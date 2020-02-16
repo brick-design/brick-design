@@ -1,0 +1,91 @@
+.select {
+  height: 24px;
+
+  :global {
+    .ant-select-selection__rendered {
+      line-height: 22px;
+    }
+
+    .ant-select-selection--single {
+      height: 24px;
+      font-size: 12px;
+      color: #000;
+      letter-spacing: 0.17px;
+
+      .ant-select-selection-selected-value {
+        height: 24px;
+        line-height: 22px;
+      }
+    }
+  }
+}
+
+.number-unit-container {
+  border-radius: 3px;
+  overflow: hidden;
+  padding: 0;
+  line-height: 0;
+  .input-num {
+    height: 24px;
+    width: 100%;
+    border: 1px solid #d9d9d9;
+    overflow: hidden;
+  }
+
+  .select-box {
+    height: 24px;
+    width: 100%;
+    padding-left: 5%;
+    text-align: center;
+  }
+
+  :global {
+    .ant-select-selection, .ant-input-number {
+      height: 24px;
+      border-radius: 2px;
+      border-color: #D6D6D6;
+      overflow: hidden;
+      // background: #FAFAFA
+    }
+
+    .ant-input-number-handler-wrap {
+      opacity: 1 !important;
+      border: none;
+      // background: #FAFAFA;
+      .ant-input-number {
+        font-size: 12px;
+      }
+
+      .ant-input-number-handler-down {
+        border: none;
+      }
+    }
+
+    .ant-select-selection__rendered {
+      margin: 0 !important;
+
+      .ant-select-selection-selected-value {
+        line-height: 20px !important;
+        padding-left: 7px;
+      }
+    }
+
+    .ant-input-number-input {
+      height: 22px;
+    }
+
+    .ant-select-arrow {
+      margin-top: -4px;
+      right: 7px;
+
+      svg {
+        width: 10px !important;
+        height: 10px !important;
+      }
+    }
+
+    .ant-select-selection--single {
+      text-align: center;
+    }
+  }
+}

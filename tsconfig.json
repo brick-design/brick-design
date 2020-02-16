@@ -9,6 +9,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "strict": true,
+    "experimentalDecorators": true,
     "paths": {
       "@/*": ["src/*"]
     },

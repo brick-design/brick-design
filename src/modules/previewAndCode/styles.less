@@ -1,0 +1,24 @@
+.preview-header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  height: 68px;
+  padding-left: 22px;
+  overflow: hidden;
+}
+
+.preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+
+  :global {
+    .ant-layout {
+      overflow-y: auto;
+      border: 1px solid #e8e8e8
+    }
+  }
+}

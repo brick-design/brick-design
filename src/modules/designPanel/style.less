@@ -1,0 +1,27 @@
+
+.container-select-border {
+  border: 1px dashed red !important;
+}
+
+
+.container-hover-border {
+  border: 1px dashed springgreen !important;
+}
+
+.dnd-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  :global {
+    .ant-modal-mask {
+      position: absolute !important;
+    }
+
+    .ant-modal-wrap {
+      position: absolute !important;
+    }
+  }
+
+}

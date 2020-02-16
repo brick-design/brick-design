@@ -1,25 +1,42 @@
 {
   "name": "@umi-block/react-visual-editor",
   "version": "0.0.1",
-  "description": "基于antd组件库的react可视化编辑工具",
-  "main": "src/index.js",
+  "description": "react可视化编辑工具",
   "authors": {
     "name": "anye",
     "email": "1278998669@qq.com"
   },
-  "repository": "umijs/umi-blocks/react-visual-edit",
+  "repository": "umijs/umi-blocks/react-visual-editor",
   "scripts": {
     "dev": "umi dev"
   },
   "dependencies": {
-    "react": ">=16.0.0"
+    "@types/react-color": "^3.0.1",
+    "animate.css": "^3.7.2",
+    "classnames": "^2.2.6",
+    "dva": "2.4.0",
+    "highlight.js": "^9.17.1",
+    "html2canvas": "^1.0.0-rc.5",
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2",
+    "rc-animate": "^2.10.2",
+    "re-resizable": "^6.1.1",
+    "react": ">=16.0.0",
+    "react-color": "^2.18.0",
+    "sortablejs": "^1.10.2",
+    "umi-plugin-react": "^1.15.2",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "umi": "^2.0.0",
-    
-    "umi-plugin-block-dev": "^2.0.0",
-    "umi-types": "^0.2.0"
-    
-    },
+    "@types/classnames": "^2.2.9",
+    "@types/highlight.js": "^9.12.3",
+    "@types/lodash": "^4.14.149",
+    "@types/sortablejs": "^1.10.2",
+    "@types/uuid": "^3.4.7",
+    "gh-pages": "^2.2.0",
+    "umi": "^2.13.3",
+    "umi-plugin-block-dev": "^3.0.3",
+    "umi-types": "^0.5.12"
+  },
   "license": "MIT"
 }
