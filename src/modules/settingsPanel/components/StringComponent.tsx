@@ -8,7 +8,7 @@ interface StringComponentPropsType{
   isShowInput:boolean,
   isShowColor:boolean,
   value:string,
-  colorType:string,
+  colorType:'hex'|'rgba',
   onChange:(value:string)=>void,
   style:any,
   rowProps:any,

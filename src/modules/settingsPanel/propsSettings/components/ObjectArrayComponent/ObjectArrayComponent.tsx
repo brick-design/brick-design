@@ -13,11 +13,12 @@ import {ACTION_TYPES} from '@/models';
 import { formatPropsFieldConfigPath, reduxConnect } from '@/utils';
 import { PropsConfigType } from '@/types/ComponentConfigType';
 import {Dispatch} from 'redux'
+import { PROPS_TYPES } from '@/types/ConfigTypes';
 interface ObjectArrayPropsType {
   value?:any,
   childPropsConfig:PropsConfigType[],
   dispatch?:Dispatch,
-  type:string,
+  type:PROPS_TYPES,
   parentFieldPath:string,
   field:string,
   onChange:(value:any)=>void

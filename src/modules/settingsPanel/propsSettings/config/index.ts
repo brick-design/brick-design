@@ -41,7 +41,7 @@ export const TYPES_TO_COMPONENT = {
 };
 
 
-export const confirmModal = (fnBsn:any) =>
+export const confirmModal = (fnBsn:()=>void) =>
   Modal.confirm({
     title: '你确定要删除此项吗?',
     onOk() {

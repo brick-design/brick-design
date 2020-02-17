@@ -3,10 +3,11 @@ import styles from '../index.less';
 import { Icon } from '@/components';
 import { ACTION_TYPES } from '@/models';
 import {Dispatch} from 'redux'
+import { VirtualDOMType } from '@/types/ModelType';
 
 interface ListItemPropsType {
   dispatch:Dispatch,
-  item:any,
+  item:{templateData:VirtualDOMType},
   itemData:{
     img:string,
     id:string,

@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { Input, Modal, Spin } from 'antd';
 import map from 'lodash/map';
 import ListItem from './listItem';
-import { reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models';
 import styles from '../index.less';
 import {Dispatch} from 'redux'
+import { TemplateInfoType } from '@/types/ModelType';
+
 const DELETE_TEMPLATE = '您确定要删除此模板？';
 
 interface TemplatePanelPropsType {
   dispatch:Dispatch,
   isShow:boolean,
-  templateInfos:any
+  templateInfos:TemplateInfoType[]
 }
 
 interface TemplatePanelStateType {

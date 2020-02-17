@@ -20,7 +20,8 @@ export interface PropInfoType {
   maxTagCount?:number,
   min?:number,
   max?:number,
-  stringCount?:number
+  stringCount?:number,
+  formItemProps?:any
 
 }
 

@@ -48,9 +48,9 @@ export function getPath({ path, index, isContainer }: RenderPath) {
  * @returns {Function}
  */
 export function reduxConnect(props?: string[], options?: object) {
-  return connect(({ REACT_EDITOR }: any) => {
+  return connect(({ BLOCK_NAME_REACT_EDITOR }: any) => {
       const resultProps: any = {};
-      each(props, (prop) => resultProps[prop] = REACT_EDITOR[prop]);
+      each(props, (prop) => resultProps[prop] = BLOCK_NAME_REACT_EDITOR[prop]);
       return resultProps;
     }, undefined, undefined, { ...options },
   );

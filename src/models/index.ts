@@ -58,7 +58,7 @@ const DEFAULT_LAYOUT :VirtualDOMType = {
  * 命名空间
  * @type {string}
  */
-const namespace='REACT_EDITOR'
+const namespace='BLOCK_NAME_REACT_EDITOR'
 
 /**
  * actions
@@ -178,7 +178,7 @@ const Model:ModelType= {
         dropTargetInfo
       } = state;
       const { defaultProps = {}, componentName, templateData,dragPath,dragParentPath }=dragData!
-      const { propPath, path, isOnlyNode,isContainer, childNodesRule, componentName: selectedComponentName, propName }=dropTargetInfo||selectedComponentInfo;
+      const { propPath, path, isOnlyNode,isContainer, childNodesRule, componentName: selectedComponentName, propName }=dropTargetInfo!||selectedComponentInfo;
       // 找到新添加组件所要放置的路径位置
       const parentPath = getPath({ path: propPath || path, isContainer: true });
       /**

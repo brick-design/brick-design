@@ -13,7 +13,7 @@ export default class SortComponent extends PureComponent<SortComponentPropsType>
   renderSortItem = ({ key }:any) => {
     return <div
       className={styles['sort-item']}
-      data-sortkey={key}
+      id={key}
       key={key}
     >
       {key}
@@ -38,7 +38,7 @@ export default class SortComponent extends PureComponent<SortComponentPropsType>
       <Sortable
         options={{
           animation: 200,
-          dataIdAttr: 'sortkey',
+          dataIdAttr: 'id',
           ghostClass: styles['item-background'],
           swapThreshold: 0.5,
           direction: 'horizontal',

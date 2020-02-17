@@ -14,12 +14,13 @@ import { FormComponentProps } from 'antd/lib/form';
 import { PropsSettingType, SelectedComponentInfoType } from '@/types/ModelType';
 import {Dispatch} from 'redux'
 import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { PropInfoType } from '@/types/ComponentConfigType';
 const FormItem = Form.Item;
 
 interface PropsSettingsPropsType extends FormComponentProps{
   dispatch?:Dispatch,
-  propsSetting:PropsSettingType,
-  selectedComponentInfo:SelectedComponentInfoType
+  propsSetting?:PropsSettingType,
+  selectedComponentInfo?:SelectedComponentInfoType
 }
 
 @reduxConnect(['propsSetting', 'selectedComponentInfo'])
@@ -33,8 +34,10 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
   }
 
   shouldComponentUpdate(nextProps:PropsSettingsPropsType) {
-    const { propsSetting: { mergePropsConfig } } = nextProps;
-    const { form: { getFieldsValue }, propsSetting: { mergePropsConfig: prevMergePropsConfig } } = this.props;
+    const { propsSetting} = nextProps;
+    const  { mergePropsConfig } =propsSetting!
+    const { form: { getFieldsValue }, propsSetting:prevPropsSetting } = this.props;
+    const prevMergePropsConfig=get(prevPropsSetting,'mergePropsConfig')
     const currentProps = filterProps(getFieldsValue());
     if (!isEqual(mergePropsConfig, prevMergePropsConfig) || !isEqual(this.currentProps, currentProps)) {
       this.currentProps = currentProps;
@@ -49,14 +52,14 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
    * @param field
    * @returns {*}
    */
-  renderFormItem = (config:any, field:string) => {
+  renderFormItem = (config:PropInfoType, field:string) => {
     const {
       form: { getFieldDecorator },
       form,
-      propsSetting,
-      selectedComponentInfo: { selectedKey },
+      selectedComponentInfo ,
     } = this.props;
-    const { type, label, rules, tip, formItemProps = {}, mirrorValue } = config;
+    const{ selectedKey }=selectedComponentInfo!
+    const { type, label, rules, tip, formItemProps } = config;
 
     let itemProps:any={}, itemOption:any={};
     /**
@@ -66,12 +69,12 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
       rules,
     };
 
-    /**
-     * 属性镜像默认值
-     */
-    if (mirrorValue) {
-      extraObj.initialValue = get(propsSetting, mirrorValue);
-    }
+    // /**
+    //  * 属性镜像默认值
+    //  */
+    // if (mirrorValue) {
+    //   extraObj.initialValue = get(propsSetting, mirrorValue);
+    // }
 
     /**
      * 如果属性为boolean类型设置form 获取值的属性
@@ -131,15 +134,17 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
   resetProps = () => {
     const {
       form: { resetFields, setFieldsValue },
-      propsSetting: { props },
+      propsSetting
     } = this.props;
+    const { props }=propsSetting!
     resetFields();
     setFieldsValue(props);
 
   };
 
   render() {
-    const { propsSetting: { mergePropsConfig } } = this.props;
+    const { propsSetting  } = this.props;
+    const { mergePropsConfig }=propsSetting!
     return (
       <>
         {!isEmpty(mergePropsConfig) && (

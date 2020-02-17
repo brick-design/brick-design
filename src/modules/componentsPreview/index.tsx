@@ -10,14 +10,14 @@ import {
 import FoldPanel from './components/foldPanel';
 import styles from './index.less';
 import TemplatePanel from './components/templatePanel';
-import { SelectedComponentInfoType } from '@/types/ModelType';
+import { SelectedComponentInfoType, TemplateInfoType } from '@/types/ModelType';
 import {Dispatch} from 'redux'
 const { TabPane } = Tabs;
 
 interface AllComponentsPropsType {
   dispatch?:Dispatch,
   selectedComponentInfo?:SelectedComponentInfoType,
-  templateInfos?:any
+  templateInfos?:TemplateInfoType[]
 }
 
 interface AllComponentsStateType{
@@ -33,7 +33,7 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
     };
   }
 
-  TabsChange = (activeKey:any) => {
+  TabsChange = (activeKey:string) => {
     this.setState({
       activeKey,
     });
@@ -49,19 +49,19 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
           <FoldPanel isShow={activeKey === 'container'}
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={CONTAINER_CATEGORY}
-                     autoCompleteData={ALL_CONTAINER_COMPONENT_NAMES}
+                     searchValues={ALL_CONTAINER_COMPONENT_NAMES}
           />
         </TabPane>
         <TabPane forceRender className={styles['tabs-panel']} tab="非容器" key="atomic">
           <FoldPanel isShow={activeKey === 'atomic'}
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={NON_CONTAINER_CATEGORY}
-                     autoCompleteData={ALL_NON_CONTAINER_COMPONENT_NAMES}
+                     searchValues={ALL_NON_CONTAINER_COMPONENT_NAMES}
 
           />
         </TabPane>
         <TabPane className={styles['tabs-panel']} style={{paddingLeft:20,paddingRight:20}}  tab="模板" key="module">
-          <TemplatePanel dispatch={dispatch!} templateInfos={templateInfos} isShow={activeKey === 'module'}/>
+          <TemplatePanel dispatch={dispatch!} templateInfos={templateInfos!} isShow={activeKey === 'module'}/>
         </TabPane>
       </Tabs>
     );

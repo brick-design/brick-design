@@ -45,11 +45,6 @@ interface SortItemStateType {
 @reduxConnect(['selectedComponentInfo', 'newAddKey', 'hoverKey'])
 class SortItem extends Component<SortItemPropsType,SortItemStateType> {
 
-   static defaultValue={
-
-   }
-
-
   propName?:string
   isSelected:boolean
 
@@ -90,7 +85,7 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
     const prevSelectedKey=get(prevSelectedComponentInfo,'selectedKey')
     const { selectedComponentInfo, path, componentConfig: { key,childNodes } } = this.props;
     const selectedKey=get(selectedComponentInfo,'selectedKey')
-    if(childNodes&&get(prevChildNodes,'length')===0&&childNodes.length>0) return this.setState({
+    if(childNodes&&prevChildNodes!.length===0&&childNodes.length>0) return this.setState({
       isUnfold:true
     })
      if (selectedKey && selectedKey === prevSelectedKey && path !== prevPath && selectedKey === key) {
@@ -129,7 +124,7 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
     if (this.propName) {
       propPath = `${getPath({ path: newPath, isContainer: true })}.${this.propName}`;
     }
-    dispatch&&dispatch({
+    dispatch!({
       type: actionType,
       payload: {
         propName: propName || this.propName,

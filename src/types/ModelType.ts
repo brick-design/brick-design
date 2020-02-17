@@ -47,6 +47,22 @@ interface DragDataType {
   dragParentPath?:string
 }
 
+export interface TemplateInfoType{
+  img:string,
+  id:string,
+  name:string,
+  config:string
+}
+
+export interface DropTargetInfoType {
+  isContainer:boolean,
+  propPath:string,
+  path:string,
+  isOnlyNode:boolean,
+  childNodesRule:string[],
+  componentName:string,
+  propName:string
+}
 export interface StateType{
   componentConfigs:VirtualDOMType[],
   selectedComponentInfo:SelectedComponentInfoType|{},
@@ -54,11 +70,11 @@ export interface StateType{
   styleSetting:any,
   undo:any[],
   redo:any[],
-  templateInfos:any[],
+  templateInfos:TemplateInfoType[],
   newAddKey:null|string,
   hoverKey:null|string,
   dragData:DragDataType|null,
-  dropTargetInfo:null|any
+  dropTargetInfo:null|DropTargetInfoType
 
 }
 

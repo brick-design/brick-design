@@ -26,7 +26,7 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
    * 拖拽排序
    * @param sortKeys
    */
-  onLayoutSortChange = (sortKeys:string[], a:any, evt:any,c:any) => {
+  onLayoutSortChange = (sortKeys:string[], a:any, evt:any) => {
     /**
      * 获取拖住节点的信息
      * @type {any}

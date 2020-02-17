@@ -4,6 +4,7 @@ import hljs from 'highlight.js';
 import { generatePageCode} from '../../utils';
 import styles from './style.less';
 import 'highlight.js/styles/androidstudio.css';
+import { VirtualDOMType } from '@/types/ModelType';
 
 const { TabPane } = Tabs;
 
@@ -13,10 +14,14 @@ interface CodeStateType {
   style:string
 }
 
-export default class Code extends Component<any,CodeStateType> {
+interface CodePropsType {
+  componentConfigs:VirtualDOMType[]
+}
+
+export default class Code extends Component<CodePropsType,CodeStateType> {
   codeRef:any;
   styleRef:any;
-  constructor(props:any) {
+  constructor(props:CodePropsType) {
     super(props);
     this.state = {
       code: '',

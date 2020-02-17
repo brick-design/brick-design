@@ -181,10 +181,11 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         draggable:true,
         onClick:(e:Event) => this.changeSelectedStatus( e, node, resultDomTreeKeys,resultPath, parentPath),
         onMouseOver: (e:Event) => this.onMouseOver(e, key),
+        onDragEnter:this.getDropTargetInfo,
         onDragStart:(e:Event)=>this.onDragStart(e,path,node,parentPath)
       };
 
-      return createElement(oAllComponents[componentName] || get(OriginalComponents, componentName), formatSpecialProps(propsResult, propsConfig));
+      return createElement(get(oAllComponents, componentName,componentName), formatSpecialProps(propsResult, propsConfig));
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/

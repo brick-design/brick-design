@@ -5,7 +5,7 @@ import {
   flattenDeepArray,
   generateContainers,
 } from '@/utils';
-export {default as AllComponentConfigs}from './componentConfigs/Ant';
+export {default as AllComponentConfigs}from './componentConfigs';
 export { default as componentsToImage } from './componentsToImage';
 export { default as domTreeIcons } from './domTreeIcons';
 

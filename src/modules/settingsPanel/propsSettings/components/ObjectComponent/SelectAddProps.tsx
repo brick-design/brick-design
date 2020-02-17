@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Input, Select, Tooltip } from 'antd';
 import map from 'lodash/map';
-import { PROPS_TYPES } from '../../config';
 import { connect } from 'dva';
 import {ACTION_TYPES} from '@/models';
 import {Dispatch} from 'redux';
+import { PROPS_TYPES } from '@/types/ConfigTypes';
 const { Option } = Select;
 
 interface SelectAddPropsType {

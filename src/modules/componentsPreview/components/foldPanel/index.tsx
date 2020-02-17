@@ -21,13 +21,13 @@ const { Panel } = Collapse;
  * @param rule 规则字段
  * @returns {{componentsCategory, openKeys: Array}|{componentsCategory: *, openKeys: Array}}
  */
-function getFilterCategory(prevComponentsCategory:CategoryType, value:any, rule?:string[] ) {
+function getFilterCategory(prevComponentsCategory:CategoryType, value?:string, rule?:string[] ) {
   const openKeys:string[] = [];
   const componentsCategory:CategoryType = {};
-  value=isEmpty(value)?null:value
+  value=isEmpty(value)?undefined:value
 
   if(value&&rule){
-    rule=rule.filter((name)=>name.includes(value))
+    rule=rule.filter((name)=>name.includes(value!))
   }else if(!value&&!rule){
     return {componentsCategory:prevComponentsCategory,openKeys}
   }
@@ -35,7 +35,7 @@ function getFilterCategory(prevComponentsCategory:CategoryType, value:any, rule?
     const { components } = infos;
     if (components) {
       each(components,(componentInfo,componentName)=>{
-        if (!rule&&componentName.includes(value)||rule&&rule.includes(componentName)) {
+        if (!rule&&componentName.includes(value!)||rule&&rule.includes(componentName)) {
           !openKeys.includes(category) && (openKeys.push(category));
           update(componentsCategory, `${category}.components`, (componentInfos = {}) => {
             componentInfos[componentName] = componentInfo;
@@ -45,7 +45,7 @@ function getFilterCategory(prevComponentsCategory:CategoryType, value:any, rule?
 
       })
 
-    } else if (!rule&&category.includes(value)||rule&&rule.includes(category)) {
+    } else if (!rule&&category.includes(value!)||rule&&rule.includes(category)) {
       openKeys.push(category);
       componentsCategory[category] = infos;
     }
@@ -54,9 +54,9 @@ function getFilterCategory(prevComponentsCategory:CategoryType, value:any, rule?
 }
 
 interface FoldPanelPropsType {
-  componentsCategory:CategoryType,
-  selectedComponentInfo:SelectedComponentInfoType,
-  autoCompleteData:string[],
+  componentsCategory:CategoryType,  //组件分类
+  selectedComponentInfo:SelectedComponentInfoType, //选中组件的信息
+  searchValues:string[],
   isShow:boolean
 }
 
@@ -181,12 +181,12 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
 
   render() {
     const { openKeys, componentsCategory } = this.state;
-    const { selectedComponentInfo: { childNodesRule }, autoCompleteData } = this.props;
+    const { selectedComponentInfo: { childNodesRule }, searchValues } = this.props;
     return (
       <>
         <AutoComplete
           style={{ marginLeft: 20, marginRight: 20 }}
-          dataSource={childNodesRule || autoCompleteData}
+          dataSource={childNodesRule || searchValues}
           filterOption={this.searchFilter}
           onSelect={this.onSelect}
           onChange={this.onChange}

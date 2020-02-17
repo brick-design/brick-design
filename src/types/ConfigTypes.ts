@@ -1,5 +1,4 @@
 
-
 export enum PROPS_TYPES {
   object= 'object',
   objectArray= 'objectArray',
