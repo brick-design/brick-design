@@ -361,7 +361,7 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
         data-info={JSON.stringify(componentConfig)}
         data-name={parentName || componentName}
         data-parents={parentNodesRule && JSON.stringify(parentNodesRule)}
-        data-sortkey={key}
+        id={key}
       >
         {this.renderHeader()}
 

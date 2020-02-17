@@ -70,7 +70,6 @@ export default {
   'Tabs.TabPane': TabPane,
   Text: text,
   BackTop: top,
-  Upload,
   Pagination,
   'Menu.Divider': MenuDivider,
   Form,

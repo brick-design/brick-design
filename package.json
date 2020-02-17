@@ -11,7 +11,6 @@
     "dev": "umi dev"
   },
   "dependencies": {
-    "@types/react-color": "^3.0.1",
     "animate.css": "^3.7.2",
     "classnames": "^2.2.6",
     "dva": "2.4.0",
@@ -28,6 +27,7 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@types/react-color": "^3.0.1",
     "@types/classnames": "^2.2.9",
     "@types/highlight.js": "^9.12.3",
     "@types/lodash": "^4.14.149",

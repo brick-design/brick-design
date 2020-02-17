@@ -26,9 +26,6 @@ import {
   SelectedComponentInfoType,
   VirtualDOMType,
 } from '@/types/ModelType';
-import { multiPropsNodeComponents } from '@/configs/childNodesNonemptyContainers';
-
-
 
 const handleComponentInfo=(payload:any)=> {
   const { propName, componentConfig } = payload;

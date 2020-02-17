@@ -34,7 +34,7 @@ const handleObjectArrayFunction = (arrValue:any[], objectArrayConfig:PropsConfig
  * @param objectConfig
  * @param functionMap
  */
-const handleObjectFunction = (objValue:any, objectConfig:PropsConfigType, functionMap:any) => {
+const handleObjectFunction = (objValue:any, objectConfig:any, functionMap:any) => {
 
   each(objValue, (v, k) => {
     const childPropsConfig = get(objectConfig, `${k}.childPropsConfig`);

@@ -26,12 +26,12 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
    * 拖拽排序
    * @param sortKeys
    */
-  onLayoutSortChange = (sortKeys:string[] = [], a:any, evt:any) => {
+  onLayoutSortChange = (sortKeys:string[], a:any, evt:any,c:any) => {
     /**
      * 获取拖住节点的信息
      * @type {any}
      */
-    const dragNode = JSON.parse(evt.clone.attributes.datainfo.value);
+    const dragNode = JSON.parse(evt.clone.dataset.info);
     const { dispatch, path, domTreeKeys } = this.props;
     dispatch&&dispatch({
       type: ACTION_TYPES.onLayoutSortChange,
@@ -87,7 +87,7 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
           group: { name: 'nested', put: this.putItem },
           animation: 200,
           disabled,
-          dataIdAttr: 'sortkey',
+          dataIdAttr: 'id',
           ghostClass: styles['item-background'],
           swapThreshold: 0.5,
         }}

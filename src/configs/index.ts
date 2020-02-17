@@ -1,13 +1,9 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
 import * as Ants from 'antd/es';
-import { multiPropsNodeComponents, singlePropNodeComponents } from './childNodesNonemptyContainers';
 import {
   flattenDeepArray,
-  generalContainers,
   generateContainers,
-  multiPropsNodeNonempty,
-  singlePropNodeNonempty,
 } from '@/utils';
 export {default as AllComponentConfigs}from './componentConfigs/Ant';
 export { default as componentsToImage } from './componentsToImage';
@@ -39,14 +35,21 @@ export const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
  * 非容器组件分类
  * @type {{Input, InputNumber, Slider, Checkbox, Rate, Radio, Icon, Typography}}
  */
-export const NON_CONTAINER_CATEGORY = { ...reactNonContainers };
+export const NON_CONTAINER_CATEGORY = { ...reactNonContainers,...htmlNonContainers };
+
+/**
+ * 属性节点不可为空的组件
+ */
+const propsNodeNonemptyComponents = [
+  'Tabs',
+  'Dropdown',
+  'Select'
+];
 
 /**
  * 设计面板可用的所有组件
  */
 export const oAllComponents = {
   ...OriginalComponents,
-  ...generateContainers(ALL_CONTAINER_COMPONENT_NAMES, generalContainers),
-  ...generateContainers(singlePropNodeComponents, singlePropNodeNonempty),
-  ...generateContainers(multiPropsNodeComponents, multiPropsNodeNonempty),
+  ...generateContainers(ALL_CONTAINER_COMPONENT_NAMES, propsNodeNonemptyComponents),
 };
