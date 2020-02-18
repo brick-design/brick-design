@@ -1,17 +1,17 @@
 
-export interface ComponentPropsType {
-  describeInfo?:string,
-  [propName:string]:any
+export interface ComponentCategoryType {
+  span?:number,
+  props?:any[],
 }
 
 export interface ComponentInfoType {
   span?:number,
-  props?:ComponentPropsType[],
+  props?:any[],
   components?:{
-    [componentName:string]:any
+    [componentName:string]:ComponentCategoryType|null
   }
 }
 
 export interface CategoryType {
-  [category:string]:ComponentInfoType
+  [category:string]:ComponentInfoType|null
 }

@@ -11,7 +11,7 @@ interface DragAbleItemPropsType {
   item:{
     defaultProps:any,
     componentName:string
-  }
+  },
 }
 
 @reduxConnect()
@@ -25,8 +25,8 @@ class DragAbleItem extends Component<DragAbleItemPropsType,any> {
     const {
       item: { defaultProps, componentName },
     } = this.props;
-    if (get(componentsToImage,componentName)) {
-      return (<img src={get(componentsToImage,componentName)} style={{ width: '100%' }}/>);
+    if(!defaultProps){
+      return componentName
     }
     return createElement(get(OriginalComponents, componentName, componentName), defaultProps);
   };

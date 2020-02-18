@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AutoComplete, Col, Collapse, Input, Row } from 'antd';
+import { AutoComplete, Col, Collapse, Input, Row,Divider } from 'antd';
 import { Icon } from '@/components';
 import map from 'lodash/map';
 import update from 'lodash/update';
@@ -9,7 +9,7 @@ import DragAbleItem from './DragAbleItem';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
-import { CategoryType, ComponentInfoType, ComponentPropsType } from '@/types/CategoryType';
+import { CategoryType, ComponentCategoryType, ComponentInfoType } from '@/types/CategoryType';
 import { SelectedComponentInfoType } from '@/types/ModelType';
 
 const { Panel } = Collapse;
@@ -32,7 +32,7 @@ function getFilterCategory(prevComponentsCategory:CategoryType, value?:string, r
     return {componentsCategory:prevComponentsCategory,openKeys}
   }
   each(prevComponentsCategory, (infos, category) => {
-    const { components } = infos;
+    const { components } = infos!;
     if (components) {
       each(components,(componentInfo,componentName)=>{
         if (!rule&&componentName.includes(value!)||rule&&rule.includes(componentName)) {
@@ -121,32 +121,33 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
     );
   }
 
-  renderDragItem = (span:number, key:string, componentName:string, defaultProps?:any, describeInfo?:any) => {
+  renderDragItem = (span:number=24, key:string, componentName:string, defaultProps?:any) => {
     return (<Col span={span} key={key}>
       <DragAbleItem
         item={{ componentName, defaultProps }}
       />
-      <div style={{ textAlign: 'center' }}>{describeInfo || componentName}</div>
     </Col>);
   };
 
-  renderContent = (categoryInfo:ComponentInfoType, categoryName:string) => {
-    const { span = 24, props, components } = categoryInfo;
-    const renderItems = props || components;
-    const isArr = isArray(renderItems);
+  renderContent = (categoryInfo:ComponentInfoType|null, categoryName:string,isShow?:boolean) => {
     let items = null;
-    if (isArr&&isEmpty(renderItems)) {
-      items = this.renderDragItem(span as number, categoryName, categoryName);
-    } else {
-      items = map(renderItems, (v:ComponentPropsType, k) => {
-        let componentName = isArr ? categoryName : k;
-        let describeInfo = isArr ? (v.describeInfo || categoryName) : k;
-        return this.renderDragItem(span as number, k, componentName, v, describeInfo);
-      });
-    }
+      if(!categoryInfo||isEmpty(categoryInfo.props||categoryInfo.components)){
+        items = this.renderDragItem(undefined, categoryName, categoryName);
+      }else {
+        const { span = 24, props, components } = categoryInfo!;
+        const renderItems = props || components;
+        items=map(renderItems,(v:ComponentCategoryType|any,k)=>{
+          if(!isArray(renderItems)){
+            return this.renderContent(v,k,true)
+          }
+         return  this.renderDragItem(span as number,k,categoryName,v)
+      })
+      }
+
     return (
       <Row className={styles['fold-content']}>
         {items}
+        {isShow&&<Divider>{categoryName}</Divider>}
       </Row>
     );
   };

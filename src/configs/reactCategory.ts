@@ -3,107 +3,100 @@ import { CategoryType } from '@/types/CategoryType';
 export const reactContainers:CategoryType = {
   'Layout': {
     components: {
-      'Layout': {},
-      'Layout.Footer': {},
-      'Layout.Content': {},
-      'Layout.Header': {},
-      'Layout.Sider': {},
+      'Layout': null,
+      'Layout.Footer': null,
+      'Layout.Content': null,
+      'Layout.Header': null,
+      'Layout.Sider': null,
     },
   },
   'GridLayout': {
     components: {
-      'Row': {},
-      'Col': {},
+      'Row': null,
+      'Col': null,
     },
 
   },
   'Tabs': {
-    span: 12,
     components: {
-      'Tabs': {},
-      'Tabs.TabPane': {},
+      'Tabs': null,
+      'Tabs.TabPane': null,
     },
   },
   'Cards': {
-    span: 12,
     components: {
-      'Card': {},
-      'Card.Grid': {},
-      'Card.Meta': {},
+      'Card': null,
+      'Card.Grid': null,
+      'Card.Meta': null,
     },
 
   },
   'Collapse': {
-    span: 12,
     components: {
-      'Collapse': {},
-      'Collapse.Panel': {},
+      'Collapse': null,
+      'Collapse.Panel': null,
     },
 
   },
   'Timeline': {
-    span: 12,
     components: {
-      Timeline: {},
-      'Timeline.Item': {},
+      Timeline: null,
+      'Timeline.Item': null,
     },
   },
   'Breadcrumb': {
-    span: 12,
     components: {
-      Breadcrumb: {},
-      'Breadcrumb.Item': {},
-      'Breadcrumb.Separator': {},
+      Breadcrumb: null,
+      'Breadcrumb.Item': null,
+      'Breadcrumb.Separator': null,
     },
   },
   'Dropdown': {
-    span: 12,
     components: {
-      Dropdown: {},
-      'Dropdown.Button': {},
+      Dropdown: null,
+      'Dropdown.Button': null,
     },
   },
   'Menus': {
     span: 12,
     components: {
-      'Menu': {},
-      'Menu.Item': {},
-      'Menu.SubMenu': {},
-      'Menu.ItemGroup': {},
-      'Menu.Divider': {},
+      'Menu': null,
+      'Menu.Item': null,
+      'Menu.SubMenu': null,
+      'Menu.ItemGroup': null,
+      'Menu.Divider': null,
     },
   },
   'Steps': {
     span: 12,
     components: {
-      'Steps': {},
-      'Steps.Step': {},
+      'Steps': null,
+      'Steps.Step': null,
     },
   },
   'AutoComplete': {
     span: 12,
     components: {
-      'AutoComplete': {},
-      'AutoComplete.Option': {},
-      'AutoComplete.OptGroup': {},
+      'AutoComplete': null,
+      'AutoComplete.Option': null,
+      'AutoComplete.OptGroup': null,
     },
   },
   'DatePicker': {
     components: {
-      'DatePicker': {},
-      'DatePicker.MonthPicker': {},
-      'DatePicker.WeekPicker': {},
-      'DatePicker.RangePicker': {},
+      'DatePicker': null,
+      'DatePicker.MonthPicker': null,
+      'DatePicker.WeekPicker': null,
+      'DatePicker.RangePicker': null,
     },
   },
   'Form': {
     components: {
-      'Form': {},
-      'Form.Item': {},
+      'Form': null,
+      'Form.Item': null,
     },
   },
   'Button': {
-    span: 12,
     props: [{
       type: 'primary',
       children: 'primary',
@@ -125,31 +118,30 @@ export const reactContainers:CategoryType = {
   },
   'Mentions': {
     components: {
-      Mentions: {},
-      'Mentions.Option': {},
+      Mentions:null,
+      'Mentions.Option': null,
     },
   },
   'Select': {
-    span: 12,
     components: {
-      'Select': {},
-      'Select.Option': {},
-      'Select.OptGroup': {},
+      'Select': null,
+      'Select.Option': null,
+      'Select.OptGroup': null,
     },
 
   },
 
   'TreeSelect': {
     components: {
-      'TreeSelect': {},
-      'TreeSelect.TreeNode': {},
+      'TreeSelect': null,
+      'TreeSelect.TreeNode': null,
     },
   },
   'List': {
     components: {
-      List: {},
-      'List.Item': {},
-      'List.Item.Meta': {},
+      List: null,
+      'List.Item': null,
+      'List.Item.Meta':null,
     },
   },
   'Tag': {
@@ -187,13 +179,15 @@ export const reactContainers:CategoryType = {
   },
   'Anchor': {
     components: {
-      'Anchor': {},
-      'Anchor.Link': {},
+      'Anchor': null,
+      'Anchor.Link': null,
     },
   },
   'Input': {
     components: {
-      'Input': {},
+      'Input': {
+        props:[{}]
+      },
       'Input.Group': {},
     },
   },
@@ -252,8 +246,12 @@ export const reactNonContainers:CategoryType = {
   },
   Radio: {
     components: {
-      Radio: {children:'Radio'},
-      'Radio.Button': {children:'Radio.Button'},
+      Radio: {
+        props:[{children:'Radio'}]
+      },
+      'Radio.Button': {
+        props:[{children:'Radio.Button'}]
+      },
     },
   },
   Rate: {
