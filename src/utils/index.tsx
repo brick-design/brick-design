@@ -151,7 +151,7 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
  */
 export function flattenDeepArray(data: CategoryType) {
   return flattenDeep(map(data, (v, k) => {
-    if (v.components) return map(v.components, (_, subK) => subK);
+    if (v&&v.components) return map(v.components, (_, subK) => subK);
     return k;
   }));
 }

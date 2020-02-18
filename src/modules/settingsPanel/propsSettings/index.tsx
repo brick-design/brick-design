@@ -1,43 +1,45 @@
 import React, { Component, createElement, createRef } from 'react';
-import { Affix, Button, Form, Tooltip } from 'antd';
+import { Button, Form, Tooltip } from 'antd';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import { DEFAULT_PROPS,  settingFormOption, TYPES_TO_COMPONENT } from './config';
+import each from 'lodash/each'
+import { DEFAULT_PROPS, TYPES_TO_COMPONENT } from './config';
 import styles from './index.less';
-import {ACTION_TYPES} from '@/models';
+import { ACTION_TYPES } from '@/models';
 import { filterProps, reduxConnect } from '@/utils';
 import SwitchMultiTypes from './components/SwitchMultiTypes';
 import { FormComponentProps } from 'antd/lib/form';
 import { PropsSettingType, SelectedComponentInfoType } from '@/types/ModelType';
-import {Dispatch} from 'redux'
+import { Dispatch } from 'redux';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { PropInfoType } from '@/types/ComponentConfigType';
+
+
 const FormItem = Form.Item;
 
-interface PropsSettingsPropsType extends FormComponentProps{
-  dispatch?:Dispatch,
-  propsSetting?:PropsSettingType,
-  selectedComponentInfo?:SelectedComponentInfoType
+interface PropsSettingsPropsType extends FormComponentProps {
+  dispatch?: Dispatch,
+  propsSetting?: PropsSettingType,
+  selectedComponentInfo?: SelectedComponentInfoType
 }
-
-@reduxConnect(['propsSetting', 'selectedComponentInfo'])
 class PropsSettings extends Component<PropsSettingsPropsType> {
-  container:any
-  currentProps?:any
-  constructor(props:PropsSettingsPropsType) {
+  container: any;
+  currentProps?: any;
+
+  constructor(props: PropsSettingsPropsType) {
     super(props);
     this.container = createRef();
     this.currentProps = undefined;
   }
 
-  shouldComponentUpdate(nextProps:PropsSettingsPropsType) {
-    const { propsSetting} = nextProps;
-    const  { mergePropsConfig } =propsSetting!
-    const { form: { getFieldsValue }, propsSetting:prevPropsSetting } = this.props;
-    const prevMergePropsConfig=get(prevPropsSetting,'mergePropsConfig')
+  shouldComponentUpdate(nextProps: PropsSettingsPropsType) {
+    const { propsSetting } = nextProps;
+    const { mergePropsConfig } = propsSetting!;
+    const { form: { getFieldsValue }, propsSetting: prevPropsSetting } = this.props;
+    const prevMergePropsConfig = get(prevPropsSetting, 'mergePropsConfig');
     const currentProps = filterProps(getFieldsValue());
     if (!isEqual(mergePropsConfig, prevMergePropsConfig) || !isEqual(this.currentProps, currentProps)) {
       this.currentProps = currentProps;
@@ -52,20 +54,20 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
    * @param field
    * @returns {*}
    */
-  renderFormItem = (config:PropInfoType, field:string) => {
+  renderFormItem = (config: PropInfoType, field: string) => {
     const {
       form: { getFieldDecorator },
       form,
-      selectedComponentInfo ,
+      selectedComponentInfo,
     } = this.props;
-    const{ selectedKey }=selectedComponentInfo!
+    const { selectedKey } = selectedComponentInfo!;
     const { type, label, rules, tip, formItemProps } = config;
 
-    let itemProps:any={}, itemOption:any={};
+    let itemProps: any = {}, itemOption: any = {};
     /**
      * 设置form rules
      */
-    const extraObj:any = {
+    const extraObj: any = {
       rules,
     };
 
@@ -85,7 +87,7 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
     /**
      * 清除属性配置中的defaultValue,value 目的是消除form警告
      */
-    const { defaultValue, value, ...props }:any = {
+    const { defaultValue, value, ...props }: any = {
       field, ...config, ...itemProps,
       size: type === PROPS_TYPES.boolean ? 'default' : 'small',
     };
@@ -106,7 +108,7 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
                 style={{ marginLeft: 10, marginRight: 10, marginBottom: 5 }}
                 {...formItemProps} label={<Tooltip title={`${field}:${tip || label}`}>{label}</Tooltip>}>
         {getFieldDecorator(field, { ...extraObj, ...itemOption })(
-          createElement(get(TYPES_TO_COMPONENT,type), props),
+          createElement(get(TYPES_TO_COMPONENT, type), props),
         )}
       </FormItem>
     );
@@ -115,7 +117,7 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
   /**
    * 提交最终属性结果
    */
-  submitProps = (e:any) => {
+  submitProps = (e: any) => {
     e.preventDefault();
     const {
       form: { validateFields },
@@ -124,9 +126,9 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
     validateFields((err, values) => {
       dispatch!({
         type: ACTION_TYPES.submitProps,
-        payload:{
-          props: filterProps(values)
-        }
+        payload: {
+          props: filterProps(values),
+        },
       });
     });
   };
@@ -134,17 +136,17 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
   resetProps = () => {
     const {
       form: { resetFields, setFieldsValue },
-      propsSetting
+      propsSetting,
     } = this.props;
-    const { props }=propsSetting!
+    const { props } = propsSetting!;
     resetFields();
     setFieldsValue(props);
 
   };
 
   render() {
-    const { propsSetting  } = this.props;
-    const { mergePropsConfig }=propsSetting!
+    const { propsSetting } = this.props;
+    const { mergePropsConfig } = propsSetting!;
     return (
       <>
         {!isEmpty(mergePropsConfig) && (
@@ -157,13 +159,22 @@ class PropsSettings extends Component<PropsSettingsPropsType> {
             </Button>
           </div>
         )}
-      <div ref={this.container} className={styles['main-container']} style={{ position: 'relative' }}>
-        <Form className={styles['form-container']} layout="vertical">
-          {!isEmpty(mergePropsConfig) && map({ ...mergePropsConfig, ...DEFAULT_PROPS }, this.renderFormItem)}
-        </Form>
-      </div>
-        </>
+        <div ref={this.container} className={styles['main-container']} style={{ position: 'relative' }}>
+          <Form className={styles['form-container']} layout="vertical">
+            {!isEmpty(mergePropsConfig) && map({ ...mergePropsConfig, ...DEFAULT_PROPS }, this.renderFormItem)}
+          </Form>
+        </div>
+      </>
     );
   }
 }
-export default Form.create<PropsSettingsPropsType>(settingFormOption)(PropsSettings)
+
+export default reduxConnect(['propsSetting', 'selectedComponentInfo'])(
+Form.create<PropsSettingsPropsType>({
+  mapPropsToFields(props) {
+    const selectedProps = get(props, 'propsSetting.props');
+    const formatFields: any = {};
+    each(selectedProps, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
+    return formatFields;
+  },
+})(PropsSettings));

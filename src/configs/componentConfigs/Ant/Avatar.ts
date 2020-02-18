@@ -1,7 +1,12 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
- const Avatar:ComponentConfigType={
+const Avatar:ComponentConfigType={
+   nodePropsConfig:{
+     icon:{
+       type:PROPS_TYPES.reactNode
+     }
+   },
   propsConfig: {
     icon: {
       label: '设置头像的图标类型',

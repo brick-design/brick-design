@@ -32,7 +32,7 @@ function getFilterCategory(prevComponentsCategory:CategoryType, value?:string, r
     return {componentsCategory:prevComponentsCategory,openKeys}
   }
   each(prevComponentsCategory, (infos, category) => {
-    const { components } = infos!;
+    const { components } = infos||{components:null};
     if (components) {
       each(components,(componentInfo,componentName)=>{
         if (!rule&&componentName.includes(value!)||rule&&rule.includes(componentName)) {
@@ -129,17 +129,27 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
     </Col>);
   };
 
+  /**
+   * 渲染分类组件中的组件
+   * @param categoryInfo  分类信息
+   * @param categoryName  分分类名字
+   * @param isShow        是否展示分割分类组件名
+   */
   renderContent = (categoryInfo:ComponentInfoType|null, categoryName:string,isShow?:boolean) => {
-    let items = null;
+    let items = null,isShowCategoryName=false
       if(!categoryInfo||isEmpty(categoryInfo.props||categoryInfo.components)){
         items = this.renderDragItem(undefined, categoryName, categoryName);
       }else {
-        const { span = 24, props, components } = categoryInfo!;
+        const { span = 24, props, components } = categoryInfo;
         const renderItems = props || components;
         items=map(renderItems,(v:ComponentCategoryType|any,k)=>{
           if(!isArray(renderItems)){
             return this.renderContent(v,k,true)
           }
+          /**
+           * 如果有默认属性显示分割分类
+           */
+          if(v) isShowCategoryName=true
          return  this.renderDragItem(span as number,k,categoryName,v)
       })
       }
@@ -147,7 +157,7 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
     return (
       <Row className={styles['fold-content']}>
         {items}
-        {isShow&&<Divider>{categoryName}</Divider>}
+        {isShowCategoryName&&isShow&&<Divider style={{fontSize:12,fontWeight:'normal',marginTop:10}}>{categoryName}</Divider>}
       </Row>
     );
   };

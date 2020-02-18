@@ -7,10 +7,11 @@ import isArray from 'lodash/isArray';
 import SortTree from './SortTree';
 import styles from './index.less';
 import { getPath, reduxConnect } from '@/utils';
-import { AllComponentConfigs, domTreeIcons } from '@/configs';
+import { AllComponentConfigs } from '@/configs';
 import {ACTION_TYPES} from '@/models'
 import { PropsNodeType, SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch} from 'redux'
+import domTreeIcons from './domTreeIcons'
 
 const { Panel } = Collapse;
 const { Item } = Menu;

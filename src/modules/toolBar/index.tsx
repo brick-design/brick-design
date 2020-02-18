@@ -218,7 +218,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
     const { visible, isShowTemplate } = this.state;
     const { componentConfigs } = this.props;
     const modalConfig = isShowTemplate ? {
-      title: '生成复合组件',
+      title: '生成模板',
       closable: true,
       footer: null,
       onCancel: this.controlModal,

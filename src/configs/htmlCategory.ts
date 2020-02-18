@@ -17,7 +17,8 @@ export const htmlNonContainers:CategoryType = {
     components: {
       'img': {
         props:[{
-          src:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1581925168337&di=75a5be185435bcb75d5d65bdbabe431b&imgtype=0&src=http%3A%2F%2Fimg.kutoo8.com%2Fupload%2Fimage%2F43278246%2Fleisineiyi%2520%25287%2529_960x540.jpg',
+          style:{height:'100%'},
+          src:'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1191630624,1109312732&fm=26&gp=0.jpg'
         }]
       }
     },

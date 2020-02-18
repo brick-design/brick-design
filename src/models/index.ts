@@ -34,7 +34,18 @@ const handleComponentInfo=(payload:any)=> {
   componentName = parentName || componentName;
   const isContainer = !!childNodes
   let { childNodesRule, nodePropsConfig} = get(AllComponentConfigs, componentName, {});
-  propName && (childNodesRule = get(nodePropsConfig, `${propName}.childNodesRule`));
+  if(nodePropsConfig){
+    if(propName){
+      childNodesRule = get(nodePropsConfig, `${propName}.childNodesRule`)
+    }else {
+      each(nodePropsConfig,(config)=>{
+        const{childNodesRule:propsChildNodesRule}=config
+        propsChildNodesRule&&(childNodesRule=propsChildNodesRule)
+
+      })
+    }
+
+  }
   const isOnlyNode=get(nodePropsConfig,`${propName}.isOnlyNode`)
   return {
     isContainer,

@@ -1,3 +1,4 @@
+import {createElement} from 'react'
 import { CategoryType } from '@/types/CategoryType';
 
 export const reactContainers:CategoryType = {
@@ -97,6 +98,7 @@ export const reactContainers:CategoryType = {
     },
   },
   'Button': {
+    span:12,
     props: [{
       type: 'primary',
       children: 'primary',
@@ -115,12 +117,6 @@ export const reactContainers:CategoryType = {
       loading: true,
       children: 'load',
     }],
-  },
-  'Mentions': {
-    components: {
-      Mentions:null,
-      'Mentions.Option': null,
-    },
   },
   'Select': {
     components: {
@@ -145,38 +141,40 @@ export const reactContainers:CategoryType = {
     },
   },
   'Tag': {
-    props: [],
+    props: [{children:"Tag"}],
   },
   'Cascader': {
-    props: [],
+    props: [{options:[{
+        value: 'zhejiang',
+        label: 'Zhejiang',children:[{value: 'haha',
+          label: 'haha',}]}]}],
   },
-  'PageHeader': {
-    props: [],
-  },
+  'PageHeader': null,
   Pagination: {
-    props: [],
+    props: [{}],
   },
   'Tooltip': {
-    props: [],
+    props: [{children:'Tooltip',title:'Tooltip'}],
   },
   'Spin': {
-    props: [],
+    props: [{}],
   },
   'Popover': {
-    props: [],
+    props: [{children:'Popover',content:'Popover'}],
   },
   'Divider': {
-    props: [],
+    props: [{children:'Divider'}],
   },
   'Carousel': {
-    props: [],
+    props: [{children:[createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'1'),
+        createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'2'),
+        createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'3')]}],
   },
   'Badge': {
-    props: [],
+    span:12,
+    props:[{count:25},{style:{ backgroundColor: '#52c41a' },count:109}]
   },
-  'BackTop': {
-    props: [],
-  },
+  'BackTop': null,
   'Anchor': {
     components: {
       'Anchor': null,
@@ -186,42 +184,37 @@ export const reactContainers:CategoryType = {
   'Input': {
     components: {
       'Input': {
-        props:[{}]
+        props:[{},{addonBefore: 'Http://',
+          addonAfter: '.com',
+          defaultValue: 'mysite'}]
       },
       'Input.Group': {},
     },
   },
-  'Upload': {
-    props: [],
-  },
-
-  'TipsBox': {
-    props: [],
-  },
-  'Radio': {
-    components: {
-      'Radio.Group': {},
-    },
-  },
+  'Upload': null,
+  'Radio.Group': null,
   Switch: {
-    props: [],
+    span:12,
+    props: [{checkedChildren:"开", unCheckedChildren:"关"},{loading:true}],
   },
-  'Affix': {},
-  'Modal': {
-    props: [],
+  Avatar:{
+    span:12,
+    props:[{src:'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
+      size:100},{src:'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
+      size:100,shape:'square'}]
   },
-  'Drawer': {
-    props: [],
-  },
+  'Affix': null,
+  'Modal': null,
+  'Drawer': null,
 
 };
 
 export const reactNonContainers:CategoryType = {
   Typography: {
     components: {
-      'Typography.Text': {},
-      'Typography.Title': {},
-      'Typography.Paragraph': {},
+      'Typography.Text': null,
+      'Typography.Title': null,
+      'Typography.Paragraph': null,
     },
   },
   Icon: {
@@ -229,18 +222,27 @@ export const reactNonContainers:CategoryType = {
   },
   Checkbox: {
     components: {
-      Checkbox: {},
-      'Checkbox.Group': {},
+      Checkbox: {
+        props:[{}]
+      },
+      'Checkbox.Group':null,
 
     },
   },
   InputNumber: {
-    props: [],
+    props: [{}],
   },
   Input: {
     components: {
-      'Input.TextArea': {},
-      'Input.Search': {},
+      'Input.TextArea': {
+        props:[{}]
+      },
+      'Input.Search': {
+        props:[{}]
+      },
+      'Input.Password':{
+        props:[{visibilityToggle:true}]
+      },
     },
 
   },
@@ -255,16 +257,11 @@ export const reactNonContainers:CategoryType = {
     },
   },
   Rate: {
-    props: [],
+    props: [{}],
   },
   Slider: {
-    props: [],
+    props: [{}],
   },
-  Avatar:{
-    props:[]
-  },
-  Transfer:{
-    props:[]
-  },
+  Transfer:null
 
 };

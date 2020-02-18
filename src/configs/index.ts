@@ -1,13 +1,11 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
-import * as Ants from 'antd/es';
+import * as Ants from 'antd/lib';
 import {
   flattenDeepArray,
   generateContainers,
 } from '@/utils';
 export {default as AllComponentConfigs}from './componentConfigs';
-export { default as componentsToImage } from './componentsToImage';
-export { default as domTreeIcons } from './domTreeIcons';
 
 /**
  * 原始组件集

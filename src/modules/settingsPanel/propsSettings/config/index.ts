@@ -49,14 +49,6 @@ export const confirmModal = (fnBsn:()=>void) =>
     },
   });
 
-export const settingFormOption = {
-  mapPropsToFields({ propsSetting }:any) {
-    const props=get(propsSetting,'props')
-    const formatFields:any = {};
-    each(props, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
-    return formatFields;
-  },
-};
 
 
 

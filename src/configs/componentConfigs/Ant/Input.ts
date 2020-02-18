@@ -145,6 +145,7 @@ const Search:ComponentConfigType= {
         label: '搜索 loading',
         type: PROPS_TYPES.boolean,
       },
+      ...Input.propsConfig
     },
   }
 const TextArea:ComponentConfigType= {
@@ -173,9 +174,19 @@ const TextArea:ComponentConfigType= {
   },
   },
   }
-
+const Password:ComponentConfigType={
+  propsConfig:{
+    visibilityToggle:{
+      label:'是否显示切换按钮',
+      type:PROPS_TYPES.boolean
+    },
+    ...Input.propsConfig
+  }
+}
   export default {
   Input,
    'Input.Search':Search,
-   'Input.TextArea':TextArea
+   'Input.TextArea':TextArea,
+    'Input.Group':Group,
+    'Input.Password':Password
   }

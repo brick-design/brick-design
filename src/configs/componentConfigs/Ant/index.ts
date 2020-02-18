@@ -1,4 +1,5 @@
 import AutoComplete from './AutoComplete';
+import Anchor from './Anchor';
 import Layout from './Layout';
 import Cascader from './Cascader';
 import Checkbox from './Checkbox';
@@ -46,6 +47,7 @@ import Select from './Select';
 
 export default {
   ...AutoComplete,
+  ...Anchor,
   ...Layout,
   Affix,
   Avatar,
