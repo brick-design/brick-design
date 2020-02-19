@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, {memo } from 'react';
 import { Select, Tooltip } from 'antd';
 import map from 'lodash/map';
 import isObject from 'lodash/isObject';
 import styles from './index.less';
 import { SelectProps } from 'antd/lib/select';
+import { propsAreEqual } from '@/utils';
 
 const { Option } = Select;
 interface EnumComponentPropsType extends SelectProps{
@@ -11,15 +12,8 @@ interface EnumComponentPropsType extends SelectProps{
   onChange:(value:any)=>void
 }
 
-class EnumComponent extends Component<EnumComponentPropsType> {
-  shouldComponentUpdate(nextProps: Readonly<EnumComponentPropsType>){
-    const {value}=nextProps
-    const {value:prevValue}=this.props
-    return value===prevValue
-  }
-
-  render() {
-    const { enumData, ...rest } = this.props;
+const EnumComponent= (props:EnumComponentPropsType)=> {
+    const { enumData, ...rest } = props;
     return (
       <Select
         style={{ width: '100%', height: 24 }}
@@ -49,7 +43,4 @@ class EnumComponent extends Component<EnumComponentPropsType> {
   }
 
 
-}
-
-
-export default  EnumComponent
+export default  memo<EnumComponentPropsType>(EnumComponent,propsAreEqual)

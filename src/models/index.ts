@@ -46,7 +46,7 @@ const handleComponentInfo=(payload:any)=> {
     }
 
   }
-  const isOnlyNode=get(nodePropsConfig,`${propName}.isOnlyNode`)
+  const isOnlyNode:boolean=get(nodePropsConfig,`${propName}.isOnlyNode`)
   return {
     isContainer,
     isOnlyNode,

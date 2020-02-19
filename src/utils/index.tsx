@@ -247,3 +247,10 @@ export const handleRequiredHasChild = (selectedComponentInfo: SelectedComponentI
   return result;
 
 };
+
+/**
+ * form 方法受控组件减少不必要渲染
+ * @param prevProps
+ * @param nextProps
+ */
+export const propsAreEqual=(prevProps:any,nextProps:any)=>prevProps.value===nextProps.value

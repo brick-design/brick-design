@@ -25,7 +25,7 @@ interface SwitchMultiTypesPropsType extends FormComponentProps{
   extraObj?:any,
   itemOption?:any,
   formItemProps?:any,
- tip?:string,
+  tip?:string,
   label?:string,
   componentProps:any
 }

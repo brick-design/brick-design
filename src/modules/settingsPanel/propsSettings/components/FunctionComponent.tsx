@@ -1,29 +1,23 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
 import { Input } from 'antd';
 import { InputProps } from 'antd/es/input';
-import split from 'lodash/split'
+import split from 'lodash/split';
+import { propsAreEqual } from '@/utils';
 
-class FunctionComponent extends Component<InputProps> {
+const FunctionComponent = (props: InputProps) => {
 
-  shouldComponentUpdate(nextProps:InputProps) {
-    const { value } = nextProps;
-    const { value: prevValue } = this.props;
-    return value !== prevValue;
-  }
+  const { value, onChange, ...rest } = props;
+  const resultValue = value && split(value as string, '.')[1];
+  return (<Input
+    onChange={(e: any) => {
+      const { value } = e.target;
+      const result: any = value && `this.${value}`;
+      onChange && onChange(result);
 
-  onFunChange = (e:any) => {
-    const { onChange } = this.props;
-    const { value } = e.target;
-    const result:any=value&&`this.${value}`
-    onChange && onChange(result);
+    }}
+    value={resultValue}
+    allowClear
+    {...rest} />);
+};
 
-  };
-
-  render() {
-    const { value, onChange, ...rest } = this.props;
-    const resultValue=value&&split(value as string,'.')[1]
-    return (<Input onChange={this.onFunChange} value={resultValue} {...rest} />);
-  }
-}
-
-export default FunctionComponent
+export default memo(FunctionComponent, propsAreEqual);

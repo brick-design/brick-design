@@ -1,24 +1,16 @@
-import React, { Component } from 'react';
+import React, { memo } from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/es/select';
+import { propsAreEqual } from '@/utils';
 
-class StringArray extends Component<SelectProps> {
-
-  shouldComponentUpdate(nextProps:SelectProps) {
-    const { value } = nextProps;
-    const { value: prevValue } = this.props;
-    return value !== prevValue;
-  }
-
-  render() {
+const StringArray=(props:SelectProps)=> {
     return <Select
       allowClear
       mode="tags"
       style={{ width: '100%' }}
       dropdownStyle={{ display: 'none' }}
-      {...this.props}
+      {...props}
     />;
   }
-}
 
-export default StringArray
+export default memo(StringArray,propsAreEqual)
