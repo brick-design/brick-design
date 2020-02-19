@@ -9,6 +9,9 @@ git clone https://github.com/anye931123/react-visual-editor.git
 npm install 
 npm run dev
 ```
+## SNAPSHOT
+
+![SNAPSHOT](./snapshot.png)
 
 ## LICENSE
 

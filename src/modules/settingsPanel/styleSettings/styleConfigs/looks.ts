@@ -8,7 +8,7 @@ export default  {
     props: {
       inputProps: { placeholder: '请输入或在右侧选择' },
       isFont: false,
-      sShowColor: true
+      isShowColor: true
     },
   },
 };
