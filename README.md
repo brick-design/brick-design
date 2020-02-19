@@ -1,11 +1,13 @@
-# @umi-material/react-visual-edit
+# @umi-block/react-visual-editor
 
-基于antd组件库的react可视化编辑工具
+react可视化拖拽组件生成页面
 
 ## Usage
 
 ```sh
-umi block https://github.com/umijs/umi-blocks/tree/master/react-visual-edit
+git clone https://github.com/anye931123/react-visual-editor.git
+npm install 
+npm run dev
 ```
 
 ## LICENSE
