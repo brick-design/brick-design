@@ -1,6 +1,6 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
-import * as Ants from 'antd/lib';
+import * as Ants from 'antd/es';
 import {
   flattenDeepArray,
   generateContainers,
