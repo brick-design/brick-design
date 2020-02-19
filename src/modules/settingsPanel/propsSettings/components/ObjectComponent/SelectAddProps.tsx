@@ -4,7 +4,7 @@ import map from 'lodash/map';
 import { connect } from 'dva';
 import {ACTION_TYPES} from '@/models';
 import {Dispatch} from 'redux';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { TYPES_TO_COMPONENT } from '@/modules/settingsPanel/propsSettings/config';
 const { Option } = Select;
 
 interface SelectAddPropsType {
@@ -56,7 +56,7 @@ export default class SelectAddProps extends Component<SelectAddPropsType,SelectA
         })
       }
     >
-      {map(PROPS_TYPES, (type) => (
+      {map(TYPES_TO_COMPONENT, (_,type) => (
         <Option value={type} key={type}>
           <Tooltip overlayStyle={{ zIndex: 1800 }} title={type}>
             {type}

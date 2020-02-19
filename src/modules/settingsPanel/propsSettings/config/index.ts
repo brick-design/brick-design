@@ -1,6 +1,4 @@
-import { Form, InputNumber, Modal, Switch } from 'antd';
-import each from 'lodash/each';
-import get from 'lodash/get';
+import {InputNumber, Modal, Switch } from 'antd';
 import {
   Animate,
   FunctionComponent,
