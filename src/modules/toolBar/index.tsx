@@ -15,6 +15,7 @@ import { Icon } from '../../components';
 import { handleRequiredHasChild } from '@/utils';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch } from 'redux'
+import { formatMessage } from 'umi-plugin-react/locale';
 const REST_STYLE = 'resetStyle';
 const UNDO = 'undo';
 const REDO = 'redo';
@@ -195,7 +196,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
         key={key}
       >
         <Icon style={{ fontSize: 18 }} type={icon}/>
-        <span>{title}</span>
+        <span>{formatMessage({id:`BLOCK_NAME.toolBar.${title}`})}</span>
       </div>
     );
   };

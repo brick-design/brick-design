@@ -69,7 +69,7 @@ const DEFAULT_LAYOUT :VirtualDOMType = {
  * 命名空间
  * @type {string}
  */
-const namespace='BLOCK_NAME_REACT_EDITOR'
+const namespace='BLOCK_NAME_CAMEL_CASE'
 
 /**
  * actions

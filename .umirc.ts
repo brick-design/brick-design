@@ -40,6 +40,7 @@ const config: IConfig = {
       {
         dva: true,
         antd: true,
+        locale: true,
         chunks: ['vendors','antdesigns', 'umi']
       },
     ],

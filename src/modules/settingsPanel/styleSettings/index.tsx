@@ -12,6 +12,7 @@ import { CSS_TYPE_TO_COMPONENT } from './config';
 import { Icon } from '../../../components';
 import { FormComponentProps } from 'antd/lib/form';
 import {Dispatch} from 'redux'
+import { formatMessage } from 'umi-plugin-react/locale';
 const FormItem = Form.Item;
 const { Panel } = Collapse;
 
@@ -55,12 +56,12 @@ class StyleSettings extends Component<StyleSettingsPropsType,StyleSettingsStateT
    */
   collapseChange = (openKeys:any) => this.setState({ openKeys });
 
-  renderHeader = (title:string, key:string) => {
+  renderHeader = (key:string) => {
     const { openKeys } = this.state;
     const isFold = openKeys.includes(key);
     return (
       <div className={styleSheet['fold-header']}>
-        <span>{title}</span>
+        <span>{formatMessage({id:`BLOCK_NAME.styles.${key}`})}</span>
         <Icon
           className={isFold ? styleSheet.rotate180 : ''}
           style={{ marginLeft: '5px', transition: 'all 0.2s' }}
@@ -104,10 +105,9 @@ class StyleSettings extends Component<StyleSettingsPropsType,StyleSettingsStateT
       </Col>);
   };
 
-  renderFormItem = (configValue:any, key:string) => {
-    const { label, styles } = configValue;
+  renderFormItem = (styles:any, key:string) => {
     return (
-      <Panel showArrow={false} className={styleSheet['panel-border']} header={this.renderHeader(label, key)} key={key}>
+      <Panel showArrow={false} className={styleSheet['panel-border']} header={this.renderHeader(key)} key={key}>
         <Row gutter={10}>
           {map(styles, this.renderColItem)}
         </Row>
