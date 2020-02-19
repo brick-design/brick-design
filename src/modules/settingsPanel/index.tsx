@@ -28,13 +28,13 @@ export default class SettingPanel extends Component<any,SettingPanelStateType> {
         onChange={this.onChange}
         activeKey={activeKey}
       >
-        <TabPane forceRender key="1" tab="页面结构">
+        <TabPane forceRender key="1" tab="DomTree">
           <DomTree/>
         </TabPane>
-        <TabPane forceRender key="2" tab="属性配置">
+        <TabPane forceRender key="2" tab="Props">
           <PropsSettings/>
         </TabPane>
-        <TabPane forceRender key="3" tab="样式配置">
+        <TabPane forceRender key="3" tab="Style">
           <StyleSettings/>
         </TabPane>
 

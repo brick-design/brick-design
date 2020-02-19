@@ -45,14 +45,14 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
     const { selectedComponentInfo,templateInfos,dispatch } = this.props;
     return (
       <Tabs className={styles['tabs-container']} activeKey={activeKey} onChange={this.TabsChange}>
-        <TabPane forceRender className={styles['tabs-panel']} tab="容器" key="container">
+        <TabPane forceRender className={styles['tabs-panel']} tab="Container" key="container">
           <FoldPanel isShow={activeKey === 'container'}
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={CONTAINER_CATEGORY}
                      searchValues={ALL_CONTAINER_COMPONENT_NAMES}
           />
         </TabPane>
-        <TabPane forceRender className={styles['tabs-panel']} tab="非容器" key="atomic">
+        <TabPane forceRender className={styles['tabs-panel']} tab="NonContainer" key="atomic">
           <FoldPanel isShow={activeKey === 'atomic'}
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={NON_CONTAINER_CATEGORY}
@@ -60,7 +60,7 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
 
           />
         </TabPane>
-        <TabPane className={styles['tabs-panel']} style={{paddingLeft:20,paddingRight:20}}  tab="模板" key="module">
+        <TabPane className={styles['tabs-panel']} style={{paddingLeft:20,paddingRight:20}}  tab="Template" key="module">
           <TemplatePanel dispatch={dispatch!} templateInfos={templateInfos!} isShow={activeKey === 'module'}/>
         </TabPane>
       </Tabs>

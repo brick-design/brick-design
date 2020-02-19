@@ -61,14 +61,14 @@ export default class Code extends Component<CodePropsType,CodeStateType> {
           activeKey={activeKey}
           className={styles['card-container']}
         >
-          <TabPane style={{height:'100%'}} forceRender key="1" tab="代码">
+          <TabPane style={{height:'100%'}} forceRender key="1" tab="Code">
             <pre style={{ height: '100%', margin: 0 }}>
               <code style={{ height: '100%' }} ref={this.codeRef} className="language-js">
                 {`${code}\n\n\n\n\n`}
               </code>
             </pre>
           </TabPane>
-          <TabPane style={{height:'100%'}} forceRender key="2" tab="样式">
+          <TabPane style={{height:'100%'}} forceRender key="2" tab="Style">
             <pre style={{ height: '100%', margin: 0 }}>
               <code style={{ height: '100%' }} ref={this.styleRef} className="language-js">
                 {`\n${style}\n\n\n\n\n`}

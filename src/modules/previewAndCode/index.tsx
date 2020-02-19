@@ -24,7 +24,7 @@ export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
     return (
       <div onClick={controlModal} className={`${styles['preview-header']}  box-line-shadow`}>
         <Icon type='left' style={{ marginRight: 7 }}/>
-        预览
+        Preview
       </div>);
 
   };

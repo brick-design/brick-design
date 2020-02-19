@@ -15,9 +15,9 @@ import { Icon } from '../../components';
 import { handleRequiredHasChild } from '@/utils';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch } from 'redux'
-const REST_STYLE = '样式重做';
-const UNDO = '撤销';
-const REDO = '重做';
+const REST_STYLE = 'resetStyle';
+const UNDO = 'undo';
+const REDO = 'redo';
 
 interface ToolBarPropsType {
   dispatch?:Dispatch,
@@ -120,7 +120,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
    * 生成复合组件
    *
    */
-  generateCompositeComponents = () => {
+  generateTemplate = () => {
     const {selectedComponentInfo,componentConfigs}=this.props
     if(handleRequiredHasChild(selectedComponentInfo!,componentConfigs!))return
       return this.setState({
@@ -235,7 +235,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
     };
     return (
       <Row type="flex" justify="space-around" align="middle" className={styles.content}>
-        <Col style={{ fontSize: '16px', paddingLeft: '21px' }} span={3}>React可视化编辑器</Col>
+        <Col style={{ fontSize: '16px', paddingLeft: '21px' }} span={3}>React-Visual-Editor</Col>
         <Col span={21}>
           <Row>
             {map(menus, this.renderGroup)}
