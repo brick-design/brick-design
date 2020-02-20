@@ -169,6 +169,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         key,
         path: resultPath,
         parentPath,
+        draggable:true,
         componentConfig: node,
         index,
         domTreeKeys: resultDomTreeKeys,
@@ -318,7 +319,6 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     isSelected && (propsResult.id = 'select-img');
     this.requiredProp&&(defaultSelectedProp=this.requiredProp)
     return{
-      draggable:true,
       ...formatSpecialProps(propsResult, merge({},propsConfig,addPropsConfig)),
       onClick: (e:Event) => this.changeSelectedStatus(e, componentConfig, domTreeKeys,path, parentPath,  defaultSelectedProp),
       onMouseOver: (e:Event) => this.onMouseOver(e, key),
