@@ -184,7 +184,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         onDragStart:(e:Event)=>this.onDragStart(e,path,node,parentPath)
       };
 
-      return createElement(get(oAllComponents, componentName,componentName), formatSpecialProps(propsResult, propsConfig));
+      return createElement(get(oAllComponents, componentName)||get(OriginalComponents,componentName,componentName), formatSpecialProps(propsResult, propsConfig));
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
