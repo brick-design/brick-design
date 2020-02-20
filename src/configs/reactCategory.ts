@@ -165,11 +165,7 @@ export const reactContainers:CategoryType = {
   'Divider': {
     props: [{children:'Divider'}],
   },
-  'Carousel': {
-    props: [{children:[createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'1'),
-        createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'2'),
-        createElement('div',{style:{height: 160,backgroundColor: '#364d79'}},'3')]}],
-  },
+  'Carousel': null,
   'Badge': {
     span:12,
     props:[{count:25},{style:{ backgroundColor: '#52c41a' },count:109}]

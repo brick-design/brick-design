@@ -171,7 +171,6 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         parentPath,
         componentConfig: node,
         index,
-        draggable:true,
         domTreeKeys: resultDomTreeKeys,
         ...props  //必须在使用否则类似tabsPanel的tab属性不起作用
       } : {
@@ -248,7 +247,6 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     const {
       componentConfig,
       containerName,
-      index,
       parentPath,
       path,
       domTreeKeys = [],
@@ -319,12 +317,13 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     isSelected && (propsResult.id = 'select-img');
     this.requiredProp&&(defaultSelectedProp=this.requiredProp)
     return{
-      ...rest,
+      draggable:true,
       ...formatSpecialProps(propsResult, merge({},propsConfig,addPropsConfig)),
       onClick: (e:Event) => this.changeSelectedStatus(e, componentConfig, domTreeKeys,path, parentPath,  defaultSelectedProp),
       onMouseOver: (e:Event) => this.onMouseOver(e, key),
       onDragEnter:(e:Event) => this.getDropTargetInfo(e,path, componentConfig,defaultSelectedProp),
-      onDragStart:(e:Event)=>this.onDragStart(e,path,componentConfig,parentPath)
+      onDragStart:(e:Event)=>this.onDragStart(e,path,componentConfig,parentPath),
+      ...rest  //必须放在最后边
     }
   }
 
