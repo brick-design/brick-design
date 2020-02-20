@@ -249,6 +249,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       containerName,
       parentPath,
       path,
+      index,
       domTreeKeys = [],
       dispatch,
       hoverKey,
