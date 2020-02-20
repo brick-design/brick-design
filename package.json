@@ -6,9 +6,13 @@
     "name": "anye",
     "email": "1278998669@qq.com"
   },
-  "repository": "umijs/umi-blocks/react-visual-editor",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/anye931123/react-visual-editor"
+  },
   "scripts": {
-    "dev": "umi dev"
+    "dev": "umi dev",
+    "build": "umi build"
   },
   "dependencies": {
     "animate.css": "^3.7.2",

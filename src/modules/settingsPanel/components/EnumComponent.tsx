@@ -1,4 +1,4 @@
-import React, {memo } from 'react';
+import React, { memo, forwardRef } from 'react';
 import { Select, Tooltip } from 'antd';
 import map from 'lodash/map';
 import isObject from 'lodash/isObject';
@@ -12,10 +12,11 @@ interface EnumComponentPropsType extends SelectProps{
   onChange:(value:any)=>void
 }
 
-const EnumComponent= (props:EnumComponentPropsType)=> {
+const EnumComponent= forwardRef((props:EnumComponentPropsType,ref:any)=> {
     const { enumData, ...rest } = props;
     return (
       <Select
+        ref={ref}
         style={{ width: '100%', height: 24 }}
         className={styles.select}
         showSearch
@@ -40,7 +41,7 @@ const EnumComponent= (props:EnumComponentPropsType)=> {
         )}
       </Select>
     );
-  }
+  })
 
 
 export default  memo<EnumComponentPropsType>(EnumComponent,propsAreEqual)

@@ -1,7 +1,7 @@
+const path=require('path')
 import { IConfig } from 'umi-types';
 
-const path=require('path')
-const config: IConfig = {
+const config:IConfig={
   chainWebpack(config, { webpack }) {
     // 设置 alias
     config.resolve.alias.set('@', path.resolve(__dirname, 'src'));
@@ -10,15 +10,15 @@ const config: IConfig = {
       minSize: 30000,
       maxSize: 0,
       minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
+      maxAsyncRequests: 6,
+      maxInitialRequests: 4,
       automaticNameDelimiter: '~',
       name: true,
       cacheGroups: {
         vendors: {
           name: 'vendors',
           chunks: 'all',
-          test: /[\\/]node_modules[\\/](react|react-dom|lodash|dva|prop-types|rc-animate|re-resizable|react-dnd|react-dnd-html5-backend|sortablejs|highlight.js)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|lodash|dva|prop-types|rc-animate|re-resizable|sortablejs|highlight.js)[\\/]/,
           priority: -10,
         },
         antdesigns: {
@@ -30,6 +30,9 @@ const config: IConfig = {
       },
     });
   },
+  history: 'hash',
+  hash:true,
+  publicPath:'./',
   plugins: [
     [
       'umi-plugin-block-dev',

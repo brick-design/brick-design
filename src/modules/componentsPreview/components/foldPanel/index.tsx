@@ -155,7 +155,7 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
       }
 
     return (
-      <Row className={styles['fold-content']}>
+      <Row key={categoryName} className={styles['fold-content']}>
         {items}
         {isShowCategoryName&&isShow&&<Divider style={{fontSize:12,fontWeight:'normal',marginTop:10}}>{categoryName}</Divider>}
       </Row>
@@ -192,6 +192,7 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
 
   render() {
     const { openKeys, componentsCategory } = this.state;
+
     const { selectedComponentInfo: { childNodesRule }, searchValues } = this.props;
     return (
       <>
@@ -212,7 +213,7 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
               style={{ backgroundColor: '#fff' }}
               onChange={this.collapseChange}>
               {map(componentsCategory, (categoryInfo:ComponentInfoType, categoryName) => {
-                  return <Panel style={{ border: 0 }}
+                return <Panel style={{ border: 0 }}
                                 header={this.renderHeader(categoryName)}
                                 key={categoryName}
                                 showArrow={false}>

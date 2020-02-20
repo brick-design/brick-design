@@ -53,8 +53,8 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
                      searchValues={ALL_CONTAINER_COMPONENT_NAMES}
           />
         </TabPane>
-        <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.nonContainer'})} key="atomic">
-          <FoldPanel isShow={activeKey === 'atomic'}
+        <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.nonContainer'})} key="nonContainer">
+          <FoldPanel isShow={activeKey === 'nonContainer'}
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={NON_CONTAINER_CATEGORY}
                      searchValues={ALL_NON_CONTAINER_COMPONENT_NAMES}
