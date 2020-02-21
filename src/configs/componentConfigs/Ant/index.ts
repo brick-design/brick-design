@@ -44,7 +44,7 @@ import Dropdown from './Dropdown';
 import PageHeader from './PageHeader';
 import Steps from './Steps';
 import Select from './Select';
-
+import Drawer from './Drawer'
 export default {
   ...AutoComplete,
   ...Anchor,
@@ -64,6 +64,7 @@ export default {
   ...Collapse,
   ...DatePicker,
   Divider,
+  Drawer,
   ...Dropdown,
   ...Form,
   Icon,

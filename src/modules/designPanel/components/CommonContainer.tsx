@@ -13,7 +13,7 @@ import {
   OriginalComponents,
 } from '@/configs';
 import {message} from 'antd'
-import { formatSpecialProps, getPath, reduxConnect } from '@/utils';
+import { filterProps, formatSpecialProps, getPath, reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models'
 import styles from '../style.less';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
@@ -164,6 +164,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       /**收集当前节点的key*/
       resultDomTreeKeys.push(key);
 
+      const handleProps=filterProps(props)||{}
       /** 根据组件类型处理属性 */
       const propsResult = ALL_CONTAINER_COMPONENT_NAMES.includes(componentName) ? {
         key,
@@ -173,10 +174,10 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         componentConfig: node,
         index,
         domTreeKeys: resultDomTreeKeys,
-        ...props  //必须在使用否则类似tabsPanel的tab属性不起作用
+        ...handleProps  //必须在使用否则类似tabsPanel的tab属性不起作用
       } : {
         key,
-        ...props,
+        ...handleProps,
         className:this.handlePropsClassName(isSelected,isHovered,className,animateClass),
         draggable:true,
         onClick:(e:Event) => this.changeSelectedStatus( e, node, resultDomTreeKeys,resultPath, parentPath),
@@ -318,6 +319,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     /** 为选中组件添加id使图片生产工具可以找到要生成图片的节点 */
     isSelected && (propsResult.id = 'select-img');
     this.requiredProp&&(defaultSelectedProp=this.requiredProp)
+
     return{
       ...formatSpecialProps(propsResult, merge({},propsConfig,addPropsConfig)),
       onClick: (e:Event) => this.changeSelectedStatus(e, componentConfig, domTreeKeys,path, parentPath,  defaultSelectedProp),
@@ -330,6 +332,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
 
   render() {
     const {containerName}=this.props
+
     return (
       createElement(get(OriginalComponents, containerName, containerName), this.handleProps())
     );
