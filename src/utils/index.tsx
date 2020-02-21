@@ -254,3 +254,17 @@ export const handleRequiredHasChild = (selectedComponentInfo: SelectedComponentI
  * @param nextProps
  */
 export const propsAreEqual=(prevProps:any,nextProps:any)=>prevProps.value===nextProps.value
+
+/**
+ * 处理父级属性与组件属性的异同
+ */
+export const diffProps=(restProps:any,props:any)=>{
+  each(restProps,(v,k)=>{
+    if(!isEqual(props[k],v)){
+      props[k]=v
+    }
+  })
+
+  return props
+
+}

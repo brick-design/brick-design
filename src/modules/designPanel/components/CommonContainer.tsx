@@ -13,7 +13,7 @@ import {
   OriginalComponents,
 } from '@/configs';
 import {message} from 'antd'
-import { filterProps, formatSpecialProps, getPath, reduxConnect } from '@/utils';
+import { diffProps, filterProps, formatSpecialProps, getPath, reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models'
 import styles from '../style.less';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
@@ -260,7 +260,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     } = this.props;
     const  { key, componentName, props, childNodes,addPropsConfig }=componentConfig
     this.requiredProp=undefined;
-    const propsResult = cloneDeep(props);
+    const propsResult = diffProps(rest,cloneDeep(props));
     const { animateClass, className } = propsResult;
     const { mirrorModalField, nodePropsConfig, propsConfig} = get(AllComponentConfigs, componentName, {});
     /** 收集当前子组件所属页面组件树分支中的位置顺序 目的是与页面结构模块关联，精准展开并定位到选中的节点 */
@@ -326,7 +326,6 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       onMouseOver: (e:Event) => this.onMouseOver(e, key),
       onDragEnter:(e:Event) => this.getDropTargetInfo(e,path, componentConfig,defaultSelectedProp),
       onDragStart:(e:Event)=>this.onDragStart(e,path,componentConfig,parentPath),
-      ...rest  //必须放在最后边
     }
   }
 
