@@ -10,9 +10,12 @@
     "type": "git",
     "url": "https://github.com/anye931123/react-visual-editor"
   },
+  "homepage": "https://anye931123.github.io/react-visual-editor",
   "scripts": {
     "dev": "umi dev",
-    "build": "umi build"
+    "build": "umi build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "animate.css": "^3.7.2",

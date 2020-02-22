@@ -17,9 +17,13 @@
 ## Usage
 
 ```sh
+// 下载项目单独运行
 git clone https://github.com/anye931123/react-visual-editor.git
 npm install 
 npm run dev
+
+// umi项目可通过添加block方式添加此项目
+umi block add https://github.com/anye931123/react-visual-editor
 ```
 ## SNAPSHOT
 
