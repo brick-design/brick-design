@@ -159,6 +159,9 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   saveComponentsInfo = () => {
     const { dispatch } = this.props;
+    dispatch!({
+      type:ACTION_TYPES.submitConfigs,
+    })
 
   };
 

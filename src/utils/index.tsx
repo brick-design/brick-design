@@ -17,6 +17,7 @@ import CommonContainer from '@/modules/designPanel/components/CommonContainer';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { CategoryType } from '@/types/CategoryType';
+import { namespace } from '@/models';
 
 interface RenderPath {
   path?: string,
@@ -48,9 +49,9 @@ export function getPath({ path, index, isContainer }: RenderPath) {
  * @returns {Function}
  */
 export function reduxConnect(props?: string[], options?: object) {
-  return connect(({ BLOCK_NAME_CAMEL_CASE }: any) => {
+  return connect((state: any) => {
       const resultProps: any = {};
-      each(props, (prop) => resultProps[prop] = BLOCK_NAME_CAMEL_CASE[prop]);
+      each(props, (prop) => resultProps[prop] = state[namespace][prop]);
       return resultProps;
     }, undefined, undefined, { ...options },
   );

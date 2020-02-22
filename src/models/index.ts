@@ -69,7 +69,7 @@ const DEFAULT_LAYOUT :VirtualDOMType = {
  * 命名空间
  * @type {string}
  */
-const namespace='BLOCK_NAME_CAMEL_CASE'
+export const namespace='BLOCK_NAME_CAMEL_CASE'
 
 /**
  * actions
@@ -117,10 +117,9 @@ const Model:ModelType= {
   },
   effects: {
     * submitConfigs({ payload }, { select }) {
-      const componentConfigs = yield select(state => get(state, 'REACT_EDITOR.componentConfigs'));
+      const componentConfigs = yield select(state => get(state, `${namespace}.componentConfigs`));
 
       const { pageCodes, styleSheetCodes } = generatePageCode(componentConfigs);
-      let res = '';
 
       // if(res&&res.id){
       //   message.success('页面配置更新成功！！');

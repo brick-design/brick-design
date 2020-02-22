@@ -75,22 +75,31 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
   }
 
   componentDidMount() {
-    const { componentConfig: { key }, newAddKey } = this.props;
-    if (key === newAddKey) {      // 新添加组件默认选中
+    const { componentConfig: { key }, newAddKey,selectedComponentInfo } = this.props;
+    const selectedKey=get(selectedComponentInfo,'selectedKey')
+    // 新添加组件默认选中,选中dom拖拽到其他容器中时更改选中信息
+    if (key === newAddKey||selectedKey===key) {
       this.dispatchData(ACTION_TYPES.selectComponent);
     }
   }
 
   componentDidUpdate(prevProps:SortItemPropsType, prevState:SortItemStateType) {
-    const { selectedComponentInfo: prevSelectedComponentInfo , path: prevPath ,componentConfig:{childNodes:prevChildNodes}} = prevProps;
+    const { selectedComponentInfo: prevSelectedComponentInfo , path: prevPath ,index:prevIndex,componentConfig:{childNodes:prevChildNodes}} = prevProps;
     const prevSelectedKey=get(prevSelectedComponentInfo,'selectedKey')
-    const { selectedComponentInfo, path, componentConfig: { key,childNodes } } = this.props;
+    const { selectedComponentInfo, path,index, componentConfig: { key,childNodes } } = this.props;
     const selectedKey=get(selectedComponentInfo,'selectedKey')
-    if(childNodes&&prevChildNodes!.length===0&&childNodes.length>0) return this.setState({
+    if(childNodes&&prevChildNodes!.length===0&&childNodes.length>0) this.setState({
       isUnfold:true
     })
-     if (selectedKey && selectedKey === prevSelectedKey && path !== prevPath && selectedKey === key) {
-      this.dispatchData(ACTION_TYPES.selectComponent);
+    const prevPosition=getPath({path:prevPath,index:prevIndex})
+    const currPosition=getPath({path,index})
+
+    /**
+     * 选中的dom更改顺序时更改选中信息
+     */
+    if (selectedKey === prevSelectedKey && currPosition !== prevPosition && selectedKey === key) {
+
+       this.dispatchData(ACTION_TYPES.selectComponent);
     }
 
 
