@@ -7,16 +7,16 @@ const UNITS = [
 ];
 
 interface NumberComponentStateType {
-  number:number,
+  number?:number,
   unit:string,
 }
 const formatValue = (value:string, units:string[], hasUnit:boolean) => {
-  if (!value) return {unit:'px'};
+  if (!value) return {number:undefined,unit:'px'};
   if (hasUnit) {
     for (const unit of units) {
       if (value.toString().indexOf(unit) > -1) {
         const tempValue = value.split(unit);
-        return { number: tempValue[0], unit };
+        return { number: tempValue[0]||undefined, unit };
       }
     }
   } else {
@@ -30,7 +30,7 @@ interface NumberComponentPropsType {
   numberSpan:number,
   unitSpan:number,
   value:string,
-  onChange:(value:string|number)=>any,
+  onChange:(value:any)=>any,
   size?:'large' | 'small' | 'default',
   numberDisabled:boolean
 }
@@ -97,7 +97,7 @@ export default class NumberComponent extends Component<NumberComponentPropsType,
     const { onChange, hasUnit } = this.props;
     const { unit, number } = this.state;
     const outputValue = hasUnit ? `${number}${unit}` : number;
-    onChange && onChange(outputValue);
+    onChange && onChange(number&&outputValue);
   };
 
   render() {

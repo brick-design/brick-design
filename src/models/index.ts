@@ -26,6 +26,7 @@ import {
   SelectedComponentInfoType,
   VirtualDOMType,
 } from '@/types/ModelType';
+import defaultData from '../../data'
 
 const handleComponentInfo=(payload:any)=> {
   const { propName, componentConfig } = payload;
@@ -103,7 +104,7 @@ export const ACTION_TYPES:{[propName: string]: string}={
 const Model:ModelType= {
   namespace,
   state: {
-    componentConfigs: [DEFAULT_LAYOUT], // 所有组件信息
+    componentConfigs: defaultData, // 所有组件信息
     selectedComponentInfo: {}, // 选中组件的信息
     propsSetting: {},  // 属性设置暂存属性数据
     styleSetting: {},
@@ -118,7 +119,6 @@ const Model:ModelType= {
   effects: {
     * submitConfigs({ payload }, { select }) {
       const componentConfigs = yield select(state => get(state, `${namespace}.componentConfigs`));
-
       const { pageCodes, styleSheetCodes } = generatePageCode(componentConfigs);
 
       // if(res&&res.id){
