@@ -58,8 +58,8 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
     return (<SortItem domTreeKeys={[...domTreeKeys, key]}
                       isFold={isFold}
                       componentConfig={componentConfig}
-                      index={index}
-                      path={path}
+                      path={getPath({path,index})}
+                      parentPath={getPath({path,isContainer:true})}
                       childNodesRule={childNodesRule}
                       key={key}/>);
   };

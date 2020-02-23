@@ -34,8 +34,8 @@ interface SortItemPropsType {
   hoverKey?:string,
   isFold?:boolean,
   path?:string,
+  parentPath?:string,
   propPath?:string,
-  index:string|number,
   childNodesRule:string[]
 }
 
@@ -84,20 +84,19 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
   }
 
   componentDidUpdate(prevProps:SortItemPropsType, prevState:SortItemStateType) {
-    const { selectedComponentInfo: prevSelectedComponentInfo , path: prevPath ,index:prevIndex,componentConfig:{childNodes:prevChildNodes}} = prevProps;
+    const { selectedComponentInfo: prevSelectedComponentInfo , path: prevPath ,componentConfig:{childNodes:prevChildNodes}} = prevProps;
     const prevSelectedKey=get(prevSelectedComponentInfo,'selectedKey')
-    const { selectedComponentInfo, path,index, componentConfig: { key,childNodes } } = this.props;
+    const { selectedComponentInfo, path, componentConfig: { key,childNodes } } = this.props;
     const selectedKey=get(selectedComponentInfo,'selectedKey')
     if(childNodes&&prevChildNodes!.length===0&&childNodes.length>0) this.setState({
       isUnfold:true
     })
-    const prevPosition=getPath({path:prevPath,index:prevIndex})
-    const currPosition=getPath({path,index})
+
 
     /**
      * 选中的dom更改顺序时更改选中信息
      */
-    if (selectedKey === prevSelectedKey && currPosition !== prevPosition && selectedKey === key) {
+    if (selectedKey === prevSelectedKey && prevPath !== path && selectedKey === key) {
 
        this.dispatchData(ACTION_TYPES.selectComponent);
     }
@@ -128,19 +127,18 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
   };
 
   dispatchData = (actionType:string) => {
-    const { componentConfig, componentConfig: { propName,isRequired,childNodes }, domTreeKeys, path, dispatch, index } = this.props;
+    const { componentConfig,parentPath, componentConfig: { propName,isRequired,childNodes }, domTreeKeys, path, dispatch } = this.props;
     let { propPath } = this.props;
-    let newPath = getPath({ path, index });
     if (this.propName) {
-      propPath = `${getPath({ path: newPath, isContainer: true })}.${this.propName}`;
+      propPath = `${path}.${this.propName}`;
     }
     dispatch!({
       type: actionType,
       payload: {
         propName: propName || this.propName,
         propPath,
-        path: newPath,
-        parentPath: getPath({ path, isContainer: true }),
+        path,
+        parentPath,
         componentConfig,
         domTreeKeys,
         isRequiredHasChild:isRequired&&isEmpty(childNodes)
@@ -246,21 +244,18 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
   renderSortTree = (childNodes:TreeNodeType[]|PropsNodeType, isOnlyNode?:boolean) => {
     const {
       path,
-      index,
       propPath,
       dispatch,
       isFold,
-      selectedComponentInfo,
       componentConfig,
       componentConfig: { key, componentName, parentName, propName },
       domTreeKeys = [],
-      newAddKey,
-      hoverKey,
       childNodesRule,
+      parentPath
     } = this.props;
     const { isUnfold } = this.state;
     const currentName = parentName ? `${parentName}.${propName}` : componentName;
-    const newPath = propPath || getPath({ path, index });
+    const newPath = propPath || path;
     if (isArray(childNodes)) {
       return (<SortTree
         isFold={!isUnfold}
@@ -293,19 +288,15 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
         tip,
         isRequired
       };
-      const propPath = `${getPath({ path, index })}.childNodes.${propName}`;
+      const propPath = `${path}.childNodes.${propName}`;
       return <SortItem
         isFold={isFold}
         componentConfig={newComponentConfig}
-        selectedComponentInfo={selectedComponentInfo}
         path={path}
-        index={index}
+        parentPath={parentPath}
         propPath={propPath}
         key={propName}
-        newAddKey={newAddKey}
-        hoverKey={hoverKey}
         domTreeKeys={[...domTreeKeys, propKey]}
-        dispatch={dispatch}
         childNodesRule={childNodesRule}
       />;
     });
@@ -326,12 +317,11 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
       componentConfig: { childNodes, key, componentName, parentName, propName, isOnlyNode },
       path,
       propPath,
-      index,
       selectedComponentInfo,
       dispatch,
       domTreeKeys,
     } = this.props;
-    const newPath = propPath || getPath({ path, index });
+    const newPath = propPath || path;
     const selectedKey=get(selectedComponentInfo,'selectedKey')
     const { isUnfold } = this.state;
     this.isSelected = selectedKey && !parentName ? selectedKey.includes(key) : selectedKey === key;
