@@ -46,6 +46,16 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     }
   }
 
+ componentDidUpdate(prevProps: Readonly<CommonContainerPropsType>, prevState: Readonly<any>) {
+    const {componentConfig:{key}}=this.props
+   const {isSelected}=this.selectedStatus(key)
+  if(!isSelected&&this.requiredProp){
+    const {componentConfig,domTreeKeys,path,parentPath}=this.props
+    this.changeSelectedStatus(null, componentConfig, domTreeKeys,path, parentPath,  this.requiredProp)
+  }
+
+ }
+
   private requiredProp?:string
   /**
    * 发送action
