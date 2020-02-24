@@ -8,6 +8,22 @@
   border: 1px dashed springgreen !important;
 }
 
+.mobile {
+  position: relative;
+  width: 405px;
+  height: 100%;
+  transition:width 700ms;
+  overflow: auto;
+  :global {
+    .ant-modal-mask {
+      position: absolute !important;
+    }
+
+    .ant-modal-wrap {
+      position: absolute !important;
+    }
+  }
+}
 .dnd-container {
   width: 100%;
   height: 100%;
