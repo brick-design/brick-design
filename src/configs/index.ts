@@ -1,39 +1,23 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
 import * as Ants from 'antd/es';
-import {
-  flattenDeepArray,
-  generateContainers,
-} from '@/utils';
-export {default as AllComponentConfigs}from './componentConfigs';
+import { ConfigType } from '@/types/ConfigTypes';
+import AllComponentConfigs from './componentConfigs';
 
 /**
  * 原始组件集
  */
-export const OriginalComponents = Ants;
-
-
-/**
- * 所有容器组件名字
- * @type {string[]}
- */
-export const ALL_CONTAINER_COMPONENT_NAMES = [...flattenDeepArray(reactContainers), ...flattenDeepArray(htmlContainers)];
-
-/**
- * 所有非容器组件名字
- * @type {*[]}
- */
-export const ALL_NON_CONTAINER_COMPONENT_NAMES = [...flattenDeepArray(reactNonContainers), ...flattenDeepArray(htmlNonContainers)];
+const OriginalComponents = Ants;
 
 /**
  * 容器组件分类
  */
-export const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
+const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
 /**
  * 非容器组件分类
  * @type {{Input, InputNumber, Slider, Checkbox, Rate, Radio, Icon, Typography}}
  */
-export const NON_CONTAINER_CATEGORY = { ...reactNonContainers,...htmlNonContainers };
+const NON_CONTAINER_CATEGORY = { ...reactNonContainers,...htmlNonContainers };
 
 /**
  * 属性节点不可为空的组件
@@ -44,10 +28,14 @@ const propsNodeNonemptyComponents = [
   'Select'
 ];
 
-/**
- * 设计面板可用的所有组件
- */
-export const oAllComponents = {
-  ...OriginalComponents,
-  ...generateContainers(ALL_CONTAINER_COMPONENT_NAMES, propsNodeNonemptyComponents),
-};
+
+
+const config:ConfigType={
+  OriginalComponents,
+  AllComponentConfigs,
+  CONTAINER_CATEGORY,
+  NON_CONTAINER_CATEGORY,
+  propsNodeNonemptyComponents
+}
+
+export default config

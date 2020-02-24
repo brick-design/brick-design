@@ -5,7 +5,7 @@ import styles from './index.less';
 import SortItem, { TreeNodeType } from './SortItem';
 import { getPath } from '@/utils';
 import get from 'lodash/get';
-import { AllComponentConfigs } from '@/configs';
+import config from '@/configs';
 import {ACTION_TYPES} from '@/models'
 import {Dispatch} from 'redux'
 import { VirtualDOMType } from '@/types/ModelType';
@@ -52,15 +52,13 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
    */
   renderSortItems = (componentConfig:TreeNodeType, index:number) => {
     const { path, isFold, domTreeKeys = [] } = this.props;
-    const { key, componentName } = componentConfig;
-    const { childNodesRule } = get(AllComponentConfigs, componentName, {});
+    const { key } = componentConfig;
 
     return (<SortItem domTreeKeys={[...domTreeKeys, key]}
                       isFold={isFold}
                       componentConfig={componentConfig}
                       path={getPath({path,index})}
                       parentPath={getPath({path,isContainer:true})}
-                      childNodesRule={childNodesRule}
                       key={key}/>);
   };
 

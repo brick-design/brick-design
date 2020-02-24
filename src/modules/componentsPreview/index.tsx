@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { Tabs } from 'antd';
-import { reduxConnect } from '@/utils';
-import {
-  ALL_CONTAINER_COMPONENT_NAMES,
-  ALL_NON_CONTAINER_COMPONENT_NAMES,
-  CONTAINER_CATEGORY,
-  NON_CONTAINER_CATEGORY,
-} from '@/configs';
+import { flattenDeepArray, reduxConnect } from '@/utils';
+import config from '@/configs';
 import FoldPanel from './components/foldPanel';
 import styles from './index.less';
 import TemplatePanel from './components/templatePanel';
@@ -49,15 +44,15 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
         <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.container'})} key="container">
           <FoldPanel isShow={activeKey === 'container'}
                      selectedComponentInfo={selectedComponentInfo!}
-                     componentsCategory={CONTAINER_CATEGORY}
-                     searchValues={ALL_CONTAINER_COMPONENT_NAMES}
+                     componentsCategory={config.CONTAINER_CATEGORY}
+                     searchValues={flattenDeepArray(config.CONTAINER_CATEGORY)}
           />
         </TabPane>
         <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.nonContainer'})} key="nonContainer">
           <FoldPanel isShow={activeKey === 'nonContainer'}
                      selectedComponentInfo={selectedComponentInfo!}
-                     componentsCategory={NON_CONTAINER_CATEGORY}
-                     searchValues={ALL_NON_CONTAINER_COMPONENT_NAMES}
+                     componentsCategory={config.NON_CONTAINER_CATEGORY}
+                     searchValues={flattenDeepArray(config.NON_CONTAINER_CATEGORY)}
 
           />
         </TabPane>

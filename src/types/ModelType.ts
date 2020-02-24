@@ -58,8 +58,8 @@ export interface DropTargetInfoType {
   isContainer:boolean,
   propPath:string,
   path:string,
-  isOnlyNode:boolean,
-  childNodesRule:string[],
+  isOnlyNode?:boolean,
+  childNodesRule?:string[],
   componentName:string,
   propName:string
 }

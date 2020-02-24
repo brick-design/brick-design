@@ -1,3 +1,5 @@
+import { CategoryType } from '@/types/CategoryType';
+import { ComponentConfigType } from '@/types/ComponentConfigType';
 
 export enum PROPS_TYPES {
   object= 'object',
@@ -21,3 +23,11 @@ export enum CSS_TYPE{
   enum= 'enum',
   number= 'number',
 };
+
+export interface ConfigType {
+  OriginalComponents:any, //所有的React原始组件
+  CONTAINER_CATEGORY:CategoryType,  //容器组件分类
+  NON_CONTAINER_CATEGORY:CategoryType, //非容器组件分类
+  AllComponentConfigs:{[componentName:string]:ComponentConfigType},
+  propsNodeNonemptyComponents:string[]
+}

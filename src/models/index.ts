@@ -9,13 +9,13 @@ import merge from 'lodash/merge';
 import { message } from 'antd';
 import uuid from 'uuid';
 import {
-  copyConfig,
+  copyConfig, flattenDeepArray,
   generateNewKey,
   getFieldInPropsPath,
   getNewSortChildNodes,
   getPath, handleRequiredHasChild,
 } from '@/utils';
-import { ALL_CONTAINER_COMPONENT_NAMES, AllComponentConfigs } from '@/configs';
+import configs from '@/configs';
 
 import { generatePageCode } from '@/modules/previewAndCode/utils';
 import { addTemplates, deleteTemplate, getTemplates, searchTemplate } from '@/service';
@@ -34,20 +34,17 @@ const handleComponentInfo=(payload:any)=> {
   let { componentName} = componentConfig;
   componentName = parentName || componentName;
   const isContainer = !!childNodes
-  let { childNodesRule, nodePropsConfig} = get(AllComponentConfigs, componentName, {});
+  let { nodePropsConfig} = get(configs.AllComponentConfigs, componentName),childNodesRule,isOnlyNode;
   if(nodePropsConfig){
     if(propName){
-      childNodesRule = get(nodePropsConfig, `${propName}.childNodesRule`)
+      ({childNodesRule,isOnlyNode} = get(nodePropsConfig, propName))
     }else {
       each(nodePropsConfig,(config)=>{
-        const{childNodesRule:propsChildNodesRule}=config
-        propsChildNodesRule&&(childNodesRule=propsChildNodesRule)
-
+        ({childNodesRule,isOnlyNode}=config)
       })
     }
 
   }
-  const isOnlyNode:boolean=get(nodePropsConfig,`${propName}.isOnlyNode`)
   return {
     isContainer,
     isOnlyNode,
@@ -66,6 +63,8 @@ const DEFAULT_LAYOUT :VirtualDOMType = {
   props: { style: {height:'100%'} },
   childNodes: [],
 };
+
+const ALL_CONTAINER_COMPONENT_NAMES=flattenDeepArray(configs.CONTAINER_CATEGORY)
 /**
  * 命名空间
  * @type {string}
@@ -218,7 +217,7 @@ const Model:ModelType= {
       /**
        * 获取当前拖拽组件的父组件规则，以及属性节点配置信息
        */
-      const { nodePropsConfig, parentNodesRule } = get(AllComponentConfigs, info.componentName, {});
+      const { nodePropsConfig, parentNodesRule } = get(configs.AllComponentConfigs, info.componentName);
       /**
        * 父组件规则限制，减少不必要的组件错误嵌套
        */
@@ -363,7 +362,7 @@ const Model:ModelType= {
       const {propPath, path, propName, componentConfig, parentPath, domTreeKeys,isRequiredHasChild } = payload;
       const { props, addPropsConfig={},key } = componentConfig;
       const {isContainer, isOnlyNode, childNodesRule, componentName}=handleComponentInfo(payload)
-      let { propsConfig} = get(AllComponentConfigs, componentName, {});
+      let { propsConfig} = get(configs.AllComponentConfigs, componentName);
       const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
       undo.push({ selectedComponentInfo, propsSetting });
       let selectedKey = key;

@@ -7,7 +7,7 @@ import merge from 'lodash/merge';
 import each from 'lodash/each';
 import classNames from 'classnames';
 import get from 'lodash/get';
-import { AllComponentConfigs, OriginalComponents } from '@/configs';
+import config from '@/configs';
 import { formatSpecialProps } from '@/utils';
 import { VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
@@ -31,7 +31,7 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
 
     const resultComponents = map(childNodesArr, childNode => {
       const { componentName, props, addPropsConfig, childNodes, key } = childNode;
-      const { nodePropsConfig, mirrorModalField, propsConfig } = get(AllComponentConfigs, componentName,{});
+      const { nodePropsConfig, mirrorModalField, propsConfig } = get(config.AllComponentConfigs, componentName);
       const cloneProps = cloneDeep(props);
       if (!isEmpty(childNodes)) {
         if (!nodePropsConfig) {
@@ -53,7 +53,8 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
       cloneProps.className = classNames(className, animateClass);
       cloneProps.key = key;
       if (mirrorModalField) {
-        const {displayPropName, mounted: { propName, type }, style} = mirrorModalField;
+        const {displayPropName, mounted, style} = mirrorModalField;
+        const  { propName, type }=mounted
         const mountedNode = document.getElementById('preview-container');
         cloneProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
         cloneProps[displayPropName] = this.state.visible;
@@ -61,7 +62,7 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
         cloneProps.zIndex = 2000;
         cloneProps.onCancel = this.controlModal;
       }
-      return createElement(get(OriginalComponents, componentName, componentName), formatSpecialProps(cloneProps, merge({}, propsConfig, addPropsConfig)));
+      return createElement(get(config.OriginalComponents, componentName, componentName), formatSpecialProps(cloneProps, merge({}, propsConfig, addPropsConfig)));
     });
 
     if (onlyNode) return resultComponents[0];

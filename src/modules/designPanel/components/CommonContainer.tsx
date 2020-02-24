@@ -6,20 +6,16 @@ import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
 import classNames from 'classnames';
-import {
-  ALL_CONTAINER_COMPONENT_NAMES,
-  AllComponentConfigs,
-  oAllComponents,
-  OriginalComponents,
-} from '@/configs';
+import config from '@/configs';
 import {message} from 'antd'
-import { diffProps, filterProps, formatSpecialProps, getPath, reduxConnect } from '@/utils';
+import { diffProps, filterProps,  formatSpecialProps, getPath, reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models'
 import styles from '../style.less';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch} from 'redux'
 import { MirrorModalFieldType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ALL_CONTAINER_COMPONENT_NAMES, oAllComponents } from '@/modules/designPanel/confg';
 
 interface CommonContainerPropsType {
   dispatch:Dispatch,
@@ -33,6 +29,10 @@ interface CommonContainerPropsType {
   path:string
 
 }
+
+/**
+ * 所有的容器组件名称
+ */
 
 @reduxConnect(['selectedComponentInfo', 'hoverKey'])
 class CommonContainer extends Component<CommonContainerPropsType,any> {
@@ -149,7 +149,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       domTreeKeys = [] } = this.props;
     const resultChildNodes = map(childNodes, (node, index) => {
       const { componentName, props, key } = node;
-      const { propsConfig } = get(AllComponentConfigs, componentName, {});
+      const { propsConfig } = get(config.AllComponentConfigs, componentName);
       const resultPath = getPath({ path, index });
       /** 获取当前子组件在页面配置信息中位置路径 */
       const parentPath = getPath({ path, isContainer: true });
@@ -186,7 +186,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
         onDragStart:(e:Event)=>this.onDragStart(e,path,node,parentPath)
       };
 
-      return createElement(get(oAllComponents, componentName)||get(OriginalComponents,componentName,componentName), formatSpecialProps(propsResult, propsConfig));
+      return createElement(get(oAllComponents, componentName)||get(config.OriginalComponents,componentName,componentName), formatSpecialProps(propsResult, propsConfig));
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
@@ -262,7 +262,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     this.requiredProp=undefined;
     const propsResult = diffProps(rest,cloneDeep(props));
     const { animateClass, className } = propsResult;
-    const { mirrorModalField, nodePropsConfig, propsConfig} = get(AllComponentConfigs, componentName, {});
+    const { mirrorModalField, nodePropsConfig, propsConfig} = get(config.AllComponentConfigs, componentName);
     /** 收集当前子组件所属页面组件树分支中的位置顺序 目的是与页面结构模块关联，精准展开并定位到选中的节点 */
     const{isHovered,isSelected}=this.selectedStatus(key)
     propsResult.className =this.handlePropsClassName(isSelected,isHovered,className,animateClass)
@@ -333,7 +333,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     const {containerName}=this.props
 
     return (
-      createElement(get(OriginalComponents, containerName, containerName), this.handleProps())
+      createElement(get(config.OriginalComponents, containerName, containerName), this.handleProps())
     );
   }
 }

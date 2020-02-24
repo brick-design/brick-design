@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react';
 import { reduxConnect } from '@/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { oAllComponents } from '@/configs';
 import {ACTION_TYPES} from '@/models'
 import style from './style.less';
 import {Dispatch} from 'redux'
 import { VirtualDOMType } from '@/types/ModelType';
+import { oAllComponents } from '@/modules/designPanel/confg';
 interface DesignPanelPropsType {
   dispatch?:Dispatch,
   componentConfigs?:VirtualDOMType[],

@@ -10,7 +10,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
 import merge from 'lodash/merge';
-import { AllComponentConfigs } from '@/configs';
+import config from '@/configs';
 import { PropsConfigType } from '@/types/ComponentConfigType';
 import { VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
@@ -112,7 +112,7 @@ const handleProps = (props:any, propsConfig:PropsConfigType, functionMap:any) =>
  */
 const analysisProps = (node:VirtualDOMType, componentNames:Set<any>, functionMap:any, styleSheet:any) => {
   const { props, addPropsConfig, componentName } = node;
-  const { propsConfig } = get(AllComponentConfigs, componentName);
+  const { propsConfig } = get(config.AllComponentConfigs, componentName);
   let propsCodes = '';
 
   const { style={}, className = [], animateClass } = props;
@@ -181,7 +181,7 @@ function renderElementToJSX(childNodesArr:VirtualDOMType[], indent = '', compone
 
   each(childNodesArr, (node,index) => {
     const { componentName, childNodes,props } = node;
-    const { nodePropsConfig } = get(AllComponentConfigs, componentName);
+    const { nodePropsConfig } = get(config.AllComponentConfigs, componentName);
     let propsCodes = '', childrenNodes:VirtualDOMType[]=[], childrenNodesJSX = '';
     /**
      * 收集组件名称

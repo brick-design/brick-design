@@ -40,7 +40,7 @@ export interface NodePropsConfigType {
 
 export interface MirrorModalFieldType {
   displayPropName:string,
-  mounted?:{
+  mounted:{
     propName:string,
     type:PROPS_TYPES.function|PROPS_TYPES.string
   }

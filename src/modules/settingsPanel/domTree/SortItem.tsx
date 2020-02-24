@@ -7,7 +7,7 @@ import isArray from 'lodash/isArray';
 import SortTree from './SortTree';
 import styles from './index.less';
 import { getPath, reduxConnect } from '@/utils';
-import { AllComponentConfigs } from '@/configs';
+import config from '@/configs';
 import {ACTION_TYPES} from '@/models'
 import { PropsNodeType, SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch} from 'redux'
@@ -36,7 +36,7 @@ interface SortItemPropsType {
   path?:string,
   parentPath?:string,
   propPath?:string,
-  childNodesRule:string[]
+  childNodesRule?:string[]
 }
 
 interface SortItemStateType {
@@ -269,13 +269,13 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
       />);
     }
     this.propName = undefined;
-    const { nodePropsConfig } = get(AllComponentConfigs, componentName, {});
+    const { nodePropsConfig } = get(config.AllComponentConfigs, componentName);
     /**
      * 处理属性节点子组件
      */
     return map(childNodes, (propChildNode, propName) => {
       this.propName = propName;
-      const { childNodesRule,label,tip,isRequired } = nodePropsConfig[propName];
+      const { childNodesRule,label,tip,isRequired } = nodePropsConfig![propName];
       const propKey = `${key}${propName}`;
       const newComponentConfig = {
         ...componentConfig,
@@ -326,7 +326,7 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
     const { isUnfold } = this.state;
     this.isSelected = selectedKey && !parentName ? selectedKey.includes(key) : selectedKey === key;
     let sortTree = null;
-    const { parentNodesRule } = get(AllComponentConfigs, parentName || componentName, {});
+    const { parentNodesRule } = get(config.AllComponentConfigs, parentName || componentName);
     const currentName = parentName ? `${parentName}.${propName}` : componentName;
     if (!!childNodes) {
       sortTree = isEmpty(childNodes) ?

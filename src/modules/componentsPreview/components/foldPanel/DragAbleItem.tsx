@@ -1,5 +1,5 @@
 import React, { Component, createElement } from 'react';
-import { OriginalComponents } from '@/configs';
+import config from '@/configs';
 import styles from '../index.less';
 import get from 'lodash/get';
 import {ACTION_TYPES } from '@/models'
@@ -48,7 +48,7 @@ class DragAbleItem extends Component<DragAbleItemPropsType,any> {
     if(!defaultProps){
       return componentName
     }
-    return createElement(get(OriginalComponents, componentName, componentName), defaultProps);
+    return createElement(get(config.OriginalComponents, componentName, componentName), defaultProps);
   };
 
   onDragStart=()=>{

@@ -206,7 +206,7 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
           <Input.Search allowClear/>
         </AutoComplete>
         <div className={styles['fold-container']}>
-          {isEmpty(componentsCategory) ? <p>为找当前选中组件可拖拽的组件</p> :
+          {isEmpty(componentsCategory) ? <p style={{textAlign:'center'}}>为找当前选中组件可拖拽的组件</p> :
             <Collapse
               bordered={false}
               activeKey={openKeys}
