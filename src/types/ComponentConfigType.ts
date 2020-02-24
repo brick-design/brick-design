@@ -5,7 +5,7 @@ export interface PropsConfigType {
 }
 
 export interface PropInfoType {
-  label:string,
+  label:string,  //属性展示
   type:PROPS_TYPES|PROPS_TYPES[],
   tip?:string,
   childPropsConfig?:PropsConfigType|PropsConfigType[],
@@ -38,13 +38,16 @@ export interface NodePropsConfigType {
   },
 }
 
+/**
+ * 弹窗类组件配置显示映射
+ */
 export interface MirrorModalFieldType {
-  displayPropName:string,
-  mounted:{
-    propName:string,
-    type:PROPS_TYPES.function|PROPS_TYPES.string
+  displayPropName:string,  // 控制显示的属性字段（比如：Modal的visible）
+  mounted:{      // 挂载组件的配置信息
+    propName:string,  //挂载组件的属性的名 (比如Modal的getContainer)
+    type:PROPS_TYPES.function|PROPS_TYPES.string //挂载组件的属性的类型
   }
-  style?:any
+  style?:any // 需要修改样式才能挂载的情况（Drawer组件起默认样式为 position: 'fixed',无法挂载到设计面板上，需要改成 position: 'absolute'）
 
 }
 

@@ -34,9 +34,10 @@ umi block add https://github.com/anye931123/react-visual-editor
   |- components
   |- configs   //全局配置信息
      |- componentConfgs  //组件配置信息包括react和html的组件信息
-        |-Ant         //Antd组件配置信息
-        |-HTML    //html标签配置信息
+        |- Ant         //Antd组件配置信息
+        |- HTML    //html标签配置信息
      |- htmlCategory.ts   //html组件分类
+     |- index.ts    // 配置信息汇总
      |- reactCategory.ts   //react组件分类组件分类
   |- locales
   |- modules
@@ -47,8 +48,8 @@ umi block add https://github.com/anye931123/react-visual-editor
 ### types
 - CategoryType 组件分类数据结构定义
 - ComponentConfigType  组件信息属性结构定义
-- ConfigTypes   全局配置信息数据结构分类
-- ModelType   modal数据结构分类
+- ConfigTypes   全局配置信息数据结构定义
+- ModelType   model数据结构定义
 
 ### configs
 通过配置config可以实现拖拽组件库的替换，更改为你需要的组件库或者组件。具体配置如下
