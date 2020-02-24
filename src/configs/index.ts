@@ -19,15 +19,6 @@ const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
  */
 const NON_CONTAINER_CATEGORY = { ...reactNonContainers,...htmlNonContainers };
 
-/**
- * 属性节点不可为空的组件
- */
-const propsNodeNonemptyComponents = [
-  'Tabs',
-  'Dropdown',
-  'Select'
-];
-
 
 
 const config:ConfigType={
@@ -35,7 +26,6 @@ const config:ConfigType={
   AllComponentConfigs,
   CONTAINER_CATEGORY,
   NON_CONTAINER_CATEGORY,
-  propsNodeNonemptyComponents
 }
 
 export default config

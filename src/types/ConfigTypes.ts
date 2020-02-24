@@ -29,5 +29,4 @@ export interface ConfigType {
   CONTAINER_CATEGORY:CategoryType,  //容器组件分类
   NON_CONTAINER_CATEGORY:CategoryType, //非容器组件分类
   AllComponentConfigs:{[componentName:string]:ComponentConfigType},
-  propsNodeNonemptyComponents:string[]
 }

@@ -4,9 +4,10 @@ import { ComponentConfigType } from '@/types/ComponentConfigType';
 const Dropdown:ComponentConfigType={
   nodePropsConfig: {
     overlay:{
-      type: PROPS_TYPES.functionReactNode,
+      type: PROPS_TYPES.reactNode,
       childNodesRule: ['Menu'],
       isOnlyNode: true,
+      isRequired:true
     },
     children:{
       type: PROPS_TYPES.reactNode,

@@ -157,33 +157,13 @@ export function flattenDeepArray(data: CategoryType) {
   }));
 }
 
-
-/**
- * 处理容器组件 容器生成方法
- * @param componentName
- * @returns {Function}
- */
-export function handleContainers(componentName: string, propsNodeNonempty?: string[]) {
-  return (props: any) => {
-    const { componentConfig } = props;
-    if (propsNodeNonempty!.includes(componentName)) {
-      const childNodes = get(componentConfig, 'childNodes.children.childNodes') || get(componentConfig, 'childNodes');
-      if (isEmpty(childNodes)) {
-        return <div/>;
-      }
-    }
-    return <CommonContainer {...props} containerName={componentName}/>;
-
-  };
-}
-
 /**
  * 生成react组件容器
  */
-export function generateContainers(componentNames: string[], propsNodeNonempty?: string[]) {
+export function generateContainers(componentNames: string[]) {
   const components: any = {};
   each(componentNames, componentName => {
-    components[componentName] = handleContainers(componentName, propsNodeNonempty);
+    components[componentName] = (props:any)=><CommonContainer {...props} containerName={componentName}/>;
   });
   return components;
 }

@@ -58,7 +58,6 @@ umi block add https://github.com/anye931123/react-visual-editor
 - AllComponentConfigs 所有的组件配置信息
 - CONTAINER_CATEGORY 容器组件分类
 - NON_CONTAINER_CATEGORY 非容器组件分类
-- propsNodeNonemptyComponents  children子节点不可为空的组件，会做特殊处理，防止崩溃报错
 
 
 ## LICENSE

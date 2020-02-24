@@ -283,7 +283,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
          */
         let isMultiProps=  Object.keys(nodePropsConfig).length>1
         each(nodePropsConfig, (nodePropConfig, propName) => {
-          const { isOnlyNode, type,isRequired } = nodePropConfig;
+          const { isOnlyNode, type,isRequired,childNodesRule } = nodePropConfig;
           const childNodesPath=getPath({ path: propName, isContainer: true })||''
           let analysisChildNodes = get(childNodes,childNodesPath ,childNodes);
           let analysisPath = path;
@@ -291,6 +291,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
           defaultSelectedProp = propName;
           if (isEmpty(analysisChildNodes)) {
             if(isRequired){
+              propsResult[propName]=createElement(get(config.OriginalComponents,get(childNodesRule,0,''),'div'))
               return  this.requiredProp=propName
             }
             return

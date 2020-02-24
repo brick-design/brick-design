@@ -6,6 +6,6 @@ export const ALL_CONTAINER_COMPONENT_NAMES=flattenDeepArray(config.CONTAINER_CAT
 
 export const oAllComponents={
   ...config.OriginalComponents,
-  ...generateContainers(ALL_CONTAINER_COMPONENT_NAMES, config.propsNodeNonemptyComponents),
+  ...generateContainers(ALL_CONTAINER_COMPONENT_NAMES),
 
 }
