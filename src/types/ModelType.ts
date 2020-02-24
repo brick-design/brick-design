@@ -74,7 +74,8 @@ export interface StateType{
   newAddKey:null|string,
   hoverKey:null|string,
   dragData:DragDataType|null,
-  dropTargetInfo:null|DropTargetInfoType
+  dropTargetInfo:null|DropTargetInfoType,
+  isMobile:boolean
 
 }
 
@@ -112,6 +113,7 @@ export interface ModelType {
     clearHovered:Reducer,
     getDragData:Reducer,
     getDropTargetInfo:Reducer,
+    changePlatform:Reducer,
     undo:Reducer,
     redo:Reducer,
 

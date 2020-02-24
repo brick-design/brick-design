@@ -9,7 +9,8 @@ import { VirtualDOMType } from '@/types/ModelType';
 interface PreviewAndCodePropsType {
   visible:boolean,
   controlModal:()=>void,
-  componentConfigs:VirtualDOMType[]
+  componentConfigs:VirtualDOMType[],
+  isMobile?:boolean
 }
 export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
 
@@ -31,7 +32,7 @@ export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
 
 
   render() {
-    const { componentConfigs = [],visible } = this.props;
+    const { componentConfigs = [],visible,isMobile } = this.props;
     if(!visible) return null
     return (
       <>
@@ -41,7 +42,9 @@ export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
               defaultSize={{ width: '260px',height:'100%' }}>
               <Code  componentConfigs={componentConfigs} />
             </Resizable>
-              <Preview componentConfigs={componentConfigs}/>
+            <div className={styles['page-container']}>
+              <Preview isMobile={isMobile} componentConfigs={componentConfigs}/>
+            </div>
           </div>
       </>
     );

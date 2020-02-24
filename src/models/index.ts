@@ -74,7 +74,7 @@ export const namespace='BLOCK_NAME_CAMEL_CASE'
 /**
  * actions
  */
-export const ACTION_TYPES:{[propName: string]: string}={
+export const ACTION_TYPES={
   submitConfigs:`${namespace}/submitConfigs`,
   searchTemplate:`${namespace}/searchTemplate`,
   getTemplateList:`${namespace}/getTemplateList`,
@@ -98,7 +98,8 @@ export const ACTION_TYPES:{[propName: string]: string}={
   undo:`${namespace}/undo`,
   redo:`${namespace}/redo`,
   getDragData:`${namespace}/getDragData`,
-  getDropTargetInfo:`${namespace}/getDropTargetInfo`
+  getDropTargetInfo:`${namespace}/getDropTargetInfo`,
+  changePlatform:`${namespace}/changePlatform`
 }
 const Model:ModelType= {
   namespace,
@@ -113,7 +114,9 @@ const Model:ModelType= {
     newAddKey: null,
     hoverKey: null,
     dragData:null,
-    dropTargetInfo:null
+    dropTargetInfo:null,
+    isMobile:true
+
   },
   effects: {
     * submitConfigs({ payload }, { select }) {
@@ -633,6 +636,11 @@ const Model:ModelType= {
       }
     },
 
+    /**
+     * 获取放置组件的容器组件信息
+     * @param state
+     * @param payload
+     */
     getDropTargetInfo(state,{payload}){
       /**
        * 如果path为undefined说明当前组件不是容器组件
@@ -656,6 +664,20 @@ const Model:ModelType= {
           propName
         },
         hoverKey:key
+      }
+    },
+
+    /**
+     * 更改平台
+     * @param state
+     */
+    changePlatform(state){
+      const {isMobile}=state
+      return {
+        ...state,
+        isMobile:!isMobile,
+        redo:[],
+        undo:[]
       }
     },
     /**

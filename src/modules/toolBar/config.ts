@@ -1,3 +1,6 @@
+
+import SwitchPlatform from './component/SwitchPlatform';
+
 /**
  * 工具栏配置
  */
@@ -17,10 +20,10 @@ export default [{
     { title: 'preview', icon: 'eye', event: 'previewPage' },
     // { title: '导出代码', icon: 'export', event: 'outputFiles' },
     { title: 'generateTemplate', icon: 'block', event: 'generateTemplate' },
-
-
+    { title: 'generateTemplate', icon:SwitchPlatform},
   ],
-}, {
+},
+  {
   span: 8,
   style: { justifyContent: 'flex-end', paddingRight: '50px' },
   group: [

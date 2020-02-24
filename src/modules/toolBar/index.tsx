@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component,createElement } from 'react';
 import { Col, Modal, Row } from 'antd';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import concat from 'lodash/concat';
 import isEmpty from 'lodash/isEmpty';
+import isString from 'lodash/isString';
 import menus, {  ENABLED } from './config';
 import styles from './style.less';
 import {ACTION_TYPES} from '@/models';
@@ -27,6 +28,7 @@ interface ToolBarPropsType {
   undo?:any[],
   redo?:any[],
   styleSetting?:any,
+  isMobile?:boolean
 
 }
 
@@ -36,7 +38,7 @@ interface ToolBarStateType {
   isShowTemplate: boolean,
 }
 
-@reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting'])
+@reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting','isMobile'])
 class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   constructor(props:ToolBarPropsType) {
@@ -186,11 +188,11 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   renderMenu = (config:any, key:string) => {
     const { title, icon, event } = config;
+    if(!isString(icon)) return createElement(icon,{key})
     const { enabled } = this.state;
     const disabledColor = '#A4A4A4';
     const enabledColor = '#000';
     const isEnabled = enabled.includes(title);
-
     return (
       <div
         style={{ color: isEnabled ? enabledColor : disabledColor }}
@@ -220,7 +222,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   render() {
     const { visible, isShowTemplate } = this.state;
-    const { componentConfigs } = this.props;
+    const { componentConfigs,isMobile } = this.props;
     const modalConfig = isShowTemplate ? {
       title: '生成模板',
       closable: true,
@@ -254,6 +256,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
             <PreviewAndCode componentConfigs={componentConfigs!}
                             controlModal={this.controlModal}
                             visible={visible}
+                            isMobile={isMobile}
             />}
         </Modal>
       </Row>

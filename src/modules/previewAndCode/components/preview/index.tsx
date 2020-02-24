@@ -13,7 +13,8 @@ import { VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
 interface PreviewPropsType {
-  componentConfigs:VirtualDOMType[]
+  componentConfigs:VirtualDOMType[],
+  isMobile?:boolean
 }
 interface PreviewStateType {
   visible:boolean
@@ -74,9 +75,9 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
   });
 
   render() {
-    const { componentConfigs } = this.props;
+    const { componentConfigs,isMobile } = this.props;
     return (
-      <div id='preview-container' className={styles['preview-container']}>
+      <div id='preview-container' className={isMobile?styles['preview-mobile']:styles['preview-container']}>
         {this.analysisPage(componentConfigs)}
       </div>);
   }

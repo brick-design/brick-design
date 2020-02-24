@@ -1,4 +1,4 @@
-
+@import "../../global";
 .container-select-border {
   border: 1px dashed red !important;
 }
@@ -11,8 +11,9 @@
 .dnd-container {
   width: 100%;
   height: 100%;
+  transition:width 700ms;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
 
   :global {
     .ant-modal-mask {

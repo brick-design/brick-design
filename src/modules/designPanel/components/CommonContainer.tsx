@@ -36,6 +36,7 @@ interface CommonContainerPropsType {
 
 @reduxConnect(['selectedComponentInfo', 'hoverKey'])
 class CommonContainer extends Component<CommonContainerPropsType,any> {
+
   private requiredProp?:string
   /**
    * 发送action

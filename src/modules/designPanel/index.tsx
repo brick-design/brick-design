@@ -10,9 +10,10 @@ import { oAllComponents } from '@/modules/designPanel/confg';
 interface DesignPanelPropsType {
   dispatch?:Dispatch,
   componentConfigs?:VirtualDOMType[],
+  isMobile?:boolean
 }
 
-@reduxConnect(['componentConfigs'])
+@reduxConnect(['componentConfigs','isMobile'])
 class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
 
   onMouseLeave = () => {
@@ -31,14 +32,13 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
 
   onDrop=()=>{
     const {dispatch}=this.props
-
     dispatch!({
       type: ACTION_TYPES.addComponent
     })
   }
 
   render() {
-    const { componentConfigs } = this.props;
+    const { componentConfigs,isMobile } = this.props;
     let FirstComponent = null;
     if (!isEmpty(componentConfigs)) {
       const {componentName, key } = componentConfigs![0];
@@ -49,7 +49,11 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
       };
       FirstComponent = React.createElement(get(oAllComponents, componentName), resultProps);
     }
-    return <div onMouseLeave={this.onMouseLeave} onDragOver={this.onDragOver}  onDrop={this.onDrop} id="dnd-container" className={style['dnd-container']}>
+    return <div onMouseLeave={this.onMouseLeave}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+                id="dnd-container"
+                className={isMobile?style.mobile:style['dnd-container']}>
       {FirstComponent}
     </div>;
   }
