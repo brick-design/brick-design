@@ -30,7 +30,6 @@ interface SortItemPropsType {
   selectedComponentInfo?:SelectedComponentInfoType,
   componentConfig:TreeNodeType,
   domTreeKeys:string[],
-  newAddKey?:string,
   hoverKey?:string,
   isFold?:boolean,
   path?:string,
@@ -43,7 +42,7 @@ interface SortItemStateType {
   isUnfold:boolean
 }
 
-@reduxConnect(['selectedComponentInfo', 'newAddKey', 'hoverKey'])
+@reduxConnect(['selectedComponentInfo', 'hoverKey'])
 class SortItem extends Component<SortItemPropsType,SortItemStateType> {
 
   propName?:string
@@ -52,10 +51,8 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
 
   constructor(props:SortItemPropsType) {
     super(props);
-    const { componentConfig: { key }, newAddKey ,domTreeKeys} = props;
-    const isUnfold = !!newAddKey && domTreeKeys.includes(key);
     this.state = {
-      isUnfold,
+      isUnfold:false,
     };
     this.isSelected=false;
 
@@ -75,10 +72,10 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
   }
 
   componentDidMount() {
-    const { componentConfig: { key }, newAddKey,selectedComponentInfo } = this.props;
+    const { componentConfig: { key },selectedComponentInfo } = this.props;
     const selectedKey=get(selectedComponentInfo,'selectedKey')
     // 新添加组件默认选中,选中dom拖拽到其他容器中时更改选中信息
-    if (key === newAddKey||selectedKey===key) {
+    if (selectedKey===key) {
       this.dispatchData(ACTION_TYPES.selectComponent);
     }
   }

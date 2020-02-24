@@ -111,7 +111,6 @@ const Model:ModelType= {
     undo: [],
     redo: [],
     templateInfos: [], // 复合组件
-    newAddKey: null,
     hoverKey: null,
     dragData:null,
     dropTargetInfo:null,
@@ -204,7 +203,7 @@ const Model:ModelType= {
 
       const componentConfigs = cloneDeep(prevComponentConfigs);
       const isTemplate = !isEmpty(templateData);
-      let newAddKey:any=null,info:VirtualDOMType;
+      let info:VirtualDOMType;
       if(dragParentPath){
         info=templateData!
       }else if(isTemplate){
@@ -240,21 +239,12 @@ const Model:ModelType= {
         if (isContainer) {
           const childNodes:VirtualDOMType[]|PropsNodeType={};
           // 获取该组件节点属性映射字段信息
-            let  requiredProps= null;
             const isMultiPropsNode= keys(nodePropsConfig).length > 1
-
             each(nodePropsConfig, (nodePropConfig, propName) => {
-              const {isRequired}=nodePropConfig
-              isRequired&&(requiredProps=propName);
               isMultiPropsNode&&(childNodes[propName] = { childNodes: []});
             });
             // 更改新添加组件的key为最后一个属性节点key此key目的为默认选中最后一个属性节点
-          if(isMultiPropsNode&&requiredProps){
-            newAddKey = `${info.key}${requiredProps}`;
 
-          }else if(requiredProps) {
-            newAddKey = info.key;
-          }
           info.childNodes = isEmpty(childNodes) ? [] : childNodes;
         }
       }
@@ -280,7 +270,6 @@ const Model:ModelType= {
         dropTargetInfo:null,
         undo,
         redo,
-        newAddKey:newAddKey,
       };
     },
 
@@ -355,7 +344,7 @@ const Model:ModelType= {
      * 选中组件
      * @param state
      * @param action
-     * @returns {{newAddKey: null, undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedComponentInfo: {selectedKey: *, path: *, domTreeKeys: *[], parentPath: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
+     * @returns {{ undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedComponentInfo: {selectedKey: *, path: *, domTreeKeys: *[], parentPath: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
      */
     selectComponent(state, {payload}) {
       const { undo, redo, selectedComponentInfo, propsSetting,componentConfigs } = state;
@@ -395,7 +384,6 @@ const Model:ModelType= {
         undo,
         redo,
         styleSetting: props.style,
-        newAddKey: null,
 
       };
     },

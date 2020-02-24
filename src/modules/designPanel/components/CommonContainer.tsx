@@ -7,6 +7,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge';
 import classNames from 'classnames';
 import config from '@/configs';
+import isArray from 'lodash/isArray';
 import {message} from 'antd'
 import { diffProps, filterProps,  formatSpecialProps, getPath, reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models'
@@ -37,6 +38,14 @@ interface CommonContainerPropsType {
 @reduxConnect(['selectedComponentInfo', 'hoverKey'])
 class CommonContainer extends Component<CommonContainerPropsType,any> {
 
+
+  componentDidMount() {
+    if(this.requiredProp){
+      const {componentConfig,domTreeKeys,path,parentPath}=this.props
+      this.changeSelectedStatus(null, componentConfig, domTreeKeys,path, parentPath,  this.requiredProp)
+    }
+  }
+
   private requiredProp?:string
   /**
    * 发送action
@@ -46,14 +55,13 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param componentConfig
    * @param domTreeKeys
    */
-  changeSelectedStatus = (event:Event, componentConfig:VirtualDOMType, domTreeKeys:string[], path?:string, parentPath?:string,selectedProp?:string) => {
+  changeSelectedStatus = (event:Event|null, componentConfig:VirtualDOMType, domTreeKeys:string[], path?:string, parentPath?:string,selectedProp?:string) => {
     event && event.stopPropagation && event.stopPropagation();
     let propPath = null;
     const { dispatch } = this.props;
-    const { key } = componentConfig;
+    const { key,childNodes} = componentConfig;
     const {isSelected } =this.selectedStatus(key)
-    if(isSelected&&this.requiredProp) return message.warning('当前选中组件必须拥有有子节点')
-    if (selectedProp) {
+    if (!isArray(childNodes)&&selectedProp) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
     }
     dispatch({

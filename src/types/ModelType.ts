@@ -71,7 +71,6 @@ export interface StateType{
   undo:any[],
   redo:any[],
   templateInfos:TemplateInfoType[],
-  newAddKey:null|string,
   hoverKey:null|string,
   dragData:DragDataType|null,
   dropTargetInfo:null|DropTargetInfoType,
