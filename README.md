@@ -14,7 +14,9 @@
 
 ## SNAPSHOT
 
-![SNAPSHOT](./snapshot.png)
+![PC](./pc.png)
+
+![mobile](./mobile.png)
 
 
 ## Usage
