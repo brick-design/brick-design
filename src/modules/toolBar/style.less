@@ -44,3 +44,26 @@
     border: 2px rgba(12, 22, 33, 4);
   }
 }
+
+.contextMenu-wrap{
+  z-index: 2000;
+  position: fixed;
+  box-shadow: 0px 2px 5px #999999;
+  border-radius: 4px;
+  padding-top: 5px;
+  background-color: #fff;
+
+  .contextMenu-option{
+    cursor: default;
+    font-size: 14px;
+    padding: 10px;
+    &:hover {
+      background: #388bfe;
+      color: white;
+    }
+    &:active {
+      color: #b5b7be;
+      background: linear-gradient(to top, #555, #444);
+    }
+  }
+}

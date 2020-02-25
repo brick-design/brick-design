@@ -1,12 +1,13 @@
 import React, { Component,createElement } from 'react';
-import { Col, Modal, Row } from 'antd';
+import { Col, Modal, Row,Tooltip} from 'antd';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import concat from 'lodash/concat';
 import isEmpty from 'lodash/isEmpty';
+import filter from 'lodash/filter';
 import isString from 'lodash/isString';
-import menus, {  ENABLED } from './config';
+import menus, { CONTEXT_MENU, ENABLED } from './config';
 import styles from './style.less';
 import {ACTION_TYPES} from '@/models';
 import { reduxConnect } from '@/utils';
@@ -16,10 +17,12 @@ import { Icon } from '../../components';
 import { handleRequiredHasChild } from '@/utils';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch } from 'redux'
+import ContextMenu from './component/ContextMenu'
 import { formatMessage } from 'umi-plugin-react/locale';
 const REST_STYLE = 'resetStyle';
 const UNDO = 'undo';
 const REDO = 'redo';
+const CLEAR='clear';
 
 interface ToolBarPropsType {
   dispatch?:Dispatch,
@@ -52,19 +55,12 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   static getDerivedStateFromProps(nextProps:ToolBarPropsType) {
     const { selectedComponentInfo, componentConfigs, undo, redo,styleSetting } = nextProps;
-    const { style: prevStyle } = selectedComponentInfo!;
+    const { style: prevStyle,isContainer } = selectedComponentInfo!;
     let enabled = [];
-
-    if (prevStyle && !isEqual(prevStyle, styleSetting)) {
-      enabled.push(REST_STYLE);
-    }
-
-    if (!isEmpty(undo)) {
-      enabled.push(UNDO);
-    }
-    if (!isEmpty(redo)) {
-      enabled.push(REDO);
-    }
+    if (prevStyle && !isEqual(prevStyle, styleSetting)) enabled.push(REST_STYLE);
+    if(isContainer) enabled.push(CLEAR);
+    if (!isEmpty(undo)) enabled.push(UNDO);
+    if (!isEmpty(redo)) enabled.push(REDO);
 
     if (isEmpty(componentConfigs)) {
       return { enabled };
@@ -80,6 +76,28 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
     return { enabled };
   }
 
+  componentDidMount() {
+   addEventListener('keydown',this.onKeyDown)
+  }
+
+  componentWillUnmount() {
+    // 移除事件监听
+    removeEventListener('keydown', this.onKeyDown)
+  }
+
+  onKeyDown=(keyEvent:any)=>{
+    const {enabled}=this.state
+    const {key,ctrlKey,shiftKey,metaKey}=keyEvent
+    if(key==='z'&&(ctrlKey||metaKey)){
+      if(!shiftKey&&enabled.includes(UNDO)){
+        this.undo()
+      }else if(shiftKey&&enabled.includes(REDO)){
+        this.redo()
+      }
+    }
+
+
+}
 
   dispatchData = (actions:any) => {
     const { dispatch } = this.props;
@@ -89,12 +107,12 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
   /**
    * 删除选中组件
    */
-  deleteComponent = () => this.dispatchData({ type: ACTION_TYPES.deleteComponent });
+  delete = () => this.dispatchData({ type: ACTION_TYPES.deleteComponent });
 
   /**
    * 复制选中组件
    */
-  copyComponent = () => this.dispatchData({ type: ACTION_TYPES.copyComponent });
+  copy = () => this.dispatchData({ type: ACTION_TYPES.copyComponent });
 
   /**
    * 重做
@@ -118,7 +136,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
   /**
    * 清除子组件
    */
-  clearChildNodes = () => this.dispatchData({ type: ACTION_TYPES.clearChildNodes });
+  clear = () => this.dispatchData({ type: ACTION_TYPES.clearChildNodes });
   /**
    * 生成复合组件
    *
@@ -159,7 +177,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
    * 保存组件信息
    */
 
-  saveComponentsInfo = () => {
+  save = () => {
     const { dispatch } = this.props;
     dispatch!({
       type:ACTION_TYPES.submitConfigs,
@@ -175,7 +193,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
    * @returns {*}
    */
 
-  previewPage = () => {
+  preview = () => {
     const { selectedComponentInfo, componentConfigs } = this.props
     if (handleRequiredHasChild(selectedComponentInfo!, componentConfigs!)) return
   this.setState({ visible: !this.state.visible, isShowTemplate: false });
@@ -187,22 +205,24 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
 
   renderMenu = (config:any, key:string) => {
-    const { title, icon, event } = config;
+    const { title, icon, shortcutKey } = config;
     if(!isString(icon)) return createElement(icon,{key})
     const { enabled } = this.state;
     const disabledColor = '#A4A4A4';
     const enabledColor = '#000';
     const isEnabled = enabled.includes(title);
     return (
+      <Tooltip mouseEnterDelay={1} title={shortcutKey}>
       <div
         style={{ color: isEnabled ? enabledColor : disabledColor }}
         className={styles['icon-container']}
-        onClick={isEnabled ? get(this,event) : undefined}
+        onClick={isEnabled ? get(this,title) : undefined}
         key={key}
       >
         <Icon style={{ fontSize: 18 }} type={icon}/>
         <span>{formatMessage({id:`BLOCK_NAME.toolBar.${title}`})}</span>
       </div>
+      </Tooltip>
     );
   };
 
@@ -221,8 +241,8 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
   controlModal = () => this.setState({ visible: !this.state.visible });
 
   render() {
-    const { visible, isShowTemplate } = this.state;
-    const { componentConfigs,isMobile } = this.props;
+    const { visible, isShowTemplate,enabled } = this.state;
+    const { componentConfigs,isMobile,dispatch,selectedComponentInfo } = this.props;
     const modalConfig = isShowTemplate ? {
       title: '生成模板',
       closable: true,
@@ -240,6 +260,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
       wrapClassName: styles['full-screen'],
     };
     return (
+      <>
       <Row type="flex" justify="space-around" align="middle" className={styles.content}>
         <Col style={{ fontSize: '16px', paddingLeft: '21px' }} span={3}>React-Visual-Editor</Col>
         <Col span={21}>
@@ -260,6 +281,12 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
             />}
         </Modal>
       </Row>
+        <ContextMenu dispatch={dispatch}
+                     isSelected={!isEmpty(selectedComponentInfo)}
+                     enableMenu={filter(CONTEXT_MENU,menu=>enabled.includes(menu))}
+                     parentThis={this}
+        />
+      </>
     );
   }
 }
