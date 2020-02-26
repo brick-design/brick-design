@@ -63,6 +63,14 @@ export interface DropTargetInfoType {
   componentName:string,
   propName:string
 }
+
+export type PlatformStyleType =number[]|string[]
+
+export interface PlatformInfoType {
+  isMobile:boolean,
+  size:PlatformStyleType,
+}
+
 export interface StateType{
   componentConfigs:VirtualDOMType[],
   selectedComponentInfo:SelectedComponentInfoType|{},
@@ -74,7 +82,7 @@ export interface StateType{
   hoverKey:null|string,
   dragData:DragDataType|null,
   dropTargetInfo:null|DropTargetInfoType,
-  isMobile:boolean
+  platformInfo:PlatformInfoType
 
 }
 

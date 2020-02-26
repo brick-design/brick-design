@@ -98,8 +98,6 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    */
   getDropTargetInfo=(event:Event,path:string, componentConfig:VirtualDOMType,selectedProp:string)=>{
     event&& event.stopPropagation && event.stopPropagation();
-    const {selectedComponentInfo}=this.props
-    if(!isEmpty(selectedComponentInfo)) return
     let propPath = null;
     const { dispatch} = this.props;
     if (selectedProp) {
@@ -223,7 +221,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
     const {selectedComponentInfo:{selectedKey},hoverKey}=this.props
     const isSelected = !!selectedKey && selectedKey.includes(key);
     /** 是否hover到当前组件 */
-    const isHovered = hoverKey === key && !selectedKey;
+    const isHovered = hoverKey === key;
     return {isHovered,isSelected}
   }
 
@@ -234,7 +232,8 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param className
    * @param animateClass
    */
-  handlePropsClassName=(isSelected:boolean,isHovered:boolean,className:any, animateClass:string)=>classNames(isSelected ? styles['container-select-border'] : (isHovered && styles['container-hover-border']), className, animateClass);
+  handlePropsClassName=(isSelected:boolean,isHovered:boolean,className:any, animateClass:string)=>
+    classNames(isSelected?styles['container-select-border']:isHovered && styles['container-hover-border'] , className, animateClass);
 
   /**
    * 处理弹窗类容器

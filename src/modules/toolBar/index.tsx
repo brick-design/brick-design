@@ -205,8 +205,8 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
 
   renderMenu = (config:any, key:string) => {
-    const { title, icon, shortcutKey } = config;
-    if(!isString(icon)) return createElement(icon,{key})
+    const { title, icon, shortcutKey,props={} } = config;
+    if(!isString(icon)) return createElement(icon,{key,...props})
     const { enabled } = this.state;
     const disabledColor = '#A4A4A4';
     const enabledColor = '#000';

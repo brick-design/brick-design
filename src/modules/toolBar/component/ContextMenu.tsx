@@ -36,14 +36,14 @@ class ContextMenu extends PureComponent<ContextMenuPropsType,ContextMenuStateTyp
   }
   componentDidMount() {
     // 添加右键点击、点击事件监听
-    document.addEventListener('contextmenu', this.handleContextMenu)
-    document.addEventListener('click', this.handleClick)
+    addEventListener('contextmenu', this.handleContextMenu)
+    addEventListener('click', this.handleClick)
   }
 
   componentWillUnmount() {
     // 移除事件监听
-    document.removeEventListener('contextmenu', this.handleContextMenu)
-    document.removeEventListener('click', this.handleClick)
+    removeEventListener('contextmenu', this.handleContextMenu)
+    removeEventListener('click', this.handleClick)
   }
 
   // 鼠标单击事件，当鼠标在任何地方单击时，设置菜单不显示

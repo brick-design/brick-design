@@ -1,5 +1,17 @@
 
 import SwitchPlatform from './component/SwitchPlatform';
+import { PlatformStyleType } from '@/types/ModelType';
+
+export interface PlatformMenusType {
+  [platformName:string]:PlatformStyleType
+}
+const platformMenus:PlatformMenusType={
+'iPhone5/SE':[320,568],
+  'iPhone6/7/8':[375,667],
+  'iPhoneX':[375,812],
+  'iPad':[765,1024],
+  'iPad Pro':[1024,1366]
+}
 
 /**
  * 工具栏配置
@@ -20,7 +32,7 @@ export default [{
     { title: 'preview', icon: 'eye' },
     // { title: '导出代码', icon: 'export', event: 'outputFiles' },
     { title: 'generateTemplate', icon: 'block' },
-    { title: 'generateTemplate', icon:SwitchPlatform},
+    { title: 'generateTemplate', icon:SwitchPlatform,props:{menus:platformMenus}},
   ],
 },
   {

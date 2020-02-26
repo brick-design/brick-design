@@ -3,17 +3,17 @@ import { reduxConnect } from '@/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import {ACTION_TYPES} from '@/models'
-import style from './style.less';
+import styles from './style.less';
 import {Dispatch} from 'redux'
-import { VirtualDOMType } from '@/types/ModelType';
+import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { oAllComponents } from '@/modules/designPanel/confg';
 interface DesignPanelPropsType {
   dispatch?:Dispatch,
   componentConfigs?:VirtualDOMType[],
-  isMobile?:boolean
+  platformInfo?:PlatformInfoType
 }
 
-@reduxConnect(['componentConfigs','isMobile'])
+@reduxConnect(['componentConfigs','platformInfo'])
 class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
 
   onMouseLeave = () => {
@@ -38,7 +38,8 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
   }
 
   render() {
-    const { componentConfigs,isMobile } = this.props;
+    const { componentConfigs,platformInfo } = this.props;
+    const {size}=platformInfo!
     let FirstComponent = null;
     if (!isEmpty(componentConfigs)) {
       const {componentName, key } = componentConfigs![0];
@@ -49,11 +50,13 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
       };
       FirstComponent = React.createElement(get(oAllComponents, componentName), resultProps);
     }
+    const style={maxWidth:size[0],maxHeight:size[1], transition:'all 700ms' }
     return <div onMouseLeave={this.onMouseLeave}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
                 id="dnd-container"
-                className={isMobile?style.mobile:style['dnd-container']}>
+                style={style}
+                className={styles['dnd-container']}>
       {FirstComponent}
     </div>;
   }

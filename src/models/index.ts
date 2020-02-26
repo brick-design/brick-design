@@ -114,7 +114,7 @@ const Model:ModelType= {
     hoverKey: null,
     dragData:null,
     dropTargetInfo:null,
-    isMobile:true
+    platformInfo:{isMobile:false,size:['100%','100%']}
 
   },
   effects: {
@@ -659,11 +659,10 @@ const Model:ModelType= {
      * 更改平台
      * @param state
      */
-    changePlatform(state){
-      const {isMobile}=state
+    changePlatform(state,{payload}){
       return {
         ...state,
-        isMobile:!isMobile,
+        platformInfo:payload,
         redo:[],
         undo:[]
       }
