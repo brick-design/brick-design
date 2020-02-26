@@ -4,13 +4,13 @@ import  Code  from './components/code';
 import Preview from './components/preview'
 import styles from './styles.less';
 import { Resizable } from 're-resizable';
-import { VirtualDOMType } from '@/types/ModelType';
+import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 
 interface PreviewAndCodePropsType {
   visible:boolean,
   controlModal:()=>void,
   componentConfigs:VirtualDOMType[],
-  isMobile?:boolean
+  platformInfo?:PlatformInfoType
 }
 export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
 
@@ -32,7 +32,7 @@ export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
 
 
   render() {
-    const { componentConfigs = [],visible,isMobile } = this.props;
+    const { componentConfigs = [],visible,platformInfo } = this.props;
     if(!visible) return null
     return (
       <>
@@ -43,7 +43,7 @@ export default class PreviewAndCode extends Component<PreviewAndCodePropsType> {
               <Code  componentConfigs={componentConfigs} />
             </Resizable>
             <div className={styles['page-container']}>
-              <Preview isMobile={isMobile} componentConfigs={componentConfigs}/>
+              <Preview platformInfo={platformInfo} componentConfigs={componentConfigs}/>
             </div>
           </div>
       </>

@@ -9,12 +9,12 @@ import classNames from 'classnames';
 import get from 'lodash/get';
 import config from '@/configs';
 import { formatSpecialProps } from '@/utils';
-import { VirtualDOMType } from '@/types/ModelType';
+import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
 interface PreviewPropsType {
   componentConfigs:VirtualDOMType[],
-  isMobile?:boolean
+  platformInfo?:PlatformInfoType
 }
 interface PreviewStateType {
   visible:boolean
@@ -75,9 +75,12 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
   });
 
   render() {
-    const { componentConfigs,isMobile } = this.props;
+    const { componentConfigs,platformInfo } = this.props;
+    const {size}=platformInfo!
+    const style={maxWidth:size[0],maxHeight:size[1]}
+
     return (
-      <div id='preview-container' className={isMobile?styles['preview-mobile']:styles['preview-container']}>
+      <div id='preview-container' style={style} className={styles['preview-container']}>
         {this.analysisPage(componentConfigs)}
       </div>);
   }

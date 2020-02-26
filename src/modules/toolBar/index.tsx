@@ -15,7 +15,7 @@ import PreviewAndCode from '../previewAndCode';
 import GenerateTemplate from './component/GenerateTemplate';
 import { Icon } from '../../components';
 import { handleRequiredHasChild } from '@/utils';
-import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
+import { PlatformInfoType, SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import {Dispatch } from 'redux'
 import ContextMenu from './component/ContextMenu'
 import { formatMessage } from 'umi-plugin-react/locale';
@@ -31,7 +31,7 @@ interface ToolBarPropsType {
   undo?:any[],
   redo?:any[],
   styleSetting?:any,
-  isMobile?:boolean
+  platformInfo?:PlatformInfoType
 
 }
 
@@ -41,7 +41,7 @@ interface ToolBarStateType {
   isShowTemplate: boolean,
 }
 
-@reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting','isMobile'])
+@reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting','platformInfo'])
 class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   constructor(props:ToolBarPropsType) {
@@ -242,7 +242,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
 
   render() {
     const { visible, isShowTemplate,enabled } = this.state;
-    const { componentConfigs,isMobile,dispatch,selectedComponentInfo } = this.props;
+    const { componentConfigs,platformInfo,dispatch,selectedComponentInfo } = this.props;
     const modalConfig = isShowTemplate ? {
       title: '生成模板',
       closable: true,
@@ -277,7 +277,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
             <PreviewAndCode componentConfigs={componentConfigs!}
                             controlModal={this.controlModal}
                             visible={visible}
-                            isMobile={isMobile}
+                            platformInfo={platformInfo}
             />}
         </Modal>
       </Row>
