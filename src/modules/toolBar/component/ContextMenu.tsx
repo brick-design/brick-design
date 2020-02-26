@@ -24,6 +24,16 @@ class ContextMenu extends PureComponent<ContextMenuPropsType,ContextMenuStateTyp
   state:ContextMenuStateType={
     visible:false
   }
+
+  static getDerivedStateFromProps(nextProps:ContextMenuPropsType){
+    const {isSelected}=nextProps
+    if(!isSelected){
+      return{visible:false}
+    }
+
+    return  null
+
+  }
   componentDidMount() {
     // 添加右键点击、点击事件监听
     document.addEventListener('contextmenu', this.handleContextMenu)
