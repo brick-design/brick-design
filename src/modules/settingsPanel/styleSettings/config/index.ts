@@ -1,9 +1,10 @@
 import { EnumComponent, NumberComponent, StringComponent } from '../../components';
+import { CSS_TYPE } from '@/types/ConfigTypes';
 
 export const CSS_TYPE_TO_COMPONENT = {
-  enum: EnumComponent,
-  number: NumberComponent,
-  string: StringComponent,
+  [CSS_TYPE.enum]: EnumComponent,
+  [CSS_TYPE.number]: NumberComponent,
+  [CSS_TYPE.string]: StringComponent,
 };
 
 
