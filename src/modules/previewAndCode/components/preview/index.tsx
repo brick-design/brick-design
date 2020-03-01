@@ -77,7 +77,7 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
   render() {
     const { componentConfigs,platformInfo } = this.props;
     const {size}=platformInfo!
-    const style={maxWidth:size[0],maxHeight:size[1]}
+    const style={width:size[0],maxHeight:size[1]}
 
     return (
       <div id='preview-container' style={style} className={styles['preview-container']}>

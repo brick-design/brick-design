@@ -50,7 +50,8 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
       };
       FirstComponent = React.createElement(get(oAllComponents, componentName), resultProps);
     }
-    const style={maxWidth:size[0],maxHeight:size[1], transition:'all 700ms' }
+
+    const style={width:size[0],maxHeight:size[1], transition:'all 700ms' }
     return <div onMouseLeave={this.onMouseLeave}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
