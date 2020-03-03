@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {  useState } from 'react';
 import { Tabs } from 'antd';
 import { flattenDeepArray, reduxConnect } from '@/utils';
 import config from '@/configs';
@@ -16,31 +16,12 @@ interface AllComponentsPropsType {
   templateInfos?:TemplateInfoType[]
 }
 
-interface AllComponentsStateType{
-  activeKey:string
-}
 
-@reduxConnect(['selectedComponentInfo','templateInfos'])
-export default class AllComponents extends Component<AllComponentsPropsType,AllComponentsStateType> {
-  constructor(props:AllComponentsPropsType) {
-    super(props);
-    this.state = {
-      activeKey: 'container',
-    };
-  }
-
-  TabsChange = (activeKey:string) => {
-    this.setState({
-      activeKey,
-    });
-  };
-
-
-  render() {
-    const { activeKey } = this.state;
-    const { selectedComponentInfo,templateInfos,dispatch } = this.props;
+ function AllComponents (props:AllComponentsPropsType){
+  const [activeKey,setActiveKey] =useState('container')
+    const { selectedComponentInfo,templateInfos,dispatch } = props;
     return (
-      <Tabs className={styles['tabs-container']} activeKey={activeKey} onChange={this.TabsChange}>
+      <Tabs className={styles['tabs-container']} activeKey={activeKey} onChange={(newActiveKey:string)=>setActiveKey(newActiveKey)}>
         <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.container'})} key="container">
           <FoldPanel isShow={activeKey === 'container'}
                      selectedComponentInfo={selectedComponentInfo!}
@@ -62,4 +43,6 @@ export default class AllComponents extends Component<AllComponentsPropsType,AllC
       </Tabs>
     );
   }
-}
+
+
+export default reduxConnect(['selectedComponentInfo','templateInfos'])(AllComponents)

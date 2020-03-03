@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { reduxConnect } from '@/utils';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -13,32 +13,16 @@ interface DesignPanelPropsType {
   platformInfo?:PlatformInfoType
 }
 
-@reduxConnect(['componentConfigs','platformInfo'])
-class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
 
-  onMouseLeave = () => {
-    const { dispatch } = this.props;
+function DesignPanel(props:DesignPanelPropsType) {
+
+  function dispatchAction(action:string) {
+    const { dispatch } = props;
     dispatch!({
-      type: ACTION_TYPES.clearHovered,
+      type: action,
     });
-  };
-
-  /**
-   * 必须有不然onDrop失效
-   */
-  onDragOver=(event:any)=>{
-    event.preventDefault()
   }
-
-  onDrop=()=>{
-    const {dispatch}=this.props
-    dispatch!({
-      type: ACTION_TYPES.addComponent
-    })
-  }
-
-  render() {
-    const { componentConfigs,platformInfo } = this.props;
+    const { componentConfigs,platformInfo } = props;
     const {size}=platformInfo!
     let FirstComponent = null;
     if (!isEmpty(componentConfigs)) {
@@ -52,15 +36,15 @@ class DesignPanel extends PureComponent<DesignPanelPropsType,any> {
     }
 
     const style={width:size[0],maxHeight:size[1], transition:'all 700ms' }
-    return <div onMouseLeave={this.onMouseLeave}
-                onDragOver={this.onDragOver}
-                onDrop={this.onDrop}
+
+    return (<div onMouseLeave={()=>dispatchAction(ACTION_TYPES.clearHovered)}
+                onDragOver={(event)=> event.preventDefault()} // 必须有不然onDrop失效
+                onDrop={()=>dispatchAction(ACTION_TYPES.addComponent)}
                 id="dnd-container"
                 style={style}
                 className={styles['dnd-container']}>
       {FirstComponent}
-    </div>;
+    </div>);
   }
-}
 
-export default  DesignPanel
+export default  reduxConnect(['componentConfigs','platformInfo'])(DesignPanel)

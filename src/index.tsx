@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { useEffect } from 'react';
 import DesignPanel from './modules/designPanel';
 import SettingsPanel from './modules/settingsPanel';
 import styles from './index.less';
@@ -35,19 +35,13 @@ const tableIndexs=[
   { name:'img', keyPath:'img', options:{unique: false} },
   { name:'config', keyPath:'config', options:{unique: false} },
 ]
-export default class extends PureComponent {
-  /**
-   * 左侧拖拽大小事件
-   *
-   * event
-   */
 
-  componentDidMount() {
+export default function Index() {
+  useEffect(()=>{
     initDB('test' ,'templates',  { autoIncrement: true },
       tableIndexs);
-  }
+  },[])
 
-  render() {
     return (
         <div className={styles.wrapper}>
           <ToolBar/>
@@ -76,4 +70,4 @@ export default class extends PureComponent {
         </div>
     );
   }
-}
+

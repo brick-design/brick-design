@@ -1,4 +1,4 @@
-import React, { createElement, PureComponent } from 'react';
+import React, { createElement, PureComponent, useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import styles from '../../styles.less';
 import map from 'lodash/map';
@@ -16,19 +16,13 @@ interface PreviewPropsType {
   componentConfigs:VirtualDOMType[],
   platformInfo?:PlatformInfoType
 }
-interface PreviewStateType {
-  visible:boolean
-}
 
-export default class Preview extends PureComponent<PreviewPropsType,PreviewStateType> {
-  constructor(props:PreviewPropsType) {
-    super(props);
-    this.state = {
-      visible: false,
-    };
-  }
 
-  analysisPage = (childNodesArr:VirtualDOMType[], onlyNode?:boolean) => {
+export default function Preview (props:PreviewPropsType){
+
+  const [visible,setVisible]=useState(false)
+
+  function analysisPage  (childNodesArr:VirtualDOMType[], onlyNode?:boolean)  {
 
     const resultComponents = map(childNodesArr, childNode => {
       const { componentName, props, addPropsConfig, childNodes, key } = childNode;
@@ -36,7 +30,7 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
       const cloneProps = cloneDeep(props);
       if (!isEmpty(childNodes)) {
         if (!nodePropsConfig) {
-          cloneProps.children = this.analysisPage(childNodes as VirtualDOMType[] );
+          cloneProps.children = analysisPage(childNodes as VirtualDOMType[] );
         } else {
           each(nodePropsConfig, (nodePropsConfig, propName) => {
             const { type, isOnlyNode } = nodePropsConfig;
@@ -44,7 +38,7 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
             const propChildNodes = get(childNodes, `${propName}.childNodes`);
             if (propChildNodes && isEmpty(propChildNodes)) return;
             if (propChildNodes && !isEmpty(propChildNodes)) analysisChildNodes = propChildNodes;
-            const propNodes = this.analysisPage(analysisChildNodes as VirtualDOMType[], isOnlyNode);
+            const propNodes = analysisPage(analysisChildNodes as VirtualDOMType[], isOnlyNode);
             cloneProps[propName] = type === PROPS_TYPES.reactNode ? propNodes : () => propNodes;
           });
         }
@@ -58,31 +52,26 @@ export default class Preview extends PureComponent<PreviewPropsType,PreviewState
         const  { propName, type }=mounted
         const mountedNode = document.getElementById('preview-container');
         cloneProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
-        cloneProps[displayPropName] = this.state.visible;
+        cloneProps[displayPropName] = visible;
         merge(cloneProps.style, style);
         cloneProps.zIndex = 2000;
-        cloneProps.onCancel = this.controlModal;
+        cloneProps.onCancel = ()=>setVisible(!visible);
       }
       return createElement(get(config.OriginalComponents, componentName, componentName), formatSpecialProps(cloneProps, merge({}, propsConfig, addPropsConfig)));
     });
 
     if (onlyNode) return resultComponents[0];
     return resultComponents;
-  };
+  }
 
-  controlModal = () => this.setState({
-    visible: !this.state.visible,
-  });
 
-  render() {
-    const { componentConfigs,platformInfo } = this.props;
+    const { componentConfigs,platformInfo } = props;
     const {size}=platformInfo!
     const style={width:size[0],maxHeight:size[1]}
 
     return (
       <div id='preview-container' style={style} className={styles['preview-container']}>
-        {this.analysisPage(componentConfigs)}
-      </div>);
-  }
+        {analysisPage(componentConfigs)}
+      </div>)
 
 }
