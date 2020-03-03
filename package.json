@@ -6,7 +6,7 @@
     "name": "anye",
     "email": "1278998669@qq.com"
   },
-  "repository":{
+  "repository": {
     "type": "git",
     "url": "https://github.com/anye931123/react-visual-editor"
   },
@@ -20,6 +20,7 @@
   "dependencies": {
     "animate.css": "^3.7.2",
     "classnames": "^2.2.6",
+    "dva": "^2.4.1",
     "highlight.js": "^9.17.1",
     "html2canvas": "^1.0.0-rc.5",
     "lodash": "^4.17.15",
@@ -33,10 +34,10 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@types/react-color": "^3.0.1",
     "@types/classnames": "^2.2.9",
     "@types/highlight.js": "^9.12.3",
     "@types/lodash": "^4.14.149",
+    "@types/react-color": "^3.0.1",
     "@types/sortablejs": "^1.10.2",
     "@types/uuid": "^3.4.7",
     "gh-pages": "^2.2.0",
