@@ -20,7 +20,6 @@
   "dependencies": {
     "animate.css": "^3.7.2",
     "classnames": "^2.2.6",
-    "dva": "2.4.0",
     "highlight.js": "^9.17.1",
     "html2canvas": "^1.0.0-rc.5",
     "lodash": "^4.17.15",
