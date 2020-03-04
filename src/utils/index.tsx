@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { message } from 'antd';
 import each from 'lodash/each';
@@ -248,4 +248,13 @@ export const diffProps=(restProps:any,props:any)=>{
 
   return props
 
+}
+
+
+export function usePrevious(value:any) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }

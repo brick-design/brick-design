@@ -1,4 +1,4 @@
-import React, { Component,createElement } from 'react';
+import React, { Component, createElement, RefObject, useEffect, useRef, useState } from 'react';
 import { Col, Modal, Row,Tooltip} from 'antd';
 import map from 'lodash/map';
 import get from 'lodash/get';
@@ -10,7 +10,7 @@ import isString from 'lodash/isString';
 import menus, { CONTEXT_MENU, ENABLED } from './config';
 import styles from './style.less';
 import {ACTION_TYPES} from '@/models';
-import { reduxConnect } from '@/utils';
+import { reduxConnect, usePrevious } from '@/utils';
 import PreviewAndCode from '../previewAndCode';
 import GenerateTemplate from './component/GenerateTemplate';
 import { Icon } from '../../components';
@@ -35,127 +35,55 @@ interface ToolBarPropsType {
 
 }
 
-interface ToolBarStateType {
-  enabled: string[],
-  visible: boolean,
-  isShowTemplate: boolean,
-}
+function ToolBar(props:ToolBarPropsType) {
+  const {selectedComponentInfo, componentConfigs, undo, redo,styleSetting,dispatch,platformInfo}=props
+  const {style,isContainer}=selectedComponentInfo!
 
-@reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting','platformInfo'])
-class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
+  const [visible,setVisible]=useState(false)
+  const [isShowTemplate,setIsShowTemplate]=useState(false)
 
-  constructor(props:ToolBarPropsType) {
-    super(props);
-    this.state = {
-      enabled: [],
-      visible: false,
-      isShowTemplate: false,
-    };
-  }
-
-  static getDerivedStateFromProps(nextProps:ToolBarPropsType) {
-    const { selectedComponentInfo, componentConfigs, undo, redo,styleSetting } = nextProps;
-    const { style: prevStyle,isContainer } = selectedComponentInfo!;
-    let enabled = [];
-    if (prevStyle && !isEqual(prevStyle, styleSetting)) enabled.push(REST_STYLE);
-    if(isContainer) enabled.push(CLEAR);
-    if (!isEmpty(undo)) enabled.push(UNDO);
-    if (!isEmpty(redo)) enabled.push(REDO);
-
-    if (isEmpty(componentConfigs)) {
-      return { enabled };
-    }
-
-    if (isEmpty(selectedComponentInfo)) {
-      enabled = concat(enabled, ENABLED.must);
-      return { enabled };
-    }
-
-    enabled = concat(enabled, ENABLED.must, ENABLED.selected);
-
-    return { enabled };
-  }
-
-  componentDidMount() {
-   addEventListener('keydown',this.onKeyDown)
-  }
-
-  componentWillUnmount() {
-    // 移除事件监听
-    removeEventListener('keydown', this.onKeyDown)
-  }
-
-  onKeyDown=(keyEvent:any)=>{
-    const {enabled}=this.state
-    const {key,ctrlKey,shiftKey,metaKey}=keyEvent
-    if(key==='z'&&(ctrlKey||metaKey)){
-      if(!shiftKey&&enabled.includes(UNDO)){
-        this.undo()
-      }else if(shiftKey&&enabled.includes(REDO)){
-        this.redo()
+  const enabled:string[] = [];
+  useEffect(()=>{
+    function onKeyDown(keyEvent:any){
+      const {key,ctrlKey,shiftKey,metaKey}=keyEvent
+      if(key==='z'&&(ctrlKey||metaKey)){
+        if(!shiftKey&&enabled.includes(UNDO)){
+          dispatch!({type:ACTION_TYPES.undo});
+        }else if(shiftKey&&enabled.includes(REDO)){
+          dispatch!({type:ACTION_TYPES.redo});
+        }
       }
+
     }
+    addEventListener('keydown',onKeyDown)
+    return ()=> removeEventListener('keydown', onKeyDown)
+  },[enabled])
 
+  if (style &&!isEqual(style, styleSetting)) enabled.push(REST_STYLE);
+  if(isContainer) enabled.push(CLEAR);
+  if (!isEmpty(undo)) enabled.push(UNDO);
+  if (!isEmpty(redo)) enabled.push(REDO);
+  if (isEmpty(selectedComponentInfo)) {
+    enabled.push(...ENABLED.must)
+  }else if (!isEmpty(componentConfigs)) {
+    enabled.push(...ENABLED.must, ...ENABLED.selected)
+  }
 
-}
-
-  dispatchData = (actions:any) => {
-    const { dispatch } = this.props;
-    dispatch!(actions);
-  };
-
-  /**
-   * 删除选中组件
-   */
-  delete = () => this.dispatchData({ type: ACTION_TYPES.deleteComponent });
-
-  /**
-   * 复制选中组件
-   */
-  copy = () => this.dispatchData({ type: ACTION_TYPES.copyComponent });
-
-  /**
-   * 重做
-   */
-  redo = () => this.dispatchData({ type: ACTION_TYPES.redo });
-
-  /**
-   * 样式重做
-   */
-  resetStyle = () => {
-    const { selectedComponentInfo } = this.props;
-    const { style }=selectedComponentInfo!
-    this.dispatchData({ type: ACTION_TYPES.changeStyles,payload:{style}  });
-  };
-
-  /**
-   * 导出代码
-   */
-  outputFiles = () => this.dispatchData({ type: ACTION_TYPES.outputFiles });
-
-  /**
-   * 清除子组件
-   */
-  clear = () => this.dispatchData({ type: ACTION_TYPES.clearChildNodes });
   /**
    * 生成复合组件
    *
    */
-  generateTemplate = () => {
-    const {selectedComponentInfo,componentConfigs}=this.props
+  function generateTemplate ()  {
     if(handleRequiredHasChild(selectedComponentInfo!,componentConfigs!))return
-      return this.setState({
-        visible: true,
-        isShowTemplate: true,
-      });
+    setVisible(true)
+    setIsShowTemplate(true)
   };
   /**
    *  本方式是生成复合组件事件
    *  data   请求de参数
    */
 
-  addTemplateInfo = (data:any) => {
-    const { dispatch, selectedComponentInfo, componentConfigs } = this.props;
+  function addTemplateInfo (data:any) {
     const { path }=selectedComponentInfo!
     const { templateName,srcImg } = data;
     const currentComponentInfo = get(componentConfigs, path, {});
@@ -169,22 +97,8 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
         },
       });
     }
-
-    this.controlModal();
+    setVisible(!visible)
   };
-
-  /**
-   * 保存组件信息
-   */
-
-  save = () => {
-    const { dispatch } = this.props;
-    dispatch!({
-      type:ACTION_TYPES.submitConfigs,
-    })
-
-  };
-
 
 
 
@@ -193,30 +107,34 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
    * @returns {*}
    */
 
-  preview = () => {
-    const { selectedComponentInfo, componentConfigs } = this.props
+  function preview () {
     if (handleRequiredHasChild(selectedComponentInfo!, componentConfigs!)) return
-  this.setState({ visible: !this.state.visible, isShowTemplate: false });
+    setVisible(!visible)
+    setIsShowTemplate(false)
 }
-  /**
-   * 撤销
-   */
-  undo = () => this.dispatchData({ type: ACTION_TYPES.undo });
+
+  const funMap:{[funName:string]:()=>any}={
+    preview,
+    generateTemplate
+  }
 
 
-  renderMenu = (config:any, key:string) => {
-    const { title, icon, shortcutKey,props={} } = config;
+    function renderMenu (config:any, key:string){
+    const { title, icon, shortcutKey,props={},type } = config;
     if(!isString(icon)) return createElement(icon,{key,...props})
-    const { enabled } = this.state;
     const disabledColor = '#A4A4A4';
     const enabledColor = '#000';
     const isEnabled = enabled.includes(title);
+    let func=undefined
+      if(isEnabled){
+        func=funMap[title]||(()=>dispatch!({type,payload:{style}}))
+      }
     return (
       <Tooltip mouseEnterDelay={1} title={shortcutKey}>
       <div
         style={{ color: isEnabled ? enabledColor : disabledColor }}
         className={styles['icon-container']}
-        onClick={isEnabled ? get(this,title) : undefined}
+        onClick={func}
         key={key}
       >
         <Icon style={{ fontSize: 18 }} type={icon}/>
@@ -224,30 +142,25 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
       </div>
       </Tooltip>
     );
-  };
+  }
 
-  renderGroup = (content:any, key:string) => {
+  function renderGroup (content:any, key:string) {
     const { span, group, style = {} } = content;
     return (
       <Col span={span} key={key}>
         <div style={{ display: 'flex', flex: 1, ...style }}>
-          {map(group, this.renderMenu)}
+          {map(group, renderMenu)}
         </div>
       </Col>
     );
   };
 
 
-  controlModal = () => this.setState({ visible: !this.state.visible });
-
-  render() {
-    const { visible, isShowTemplate,enabled } = this.state;
-    const { componentConfigs,platformInfo,dispatch,selectedComponentInfo } = this.props;
-    const modalConfig = isShowTemplate ? {
+   const modalConfig = isShowTemplate ? {
       title: '生成模板',
       closable: true,
       footer: null,
-      onCancel: this.controlModal,
+      onCancel: ()=>setVisible(!visible),
     } : {
       width: '100%',
       bodyStyle: {
@@ -265,7 +178,7 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
         <Col style={{ fontSize: '16px', paddingLeft: '21px' }} span={3}>React-Visual-Editor</Col>
         <Col span={21}>
           <Row>
-            {map(menus, this.renderGroup)}
+            {map(menus, renderGroup)}
           </Row>
         </Col>
         <Modal
@@ -273,22 +186,20 @@ class ToolBar extends Component<ToolBarPropsType,ToolBarStateType> {
           destroyOnClose
           {...modalConfig}
         >
-          {isShowTemplate ? <GenerateTemplate  uploadFile={this.addTemplateInfo}/> :
+          {isShowTemplate ? <GenerateTemplate  uploadFile={addTemplateInfo}/> :
             <PreviewAndCode componentConfigs={componentConfigs!}
-                            controlModal={this.controlModal}
+                            controlModal={()=>setVisible(!visible)}
                             visible={visible}
                             platformInfo={platformInfo}
             />}
         </Modal>
       </Row>
-        <ContextMenu dispatch={dispatch}
+        <ContextMenu dispatch={dispatch!}
                      isSelected={!isEmpty(selectedComponentInfo)}
                      enableMenu={filter(CONTEXT_MENU,menu=>enabled.includes(menu))}
-                     parentThis={this}
         />
       </>
     );
   }
-}
 
-export default ToolBar
+export default reduxConnect(['selectedComponentInfo', 'componentConfigs', 'undo', 'redo','styleSetting','platformInfo'])(ToolBar)

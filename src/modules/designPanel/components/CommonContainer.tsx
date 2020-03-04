@@ -8,7 +8,6 @@ import merge from 'lodash/merge';
 import classNames from 'classnames';
 import config from '@/configs';
 import isArray from 'lodash/isArray';
-import {message} from 'antd'
 import { diffProps, filterProps,  formatSpecialProps, getPath, reduxConnect } from '@/utils';
 import {ACTION_TYPES} from '@/models'
 import styles from '../style.less';

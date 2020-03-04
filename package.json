@@ -27,7 +27,7 @@
     "prop-types": "^15.7.2",
     "rc-animate": "^2.10.2",
     "re-resizable": "^6.1.1",
-    "react": ">=16.0.0",
+    "react": ">=16.8.0",
     "react-color": "^2.18.0",
     "sortablejs": "^1.10.2",
     "umi-plugin-react": "^1.15.2",

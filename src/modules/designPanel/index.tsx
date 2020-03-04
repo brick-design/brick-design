@@ -16,13 +16,7 @@ interface DesignPanelPropsType {
 
 function DesignPanel(props:DesignPanelPropsType) {
 
-  function dispatchAction(action:string) {
-    const { dispatch } = props;
-    dispatch!({
-      type: action,
-    });
-  }
-    const { componentConfigs,platformInfo } = props;
+    const { componentConfigs,platformInfo,dispatch } = props;
     const {size}=platformInfo!
     let FirstComponent = null;
     if (!isEmpty(componentConfigs)) {
@@ -37,9 +31,9 @@ function DesignPanel(props:DesignPanelPropsType) {
 
     const style={width:size[0],maxHeight:size[1], transition:'all 700ms' }
 
-    return (<div onMouseLeave={()=>dispatchAction(ACTION_TYPES.clearHovered)}
+    return (<div onMouseLeave={()=>dispatch!({type:ACTION_TYPES.clearHovered})}
                 onDragOver={(event)=> event.preventDefault()} // 必须有不然onDrop失效
-                onDrop={()=>dispatchAction(ACTION_TYPES.addComponent)}
+                onDrop={()=>dispatch!({type:ACTION_TYPES.addComponent})}
                 id="dnd-container"
                 style={style}
                 className={styles['dnd-container']}>

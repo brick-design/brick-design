@@ -1,103 +1,83 @@
-import React, { PureComponent} from 'react'
-import map from 'lodash/map'
-import styles from '../style.less'
+import React, { useEffect, useRef, useState } from 'react';
+import map from 'lodash/map';
+import styles from '../style.less';
 import { Dispatch } from 'redux';
 import { formatMessage } from 'umi-plugin-react/locale';
-import get from "lodash/get";
+import get from 'lodash/get';
+import { ACTION_TYPES } from '@/models';
 
 interface ContextMenuPropsType {
-  dispatch?:Dispatch,
-  isSelected:boolean,
-  enableMenu:string[],
-  parentThis:any
+  dispatch: Dispatch,
+  isSelected: boolean,
+  enableMenu: string[],
 }
 
-interface ContextMenuStateType {
-  visible:boolean
-
+const menuMap={
+  copy:ACTION_TYPES.copyComponent,
+  clear:ACTION_TYPES.clearChildNodes,
+  delete:ACTION_TYPES.deleteComponent
 }
 
+type MenuType='copy'|'clear'|'delete'
 
-class ContextMenu extends PureComponent<ContextMenuPropsType,ContextMenuStateType> {
-  root:any;
+function ContextMenu(props: ContextMenuPropsType) {
+  const { isSelected, enableMenu,dispatch } = props;
+  const root: React.RefObject<any> = useRef(null);
+  const [visible, setVisible] = useState(isSelected);
 
-  state:ContextMenuStateType={
-    visible:false
-  }
+  useEffect(() => {
+    function handleContextMenu(event: any) {
+      if (!isSelected) return;
+      event.preventDefault();
+      setVisible(true);
+      const dom = root.current;
+      const { clientX, clientY } = event;
+      const { innerWidth, innerHeight } = window;
+      const { offsetWidth, offsetHeight } = dom;
+      const right = (innerWidth - clientX) > offsetWidth;
+      const left = !right;
+      const bottom = (innerHeight - clientY) > offsetHeight;
+      const top = !bottom;
+      if (right) {
+        dom.style.left = `${clientX}px`;
+      }
+      if (left) {
+        dom.style.left = `${clientX - offsetWidth}px`;
+      }
 
-  static getDerivedStateFromProps(nextProps:ContextMenuPropsType){
-    const {isSelected}=nextProps
-    if(!isSelected){
-      return{visible:false}
+      if (bottom) {
+        dom.style.top = `${clientY}px`;
+      }
+      if (top) {
+        dom.style.top = `${clientY - offsetHeight}px`;
+      }
     }
+    addEventListener('contextmenu', handleContextMenu);
+    return () => removeEventListener('contextmenu', handleContextMenu);
+  },[isSelected,visible]);
 
-    return  null
-
-  }
-  componentDidMount() {
-    // 添加右键点击、点击事件监听
-    addEventListener('contextmenu', this.handleContextMenu)
-    addEventListener('click', this.handleClick)
-  }
-
-  componentWillUnmount() {
-    // 移除事件监听
-    removeEventListener('contextmenu', this.handleContextMenu)
-    removeEventListener('click', this.handleClick)
-  }
-
-  // 鼠标单击事件，当鼠标在任何地方单击时，设置菜单不显示
-  handleClick = () => {
-    const { visible } = this.state
-    if (visible) {
-      this.setState({ visible: false })
+  useEffect(() => {
+    function handleClick() {
+      if (visible) {
+        setVisible(false);
+      }
     }
-  };
+    addEventListener('click', handleClick);
+    return () => removeEventListener('click', handleClick);
 
-  // 右键菜单事件
-  handleContextMenu = (event:any) => {
-    const {isSelected}=this.props
-    if(!isSelected) return
-    event.preventDefault()
-    this.setState({visible:true})
-    const {clientX,clientY}=event
-    const {innerWidth,innerHeight}=window
-    const{offsetWidth,offsetHeight}=this.root
-    const right = (innerWidth - clientX) > offsetWidth
-    const left = !right
-    const bottom = (innerHeight - clientY) > offsetHeight
-    const top = !bottom
-    if (right) {
-      this.root.style.left = `${clientX}px`
-    }
-    if (left) {
-      this.root.style.left = `${clientX - offsetWidth}px`
-    }
+  }, [visible]);
 
-    if (bottom) {
-      this.root.style.top = `${clientY}px`
-    }
-    if (top) {
-      this.root.style.top = `${clientY - offsetHeight}px`
-    }
-  };
+  if(!visible) return null
+  return (
+      <div ref={root} className={styles['contextMenu-wrap']}>
+        {map(enableMenu, (menu:MenuType, key) => <div
+          onClick={()=>dispatch({type:menuMap[menu]})}
+          key={key}
+          className={styles['contextMenu-option']}>{formatMessage({ id: `BLOCK_NAME.toolBar.${menu}` })}</div>,
+        )}
 
-  render() {
-    const {visible}=this.state
-    const {enableMenu,parentThis}=this.props
-    return (
-      visible && (
-        <div  ref={(ref)=>this.root=ref}  className={styles["contextMenu-wrap"]} >
-          {map(enableMenu,(menu,key)=><div
-            onClick={get(parentThis,menu)}
-            key={key}
-            className={styles["contextMenu-option"]}>{formatMessage({id:`BLOCK_NAME.toolBar.${menu}`})}</div>
-          )}
-
-        </div>
-      )
-    )
-  }
+      </div>
+  );
 }
 
-export default ContextMenu
+export default ContextMenu;

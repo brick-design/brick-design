@@ -1,6 +1,7 @@
 
 import SwitchPlatform from './component/SwitchPlatform';
 import { PlatformStyleType } from '@/types/ModelType';
+import { ACTION_TYPES } from '@/models';
 
 export interface PlatformMenusType {
   [platformName:string]:PlatformStyleType
@@ -20,29 +21,29 @@ export default [{
   span: 8,
   style: { justifyContent: 'flex-end' },
   group: [
-    { title: 'undo', icon: 'undo',shortcutKey:'command+z/control+z' },
-    { title: 'redo', icon: 'redo',shortcutKey:'command+shift+z/control+shift+z' },
+    { title: 'undo', icon: 'undo',shortcutKey:'command+z/control+z',type:ACTION_TYPES.undo },
+    { title: 'redo', icon: 'redo',shortcutKey:'command+shift+z/control+shift+z',type:ACTION_TYPES.redo },
     // {title:'属性重做',icon:'shuxing',event:'resetProps'},
-    { title: 'resetStyle', icon: 'form' },
+    { title: 'resetStyle', icon: 'form' ,type:ACTION_TYPES.changeStyles},
   ],
 }, {
   span: 8,
   style: { justifyContent: 'flex-end' },
   group: [
-    { title: 'preview', icon: 'eye' },
+    { title: 'preview', icon: 'eye', },
     // { title: '导出代码', icon: 'export', event: 'outputFiles' },
     { title: 'generateTemplate', icon: 'block' },
-    { title: 'generateTemplate', icon:SwitchPlatform,props:{menus:platformMenus}},
+    { title: 'switchPlatform', icon:SwitchPlatform,props:{menus:platformMenus}},
   ],
 },
   {
   span: 8,
   style: { justifyContent: 'flex-end', paddingRight: '50px' },
   group: [
-    { title: 'save', icon: 'save' },
-    { title: 'copy', icon: 'copy' },
-    { title: 'clear', icon: 'rest' },
-    { title: 'delete', icon: 'delete' },
+    { title: 'save', icon: 'save',type:ACTION_TYPES.submitConfigs },
+    { title: 'copy', icon: 'copy',type:ACTION_TYPES.copyComponent },
+    { title: 'clear', icon: 'rest',type:ACTION_TYPES.clearChildNodes },
+    { title: 'delete', icon: 'delete',type:ACTION_TYPES.deleteComponent },
 
   ],
 }];

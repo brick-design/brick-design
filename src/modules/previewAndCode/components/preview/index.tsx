@@ -1,4 +1,4 @@
-import React, { createElement, PureComponent, useState } from 'react';
+import React, { createElement, useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import styles from '../../styles.less';
 import map from 'lodash/map';
@@ -13,16 +13,16 @@ import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
 interface PreviewPropsType {
-  componentConfigs:VirtualDOMType[],
-  platformInfo?:PlatformInfoType
+  componentConfigs: VirtualDOMType[],
+  platformInfo?: PlatformInfoType
 }
 
 
-export default function Preview (props:PreviewPropsType){
+export default function Preview(props: PreviewPropsType) {
+  const { componentConfigs, platformInfo } = props;
+  const [visible, setVisible] = useState(false);
 
-  const [visible,setVisible]=useState(false)
-
-  function analysisPage  (childNodesArr:VirtualDOMType[], onlyNode?:boolean)  {
+  function analysisPage(childNodesArr: VirtualDOMType[], onlyNode?: boolean) {
 
     const resultComponents = map(childNodesArr, childNode => {
       const { componentName, props, addPropsConfig, childNodes, key } = childNode;
@@ -30,7 +30,7 @@ export default function Preview (props:PreviewPropsType){
       const cloneProps = cloneDeep(props);
       if (!isEmpty(childNodes)) {
         if (!nodePropsConfig) {
-          cloneProps.children = analysisPage(childNodes as VirtualDOMType[] );
+          cloneProps.children = analysisPage(childNodes as VirtualDOMType[]);
         } else {
           each(nodePropsConfig, (nodePropsConfig, propName) => {
             const { type, isOnlyNode } = nodePropsConfig;
@@ -48,14 +48,14 @@ export default function Preview (props:PreviewPropsType){
       cloneProps.className = classNames(className, animateClass);
       cloneProps.key = key;
       if (mirrorModalField) {
-        const {displayPropName, mounted, style} = mirrorModalField;
-        const  { propName, type }=mounted
+        const { displayPropName, mounted, style } = mirrorModalField;
+        const { propName, type } = mounted;
         const mountedNode = document.getElementById('preview-container');
         cloneProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
         cloneProps[displayPropName] = visible;
         merge(cloneProps.style, style);
         cloneProps.zIndex = 2000;
-        cloneProps.onCancel = ()=>setVisible(!visible);
+        cloneProps.onCancel = () => setVisible(!visible);
       }
       return createElement(get(config.OriginalComponents, componentName, componentName), formatSpecialProps(cloneProps, merge({}, propsConfig, addPropsConfig)));
     });
@@ -64,14 +64,12 @@ export default function Preview (props:PreviewPropsType){
     return resultComponents;
   }
 
+  const { size } = platformInfo!;
+  const style = { width: size[0], maxHeight: size[1] };
 
-    const { componentConfigs,platformInfo } = props;
-    const {size}=platformInfo!
-    const style={width:size[0],maxHeight:size[1]}
-
-    return (
-      <div id='preview-container' style={style} className={styles['preview-container']}>
-        {analysisPage(componentConfigs)}
-      </div>)
+  return (
+    <div id='preview-container' style={style} className={styles['preview-container']}>
+      {analysisPage(componentConfigs)}
+    </div>);
 
 }
