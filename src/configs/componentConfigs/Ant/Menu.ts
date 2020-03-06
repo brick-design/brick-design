@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Menu:ComponentConfigType={
+const Menu: ComponentConfigType = {
   nodePropsConfig: {
     overflowedIndicator: {
       type: PROPS_TYPES.reactNode,
@@ -94,85 +94,85 @@ const Menu:ComponentConfigType={
     },
   },
 };
-const Divider:ComponentConfigType= {
-    propsConfig: {},
-  }
-const   ItemGroup:ComponentConfigType= {
-    nodePropsConfig: {
-      title: {
-        type: PROPS_TYPES.reactNode,
-      },
-      children: {
-        type: PROPS_TYPES.reactNode,
-        childNodesRule: ['Menu.Item'],
-      },
+const Divider: ComponentConfigType = {
+  propsConfig: {},
+};
+const ItemGroup: ComponentConfigType = {
+  nodePropsConfig: {
+    title: {
+      type: PROPS_TYPES.reactNode,
     },
-    propsConfig: {
-      title: {
-        label: '标题内容',
-        type: PROPS_TYPES.string,
-      },
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Menu.Item'],
     },
-  }
-const   SubMenu:ComponentConfigType= {
-    nodePropsConfig: {
-      title: {
-        type: PROPS_TYPES.reactNode,
-      },
-      children: {
-        type: PROPS_TYPES.reactNode,
-        childNodesRule: ['Menu.Item', 'Menu.SubMenu', 'Menu.ItemGroup'],
-      },
+  },
+  propsConfig: {
+    title: {
+      label: '标题内容',
+      type: PROPS_TYPES.string,
     },
-    propsConfig: {
-      title: {
-        label: '标题内容',
-        type: PROPS_TYPES.string,
-      },
-      popupClassName: {
-        label: '子菜单样式',
-        type: PROPS_TYPES.string,
-      },
-      disabled: {
-        label: '是否禁用',
-        type: PROPS_TYPES.boolean,
-      },
-      key: {
-        label: 'item 的唯一标志',
-        type: PROPS_TYPES.string,
-      },
-      onTitleClick: {
-        label: '点击子菜单标题',
-        type: PROPS_TYPES.function,
-        placeholder: '({ key, domEvent }) => {}',
-      },
+  },
+};
+const SubMenu: ComponentConfigType = {
+  nodePropsConfig: {
+    title: {
+      type: PROPS_TYPES.reactNode,
+    },
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Menu.Item', 'Menu.SubMenu', 'Menu.ItemGroup'],
+    },
+  },
+  propsConfig: {
+    title: {
+      label: '标题内容',
+      type: PROPS_TYPES.string,
+    },
+    popupClassName: {
+      label: '子菜单样式',
+      type: PROPS_TYPES.string,
+    },
+    disabled: {
+      label: '是否禁用',
+      type: PROPS_TYPES.boolean,
+    },
+    key: {
+      label: 'item 的唯一标志',
+      type: PROPS_TYPES.string,
+    },
+    onTitleClick: {
+      label: '点击子菜单标题',
+      type: PROPS_TYPES.function,
+      placeholder: '({ key, domEvent }) => {}',
+    },
 
+  },
+};
+const Item: ComponentConfigType = {
+  propsConfig: {
+    children: {
+      label: '内容',
+      type: PROPS_TYPES.string,
     },
-  }
-const   Item:ComponentConfigType= {
-    propsConfig: {
-      children: {
-        label: '内容',
-        type: PROPS_TYPES.string,
-      },
-      disabled: {
-        label: '是否禁用',
-        type: PROPS_TYPES.boolean,
-      },
-      key: {
-        label: 'item 的唯一标志',
-        type: PROPS_TYPES.string,
-      },
-      title: {
-        label: '设置收缩时展示的悬浮标题',
-        type: PROPS_TYPES.string,
-      },
+    disabled: {
+      label: '是否禁用',
+      type: PROPS_TYPES.boolean,
     },
-  }
-  export default {
-    Menu,
-    'Menu.Divider':Divider,
-    'Menu.ItemGroup':ItemGroup,
-    'Menu.SubMenu':SubMenu,
-    'Menu.Item':Item
-  }
+    key: {
+      label: 'item 的唯一标志',
+      type: PROPS_TYPES.string,
+    },
+    title: {
+      label: '设置收缩时展示的悬浮标题',
+      type: PROPS_TYPES.string,
+    },
+  },
+};
+export default {
+  Menu,
+  'Menu.Divider': Divider,
+  'Menu.ItemGroup': ItemGroup,
+  'Menu.SubMenu': SubMenu,
+  'Menu.Item': Item,
+};

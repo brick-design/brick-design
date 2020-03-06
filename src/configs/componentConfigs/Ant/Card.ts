@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Card:ComponentConfigType={
+const Card: ComponentConfigType = {
   nodePropsConfig: {
     cover: {
       type: PROPS_TYPES.reactNode,
@@ -73,8 +73,8 @@ const Card:ComponentConfigType={
       type: PROPS_TYPES.objectArray,
       childPropsConfig: [{
         key: {
-          label:'key',
-          type:PROPS_TYPES.string
+          label: 'key',
+          type: PROPS_TYPES.string,
         },
       }],
     },
@@ -94,38 +94,38 @@ const Card:ComponentConfigType={
   },
 };
 
-const  Grid:ComponentConfigType={
-    propsConfig: {
-      hoverable: {
-        label: '鼠标移过时可浮起',
-        tip: '鼠标移过时可浮起',
-        type: PROPS_TYPES.boolean,
-      },
+const Grid: ComponentConfigType = {
+  propsConfig: {
+    hoverable: {
+      label: '鼠标移过时可浮起',
+      tip: '鼠标移过时可浮起',
+      type: PROPS_TYPES.boolean,
     },
-  }
+  },
+};
 
-  const  Meta:ComponentConfigType={
-    nodePropsConfig: {
-      avatar: {
-        type: PROPS_TYPES.reactNode,
-      },
-      description: {
-        type: PROPS_TYPES.reactNode,
-      },
-      title: {
-        type: PROPS_TYPES.reactNode,
-      },
+const Meta: ComponentConfigType = {
+  nodePropsConfig: {
+    avatar: {
+      type: PROPS_TYPES.reactNode,
     },
-    propsConfig: {
-      className: {
-        label: '容器类名',
-        type: PROPS_TYPES.string,
-      },
+    description: {
+      type: PROPS_TYPES.reactNode,
     },
-  }
+    title: {
+      type: PROPS_TYPES.reactNode,
+    },
+  },
+  propsConfig: {
+    className: {
+      label: '容器类名',
+      type: PROPS_TYPES.string,
+    },
+  },
+};
 
-  export default {
+export default {
   Card,
-    'Card.Grid':Grid,
-    'Card.Meta':Meta
-  }
+  'Card.Grid': Grid,
+  'Card.Meta': Meta,
+};

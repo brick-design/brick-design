@@ -1,20 +1,20 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Dropdown:ComponentConfigType={
+const Dropdown: ComponentConfigType = {
   nodePropsConfig: {
-    overlay:{
+    overlay: {
       type: PROPS_TYPES.reactNode,
       childNodesRule: ['Menu'],
       isOnlyNode: true,
-      isRequired:true
+      isRequired: true,
     },
-    children:{
+    children: {
       type: PROPS_TYPES.reactNode,
       isOnlyNode: true,
-      isRequired:true
+      isRequired: true,
     },
-},
+  },
   propsConfig: {
     disabled: {
       label: '菜单是否禁用',
@@ -56,61 +56,61 @@ const Dropdown:ComponentConfigType={
     },
   },
 };
-const Button:ComponentConfigType= {
-    nodePropsConfig: {
-      overlay: {
-        type: PROPS_TYPES.reactNode,
-        childNodesRule: ['Menu'],
-      },
-      icon:{
-        type: PROPS_TYPES.reactNode,
-      },
-      children:{
-        type: PROPS_TYPES.reactNode,
-      },
+const Button: ComponentConfigType = {
+  nodePropsConfig: {
+    overlay: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Menu'],
     },
-    propsConfig: {
-      disabled: {
-        label: '菜单是否禁用',
-        type: PROPS_TYPES.boolean,
-      },
-      size: {
-        label: '按钮大小',
-        type: PROPS_TYPES.enum,
-        enumData: ['default', 'large', 'small'],
-      },
-      type: {
-        label: '按钮类型',
-        type: PROPS_TYPES.enum,
-        enumData: ['default', 'primary', 'dashed', 'danger', 'link'],
+    icon: {
+      type: PROPS_TYPES.reactNode,
+    },
+    children: {
+      type: PROPS_TYPES.reactNode,
+    },
+  },
+  propsConfig: {
+    disabled: {
+      label: '菜单是否禁用',
+      type: PROPS_TYPES.boolean,
+    },
+    size: {
+      label: '按钮大小',
+      type: PROPS_TYPES.enum,
+      enumData: ['default', 'large', 'small'],
+    },
+    type: {
+      label: '按钮类型',
+      type: PROPS_TYPES.enum,
+      enumData: ['default', 'primary', 'dashed', 'danger', 'link'],
 
-      },
-      placement: {
-        label: '菜单弹出位置',
-        type: PROPS_TYPES.enum,
-        enumData: ['bottomLeft', 'bottomCenter', 'bottomRight', 'topLeft', 'topCenter', 'topRight'],
-      },
-      trigger: {
-        label: '触发下拉的行为',
-        tip: '触发下拉的行为, 移动端不支持 hover,click|hover|contextMenu',
-        type: PROPS_TYPES.stringArray,
-      },
-      visible: {
-        label: '菜单是否显示',
-        type: PROPS_TYPES.boolean,
-      },
-      onClick: {
-        label: '点击左侧按钮的回调',
-        type: PROPS_TYPES.function,
-      },
-      onVisibleChange: {
-        label: '菜单显示状态改变时调用',
-        type: PROPS_TYPES.function,
-        placeholder: '(visible)=>{}',
-      },
     },
-  }
+    placement: {
+      label: '菜单弹出位置',
+      type: PROPS_TYPES.enum,
+      enumData: ['bottomLeft', 'bottomCenter', 'bottomRight', 'topLeft', 'topCenter', 'topRight'],
+    },
+    trigger: {
+      label: '触发下拉的行为',
+      tip: '触发下拉的行为, 移动端不支持 hover,click|hover|contextMenu',
+      type: PROPS_TYPES.stringArray,
+    },
+    visible: {
+      label: '菜单是否显示',
+      type: PROPS_TYPES.boolean,
+    },
+    onClick: {
+      label: '点击左侧按钮的回调',
+      type: PROPS_TYPES.function,
+    },
+    onVisibleChange: {
+      label: '菜单显示状态改变时调用',
+      type: PROPS_TYPES.function,
+      placeholder: '(visible)=>{}',
+    },
+  },
+};
 export default {
   Dropdown,
-  'Dropdown.Button':Button
-}
+  'Dropdown.Button': Button,
+};

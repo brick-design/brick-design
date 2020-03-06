@@ -1,12 +1,12 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Anchor:ComponentConfigType={
-  nodePropsConfig:{
-    children:{
-      type:PROPS_TYPES.reactNode,
-      childNodesRule:['Anchor.Link']
-    }
+const Anchor: ComponentConfigType = {
+  nodePropsConfig: {
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Anchor.Link'],
+    },
   },
   propsConfig: {
     affix: {
@@ -36,34 +36,34 @@ const Anchor:ComponentConfigType={
     },
   },
 };
-const Link:ComponentConfigType={
-  parentNodesRule:['Anchor','Anchor.Link.children'],
-  nodePropsConfig:{
-    title:{
-      type:PROPS_TYPES.reactNode
+const Link: ComponentConfigType = {
+  parentNodesRule: ['Anchor', 'Anchor.Link.children'],
+  nodePropsConfig: {
+    title: {
+      type: PROPS_TYPES.reactNode,
     },
-    children:{
-      type:PROPS_TYPES.reactNode,
-      childNodesRule:['Anchor.Link']
-    }
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Anchor.Link'],
+    },
   },
-  propsConfig:{
+  propsConfig: {
     href: {
       label: '锚点链接',
-      type: PROPS_TYPES.string
+      type: PROPS_TYPES.string,
     },
     title: {
       label: '文字内容',
-      type: PROPS_TYPES.string
+      type: PROPS_TYPES.string,
     },
-    target:{
-      label:'该属性指定在何处显示链接的资源',
-      type:PROPS_TYPES.string
-    }
-  }
-}
+    target: {
+      label: '该属性指定在何处显示链接的资源',
+      type: PROPS_TYPES.string,
+    },
+  },
+};
 
 export default {
   Anchor,
-  'Anchor.Link':Link
-}
+  'Anchor.Link': Link,
+};

@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Tooltip:ComponentConfigType={
+const Tooltip: ComponentConfigType = {
   mirrorModalField: {
     displayPropName: 'visible',
   },
@@ -41,7 +41,7 @@ const Tooltip:ComponentConfigType={
     },
     overlayStyle: {
       label: '卡片样式',
-      type: [PROPS_TYPES.object,PROPS_TYPES.json],
+      type: [PROPS_TYPES.object, PROPS_TYPES.json],
     },
     placement: {
       label: '气泡框位置',
@@ -63,4 +63,4 @@ const Tooltip:ComponentConfigType={
   },
 };
 
-export default Tooltip
+export default Tooltip;

@@ -26,9 +26,9 @@ export default function Code(props: CodePropsType) {
 
   }, [componentConfigs]);
 
-  useEffect(()=>{
+  useEffect(() => {
     highlightCode();
-  },[code,style])
+  }, [code, style]);
 
   function highlightCode() {
     hljs.highlightBlock(codeRef.current);

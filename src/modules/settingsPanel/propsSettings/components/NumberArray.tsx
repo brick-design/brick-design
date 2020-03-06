@@ -1,24 +1,17 @@
-import React, { Component } from 'react';
+import React, { forwardRef, memo } from 'react';
 import { Select } from 'antd';
-import isEqual from 'lodash/isEqual'
 import { SelectProps } from 'antd/es/select';
+import { propsAreEqual } from '@/utils';
 
-interface NumberArrayPropsType extends SelectProps<any>{
-  maxTagCount:number,
-  onChange:(value:any)=>void
+interface NumberArrayPropsType extends SelectProps<any> {
+  maxTagCount: number,
+  onChange: (value: any) => void
 }
 
 
-class NumberArray extends Component<NumberArrayPropsType> {
-
-  shouldComponentUpdate(nextProps: Readonly<NumberArrayPropsType>){
-    const {value}=nextProps
-    const {value:prevValue}=this.props
-    return isEqual(value,prevValue)
-  }
-
-  onNumberChange = (value:string) => {
-    const { onChange, maxTagCount = 10000 } = this.props;
+function NumberArray(props: NumberArrayPropsType, ref: any) {
+  function onNumberChange(value: string) {
+    const { onChange, maxTagCount = 10000 } = props;
     const numberArray = [];
     if (value.length <= maxTagCount) {
       for (const v of value) {
@@ -29,17 +22,16 @@ class NumberArray extends Component<NumberArrayPropsType> {
       }
       onChange && onChange(numberArray);
     }
-  };
-
-  render() {
-    return (<Select
-      mode="tags"
-      style={{ width: '100%' }}
-      dropdownStyle={{ display: 'none' }}
-      {...this.props}
-      onChange={this.onNumberChange}
-    />);
   }
+
+  return (<Select
+    ref={ref}
+    mode="tags"
+    style={{ width: '100%' }}
+    dropdownStyle={{ display: 'none' }}
+    {...props}
+    onChange={onNumberChange}
+  />);
 }
 
-export default NumberArray
+export default memo(forwardRef(NumberArray), propsAreEqual);

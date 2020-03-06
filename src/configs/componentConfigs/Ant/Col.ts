@@ -12,7 +12,7 @@ const DEFAULT_CONFIG = {
   },
 };
 
-const Col:ComponentConfigType={
+const Col: ComponentConfigType = {
   propsConfig: {
     offset: {
       label: '间隔格数',
@@ -42,7 +42,7 @@ const Col:ComponentConfigType={
     xs: {
       label: 'xs',
       tip: '<576px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -50,7 +50,7 @@ const Col:ComponentConfigType={
     sm: {
       label: 'sm',
       tip: '<576px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -58,7 +58,7 @@ const Col:ComponentConfigType={
     md: {
       label: 'md',
       tip: '≥768px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -66,7 +66,7 @@ const Col:ComponentConfigType={
     lg: {
       label: 'lg',
       tip: '≥992px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -74,7 +74,7 @@ const Col:ComponentConfigType={
     xl: {
       label: 'xl',
       tip: '≥1200px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -82,7 +82,7 @@ const Col:ComponentConfigType={
     xxl: {
       label: 'xxl',
       tip: '≥1600px 响应式栅格，可为栅格数或一个包含其他属性的对象',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object],
       childPropsConfig: {
         ...DEFAULT_CONFIG,
       },
@@ -90,4 +90,4 @@ const Col:ComponentConfigType={
   },
 };
 
-export default Col
+export default Col;

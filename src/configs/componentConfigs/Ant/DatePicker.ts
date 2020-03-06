@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { NodePropsConfigType, ComponentConfigType, PropsConfigType } from '@/types/ComponentConfigType';
+import { ComponentConfigType, NodePropsConfigType, PropsConfigType } from '@/types/ComponentConfigType';
 
-const commonNodePropsConfig:NodePropsConfigType = {
+const commonNodePropsConfig: NodePropsConfigType = {
   dateRender: {
     type: PROPS_TYPES.functionReactNode,
     params: ['currentDate', 'today'],
@@ -14,7 +14,7 @@ const commonNodePropsConfig:NodePropsConfigType = {
     type: PROPS_TYPES.reactNode,
   },
 };
-const commonPropsConfig:PropsConfigType = {
+const commonPropsConfig: PropsConfigType = {
   allowClear: {
     label: '是否显示清除按钮',
     type: PROPS_TYPES.boolean,
@@ -84,7 +84,7 @@ const commonPropsConfig:PropsConfigType = {
   },
 
 };
-const DatePicker:ComponentConfigType= {
+const DatePicker: ComponentConfigType = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
@@ -99,14 +99,14 @@ const DatePicker:ComponentConfigType= {
       placeholder: '(date) => {}',
     },
     format: {
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray],
       label: '展示的日期格式',
       placeholder: '默认 YYYY - MM - DD',
     },
 
     showTime: {
       label: '增加时间选择功能',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
       childPropsConfig: {},
     },
     showToday: {
@@ -132,85 +132,85 @@ const DatePicker:ComponentConfigType= {
   },
 };
 
-const MonthPicker:ComponentConfigType= {
+const MonthPicker: ComponentConfigType = {
   nodePropsConfig: {
     monthCellContentRender: {
       type: PROPS_TYPES.functionReactNode,
-        params: ['date', 'locale'],
+      params: ['date', 'locale'],
     },
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
-        params: ['mode'],
+      params: ['mode'],
     }, ...commonNodePropsConfig,
   },
   propsConfig: {
-  ...commonPropsConfig,
-      format: {
+    ...commonPropsConfig,
+    format: {
       type: PROPS_TYPES.string,
-        label: '展示的日期格式',
-        placeholder: '默认 YYYY - MM - DD',
+      label: '展示的日期格式',
+      placeholder: '默认 YYYY - MM - DD',
     },
     onChange: {
       type: PROPS_TYPES.function,
-        label: '值改变时的回调',
-        placeholder: '(date, dateString) => {}',
+      label: '值改变时的回调',
+      placeholder: '(date, dateString) => {}',
     },
   },
-}
-  const WeekPicker:ComponentConfigType={
+};
+const WeekPicker: ComponentConfigType = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
-        params: ['mode'],
+      params: ['mode'],
     }, ...commonNodePropsConfig,
   },
   propsConfig: {
-  ...commonPropsConfig,
-      format: {
+    ...commonPropsConfig,
+    format: {
       type: PROPS_TYPES.string,
-        label: '展示的日期格式',
-        placeholder: '默认 YYYY - MM - DD',
+      label: '展示的日期格式',
+      placeholder: '默认 YYYY - MM - DD',
     },
     onChange: {
       type: PROPS_TYPES.function,
-        label: '值改变时的回调',
-        placeholder: '(date, dateString) => {}',
+      label: '值改变时的回调',
+      placeholder: '(date, dateString) => {}',
     },
   },
-}
+};
 
-const RangePicker:ComponentConfigType= {
+const RangePicker: ComponentConfigType = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
-        params: ['mode'],
+      params: ['mode'],
     }, ...commonNodePropsConfig,
   },
   propsConfig: {
-  ...commonPropsConfig,
-      disabledTime: {
+    ...commonPropsConfig,
+    disabledTime: {
       label: '不可选择的时间',
-        type: PROPS_TYPES.function,
-        placeholder: '(date) => {}',
+      type: PROPS_TYPES.function,
+      placeholder: '(date) => {}',
     },
     format: {
       type: PROPS_TYPES.string,
-        label: '展示的日期格式',
-        placeholder: '默认 YYYY - MM - DD',
+      label: '展示的日期格式',
+      placeholder: '默认 YYYY - MM - DD',
     },
     ranges: {
       label: '预设时间范围快捷选择',
-        type: [PROPS_TYPES.object,PROPS_TYPES.function],
-        childPropsConfig: {},
+      type: [PROPS_TYPES.object, PROPS_TYPES.function],
+      childPropsConfig: {},
     },
     separator: {
       label: '设置分隔符',
-        type: PROPS_TYPES.string,
+      type: PROPS_TYPES.string,
     },
     showTime: {
       label: '增加时间选择功能',
-        type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
-        childPropsConfig: {},
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
+      childPropsConfig: {},
     },
     // value: {
     //   type: PROPS_TYPES.string,
@@ -218,26 +218,26 @@ const RangePicker:ComponentConfigType= {
     // }
     onCalendarChange: {
       label: '待选日期发生变化的回调',
-        type: PROPS_TYPES.function,
-        placeholder: '(dates, dateStrings)=>{}',
+      type: PROPS_TYPES.function,
+      placeholder: '(dates, dateStrings)=>{}',
     },
     onChange: {
       type: PROPS_TYPES.function,
-        label: '值改变时的回调',
-        placeholder: '(date, dateString) => {}',
+      label: '值改变时的回调',
+      placeholder: '(date, dateString) => {}',
     },
     onOk: {
       label: '点击确定按钮的回调',
-        type: PROPS_TYPES.function,
-        placeholder: '(dates) => {}',
+      type: PROPS_TYPES.function,
+      placeholder: '(dates) => {}',
     },
 
   },
-}
+};
 
 export default {
   DatePicker,
-  'DatePicker.MonthPicker':MonthPicker,
-  'DatePicker.WeekPicker':WeekPicker,
-  'DatePicker.RangePicker':RangePicker
-}
+  'DatePicker.MonthPicker': MonthPicker,
+  'DatePicker.WeekPicker': WeekPicker,
+  'DatePicker.RangePicker': RangePicker,
+};

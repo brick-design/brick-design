@@ -2,7 +2,7 @@ import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
 
-const Calendar:ComponentConfigType= {
+const Calendar: ComponentConfigType = {
 
   propsConfig: {
     dateCellRender: {
@@ -71,4 +71,4 @@ const Calendar:ComponentConfigType= {
   },
 };
 
-export default Calendar
+export default Calendar;

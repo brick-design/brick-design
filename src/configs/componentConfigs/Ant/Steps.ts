@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Steps:ComponentConfigType={
+const Steps: ComponentConfigType = {
   nodePropsConfig: {
     progressDot: {
       type: PROPS_TYPES.functionReactNode,
@@ -64,7 +64,7 @@ const Steps:ComponentConfigType={
   },
 };
 
-const Step:ComponentConfigType= {
+const Step: ComponentConfigType = {
   nodePropsConfig: {
     description: {
       type: PROPS_TYPES.reactNode,
@@ -109,10 +109,10 @@ const Step:ComponentConfigType= {
       enumData: ['wait', 'process', 'finish', 'error'],
     },
   },
-}
+};
 
 export default {
   Steps,
-  'Steps.Step':Step
+  'Steps.Step': Step,
 
-}
+};

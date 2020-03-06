@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Button:ComponentConfigType={
+const Button: ComponentConfigType = {
   propsConfig: {
     children: {
       label: '内容',
@@ -35,7 +35,7 @@ const Button:ComponentConfigType={
     loading: {
       label: '载入状态',
       tip: '设置按钮载入状态',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
       childPropsConfig: {
         delay: {
           label: '时间',
@@ -81,4 +81,4 @@ const Button:ComponentConfigType={
   },
 };
 
-export default Button
+export default Button;

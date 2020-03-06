@@ -9,7 +9,7 @@ import 'antd/dist/antd.css';
 import 'animate.css/animate.min.css';
 import { initDB } from './service';
 
-const COMMON_ENABLE={
+const COMMON_ENABLE = {
   top: false,
   right: false,
   bottom: false,
@@ -18,7 +18,7 @@ const COMMON_ENABLE={
   bottomRight: false,
   bottomLeft: false,
   topLeft: false,
-}
+};
 const LEFT_ENABLE = {
   ...COMMON_ENABLE,
   right: true,
@@ -30,44 +30,44 @@ const RIGHT_ENABLE = {
 
 };
 
-const tableIndexs=[
-  { name:'name', keyPath:'name', options:{unique: true} },
-  { name:'img', keyPath:'img', options:{unique: false} },
-  { name:'config', keyPath:'config', options:{unique: false} },
-]
+const tableIndexs = [
+  { name: 'name', keyPath: 'name', options: { unique: true } },
+  { name: 'img', keyPath: 'img', options: { unique: false } },
+  { name: 'config', keyPath: 'config', options: { unique: false } },
+];
 
 export default function Index() {
-  useEffect(()=>{
-    initDB('test' ,'templates',  { autoIncrement: true },
+  useEffect(() => {
+    initDB('test', 'templates', { autoIncrement: true },
       tableIndexs);
-  },[])
+  }, []);
 
-    return (
-        <div className={styles.wrapper}>
-          <ToolBar/>
-          <div
-            className={styles.content}
-          >
-            <Resizable
-              enable={LEFT_ENABLE}
-              defaultSize={{ width: '260px', height: '100%' }}
-              className={styles['left-preview']}
-            >
-              <AllComponents/>
-            </Resizable>
+  return (
+    <div className={styles.wrapper}>
+      <ToolBar/>
+      <div
+        className={styles.content}
+      >
+        <Resizable
+          enable={LEFT_ENABLE}
+          defaultSize={{ width: '260px', height: '100%' }}
+          className={styles['left-preview']}
+        >
+          <AllComponents/>
+        </Resizable>
 
-            <div className={styles['canvas-container']}>
-              <DesignPanel/>
-            </div>
-            <Resizable
-              enable={RIGHT_ENABLE}
-              defaultSize={{ width: '300px',height:'100%' }}
-              className={styles['props-shadow']}
-            >
-              <SettingsPanel/>
-            </Resizable>
-          </div>
+        <div className={styles['canvas-container']}>
+          <DesignPanel/>
         </div>
-    );
-  }
+        <Resizable
+          enable={RIGHT_ENABLE}
+          defaultSize={{ width: '300px', height: '100%' }}
+          className={styles['props-shadow']}
+        >
+          <SettingsPanel/>
+        </Resizable>
+      </div>
+    </div>
+  );
+}
 

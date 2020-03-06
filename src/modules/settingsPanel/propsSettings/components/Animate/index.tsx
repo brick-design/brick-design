@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import map from 'lodash/map';
 import { Button, Col, Dropdown, Row, TreeSelect } from 'antd';
 import classNames from 'classnames';
@@ -6,75 +6,23 @@ import styles from './index.less';
 import options from './config';
 
 const { TreeNode } = TreeSelect;
+
 interface AnimatePropsType {
-  value:string,
-  onChange:(value:any)=>void
+  value: string,
+  onChange: (value: any) => void
 }
 
-interface AnimateStateType {
-  animateName: string,
-  dropdownVisible:boolean
-}
-class Animate extends Component<AnimatePropsType,AnimateStateType> {
+function Animate(props: AnimatePropsType) {
+  const { value, onChange } = props;
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
-
-  constructor(props:AnimatePropsType) {
-    super(props);
-
-    this.state = {
-      animateName: '',
-      dropdownVisible: false,
-    };
-  }
-
-  static getDerivedStateFromProps(nextProps:AnimatePropsType) {
-    const { value } = nextProps;
-    return { animateName: value ? value.split(' ')[0] : '' };
-
-  }
-
-  handleChange = (val:any) => {
-    const { onChange } = this.props;
+  function handleChange(val: any) {
     let animatedClass = val ? `${val} animated` : undefined;
     onChange && onChange(animatedClass);
   };
 
-  animateIt = () => {
-    const { dropdownVisible } = this.state;
-    this.setState({
-      dropdownVisible: !dropdownVisible,
-    });
-  };
 
-
-  renderSelect = (animateName:string) => (
-    <TreeSelect
-      showSearch
-      value={animateName}
-      style={{ width: '100%' }}
-      dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
-      placeholder="请选择"
-      allowClear
-      treeDefaultExpandAll
-      dropdownMatchSelectWidth
-      className={styles['select-box']}
-      onChange={this.handleChange}
-    >
-      {
-        map(options, (optGroup) => (
-            <TreeNode value={optGroup.title} title={optGroup.title} key={optGroup.title} disabled>
-              {map(optGroup.data, option => (
-                <TreeNode value={option} title={option} key={option}/>
-              ))}
-            </TreeNode>
-          ),
-        )
-      }
-    </TreeSelect>
-  );
-
-  renderAnimateBox = (animateName:string) => {
-
+  function renderAnimateBox(animateName: string) {
     const animateClass = animateName ? `${animateName} animated` : '';
 
     return (
@@ -88,24 +36,45 @@ class Animate extends Component<AnimatePropsType,AnimateStateType> {
     );
   };
 
-  render() {
-    const { dropdownVisible, animateName } = this.state;
-    return (
-      <Row gutter={10} className={styles['animate-component-warp']}>
-        <Col style={{ lineHeight: 0 }} span={14}>
-          {this.renderSelect(animateName)}
-        </Col>
-        <Col style={{ lineHeight: 0, position: 'relative' }} span={10} id='drop-down'>
-          <Dropdown visible={dropdownVisible}
-                    getPopupContainer={(triggerNode:any) => triggerNode}
-                    overlay={this.renderAnimateBox(animateName)}
-                    placement="bottomRight">
-            <Button size={'small'} className={styles['animate-btn']} onClick={this.animateIt}>Animate It</Button>
-          </Dropdown>
-        </Col>
-      </Row>
-    );
-  }
+  return (
+    <Row gutter={10} className={styles['animate-component-warp']}>
+      <Col style={{ lineHeight: 0 }} span={14}>
+        <TreeSelect
+          showSearch
+          value={value ? value.split(' ')[0] : ''}
+          style={{ width: '100%' }}
+          dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
+          placeholder="请选择"
+          allowClear
+          treeDefaultExpandAll
+          dropdownMatchSelectWidth
+          className={styles['select-box']}
+          onChange={handleChange}
+        >
+          {
+            map(options, (optGroup) => (
+                <TreeNode value={optGroup.title} title={optGroup.title} key={optGroup.title} disabled>
+                  {map(optGroup.data, option => (
+                    <TreeNode value={option} title={option} key={option}/>
+                  ))}
+                </TreeNode>
+              ),
+            )
+          }
+        </TreeSelect>
+      </Col>
+      <Col style={{ lineHeight: 0, position: 'relative' }} span={10} id='drop-down'>
+        <Dropdown visible={dropdownVisible}
+                  getPopupContainer={(triggerNode: any) => triggerNode}
+                  overlay={renderAnimateBox(value ? value.split(' ')[0] : '')}
+                  placement="bottomRight">
+          <Button size={'small'} className={styles['animate-btn']} onClick={() => setDropdownVisible(!dropdownVisible)}>Animate
+            It</Button>
+        </Dropdown>
+      </Col>
+    </Row>
+  );
 }
+
 
 export default Animate;

@@ -4,24 +4,24 @@ import Breadcrumb from './Breadcrumb';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const PageHeader:ComponentConfigType= {
+const PageHeader: ComponentConfigType = {
   nodePropsConfig: {
-    title:{
-    type: PROPS_TYPES.reactNode,
-  },
-    subTitle:{
+    title: {
       type: PROPS_TYPES.reactNode,
     },
-    backIcon:{
+    subTitle: {
       type: PROPS_TYPES.reactNode,
     },
-    extra:{
+    backIcon: {
       type: PROPS_TYPES.reactNode,
     },
-    footer:{
+    extra: {
       type: PROPS_TYPES.reactNode,
     },
-    children:{
+    footer: {
+      type: PROPS_TYPES.reactNode,
+    },
+    children: {
       type: PROPS_TYPES.reactNode,
     },
   },
@@ -53,4 +53,4 @@ const PageHeader:ComponentConfigType= {
     },
   },
 };
-export default PageHeader
+export default PageHeader;

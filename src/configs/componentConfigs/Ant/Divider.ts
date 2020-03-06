@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Divider:ComponentConfigType={
+const Divider: ComponentConfigType = {
   propsConfig: {
     dashed: {
       label: '是否虚线',
@@ -28,4 +28,4 @@ const Divider:ComponentConfigType={
   },
 };
 
-export default Divider
+export default Divider;

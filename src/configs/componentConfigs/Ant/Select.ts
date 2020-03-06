@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Select:ComponentConfigType={
+const Select: ComponentConfigType = {
 
   nodePropsConfig: {
     dropdownRender: {
@@ -25,7 +25,7 @@ const Select:ComponentConfigType={
     },
     children: {
       type: PROPS_TYPES.reactNode,
-      childNodesRule: ['Select.OptGroup','Select.Option'],
+      childNodesRule: ['Select.OptGroup', 'Select.Option'],
     },
   },
   propsConfig: {
@@ -48,7 +48,7 @@ const Select:ComponentConfigType={
     },
     defaultValue: {
       label: '输入框默认值',
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray,PROPS_TYPES.number,PROPS_TYPES.numberArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray, PROPS_TYPES.number, PROPS_TYPES.numberArray],
     },
     disabled: {
       label: '是否禁用',
@@ -64,21 +64,21 @@ const Select:ComponentConfigType={
     },
     dropdownStyle: {
       label: '下拉菜单的 style 属性',
-      type: [PROPS_TYPES.object,PROPS_TYPES.json],
+      type: [PROPS_TYPES.object, PROPS_TYPES.json],
     },
     dropdownMenuStyle: {
       label: 'dropdown 菜单自定义样式',
-      type: [PROPS_TYPES.object,PROPS_TYPES.json],
+      type: [PROPS_TYPES.object, PROPS_TYPES.json],
     },
     filterOption: {
       label: '是否根据输入项进行筛选',
       tip: '是否根据输入项进行筛选。当其为一个函数时，会接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false。',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.function],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.function],
       placeholder: '(inputValue, option)=>{}',
     },
     firstActiveValue: {
       label: '默认高亮的选项',
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray],
     },
     getPopupContainer: {
       label: '菜单渲染父节点',
@@ -151,7 +151,7 @@ const Select:ComponentConfigType={
     },
     value: {
       label: '指定当前选中的条目',
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray,PROPS_TYPES.number,PROPS_TYPES.numberArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray, PROPS_TYPES.number, PROPS_TYPES.numberArray],
     },
     onBlur: {
       label: '失去焦点时的回调',
@@ -225,56 +225,56 @@ const Select:ComponentConfigType={
   },
 };
 
-const  OptGroup:ComponentConfigType= {
-    parentNodesRule: ['Select.children'],
-    nodePropsConfig: {
-      label: {
-        type: PROPS_TYPES.reactNode,
-      },
-      children: {
-        type: PROPS_TYPES.reactNode,
-        childNodesRule: ['Select.Option'],
-      },
+const OptGroup: ComponentConfigType = {
+  parentNodesRule: ['Select.children'],
+  nodePropsConfig: {
+    label: {
+      type: PROPS_TYPES.reactNode,
     },
-    propsConfig: {
-      key: {
-        label: 'key',
-        type: PROPS_TYPES.string,
-      },
-      label: {
-        label: '组名',
-        type: PROPS_TYPES.string,
-      },
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Select.Option'],
     },
-  }
-const  Option:ComponentConfigType= {
-    parentNodesRule: ['Select.children','Select.OptGroup.children' ],
-    propsConfig: {
-      children: {
-        label: '内容',
-        type: PROPS_TYPES.string,
-      },
-      disabled: {
-        label: '是否禁用',
-        type: PROPS_TYPES.boolean,
-      },
-      key: {
-        label: 'key',
-        tip: '和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置',
-        type: PROPS_TYPES.string,
-      },
-      title: {
-        label: '选中该 Option 后，Select 的 title',
-        type: PROPS_TYPES.string,
-      },
-      value: {
-        label: '默认根据此属性值进行筛选',
-        type: [PROPS_TYPES.string,PROPS_TYPES.number],
   },
+  propsConfig: {
+    key: {
+      label: 'key',
+      type: PROPS_TYPES.string,
+    },
+    label: {
+      label: '组名',
+      type: PROPS_TYPES.string,
+    },
   },
-  }
-  export default {
+};
+const Option: ComponentConfigType = {
+  parentNodesRule: ['Select.children', 'Select.OptGroup.children'],
+  propsConfig: {
+    children: {
+      label: '内容',
+      type: PROPS_TYPES.string,
+    },
+    disabled: {
+      label: '是否禁用',
+      type: PROPS_TYPES.boolean,
+    },
+    key: {
+      label: 'key',
+      tip: '和 value 含义一致。如果 React 需要你设置此项，此项值与 value 的值相同，然后可以省略 value 设置',
+      type: PROPS_TYPES.string,
+    },
+    title: {
+      label: '选中该 Option 后，Select 的 title',
+      type: PROPS_TYPES.string,
+    },
+    value: {
+      label: '默认根据此属性值进行筛选',
+      type: [PROPS_TYPES.string, PROPS_TYPES.number],
+    },
+  },
+};
+export default {
   Select,
-    'Select.OptGroup':OptGroup,
-    'Select.Option':Option
-  }
+  'Select.OptGroup': OptGroup,
+  'Select.Option': Option,
+};

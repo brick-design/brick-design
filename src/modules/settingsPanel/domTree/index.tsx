@@ -8,15 +8,15 @@ import { Dispatch } from 'redux';
 
 interface DomTreePropsType {
   componentConfigs?: VirtualDOMType[],
-  selectedComponentInfo?:SelectedComponentInfoType,
-  hoverKey?:string,
+  selectedComponentInfo?: SelectedComponentInfoType,
+  hoverKey?: string,
   dispatch?: Dispatch
 }
 
 
 function DomTree(props: DomTreePropsType) {
 
-  const { dispatch, componentConfigs,selectedComponentInfo,hoverKey } = props;
+  const { dispatch, componentConfigs, selectedComponentInfo, hoverKey } = props;
 
   function onMouseLeave(e: any) {
     e.stopPropagation();
@@ -39,4 +39,4 @@ function DomTree(props: DomTreePropsType) {
   );
 }
 
-export default reduxConnect(['componentConfigs','selectedComponentInfo','hoverKey'])(DomTree);
+export default reduxConnect(['componentConfigs', 'selectedComponentInfo', 'hoverKey'])(DomTree);

@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Breadcrumb:ComponentConfigType={
+const Breadcrumb: ComponentConfigType = {
   nodePropsConfig: {
     separator: {
       type: PROPS_TYPES.reactNode,
@@ -50,46 +50,46 @@ const Breadcrumb:ComponentConfigType={
     },
   },
 };
-const Item:ComponentConfigType={
-    nodePropsConfig: {
-      overlay: {
-        label:"菜单",
-        tip:'哈哈哈',
-        type: PROPS_TYPES.functionReactNode,
-        params: [],
-        childNodesRule: ['Menu'],
-      },
-      children:{
-        type: PROPS_TYPES.reactNode,
-      },
+const Item: ComponentConfigType = {
+  nodePropsConfig: {
+    overlay: {
+      label: '菜单',
+      tip: '哈哈哈',
+      type: PROPS_TYPES.functionReactNode,
+      params: [],
+      childNodesRule: ['Menu'],
     },
-    propsConfig: {
-      children: {
-        label: '内容',
-        type: PROPS_TYPES.string,
-      },
-      href: {
-        label: '链接的目的地',
-        type: PROPS_TYPES.string,
-      },
-      onClick: {
-        label: '单击事件',
-        type: PROPS_TYPES.function,
-        placeholder: '(e)=>{}',
-      },
+    children: {
+      type: PROPS_TYPES.reactNode,
     },
-  }
-  const Separator:ComponentConfigType={
-    propsConfig: {
-      children: {
-        label: '要显示的分隔符',
-        type: PROPS_TYPES.string,
-      },
+  },
+  propsConfig: {
+    children: {
+      label: '内容',
+      type: PROPS_TYPES.string,
     },
-  }
+    href: {
+      label: '链接的目的地',
+      type: PROPS_TYPES.string,
+    },
+    onClick: {
+      label: '单击事件',
+      type: PROPS_TYPES.function,
+      placeholder: '(e)=>{}',
+    },
+  },
+};
+const Separator: ComponentConfigType = {
+  propsConfig: {
+    children: {
+      label: '要显示的分隔符',
+      type: PROPS_TYPES.string,
+    },
+  },
+};
 
-  export default {
+export default {
   Breadcrumb,
-    'Breadcrumb.Item':Item,
-    'Breadcrumb.Separator':Separator
-  }
+  'Breadcrumb.Item': Item,
+  'Breadcrumb.Separator': Separator,
+};

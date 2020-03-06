@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Rate:ComponentConfigType={
+const Rate: ComponentConfigType = {
   nodePropsConfig: {
     character: {
       type: PROPS_TYPES.reactNode,
@@ -72,4 +72,4 @@ const Rate:ComponentConfigType={
     },
   },
 };
-export default Rate
+export default Rate;

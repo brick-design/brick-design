@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Timeline:ComponentConfigType={
+const Timeline: ComponentConfigType = {
   nodePropsConfig: {
     pending: {
       type: PROPS_TYPES.reactNode,
@@ -37,7 +37,7 @@ const Timeline:ComponentConfigType={
     },
   },
 };
-const   Item:ComponentConfigType= {
+const Item: ComponentConfigType = {
   nodePropsConfig: {
     dot: {
       type: PROPS_TYPES.reactNode,
@@ -66,9 +66,9 @@ const   Item:ComponentConfigType= {
       enumData: ['left', 'right'],
     },
   },
-}
+};
 
 export default {
   Timeline,
-  'Timeline.Item':Item
-}
+  'Timeline.Item': Item,
+};

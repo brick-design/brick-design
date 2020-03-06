@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Affix:ComponentConfigType={
+const Affix: ComponentConfigType = {
   propsConfig: {
     offsetBottom: {
       label: '达到偏移量后触发',
@@ -28,4 +28,4 @@ const Affix:ComponentConfigType={
   },
 };
 
-export default Affix
+export default Affix;

@@ -9,11 +9,13 @@ import merge from 'lodash/merge';
 import { message } from 'antd';
 import uuid from 'uuid';
 import {
-  copyConfig, flattenDeepArray,
+  copyConfig,
+  flattenDeepArray,
   generateNewKey,
   getFieldInPropsPath,
   getNewSortChildNodes,
-  getPath, handleRequiredHasChild,
+  getPath,
+  handleRequiredHasChild,
 } from '@/utils';
 import configs from '@/configs';
 
@@ -26,22 +28,22 @@ import {
   SelectedComponentInfoType,
   VirtualDOMType,
 } from '@/types/ModelType';
-import defaultData from '../../data'
+import defaultData from '../../data';
 
-const handleComponentInfo=(payload:any)=> {
+const handleComponentInfo = (payload: any) => {
   const { propName, componentConfig } = payload;
   const { parentName, childNodes } = componentConfig;
-  let { componentName} = componentConfig;
+  let { componentName } = componentConfig;
   componentName = parentName || componentName;
-  const isContainer = !!childNodes
-  let { nodePropsConfig} = get(configs.AllComponentConfigs, componentName),childNodesRule,isOnlyNode;
-  if(nodePropsConfig){
-    if(propName){
-      ({childNodesRule,isOnlyNode} = get(nodePropsConfig, propName))
-    }else {
-      each(nodePropsConfig,(config)=>{
-        ({childNodesRule,isOnlyNode}=config)
-      })
+  const isContainer = !!childNodes;
+  let { nodePropsConfig } = get(configs.AllComponentConfigs, componentName), childNodesRule, isOnlyNode;
+  if (nodePropsConfig) {
+    if (propName) {
+      ({ childNodesRule, isOnlyNode } = get(nodePropsConfig, propName));
+    } else {
+      each(nodePropsConfig, (config) => {
+        ({ childNodesRule, isOnlyNode } = config);
+      });
     }
 
   }
@@ -49,59 +51,59 @@ const handleComponentInfo=(payload:any)=> {
     isContainer,
     isOnlyNode,
     childNodesRule,
-    componentName
-  }
-}
+    componentName,
+  };
+};
 
 /**
  * 初始默认组件
  * @type {{childNodes: Array, componentName: string, key: string, props: {style: {height: string}}}}
  */
-const DEFAULT_LAYOUT :VirtualDOMType = {
+const DEFAULT_LAYOUT: VirtualDOMType = {
   key: `n${Date.now()}`,
   componentName: 'Layout',
-  props: { style: {height:'100%'} },
+  props: { style: { height: '100%' } },
   childNodes: [],
 };
 
-const ALL_CONTAINER_COMPONENT_NAMES=flattenDeepArray(configs.CONTAINER_CATEGORY)
+const ALL_CONTAINER_COMPONENT_NAMES = flattenDeepArray(configs.CONTAINER_CATEGORY);
 /**
  * 命名空间
  * @type {string}
  */
-export const namespace='BLOCK_NAME_CAMEL_CASE'
+export const namespace = 'BLOCK_NAME_CAMEL_CASE';
 
 /**
  * actions
  */
-export const ACTION_TYPES={
-  submitConfigs:`${namespace}/submitConfigs`,
-  searchTemplate:`${namespace}/searchTemplate`,
-  getTemplateList:`${namespace}/getTemplateList`,
-  outputFiles:`${namespace}/outputFiles`,
-  addTemplateInfo:`${namespace}/addTemplateInfo`,
-  deleteTemplate:`${namespace}/deleteTemplate`,
-  saveTemplateInfos:`${namespace}/saveTemplateInfos`,
-  addComponent:`${namespace}/addComponent`,
-  copyComponent:`${namespace}/copyComponent`,
-  onLayoutSortChange:`${namespace}/onLayoutSortChange`,
-  clearSelectedStatus:`${namespace}/clearSelectedStatus`,
-  selectComponent:`${namespace}/selectComponent`,
-  clearChildNodes:`${namespace}/clearChildNodes`,
-  deleteComponent:`${namespace}/deleteComponent`,
-  addPropsConfig:`${namespace}/addPropsConfig`,
-  deletePropsConfig:`${namespace}/deletePropsConfig`,
-  changeStyles:`${namespace}/changeStyles`,
-  submitProps:`${namespace}/submitProps`,
-  overTarget:`${namespace}/overTarget`,
-  clearHovered:`${namespace}/clearHovered`,
-  undo:`${namespace}/undo`,
-  redo:`${namespace}/redo`,
-  getDragData:`${namespace}/getDragData`,
-  getDropTargetInfo:`${namespace}/getDropTargetInfo`,
-  changePlatform:`${namespace}/changePlatform`
-}
-const Model:ModelType= {
+export const ACTION_TYPES = {
+  submitConfigs: `${namespace}/submitConfigs`,
+  searchTemplate: `${namespace}/searchTemplate`,
+  getTemplateList: `${namespace}/getTemplateList`,
+  outputFiles: `${namespace}/outputFiles`,
+  addTemplateInfo: `${namespace}/addTemplateInfo`,
+  deleteTemplate: `${namespace}/deleteTemplate`,
+  saveTemplateInfos: `${namespace}/saveTemplateInfos`,
+  addComponent: `${namespace}/addComponent`,
+  copyComponent: `${namespace}/copyComponent`,
+  onLayoutSortChange: `${namespace}/onLayoutSortChange`,
+  clearSelectedStatus: `${namespace}/clearSelectedStatus`,
+  selectComponent: `${namespace}/selectComponent`,
+  clearChildNodes: `${namespace}/clearChildNodes`,
+  deleteComponent: `${namespace}/deleteComponent`,
+  addPropsConfig: `${namespace}/addPropsConfig`,
+  deletePropsConfig: `${namespace}/deletePropsConfig`,
+  changeStyles: `${namespace}/changeStyles`,
+  submitProps: `${namespace}/submitProps`,
+  overTarget: `${namespace}/overTarget`,
+  clearHovered: `${namespace}/clearHovered`,
+  undo: `${namespace}/undo`,
+  redo: `${namespace}/redo`,
+  getDragData: `${namespace}/getDragData`,
+  getDropTargetInfo: `${namespace}/getDropTargetInfo`,
+  changePlatform: `${namespace}/changePlatform`,
+};
+const Model: ModelType = {
   namespace,
   state: {
     componentConfigs: defaultData, // 所有组件信息
@@ -112,9 +114,9 @@ const Model:ModelType= {
     redo: [],
     templateInfos: [], // 复合组件
     hoverKey: null,
-    dragData:null,
-    dropTargetInfo:null,
-    platformInfo:{isMobile:false,size:['100%','100%']}
+    dragData: null,
+    dropTargetInfo: null,
+    platformInfo: { isMobile: false, size: ['100%', '100%'] },
 
   },
   effects: {
@@ -128,14 +130,14 @@ const Model:ModelType= {
       //   message.error('配置信息更新失败!')
       // }
     },
-    * searchTemplate({payload},{put}){
-      const templateInfo=yield new Promise(function(resolve) {
-        searchTemplate(payload.searchValue,resolve)
-      })
+    * searchTemplate({ payload }, { put }) {
+      const templateInfo = yield new Promise(function(resolve) {
+        searchTemplate(payload.searchValue, resolve);
+      });
       yield put({
         type: 'saveTemplateInfos',
-        templateInfos:templateInfo?[templateInfo]:[],
-      })
+        templateInfos: templateInfo ? [templateInfo] : [],
+      });
     },
     * getTemplateList(_, { put }) {
       const templateInfos = yield new Promise(function(resolve) {
@@ -143,9 +145,9 @@ const Model:ModelType= {
       });
       yield put({
         type: 'saveTemplateInfos',
-        payload:{
-          templateInfos
-        }
+        payload: {
+          templateInfos,
+        },
       });
     },
     * addTemplateInfo({ payload }, { put }) {
@@ -169,7 +171,7 @@ const Model:ModelType= {
   },
   reducers: {
 
-    saveTemplateInfos(state, {payload}) {
+    saveTemplateInfos(state, { payload }) {
       return {
         ...state,
         ...payload,
@@ -186,10 +188,10 @@ const Model:ModelType= {
         componentConfigs: prevComponentConfigs,
         selectedComponentInfo,
         dragData,
-        dropTargetInfo
+        dropTargetInfo,
       } = state;
-      const { defaultProps = {}, componentName, templateData,dragPath,dragParentPath }=dragData!
-      const { propPath, path, isOnlyNode,isContainer, childNodesRule, componentName: selectedComponentName, propName }=dropTargetInfo!||selectedComponentInfo;
+      const { defaultProps = {}, componentName, templateData, dragPath, dragParentPath } = dragData!;
+      const { propPath, path, isOnlyNode, isContainer, childNodesRule, componentName: selectedComponentName, propName } = dropTargetInfo! || selectedComponentInfo;
       // 找到新添加组件所要放置的路径位置
       const parentPath = getPath({ path: propPath || path, isContainer: true });
       /**
@@ -197,21 +199,21 @@ const Model:ModelType= {
        * 或者拖拽组件的父节点路径与当前选中组件的子节点路径相同表明拖拽组件没有拖出它所在的容器，
        * 或者拖拽组件的路径与当前选中组件的路径相同表明为它自己
        */
-      if(!isContainer&&!isEmpty(prevComponentConfigs)||dragParentPath&&parentPath===dragParentPath ||dragPath&&dragPath===path){
-        return  state
+      if (!isContainer && !isEmpty(prevComponentConfigs) || dragParentPath && parentPath === dragParentPath || dragPath && dragPath === path) {
+        return state;
       }
 
       const componentConfigs = cloneDeep(prevComponentConfigs);
       const isTemplate = !isEmpty(templateData);
-      let info:VirtualDOMType;
-      if(dragParentPath){
-        info=templateData!
-      }else if(isTemplate){
-        info= generateNewKey(templateData!)
-      }else {
+      let info: VirtualDOMType;
+      if (dragParentPath) {
+        info = templateData!;
+      } else if (isTemplate) {
+        info = generateNewKey(templateData!);
+      } else {
         info = {
           key: uuid(),
-          componentName:componentName!,
+          componentName: componentName!,
           props: defaultProps, // 最终输出当前组件的属性树
         };
       }
@@ -237,13 +239,13 @@ const Model:ModelType= {
       if (!isTemplate) {
         const isContainer = ALL_CONTAINER_COMPONENT_NAMES.includes(componentName!);
         if (isContainer) {
-          const childNodes:VirtualDOMType[]|PropsNodeType={};
+          const childNodes: VirtualDOMType[] | PropsNodeType = {};
           // 获取该组件节点属性映射字段信息
-            const isMultiPropsNode= keys(nodePropsConfig).length > 1
-            each(nodePropsConfig, (nodePropConfig, propName) => {
-              isMultiPropsNode&&(childNodes[propName] = { childNodes: []});
-            });
-            // 更改新添加组件的key为最后一个属性节点key此key目的为默认选中最后一个属性节点
+          const isMultiPropsNode = keys(nodePropsConfig).length > 1;
+          each(nodePropsConfig, (nodePropConfig, propName) => {
+            isMultiPropsNode && (childNodes[propName] = { childNodes: [] });
+          });
+          // 更改新添加组件的key为最后一个属性节点key此key目的为默认选中最后一个属性节点
 
           info.childNodes = isEmpty(childNodes) ? [] : childNodes;
         }
@@ -254,8 +256,8 @@ const Model:ModelType= {
           return [...childNodes, info];
         });
 
-        if(dragParentPath){
-          update(componentConfigs,dragParentPath,(childNodes)=>childNodes.filter((node:VirtualDOMType)=>node.key!==info.key))
+        if (dragParentPath) {
+          update(componentConfigs, dragParentPath, (childNodes) => childNodes.filter((node: VirtualDOMType) => node.key !== info.key));
         }
       } else {
         componentConfigs.push(info);
@@ -266,8 +268,8 @@ const Model:ModelType= {
       return {
         ...state,
         componentConfigs,
-        dragData:null,
-        dropTargetInfo:null,
+        dragData: null,
+        dropTargetInfo: null,
         undo,
         redo,
       };
@@ -280,7 +282,7 @@ const Model:ModelType= {
      */
     copyComponent(state) {
       const { undo, redo, componentConfigs: prevComponentConfigs, selectedComponentInfo } = state;
-      const { selectedKey,parentPath }=selectedComponentInfo as SelectedComponentInfoType;
+      const { selectedKey, parentPath } = selectedComponentInfo as SelectedComponentInfoType;
       const componentConfigs = cloneDeep(prevComponentConfigs);
       if (parentPath) {
         update(componentConfigs, parentPath, childNodes => copyConfig(childNodes, selectedKey));
@@ -303,7 +305,7 @@ const Model:ModelType= {
      * @param action
      * @returns {{componentConfigs: *}}
      */
-    onLayoutSortChange(state, {payload}) {
+    onLayoutSortChange(state, { payload }) {
       const { sortKeys, path, dragNode } = payload;
       const { undo, redo, componentConfigs: prevComponentConfigs } = state;
       let componentConfigs = cloneDeep(prevComponentConfigs);
@@ -324,9 +326,9 @@ const Model:ModelType= {
      * @returns {{undo: *, propsSetting: {}, redo: *, selectedComponentInfo: {}}}
      */
     clearSelectedStatus(state) {
-      const { selectedComponentInfo, propsSetting, undo, redo, styleSetting,componentConfigs } = state;
-      if(handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType,componentConfigs)){
-        return state
+      const { selectedComponentInfo, propsSetting, undo, redo, styleSetting, componentConfigs } = state;
+      if (handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType, componentConfigs)) {
+        return state;
       }
       undo.push({ selectedComponentInfo, propsSetting, styleSetting });
       redo.length = 0;
@@ -346,15 +348,15 @@ const Model:ModelType= {
      * @param action
      * @returns {{ undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedComponentInfo: {selectedKey: *, path: *, domTreeKeys: *[], parentPath: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
      */
-    selectComponent(state, {payload}) {
-      const { undo, redo, selectedComponentInfo, propsSetting,componentConfigs } = state;
-      if(handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType,componentConfigs)){
-        return state
+    selectComponent(state, { payload }) {
+      const { undo, redo, selectedComponentInfo, propsSetting, componentConfigs } = state;
+      if (handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType, componentConfigs)) {
+        return state;
       }
-      const {propPath, path, propName, componentConfig, parentPath, domTreeKeys,isRequiredHasChild } = payload;
-      const { props, addPropsConfig={},key } = componentConfig;
-      const {isContainer, isOnlyNode, childNodesRule, componentName}=handleComponentInfo(payload)
-      let { propsConfig} = get(configs.AllComponentConfigs, componentName);
+      const { propPath, path, propName, componentConfig, parentPath, domTreeKeys, isRequiredHasChild } = payload;
+      const { props, addPropsConfig = {}, key } = componentConfig;
+      const { isContainer, isOnlyNode, childNodesRule, componentName } = handleComponentInfo(payload);
+      let { propsConfig } = get(configs.AllComponentConfigs, componentName);
       const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
       undo.push({ selectedComponentInfo, propsSetting });
       let selectedKey = key;
@@ -365,10 +367,10 @@ const Model:ModelType= {
       redo.length = 0;
       return {
         ...state,
-        dropTargetInfo:null,
+        dropTargetInfo: null,
         selectedComponentInfo: {
           selectedKey,
-          style: props.style||{},
+          style: props.style || {},
           parentPath,
           componentName,
           propName,
@@ -378,7 +380,7 @@ const Model:ModelType= {
           isOnlyNode,
           childNodesRule,
           domTreeKeys,
-          isRequiredHasChild
+          isRequiredHasChild,
         },
         propsSetting: { propsConfig, mergePropsConfig, addPropsConfig, props },
         undo,
@@ -397,9 +399,9 @@ const Model:ModelType= {
     clearChildNodes(state) {
       const { componentConfigs: prevComponentConfigs, selectedComponentInfo, undo, redo } = state;
       const componentConfigs = cloneDeep(prevComponentConfigs);
-      const { path,propPath} = selectedComponentInfo as SelectedComponentInfoType;
-      const updatePath=getPath({ path:propPath||path, isContainer: true })
-      update(componentConfigs,updatePath!, () => []);
+      const { path, propPath } = selectedComponentInfo as SelectedComponentInfoType;
+      const updatePath = getPath({ path: propPath || path, isContainer: true });
+      update(componentConfigs, updatePath!, () => []);
       undo.push({ componentConfigs: prevComponentConfigs });
       redo.length = 0;
       return {
@@ -442,13 +444,13 @@ const Model:ModelType= {
      * @param action
      * @returns {{propsSetting: *}}
      */
-    addPropsConfig(state, {payload}) {
+    addPropsConfig(state, { payload }) {
       const { newPropField, parentFieldPath, childPropsConfig, propType } = payload;
       const { propsSetting: prevPropsSetting, undo, redo } = state;
       const propsSetting = cloneDeep(prevPropsSetting);
       const { addPropsConfig, propsConfig } = propsSetting as PropsSettingType;
       let isAdd = true;
-      update(addPropsConfig, parentFieldPath, (propsContent:any) => {
+      update(addPropsConfig, parentFieldPath, (propsContent: any) => {
         // 对象数组 添加一个对象时的逻辑
         if (childPropsConfig) return childPropsConfig;
         if (!propsContent) propsContent = {};
@@ -459,20 +461,20 @@ const Model:ModelType= {
           propsContent[newPropField] = {
             label: newPropField,
             type: propType,
-            isAdd: true
+            isAdd: true,
           };
         }
         return propsContent;
       });
       if (!isAdd) return state;
-     const mergePropsConfig = (merge({}, propsConfig, addPropsConfig));
+      const mergePropsConfig = (merge({}, propsConfig, addPropsConfig));
       undo.push({ propsSetting: prevPropsSetting });
       redo.length = 0;
       return {
         ...state,
-        propsSetting:{
+        propsSetting: {
           ...propsSetting,
-          mergePropsConfig
+          mergePropsConfig,
         },
         undo,
         redo,
@@ -485,32 +487,32 @@ const Model:ModelType= {
      * @param action
      * @returns {{propsSetting: *}}
      */
-    deletePropsConfig(state, {payload}) {
+    deletePropsConfig(state, { payload }) {
       const { propsSetting: prevPropsSetting, undo, redo } = state;
       const propsSetting = cloneDeep(prevPropsSetting);
       const { parentFieldPath, field } = payload;
-      const { addPropsConfig, propsConfig,props } = propsSetting as PropsSettingType;
-      const fieldInPropsPath= getFieldInPropsPath(parentFieldPath)
+      const { addPropsConfig, propsConfig, props } = propsSetting as PropsSettingType;
+      const fieldInPropsPath = getFieldInPropsPath(parentFieldPath);
       update(addPropsConfig, parentFieldPath, prevPropsConfig => {
         delete prevPropsConfig[field];
         return prevPropsConfig;
       });
 
-      update(props,fieldInPropsPath,prevProps=>{
-        if(typeof prevProps ==='object'){
-          delete prevProps[field]
+      update(props, fieldInPropsPath, prevProps => {
+        if (typeof prevProps === 'object') {
+          delete prevProps[field];
         }
-        return prevProps
-      })
+        return prevProps;
+      });
 
       const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
       undo.push({ propsSetting: prevPropsSetting });
       redo.length = 0;
       return {
         ...state,
-        propsSetting:{
+        propsSetting: {
           ...propsSetting,
-          mergePropsConfig
+          mergePropsConfig,
         },
         undo,
         redo,
@@ -524,7 +526,7 @@ const Model:ModelType= {
      * @param action
      * @returns {{propsSetting: *, componentConfigs: *}|*}
      */
-    changeStyles(state, {payload}) {
+    changeStyles(state, { payload }) {
       const { style } = payload;
       const { undo, redo, selectedComponentInfo, componentConfigs: prevComponentConfigs, styleSetting: prevStyleSetting } = state;
       const { path } = selectedComponentInfo as SelectedComponentInfoType;
@@ -554,7 +556,7 @@ const Model:ModelType= {
      * @param action
      * @returns {{propsSetting: *, componentConfigs: *}}
      */
-    submitProps(state, {payload}) {
+    submitProps(state, { payload }) {
       const { props } = payload;
       const { propsSetting: prevPropsSetting, componentConfigs: prevComponentConfigs, selectedComponentInfo, undo, redo } = state;
       const propsSetting = cloneDeep(prevPropsSetting);
@@ -566,7 +568,7 @@ const Model:ModelType= {
         return ({
           ...componentConfig,
           props: { ...props, style },
-        ...(isEmpty(addPropsConfig)?{}:{addPropsConfig}),
+          ...(isEmpty(addPropsConfig) ? {} : { addPropsConfig }),
         });
       });
       undo.push({ componentConfigs: prevComponentConfigs, propsSetting: prevPropsSetting });
@@ -574,9 +576,9 @@ const Model:ModelType= {
       message.success('属性配置提交成功！！');
       return {
         ...state,
-        propsSetting:{
+        propsSetting: {
           ...propsSetting,
-          props
+          props,
         },
         componentConfigs,
         undo,
@@ -591,7 +593,7 @@ const Model:ModelType= {
      * @param action
      * @returns {{hoverKey: *}}
      */
-    overTarget(state, {payload}) {
+    overTarget(state, { payload }) {
       const { hoverKey } = payload;
       return {
         ...state,
@@ -616,12 +618,12 @@ const Model:ModelType= {
      * @param action
      * @returns {{dragData: *}}
      */
-    getDragData(state,{payload}){
-      const {dragData}=payload
-      return{
+    getDragData(state, { payload }) {
+      const { dragData } = payload;
+      return {
         ...state,
-        dragData
-      }
+        dragData,
+      };
     },
 
     /**
@@ -629,43 +631,43 @@ const Model:ModelType= {
      * @param state
      * @param payload
      */
-    getDropTargetInfo(state,{payload}){
+    getDropTargetInfo(state, { payload }) {
       /**
        * 如果path为undefined说明当前组件不是容器组件
        */
-      if(!payload.path) return {
+      if (!payload.path) return {
         ...state,
-        dropTargetInfo:null,
-        hoverKey:null
-      }
-      const {path, propName, propPath,componentConfig:{key}}=payload
-      const {isOnlyNode,isContainer, childNodesRule, componentName}=handleComponentInfo(payload)
-      return{
+        dropTargetInfo: null,
+        hoverKey: null,
+      };
+      const { path, propName, propPath, componentConfig: { key } } = payload;
+      const { isOnlyNode, isContainer, childNodesRule, componentName } = handleComponentInfo(payload);
+      return {
         ...state,
-        dropTargetInfo:{
+        dropTargetInfo: {
           isContainer,
           propPath,
           path,
           isOnlyNode,
           childNodesRule,
           componentName,
-          propName
+          propName,
         },
-        hoverKey:key
-      }
+        hoverKey: key,
+      };
     },
 
     /**
      * 更改平台
      * @param state
      */
-    changePlatform(state,{payload}){
+    changePlatform(state, { payload }) {
       return {
         ...state,
-        platformInfo:payload,
-        redo:[],
-        undo:[]
-      }
+        platformInfo: payload,
+        redo: [],
+        undo: [],
+      };
     },
     /**
      * 撤销
@@ -675,8 +677,8 @@ const Model:ModelType= {
     undo(state) {
       const { undo, redo } = state;
       const nextState = undo.pop();
-      const prevState:any = {};
-      each(nextState, (_, key) => prevState[key] = get(state,key));
+      const prevState: any = {};
+      each(nextState, (_, key) => prevState[key] = get(state, key));
       redo.push(prevState);
       return {
         ...state,
@@ -693,8 +695,8 @@ const Model:ModelType= {
     redo(state) {
       const { undo, redo } = state;
       const nextState = redo.pop();
-      const prevState:any = {};
-      each(nextState, (_, key) => prevState[key] = get(state,key));
+      const prevState: any = {};
+      each(nextState, (_, key) => prevState[key] = get(state, key));
       undo.push(prevState);
       return {
         ...state,

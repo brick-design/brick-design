@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Tag:ComponentConfigType={
+const Tag: ComponentConfigType = {
   propsConfig: {
     color: {
       label: '标签色',
@@ -10,4 +10,4 @@ const Tag:ComponentConfigType={
   },
 };
 
-export default Tag
+export default Tag;

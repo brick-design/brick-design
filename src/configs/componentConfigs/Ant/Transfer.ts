@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Transfer:ComponentConfigType={
+const Transfer: ComponentConfigType = {
   propsConfig: {
     render: {
       label: '行元素渲染',
@@ -36,4 +36,4 @@ const Transfer:ComponentConfigType={
   },
 };
 
-export default Transfer
+export default Transfer;

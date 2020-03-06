@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Pagination:ComponentConfigType={
+const Pagination: ComponentConfigType = {
   nodePropsConfig: {
     itemRender: {
       type: PROPS_TYPES.functionReactNode,
@@ -107,4 +107,4 @@ const Pagination:ComponentConfigType={
   },
 };
 
-export default Pagination
+export default Pagination;

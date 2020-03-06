@@ -5,36 +5,38 @@ import styles from './index.less';
 import SortItem, { TreeNodeType } from './SortItem';
 import { getPath } from '@/utils';
 
-import {ACTION_TYPES} from '@/models'
-import {Dispatch} from 'redux'
+import { ACTION_TYPES } from '@/models';
+import { Dispatch } from 'redux';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
+
 interface SortTreePropsType {
-  dispatch?:Dispatch,
-  path?:string,
-  domTreeKeys?:string[],
-  isFold?:boolean,
-  childNodesRule?:string[],
-  childNodes?:VirtualDOMType[],
-  isOnlyNode?:boolean,
-  currentName?:string,
-  disabled?:boolean,
-  selectedComponentInfo?:SelectedComponentInfoType,
-  hoverKey?:string
+  dispatch?: Dispatch,
+  path?: string,
+  domTreeKeys?: string[],
+  isFold?: boolean,
+  childNodesRule?: string[],
+  childNodes?: VirtualDOMType[],
+  isOnlyNode?: boolean,
+  currentName?: string,
+  disabled?: boolean,
+  selectedComponentInfo?: SelectedComponentInfoType,
+  hoverKey?: string
 }
 
-function SortTree (props:SortTreePropsType) {
-  const { dispatch, path, domTreeKeys=[], isFold,
-    childNodesRule, childNodes=[], isOnlyNode, currentName,
+function SortTree(props: SortTreePropsType) {
+  const {
+    dispatch, path, domTreeKeys = [], isFold,
+    childNodesRule, childNodes = [], isOnlyNode, currentName,
     disabled,
     selectedComponentInfo,
-    hoverKey
+    hoverKey,
   } = props;
 
   /**
    * 拖拽排序
    * @param sortKeys
    */
-  function onLayoutSortChange (sortKeys:string[], a:any, evt:any) {
+  function onLayoutSortChange(sortKeys: string[], a: any, evt: any) {
     /**
      * 获取拖住节点的信息
      * @type {any}
@@ -42,12 +44,12 @@ function SortTree (props:SortTreePropsType) {
     const dragNode = JSON.parse(evt.clone.dataset.info);
     dispatch!({
       type: ACTION_TYPES.onLayoutSortChange,
-      payload:{
+      payload: {
         sortKeys,
         path: getPath({ path, isContainer: true }),
         dragNode,
         domTreeKeys,
-      }
+      },
     });
   };
 
@@ -57,13 +59,13 @@ function SortTree (props:SortTreePropsType) {
    * @param index
    * @returns {*}
    */
-  function renderSortItems (componentConfig:TreeNodeType, index:number){
+  function renderSortItems(componentConfig: TreeNodeType, index: number) {
     const { key } = componentConfig;
     return (<SortItem domTreeKeys={[...domTreeKeys, key]}
                       isFold={isFold}
                       componentConfig={componentConfig}
-                      path={getPath({path,index})}
-                      parentPath={getPath({path,isContainer:true})}
+                      path={getPath({ path, index })}
+                      parentPath={getPath({ path, isContainer: true })}
                       key={key}
                       dispatch={dispatch}
                       selectedComponentInfo={selectedComponentInfo}
@@ -72,7 +74,7 @@ function SortTree (props:SortTreePropsType) {
   }
 
 
-  function putItem(a:any, b:any, c:any){
+  function putItem(a: any, b: any, c: any) {
     const dragName = c.dataset.name;
     const parentNodesRule = c.dataset.parents && JSON.parse(c.dataset.parents);
     if (isOnlyNode && childNodes.length === 1) return false;
@@ -84,23 +86,23 @@ function SortTree (props:SortTreePropsType) {
     }
     return true;
   };
-   return (
-      <Sortable
-        options={{
-          group: { name: 'nested', put: putItem },
-          animation: 200,
-          disabled,
-          dataIdAttr: 'id',
-          ghostClass: styles['item-background'],
-          swapThreshold: 0.5,
-        }}
-        onChange={onLayoutSortChange}
+  return (
+    <Sortable
+      options={{
+        group: { name: 'nested', put: putItem },
+        animation: 200,
+        disabled,
+        dataIdAttr: 'id',
+        ghostClass: styles['item-background'],
+        swapThreshold: 0.5,
+      }}
+      onChange={onLayoutSortChange}
 
-      >
-        {map(childNodes, renderSortItems)}
-      </Sortable>
+    >
+      {map(childNodes, renderSortItems)}
+    </Sortable>
 
-    );
-  }
+  );
+}
 
-export default SortTree
+export default SortTree;

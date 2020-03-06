@@ -15,7 +15,7 @@ const Option = {
     type: PROPS_TYPES.objectArray,
   },
 };
-const Cascader:ComponentConfigType={
+const Cascader: ComponentConfigType = {
 
   nodePropsConfig: {
     displayRender: {
@@ -130,7 +130,7 @@ const Cascader:ComponentConfigType={
     showSearch: {
       label: '显示搜索框',
       tip: '在选择框中显示搜索框',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
       childPropsConfig: {
         filter: {
           label: 'filter',
@@ -140,7 +140,7 @@ const Cascader:ComponentConfigType={
         },
         limit: {
           label: '搜索结果展示数量',
-          type: [PROPS_TYPES.boolean,PROPS_TYPES.number],
+          type: [PROPS_TYPES.boolean, PROPS_TYPES.number],
         },
         matchInputWidth: {
           label: '搜索结果列表是否与输入框同宽',
@@ -183,4 +183,4 @@ const Cascader:ComponentConfigType={
   },
 };
 
-export default Cascader
+export default Cascader;

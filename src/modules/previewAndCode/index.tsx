@@ -25,6 +25,7 @@ function PreviewAndCode(props: PreviewAndCodePropsType) {
       </div>);
 
   }
+
   if (!visible) return null;
   return (
     <>

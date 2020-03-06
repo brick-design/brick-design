@@ -1,8 +1,9 @@
 import { message } from 'antd';
-let db:any
-export const initDB = (dbName:string, dbTable:string, dbTableConfig:any, tableIndexs:any,version?:number) => {
+
+let db: any;
+export const initDB = (dbName: string, dbTable: string, dbTableConfig: any, tableIndexs: any, version?: number) => {
   let dbRequest = window.indexedDB.open(dbName, version);
-  dbRequest.onupgradeneeded = (event:any) => {
+  dbRequest.onupgradeneeded = (event: any) => {
     db = event.target.result;
     if (dbTable && !db.objectStoreNames.contains(dbTable)) {
       let objectStore = db.createObjectStore(dbTable, dbTableConfig);
@@ -16,7 +17,7 @@ export const initDB = (dbName:string, dbTable:string, dbTableConfig:any, tableIn
   };
 };
 
-export const addTemplates = (payload:any, resolve:any) => {
+export const addTemplates = (payload: any, resolve: any) => {
   const { img, name, config } = payload;
   const addRequest = db.transaction(['templates'], 'readwrite')
     .objectStore('templates')
@@ -27,12 +28,12 @@ export const addTemplates = (payload:any, resolve:any) => {
   };
 };
 
-export const getTemplates = (resolve:any) => {
+export const getTemplates = (resolve: any) => {
   const getRequest = db.transaction(['templates'], 'readonly')
     .objectStore('templates')
     .openCursor(null, 'next');
-  let templateInfos:any[] = [];
-  getRequest.onsuccess = (event:any) => {
+  let templateInfos: any[] = [];
+  getRequest.onsuccess = (event: any) => {
     let cursor = event.target.result;
     if (cursor) {
       templateInfos.push({ id: cursor.key, ...cursor.value });
@@ -45,7 +46,7 @@ export const getTemplates = (resolve:any) => {
 };
 
 
-export const deleteTemplate = (id:string, resolve:any) => {
+export const deleteTemplate = (id: string, resolve: any) => {
   const deleteRequest = db.transaction(['templates'], 'readwrite')
     .objectStore('templates')
     .delete(id);
@@ -57,14 +58,14 @@ export const deleteTemplate = (id:string, resolve:any) => {
 
 };
 
-export const searchTemplate=(value:string,resolve:any)=>{
-  const searchRequest=db.transaction(['templates'],'readonly')
+export const searchTemplate = (value: string, resolve: any) => {
+  const searchRequest = db.transaction(['templates'], 'readonly')
     .objectStore('templates')
     .index('name')
-    .get(value)
+    .get(value);
 
-  searchRequest.onsuccess=(event:any)=>{
-    resolve(event.target.result)
-  }
+  searchRequest.onsuccess = (event: any) => {
+    resolve(event.target.result);
+  };
 
-  }
+};

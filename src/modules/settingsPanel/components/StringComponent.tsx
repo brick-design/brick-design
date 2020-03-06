@@ -1,72 +1,52 @@
-import React, { Component } from 'react';
-import { Button, Col, Input, Row, Dropdown } from 'antd';
+import React, { memo, useEffect, useState } from 'react';
+import { Button, Col, Dropdown, Input, Row } from 'antd';
 import { ChromePicker } from 'react-color';
-import {Icon} from '@/components';
+import { Icon } from '@/components';
+import { propsAreEqual } from '@/utils';
 
-interface StringComponentPropsType{
-  isFont:boolean,
-  isShowInput:boolean,
-  isShowColor:boolean,
-  value:string,
-  colorType:'hex'|'rgba',
-  onChange:(value:string)=>void,
-  style:any,
-  rowProps:any,
-  inputColProps:any,
-  colorColProps:any,
-  inputProps:any,
-
-
+interface StringComponentPropsType {
+  isFont: boolean,
+  isShowInput: boolean,
+  isShowColor: boolean,
+  value: string,
+  colorType: 'hex' | 'rgba',
+  onChange: (value: string) => void,
+  style: any,
+  rowProps: any,
+  inputColProps: any,
+  colorColProps: any,
+  inputProps: any,
+  children: any
 }
 
-interface StringComponentStateType {
-  color:string
-}
-export default class StringComponent extends Component<StringComponentPropsType,StringComponentStateType> {
 
-  static defaultProps = {
-    isFont: false,
-    isShowInput: true,
-    isShowColor: false,
-    colorType : 'hex',
-  };
+function StringComponent(props: StringComponentPropsType) {
 
-  colorTimer:any;
+  const {
+    value,
+    isShowInput = true,
+    isShowColor = false,
+    colorType = 'hex',
+    onChange,
+    children,
+    isFont,
+    style,
+    rowProps = { gutter: 5 },
+    inputColProps = { span: 18 },
+    colorColProps = { span: 6 },
+    inputProps = {},
+  } = props;
+  const [color, setColor] = useState(value);
+  useEffect(() => {
+    setColor(value);
+  }, [value]);
 
-  constructor(props:StringComponentPropsType) {
-    super(props);
-    this.state = {
-      color: '',
-    };
-    this.colorTimer = null;
-  }
+  useEffect(() => {
+    let timer = setTimeout(() => onChange && onChange(color), 100);
+    return()=> clearTimeout(timer);
+  }, [color]);
 
-  componentDidMount() {
-    const { value } = this.props;
-    this.setState({
-      color: value,
-    });
-  }
-
-  shouldComponentUpdate(nextProps:StringComponentPropsType, nextState:StringComponentStateType) {
-    const { value } = nextProps;
-    const { color } = nextState;
-    const { color: prevColor } = this.state;
-    const { value: prevValue } = this.props;
-
-    return value !== prevValue || color !== prevColor;
-  };
-
-  componentDidUpdate(prevProps:StringComponentPropsType, prevState:StringComponentStateType) {
-    const { value: prevValue } = prevProps;
-    const { value } = this.props;
-    value !== prevValue && this.setState({
-      color: value,
-    });
-  }
-
-  handleChangeColor = (value:any) => {
-    const { colorType } = this.props;
+  function handleChangeColor(value: any) {
     let color;
     if (value.target) {
       color = value.target.value;
@@ -74,51 +54,27 @@ export default class StringComponent extends Component<StringComponentPropsType,
       const { rgb: { r, g, b, a }, hex } = value;
       color = colorType === 'hex' ? hex : `rgba(${r},${g},${b},${a})`;
     }
-    const { onChange } = this.props;
-    this.setState({
-      color: color,
-    }, () => {
-      this.colorTimer && clearTimeout(this.colorTimer);
-      this.colorTimer = setTimeout(() => onChange && onChange(this.state.color), 100);
-    });
-  };
-
-  componentWillUnmount() {
-    this.colorTimer && clearTimeout(this.colorTimer);
+    setColor(color);
   }
 
-
-  render() {
-    const { color } = this.state;
-    let {
-      children,
-      isFont,
-      isShowInput,
-      isShowColor,
-      style,
-      rowProps = { gutter: 5 },
-      inputColProps = { span: 18 },
-      colorColProps = { span: 6 },
-      inputProps = {},
-    } = this.props;
-    children = children || isFont && <Icon type={'font-colors'}/>;
-    const colorStyle = children ? { color, fontSize: 16 } : { backgroundColor: color };
-    return (
-      <Row {...rowProps}>
-        {isShowInput && <Col {...inputColProps}>
-          <Input allowClear size={'small'} value={color} onChange={this.handleChangeColor} {...inputProps}/>
-        </Col>}
-        {isShowColor && <Col {...colorColProps}>
-          <Dropdown
-            trigger={["click"]}
-            overlay={<ChromePicker color={color} onChange={this.handleChangeColor}/>}>
-            <Button size={'small'} style={{ width: '100%', ...style, ...colorStyle }}>
-              {children}
-            </Button>
-          </Dropdown>
-        </Col>}
-      </Row>
-    );
-  }
+  const childNode = children || isFont && <Icon type={'font-colors'}/>;
+  const colorStyle = childNode ? { color, fontSize: 16 } : { backgroundColor: color };
+  return (
+    <Row {...rowProps}>
+      {isShowInput && <Col {...inputColProps}>
+        <Input allowClear size={'small'} value={color} onChange={handleChangeColor} {...inputProps}/>
+      </Col>}
+      {isShowColor && <Col {...colorColProps}>
+        <Dropdown
+          trigger={['click']}
+          overlay={<ChromePicker color={color} onChange={handleChangeColor}/>}>
+          <Button size={'small'} style={{ width: '100%', ...style, ...colorStyle }}>
+            {childNode}
+          </Button>
+        </Dropdown>
+      </Col>}
+    </Row>
+  );
 }
 
+export default memo<StringComponentPropsType>(StringComponent, propsAreEqual);

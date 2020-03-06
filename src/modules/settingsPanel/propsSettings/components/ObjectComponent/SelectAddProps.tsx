@@ -1,62 +1,45 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Input, Select, Tooltip } from 'antd';
 import map from 'lodash/map';
 import { connect } from 'dva';
-import {ACTION_TYPES} from '@/models';
-import {Dispatch} from 'redux';
+import { ACTION_TYPES } from '@/models';
+import { Dispatch } from 'redux';
 import { TYPES_TO_COMPONENT } from '@/modules/settingsPanel/propsSettings/config';
+
 const { Option } = Select;
 
 interface SelectAddPropsType {
-  dispatch?:Dispatch,
-  parentFieldPath:string
+  dispatch?: Dispatch,
+  parentFieldPath: string
 }
 
-interface SelectAddPropsStateType {
-  newPropField: string,
-  propType: string,
-}
 
-@connect()
-export default class SelectAddProps extends Component<SelectAddPropsType,SelectAddPropsStateType> {
-  constructor(props:SelectAddPropsType) {
-    super(props);
-    this.state = {
-      newPropField: '',
-      propType: 'string',
-    };
-  }
+function SelectAddProps(props: SelectAddPropsType) {
+  const [newPropField, setNewPropField] = useState();
+  const [propType, setPropType] = useState('string');
 
-  addParam = () => {
-    const { newPropField, propType } = this.state;
-    const { dispatch, parentFieldPath } = this.props;
+  function addParam() {
+    const { dispatch, parentFieldPath } = props;
     if (/^[0-9a-zA-Z\$_][0-9a-zA-Z\d_]*$/.test(newPropField)) {
       dispatch!({
         type: ACTION_TYPES.addPropsConfig,
-        payload:{
+        payload: {
           newPropField,
           propType,
           parentFieldPath,
-        }
+        },
+      });
+      setNewPropField('');
 
-      });
-      this.setState({
-        newPropField: '',
-      });
     }
   };
 
-  renderAddonBefore = () => {
-    const { propType } = this.state;
+  function renderAddonBefore() {
     return <Select
       defaultValue={propType}
-      onChange={v =>
-        this.setState({
-          propType: v,
-        })
-      }
+      onChange={v => setPropType(v)}
     >
-      {map(TYPES_TO_COMPONENT, (_,type) => (
+      {map(TYPES_TO_COMPONENT, (_, type) => (
         <Option value={type} key={type}>
           <Tooltip overlayStyle={{ zIndex: 1800 }} title={type}>
             {type}
@@ -64,23 +47,18 @@ export default class SelectAddProps extends Component<SelectAddPropsType,SelectA
         </Option>
       ))}
     </Select>;
-  };
-
-  render() {
-    const { newPropField } = this.state;
-    return (
-      <Input.Search
-        addonBefore={this.renderAddonBefore()}
-        placeholder="新增字段名称"
-        value={newPropField}
-        onChange={e =>
-          this.setState({
-            newPropField: e.target.value,
-          })
-        }
-        onSearch={this.addParam}
-        enterButton="Add"
-      />
-    );
   }
+
+  return (
+    <Input.Search
+      addonBefore={renderAddonBefore()}
+      placeholder="新增字段名称"
+      value={newPropField}
+      onChange={e => setNewPropField(e.target.value)}
+      onSearch={addParam}
+      enterButton="Add"
+    />
+  );
 }
+
+export default connect()(SelectAddProps);

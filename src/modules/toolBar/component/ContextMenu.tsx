@@ -11,16 +11,16 @@ interface ContextMenuPropsType {
   enableMenu: string[],
 }
 
-const menuMap={
-  copy:ACTION_TYPES.copyComponent,
-  clear:ACTION_TYPES.clearChildNodes,
-  delete:ACTION_TYPES.deleteComponent
-}
+const menuMap = {
+  copy: ACTION_TYPES.copyComponent,
+  clear: ACTION_TYPES.clearChildNodes,
+  delete: ACTION_TYPES.deleteComponent,
+};
 
-type MenuType='copy'|'clear'|'delete'
+type MenuType = 'copy' | 'clear' | 'delete'
 
 function ContextMenu(props: ContextMenuPropsType) {
-  const { isSelected, enableMenu,dispatch } = props;
+  const { isSelected, enableMenu, dispatch } = props;
   const root: React.RefObject<any> = useRef(null);
   const [visible, setVisible] = useState(isSelected);
 
@@ -51,9 +51,10 @@ function ContextMenu(props: ContextMenuPropsType) {
         dom.style.top = `${clientY - offsetHeight}px`;
       }
     }
+
     addEventListener('contextmenu', handleContextMenu);
     return () => removeEventListener('contextmenu', handleContextMenu);
-  },[isSelected,visible]);
+  }, [isSelected, visible]);
 
   useEffect(() => {
     function handleClick() {
@@ -61,22 +62,23 @@ function ContextMenu(props: ContextMenuPropsType) {
         setVisible(false);
       }
     }
+
     addEventListener('click', handleClick);
     return () => removeEventListener('click', handleClick);
 
   }, [visible]);
 
-  if(!isSelected&&visible) setVisible(false)
-  if(!visible) return null
+  if (!isSelected && visible) setVisible(false);
+  if (!visible) return null;
   return (
-      <div ref={root} className={styles['contextMenu-wrap']}>
-        {map(enableMenu, (menu:MenuType, key) => <div
-          onClick={()=>dispatch({type:menuMap[menu]})}
-          key={key}
-          className={styles['contextMenu-option']}>{formatMessage({ id: `BLOCK_NAME.toolBar.${menu}` })}</div>,
-        )}
+    <div ref={root} className={styles['contextMenu-wrap']}>
+      {map(enableMenu, (menu: MenuType, key) => <div
+        onClick={() => dispatch({ type: menuMap[menu] })}
+        key={key}
+        className={styles['contextMenu-option']}>{formatMessage({ id: `BLOCK_NAME.toolBar.${menu}` })}</div>,
+      )}
 
-      </div>
+    </div>
   );
 }
 

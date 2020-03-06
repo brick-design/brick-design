@@ -1,128 +1,84 @@
-import React, { Component } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Col, InputNumber, Row } from 'antd';
 import styles from './index.less';
-import {EnumComponent} from './index'
+import { EnumComponent } from './index';
+import { propsAreEqual } from '@/utils';
+
 const UNITS = [
   'px', '%', 'em', 'rem',
 ];
 
-interface NumberComponentStateType {
-  number?:number,
-  unit:string,
-}
-const formatValue = (value:string, units:string[], hasUnit:boolean) => {
-  if (!value) return {number:undefined,unit:'px'};
+const formatValue = (value: string, units: string[], hasUnit: boolean) => {
+  if (!value) return { formatNumber: undefined, formatUnit: 'px' };
   if (hasUnit) {
-    for (const unit of units) {
-      if (value.toString().indexOf(unit) > -1) {
-        const tempValue = value.split(unit);
-        return { number: tempValue[0]||undefined, unit };
-      }
-    }
+    const formatNumber= parseInt(value)
+   return { formatNumber, formatUnit: value.split(`${formatNumber}`)[1] };
   } else {
-    return { number: value };
+    return { formatNumber: value };
   }
 };
 
 interface NumberComponentPropsType {
-  units:string[],
-  hasUnit:boolean,
-  numberSpan:number,
-  unitSpan:number,
-  value:string,
-  onChange:(value:any)=>any,
-  size?:'large' | 'small' | 'default',
-  numberDisabled:boolean
+  units: string[],
+  hasUnit: boolean,
+  numberSpan: number,
+  unitSpan: number,
+  value: string,
+  onChange: (value: any) => any,
+  size?: 'large' | 'small' | 'default',
+  numberDisabled: boolean
 }
 
 
+function NumberComponent(props: NumberComponentPropsType) {
+  const {
+    units = UNITS,
+    hasUnit = false,
+    numberSpan = 13,
+    value,
+    unitSpan = 11,
+    size,
+    numberDisabled,
+    onChange,
+  } = props;
+  const { formatNumber, formatUnit = 'px' }: any = formatValue(value, units, hasUnit);
 
-export default class NumberComponent extends Component<NumberComponentPropsType,NumberComponentStateType> {
+  const [number, setNumber] = useState(formatNumber);
+  const [unit, setUnit] = useState(formatUnit);
+  const outputValue = hasUnit ? `${number}${unit}` : number;
 
-  static  defaultProps = {
-    units: UNITS,
-    hasUnit: false,
-    numberSpan: 13,
-    unitSpan: 11,
-  };
+  useEffect(() => {
+    const { formatNumber, formatUnit = 'px' }: any = formatValue(value, units, hasUnit);
+    setNumber(formatNumber);
+    setUnit(formatUnit);
 
-  numberTimer:any
+  }, [value, units, hasUnit]);
 
-  constructor(props:NumberComponentPropsType) {
-    super(props);
-    const { units, value, hasUnit } = props;
-    const { number, unit = 'px' }:any = formatValue(value, units, hasUnit);
-    this.state = {
-      number,
-      unit,
-    };
-  }
+  useEffect(() => {
+    let timer = setTimeout(() => onChange && onChange(number && outputValue), 100);
+    return () => clearTimeout(timer);
+  }, [number, unit]);
 
-  shouldComponentUpdate(nextProps:NumberComponentPropsType, nextState:NumberComponentStateType) {
-    const { value } = nextProps;
-    const { value: prevValue } = this.props;
-    const { number, unit } = nextState;
-    const { number: prevNumber, unit: prevUnit } = this.state;
-    return value !== prevValue || number !== prevNumber || unit !== prevUnit;
-  }
+  return (
+    <Row className={styles['number-unit-container']}>
+      <Col span={numberSpan}>
+        <InputNumber className={styles['input-num']}
+                     disabled={numberDisabled}
+                     value={number}
+                     size={size}
+                     onChange={(newNumber) => setNumber(newNumber)}/>
+      </Col>
+      {hasUnit && <Col span={unitSpan}>
+        <EnumComponent
+          allowClear={false}
+          value={unit}
+          enumData={units}
+          onChange={(newUnit) => setUnit(newUnit)}
+        />
 
-  componentDidUpdate(prevProps:NumberComponentPropsType, prevState:NumberComponentStateType) {
-    const { value: prevValue } = prevProps;
-    const { value, units, hasUnit } = this.props;
-    if (value !== prevValue) {
-      const { number, unit }:any = formatValue(value, units, hasUnit);
-      this.setState({ number, unit });
-    }
-  }
-
-  componentWillUnmount() {
-    this.numberTimer && clearTimeout(this.numberTimer);
-  }
-
-  numberChange = (number:any) => {
-    this.setState({number},()=>{
-      this.numberTimer && clearTimeout(this.numberTimer);
-      this.numberTimer = setTimeout(this.outputData,100);
-    })
-  }
-
-  unitChange = (unit:string) => {
-    this.setState({
-      unit: unit,
-    }, this.outputData);
-
-  };
-
-  outputData = () => {
-    const { onChange, hasUnit } = this.props;
-    const { unit, number } = this.state;
-    const outputValue = hasUnit ? `${number}${unit}` : number;
-    onChange && onChange(number&&outputValue);
-  };
-
-  render() {
-    const { units, hasUnit, numberSpan, unitSpan, size, numberDisabled } = this.props;
-    const { number, unit } = this.state;
-    return (
-      <Row className={styles['number-unit-container']}>
-        <Col  span={numberSpan}>
-          <InputNumber className={styles['input-num']}
-                       disabled={numberDisabled}
-                       value={number}
-                       size={size}
-                       onChange={this.numberChange}/>
-        </Col>
-        {hasUnit && <Col  span={unitSpan}>
-          <EnumComponent
-            allowClear={false}
-            value={unit}
-            enumData={units}
-            onChange={this.unitChange}
-          />
-
-        </Col>}
-      </Row>
-    );
-  }
-
+      </Col>}
+    </Row>
+  );
 }
+
+export default memo<NumberComponentPropsType>(NumberComponent, propsAreEqual);

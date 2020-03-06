@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Row:ComponentConfigType={
+const Row: ComponentConfigType = {
   propsConfig: {
     align: {
       label: '垂直对齐方式',
@@ -12,7 +12,7 @@ const Row:ComponentConfigType={
     gutter: {
       label: '栅格间隔',
       tip: '栅格间隔，可以写成像素值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24}',
-      type: [PROPS_TYPES.number,PROPS_TYPES.object,PROPS_TYPES.numberArray],
+      type: [PROPS_TYPES.number, PROPS_TYPES.object, PROPS_TYPES.numberArray],
       childPropsConfig: {
         xs: {
           label: 'xs',
@@ -56,4 +56,4 @@ const Row:ComponentConfigType={
 
   },
 };
-export default Row
+export default Row;

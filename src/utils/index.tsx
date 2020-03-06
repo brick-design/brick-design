@@ -121,7 +121,7 @@ export const SPECIAL_STRING_CONSTANTS: any = {
 export const formatSpecialProps = (props: any, propsConfig: any) => {
   const nextProps = props;
   each(props, (v, k) => {
-    if (get(propsConfig,k)) {
+    if (get(propsConfig, k)) {
       if (!isObject(v)) {
         if (SPECIAL_STRING_CONSTANTS[v] !== undefined) {
           nextProps[k] = SPECIAL_STRING_CONSTANTS[v];
@@ -152,7 +152,7 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
  */
 export function flattenDeepArray(data: CategoryType) {
   return flattenDeep(map(data, (v, k) => {
-    if (v&&v.components) return map(v.components, (_, subK) => subK);
+    if (v && v.components) return map(v.components, (_, subK) => subK);
     return k;
   }));
 }
@@ -163,7 +163,7 @@ export function flattenDeepArray(data: CategoryType) {
 export function generateContainers(componentNames: string[]) {
   const components: any = {};
   each(componentNames, componentName => {
-    components[componentName] = (props:any)=><CommonContainer {...props} containerName={componentName}/>;
+    components[componentName] = (props: any) => <CommonContainer {...props} containerName={componentName}/>;
   });
   return components;
 }
@@ -234,24 +234,24 @@ export const handleRequiredHasChild = (selectedComponentInfo: SelectedComponentI
  * @param prevProps
  * @param nextProps
  */
-export const propsAreEqual=(prevProps:any,nextProps:any)=>prevProps.value===nextProps.value
+export const propsAreEqual = (prevProps: any, nextProps: any) => isEqual(prevProps.value, nextProps.value);
 
 /**
  * 处理父级属性与组件属性的异同
  */
-export const diffProps=(restProps:any,props:any)=>{
-  each(restProps,(v,k)=>{
-    if(!isEqual(props[k],v)){
-      props[k]=v
+export const diffProps = (restProps: any, props: any) => {
+  each(restProps, (v, k) => {
+    if (!isEqual(props[k], v)) {
+      props[k] = v;
     }
-  })
+  });
 
-  return props
+  return props;
 
-}
+};
 
 
-export function usePrevious(value:any) {
+export function usePrevious(value: any) {
   const ref = useRef();
   useEffect(() => {
     ref.current = value;

@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Tabs:ComponentConfigType={
+const Tabs: ComponentConfigType = {
 
   nodePropsConfig: {
     tabBarExtraContent: {
@@ -9,8 +9,8 @@ const Tabs:ComponentConfigType={
     },
     children: {
       type: PROPS_TYPES.reactNode,
-      isRequired:true,
-      childNodesRule:['Tabs.TabPane']
+      isRequired: true,
+      childNodesRule: ['Tabs.TabPane'],
     },
 
   },
@@ -104,8 +104,8 @@ const Tabs:ComponentConfigType={
   },
 };
 
-const TabPane:ComponentConfigType={
-  parentNodesRule:['Tabs.children'],
+const TabPane: ComponentConfigType = {
+  parentNodesRule: ['Tabs.children'],
   nodePropsConfig: {
     tab: {
       type: PROPS_TYPES.reactNode,
@@ -129,9 +129,9 @@ const TabPane:ComponentConfigType={
       type: PROPS_TYPES.string,
     },
   },
-}
+};
 
 export default {
   Tabs,
-  'Tabs.TabPane':TabPane,
-}
+  'Tabs.TabPane': TabPane,
+};

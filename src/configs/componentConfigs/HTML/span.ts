@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const span:ComponentConfigType={
+const span: ComponentConfigType = {
   propsConfig: {
     children: {
       label: '文本内容',
@@ -10,4 +10,4 @@ const span:ComponentConfigType={
   },
 };
 
-export default span
+export default span;

@@ -21,7 +21,7 @@
 
 
 .full-screen {
-  :global{
+  :global {
     .ant-modal {
       padding: 0;
       top: 0;
@@ -31,18 +31,20 @@
   }
 }
 
-.switch-container{
+.switch-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   width: 80px;
   margin-left: 30px;
   color: #000;
-  .switch-platform{
+
+  .switch-platform {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 60px;
+
     > span {
       font-size: 12px;
       margin-top: 5px;
@@ -52,7 +54,7 @@
 
 }
 
-.contextMenu-wrap{
+.contextMenu-wrap {
   z-index: 2000;
   position: fixed;
   box-shadow: 0px 2px 5px #999999;
@@ -60,14 +62,16 @@
   padding-top: 5px;
   background-color: #fff;
 
-  .contextMenu-option{
+  .contextMenu-option {
     cursor: default;
     font-size: 14px;
     padding: 10px;
+
     &:hover {
       background: #388bfe;
       color: white;
     }
+
     &:active {
       color: #b5b7be;
       background: linear-gradient(to top, #555, #444);

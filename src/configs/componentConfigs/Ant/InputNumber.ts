@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const InputNumber:ComponentConfigType={
+const InputNumber: ComponentConfigType = {
 
   propsConfig: {
     autoFocus: {
@@ -53,7 +53,7 @@ const InputNumber:ComponentConfigType={
     step: {
       label: '步差',
       tip: '每次改变步数，可以为小数',
-      type: [PROPS_TYPES.string,PROPS_TYPES.number],
+      type: [PROPS_TYPES.string, PROPS_TYPES.number],
       defaultValue: '1',
     },
     value: {
@@ -73,4 +73,4 @@ const InputNumber:ComponentConfigType={
   },
 };
 
-export default InputNumber
+export default InputNumber;

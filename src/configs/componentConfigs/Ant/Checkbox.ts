@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Checkbox:ComponentConfigType={
+const Checkbox: ComponentConfigType = {
   propsConfig: {
     children: {
       label: '内容',
@@ -37,52 +37,52 @@ const Checkbox:ComponentConfigType={
   },
 };
 
-const   Group:ComponentConfigType={
-    propsConfig: {
-      defaultValue: {
-        label: '默认选中的选项',
-        type: PROPS_TYPES.stringArray,
-      },
-      disabled: {
-        label: '整组失效',
-        type: PROPS_TYPES.boolean,
-      },
-      name: {
-        label: 'name',
-        tip: 'CheckboxGroup 下所有 input[type="checkbox"] 的 name 属性',
-        type: PROPS_TYPES.string,
-      },
-      options: {
-        label: '指定可选项',
-        type: [PROPS_TYPES.stringArray,PROPS_TYPES.objectArray],
-    childPropsConfig: [{
-      label: {
-        label: 'label',
-        type: PROPS_TYPES.string,
-      },
-      value: {
-        label: 'value',
-        type: PROPS_TYPES.string,
-      },
-      disabled: {
-        label: '禁用',
-        type: PROPS_TYPES.boolean,
-      },
-    }],
+const Group: ComponentConfigType = {
+  propsConfig: {
+    defaultValue: {
+      label: '默认选中的选项',
+      type: PROPS_TYPES.stringArray,
+    },
+    disabled: {
+      label: '整组失效',
+      type: PROPS_TYPES.boolean,
+    },
+    name: {
+      label: 'name',
+      tip: 'CheckboxGroup 下所有 input[type="checkbox"] 的 name 属性',
+      type: PROPS_TYPES.string,
+    },
+    options: {
+      label: '指定可选项',
+      type: [PROPS_TYPES.stringArray, PROPS_TYPES.objectArray],
+      childPropsConfig: [{
+        label: {
+          label: 'label',
+          type: PROPS_TYPES.string,
+        },
+        value: {
+          label: 'value',
+          type: PROPS_TYPES.string,
+        },
+        disabled: {
+          label: '禁用',
+          type: PROPS_TYPES.boolean,
+        },
+      }],
+    },
+    value: {
+      label: '指定选中的选项',
+      type: PROPS_TYPES.stringArray,
+    },
+    onChange: {
+      label: '变化时回调函数',
+      type: PROPS_TYPES.function,
+      placeholder: '(checkedValue)=>{}',
+    },
   },
-  value: {
-    label: '指定选中的选项',
-    type: PROPS_TYPES.stringArray,
-  },
-  onChange: {
-    label: '变化时回调函数',
-    type: PROPS_TYPES.function,
-    placeholder: '(checkedValue)=>{}',
-  },
-  }
-  }
+};
 
-  export default {
+export default {
   Checkbox,
-    'Checkbox.Group':Group
-  }
+  'Checkbox.Group': Group,
+};

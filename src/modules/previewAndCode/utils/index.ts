@@ -22,7 +22,7 @@ import { PROPS_TYPES } from '@/types/ConfigTypes';
  * @param objectArrayConfig
  * @param functionMap
  */
-const handleObjectArrayFunction = (arrValue:any[], objectArrayConfig:PropsConfigType[], functionMap:any) => {
+const handleObjectArrayFunction = (arrValue: any[], objectArrayConfig: PropsConfigType[], functionMap: any) => {
   each(arrValue, (obj, index) => {
     handleObjectFunction(obj, get(objectArrayConfig, index), functionMap);
   });
@@ -34,7 +34,7 @@ const handleObjectArrayFunction = (arrValue:any[], objectArrayConfig:PropsConfig
  * @param objectConfig
  * @param functionMap
  */
-const handleObjectFunction = (objValue:any, objectConfig:any, functionMap:any) => {
+const handleObjectFunction = (objValue: any, objectConfig: any, functionMap: any) => {
 
   each(objValue, (v, k) => {
     const childPropsConfig = get(objectConfig, `${k}.childPropsConfig`);
@@ -44,10 +44,10 @@ const handleObjectFunction = (objValue:any, objectConfig:any, functionMap:any) =
       if (!functionMap[funName]) {
         functionMap[funName] = funBody;
       }
-    }else if(!isEmpty(childPropsConfig)){
+    } else if (!isEmpty(childPropsConfig)) {
       if (isArray(v) && isArray(childPropsConfig) && v.length === childPropsConfig.length) {
         handleObjectArrayFunction(v, childPropsConfig, functionMap);
-      } else if (isObject(v) && isEqual(keys(v),keys(childPropsConfig))) {
+      } else if (isObject(v) && isEqual(keys(v), keys(childPropsConfig))) {
         handleObjectFunction(v, childPropsConfig, functionMap);
       }
     }
@@ -61,7 +61,7 @@ const handleObjectFunction = (objValue:any, objectConfig:any, functionMap:any) =
  * @param functionMap
  * @returns {string}
  */
-const handleProps = (props:any, propsConfig:PropsConfigType, functionMap:any) => {
+const handleProps = (props: any, propsConfig: PropsConfigType, functionMap: any) => {
   let propsCodes = '';
   each(props, (value, prop) => {
     /**
@@ -86,15 +86,15 @@ const handleProps = (props:any, propsConfig:PropsConfigType, functionMap:any) =>
       if (!isEmpty(childPropsConfig)) {
         if (isArray(value) && isArray(childPropsConfig) && value.length === childPropsConfig.length) {
           handleObjectArrayFunction(value, childPropsConfig, functionMap);
-        } else if (isObject(value)&&isEqual(keys(value),keys(childPropsConfig))) {
+        } else if (isObject(value) && isEqual(keys(value), keys(childPropsConfig))) {
           handleObjectFunction(value, childPropsConfig, functionMap);
         }
       }
       resultValue = JSON.stringify(value);
-    } else if(isString(value)) {
+    } else if (isString(value)) {
       resultValue = `'${value}'`;
-    }else {
-      resultValue=value
+    } else {
+      resultValue = value;
     }
     propsCodes += `${prop}={${resultValue}} `;
   });
@@ -110,12 +110,12 @@ const handleProps = (props:any, propsConfig:PropsConfigType, functionMap:any) =>
  * @param styleSheet
  * @returns {string}
  */
-const analysisProps = (node:VirtualDOMType, componentNames:Set<any>, functionMap:any, styleSheet:any) => {
+const analysisProps = (node: VirtualDOMType, componentNames: Set<any>, functionMap: any, styleSheet: any) => {
   const { props, addPropsConfig, componentName } = node;
   const { propsConfig } = get(config.AllComponentConfigs, componentName);
   let propsCodes = '';
 
-  const { style={}, className = [], animateClass } = props;
+  const { style = {}, className = [], animateClass } = props;
   /**
    * 处理动画样式类
    */
@@ -136,8 +136,8 @@ const analysisProps = (node:VirtualDOMType, componentNames:Set<any>, functionMap
    * 使用classNames库集中处理className
    */
   if (!isEmpty(className)) {
-    propsCodes += `className={classNames(${className.map((item:string) => item.includes('style') ? item : `'${item}'`)})}`;
-    delete props.className
+    propsCodes += `className={classNames(${className.map((item: string) => item.includes('style') ? item : `'${item}'`)})}`;
+    delete props.className;
   }
 
   /**
@@ -157,12 +157,13 @@ const analysisProps = (node:VirtualDOMType, componentNames:Set<any>, functionMap
  * @param props
  * @returns {string}
  */
-const handleAntForm=(componentName:string,childrenNodesJSX:string,props:any,indent:string)=>{
-  if(componentName==='Form.Item'){
-    childrenNodesJSX=`\n${indent}{getFieldDecorator(${props.filed})(${childrenNodesJSX})}`
+const handleAntForm = (componentName: string, childrenNodesJSX: string, props: any, indent: string) => {
+  if (componentName === 'Form.Item') {
+    childrenNodesJSX = `\n${indent}{getFieldDecorator(${props.filed})(${childrenNodesJSX})}`;
   }
-  return childrenNodesJSX
-}
+  return childrenNodesJSX;
+};
+
 /**
  * 生成render方法中的代码
  * @param childNodesArr
@@ -172,17 +173,17 @@ const handleAntForm=(componentName:string,childrenNodesJSX:string,props:any,inde
  * @param styleSheet
  * @returns {{styleSheet: (*|{}), jsx: string, componentNames: (*|Set<any>), functionMap: (*|{})}}
  */
-function renderElementToJSX(childNodesArr:VirtualDOMType[], indent = '', componentNames:Set<string>=new Set(), functionMap?:any, styleSheet?:any,isPropNode?:boolean) {
+function renderElementToJSX(childNodesArr: VirtualDOMType[], indent = '', componentNames: Set<string> = new Set(), functionMap?: any, styleSheet?: any, isPropNode?: boolean) {
   functionMap = functionMap || {};
   styleSheet = styleSheet || {};
   let resultJSX = '';
   const resultIndent = `\n${indent}`;
   /** 属性值解析生成代码 */
 
-  each(childNodesArr, (node,index) => {
-    const { componentName, childNodes,props } = node;
+  each(childNodesArr, (node, index) => {
+    const { componentName, childNodes, props } = node;
     const { nodePropsConfig } = get(config.AllComponentConfigs, componentName);
-    let propsCodes = '', childrenNodes:VirtualDOMType[]=[], childrenNodesJSX = '';
+    let propsCodes = '', childrenNodes: VirtualDOMType[] = [], childrenNodesJSX = '';
     /**
      * 收集组件名称
      */
@@ -194,31 +195,31 @@ function renderElementToJSX(childNodesArr:VirtualDOMType[], indent = '', compone
     propsCodes += analysisProps(node, componentNames, functionMap, styleSheet);
     const nodeIndent = resultIndent;
 
-    let nodeJSX = `${nodeIndent}${isPropNode&&index>0?',':''}<${componentName} `;
+    let nodeJSX = `${nodeIndent}${isPropNode && index > 0 ? ',' : ''}<${componentName} `;
 
     if (!isEmpty(childNodes)) {
       if (nodePropsConfig) {
         each(nodePropsConfig, (nodePropConfig, propName) => {
-          const { type,params } = nodePropConfig;
+          const { type, params } = nodePropConfig;
           const propChildNodes = get(childNodes, `${propName}.childNodes`);
           if (propName === 'children') return childrenNodes = propChildNodes || childNodes;
-          let analysisChildNodes:VirtualDOMType[] = childNodes as VirtualDOMType[];
+          let analysisChildNodes: VirtualDOMType[] = childNodes as VirtualDOMType[];
           if (isEmpty(propChildNodes)) return;
-          if (!isEmpty(propChildNodes)) analysisChildNodes = propChildNodes ;
-          let { jsx } = renderElementToJSX(analysisChildNodes, '', componentNames, functionMap, styleSheet,true);
+          if (!isEmpty(propChildNodes)) analysisChildNodes = propChildNodes;
+          let { jsx } = renderElementToJSX(analysisChildNodes, '', componentNames, functionMap, styleSheet, true);
 
           const isReactNode = type === PROPS_TYPES.reactNode;
           /**
            * 处理属性节点个数大于1的情况
            */
-          jsx=analysisChildNodes.length>1?`[${jsx}]`:jsx
+          jsx = analysisChildNodes.length > 1 ? `[${jsx}]` : jsx;
           propsCodes += `${propName}={${isReactNode ? jsx : `(${params})=>${jsx}`}} `;
         });
       } else {
         childrenNodes = childNodes as VirtualDOMType[];
       }
 
-      nodeJSX+=propsCodes.trimRight()
+      nodeJSX += propsCodes.trimRight();
 
       if (childrenNodes) {
         const { jsx } = renderElementToJSX(childrenNodes, `${indent}  `, componentNames, functionMap, styleSheet);
@@ -229,9 +230,9 @@ function renderElementToJSX(childNodesArr:VirtualDOMType[], indent = '', compone
        * 处理antd form.Item 子组件
        * @type {string}
        */
-      childrenNodesJSX=handleAntForm(componentName,childrenNodesJSX,props,`${indent}  `)
+      childrenNodesJSX = handleAntForm(componentName, childrenNodesJSX, props, `${indent}  `);
 
-      nodeJSX +=isEmpty(childrenNodesJSX)?'/>': `>${childrenNodesJSX}${nodeIndent}</${componentName}>`;
+      nodeJSX += isEmpty(childrenNodesJSX) ? '/>' : `>${childrenNodesJSX}${nodeIndent}</${componentName}>`;
     } else {
       nodeJSX += `${propsCodes.trimRight()}/>`;
     }
@@ -247,7 +248,7 @@ function renderElementToJSX(childNodesArr:VirtualDOMType[], indent = '', compone
  * @param functionMap
  * @returns {string}
  */
-export function generateFunctionCodes(functionMap:any) {
+export function generateFunctionCodes(functionMap: any) {
   let functionCodes = '';
 
   each(functionMap, (funBody, funName) => {
@@ -264,7 +265,7 @@ export function generateFunctionCodes(functionMap:any) {
  * @param styleSheet
  * @returns {string}
  */
-export function generateStyleSheetCodes(styleSheet:any) {
+export function generateStyleSheetCodes(styleSheet: any) {
   let styleSheetCodes = '';
   each(styleSheet, (style, className) => {
     styleSheetCodes += `.${className}{\n`;
@@ -282,15 +283,15 @@ export function generateStyleSheetCodes(styleSheet:any) {
  * @returns {string}
  */
 
-export function generatePageCode(childNodesArr:VirtualDOMType[]) {
+export function generatePageCode(childNodesArr: VirtualDOMType[]) {
   const { jsx, componentNames, functionMap, styleSheet } = renderElementToJSX(cloneDeep(childNodesArr), '         ');
   const styleSheetCodes = generateStyleSheetCodes(styleSheet);
   const functionCodes = generateFunctionCodes(functionMap);
-  const importComponentNames=new Set(map([...componentNames],(componentName)=>{
-    if(!componentName.includes('.')) return componentName
-    return componentName.split('.')[0]
-  }))
-  const hasForm=componentNames.has('Form')
+  const importComponentNames = new Set(map([...componentNames], (componentName) => {
+    if (!componentName.includes('.')) return componentName;
+    return componentName.split('.')[0];
+  }));
+  const hasForm = componentNames.has('Form');
   const pageCodes = `
 import React, { Component } from 'react';
 import { ${[...importComponentNames]} } from 'antd';
@@ -305,7 +306,7 @@ export default class Index extends Component {
   ${functionCodes}
     
   render(){
-  ${hasForm?'const {form:{getFieldDecorator}}=this.props':''}
+  ${hasForm ? 'const {form:{getFieldDecorator}}=this.props' : ''}
       return (${jsx}
       )
   }

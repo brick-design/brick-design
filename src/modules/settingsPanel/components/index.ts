@@ -1,4 +1,4 @@
-export {default as EnumComponent} from './EnumComponent';
-export {default as StringComponent} from './StringComponent';
-export {default as NumberComponent} from './NumberComponent';
+export { default as EnumComponent } from './EnumComponent';
+export { default as StringComponent } from './StringComponent';
+export { default as NumberComponent } from './NumberComponent';
 

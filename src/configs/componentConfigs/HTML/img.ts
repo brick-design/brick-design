@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const img:ComponentConfigType={
+const img: ComponentConfigType = {
   propsConfig: {
     alt: {
       label: '图像的替代文本',
@@ -21,4 +21,4 @@ const img:ComponentConfigType={
     },
   },
 };
-export default img
+export default img;

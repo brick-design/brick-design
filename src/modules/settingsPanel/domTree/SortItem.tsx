@@ -72,13 +72,13 @@ function SortItem(props: SortItemPropsType) {
     }
   }, [prevChildNodes, childNodes]);
 
-  const selectedDomTreeKeys:string[]=get(selectedComponentInfo,'domTreeKeys',[])
+  const selectedDomTreeKeys: string[] = get(selectedComponentInfo, 'domTreeKeys', []);
 
-  if(!isEmpty(selectedDomTreeKeys)&&!isUnfold&&selectedDomTreeKeys.includes(key)){
-    setIsUnfold(true)
+  if (!isEmpty(selectedDomTreeKeys) && !isUnfold && selectedDomTreeKeys.includes(key)) {
+    setIsUnfold(true);
   }
 
-  if(isFold&&isUnfold) setIsUnfold(false)
+  if (isFold && isUnfold) setIsUnfold(false);
 
 
   function dispatchData(actionType: string) {
@@ -184,8 +184,8 @@ function SortItem(props: SortItemPropsType) {
             }}
             type="caret-right"
             onClick={(event) => {
-              event.stopPropagation()
-              setIsUnfold(!isUnfold)
+              event.stopPropagation();
+              setIsUnfold(!isUnfold);
             }
             }
           />

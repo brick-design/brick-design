@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Input:ComponentConfigType={
+const Input: ComponentConfigType = {
   nodePropsConfig: {
     addonAfter: {
       type: PROPS_TYPES.reactNode,
@@ -104,89 +104,89 @@ const Input:ComponentConfigType={
     },
   },
 };
-const Group:ComponentConfigType= {
-    nodePropsConfig: {
-      children: {
-        type: PROPS_TYPES.reactNode,
-        childNodesRule: ['Input'],
-      },
+const Group: ComponentConfigType = {
+  nodePropsConfig: {
+    children: {
+      type: PROPS_TYPES.reactNode,
+      childNodesRule: ['Input'],
     },
-    propsConfig: {
-      compact: {
-        label: '是否用紧凑模式',
-        type: PROPS_TYPES.boolean,
-      },
-      size: {
-        label: '大小',
-        tip: 'Input.Group 中所有的 Input 的大小，可选 large default small',
-        type: PROPS_TYPES.enum,
-        enumData: ['large', 'default', 'small'],
-      },
+  },
+  propsConfig: {
+    compact: {
+      label: '是否用紧凑模式',
+      type: PROPS_TYPES.boolean,
     },
-  }
-const Search:ComponentConfigType= {
-    nodePropsConfig: {
-      enterButton: {
-        type: PROPS_TYPES.reactNode,
-      },
+    size: {
+      label: '大小',
+      tip: 'Input.Group 中所有的 Input 的大小，可选 large default small',
+      type: PROPS_TYPES.enum,
+      enumData: ['large', 'default', 'small'],
     },
-    propsConfig: {
-      enterButton: {
-        label: '是否有确认按钮',
-        tip: '是否有确认按钮，可设为按钮文字。该属性会与 addon 冲突',
-        type: PROPS_TYPES.boolean,
-      },
-      onSearch: {
-        label: '点击搜索或按下回车键时的回调',
-        type: PROPS_TYPES.function,
-        placeholder: '(value, event)=>{}',
-      },
-      loading: {
-        label: '搜索 loading',
-        type: PROPS_TYPES.boolean,
-      },
-      ...Input.propsConfig
+  },
+};
+const Search: ComponentConfigType = {
+  nodePropsConfig: {
+    enterButton: {
+      type: PROPS_TYPES.reactNode,
     },
-  }
-const TextArea:ComponentConfigType= {
-    propsConfig: {
-      autoSize: {
-        label: '自适应内容高度',
-        tip: '自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }。3.24.0 后 autosize 被废弃，请使用 autoSize。',
-        type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
   },
-  defaultValue: {
-    label: '默认内容',
-    type: PROPS_TYPES.string,
-  },
-  value: {
-    label: '输入框内容',
-    type: PROPS_TYPES.string,
-  },
-  onPressEnter: {
-    label: '按下回车回调',
-    type: PROPS_TYPES.function,
-    placeholder: '(e) => {}',
-  },
-  allowClear: {
-    label: '是否显示清除按钮',
-    type: PROPS_TYPES.boolean,
-  },
-  },
-  }
-const Password:ComponentConfigType={
-  propsConfig:{
-    visibilityToggle:{
-      label:'是否显示切换按钮',
-      type:PROPS_TYPES.boolean
+  propsConfig: {
+    enterButton: {
+      label: '是否有确认按钮',
+      tip: '是否有确认按钮，可设为按钮文字。该属性会与 addon 冲突',
+      type: PROPS_TYPES.boolean,
     },
-    ...Input.propsConfig
-  }
-}
-  export default {
+    onSearch: {
+      label: '点击搜索或按下回车键时的回调',
+      type: PROPS_TYPES.function,
+      placeholder: '(value, event)=>{}',
+    },
+    loading: {
+      label: '搜索 loading',
+      type: PROPS_TYPES.boolean,
+    },
+    ...Input.propsConfig,
+  },
+};
+const TextArea: ComponentConfigType = {
+  propsConfig: {
+    autoSize: {
+      label: '自适应内容高度',
+      tip: '自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }。3.24.0 后 autosize 被废弃，请使用 autoSize。',
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
+    },
+    defaultValue: {
+      label: '默认内容',
+      type: PROPS_TYPES.string,
+    },
+    value: {
+      label: '输入框内容',
+      type: PROPS_TYPES.string,
+    },
+    onPressEnter: {
+      label: '按下回车回调',
+      type: PROPS_TYPES.function,
+      placeholder: '(e) => {}',
+    },
+    allowClear: {
+      label: '是否显示清除按钮',
+      type: PROPS_TYPES.boolean,
+    },
+  },
+};
+const Password: ComponentConfigType = {
+  propsConfig: {
+    visibilityToggle: {
+      label: '是否显示切换按钮',
+      type: PROPS_TYPES.boolean,
+    },
+    ...Input.propsConfig,
+  },
+};
+export default {
   Input,
-   'Input.Search':Search,
-   'Input.TextArea':TextArea,
-    'Input.Group':Group,
-    'Input.Password':Password
-  }
+  'Input.Search': Search,
+  'Input.TextArea': TextArea,
+  'Input.Group': Group,
+  'Input.Password': Password,
+};

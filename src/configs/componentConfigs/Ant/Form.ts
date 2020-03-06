@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Form:ComponentConfigType= {
+const Form: ComponentConfigType = {
   propsConfig: {
     hideRequiredMark: {
       label: '隐藏所有表单项的必选标记',
@@ -44,7 +44,7 @@ const Form:ComponentConfigType= {
   },
 };
 
-const   Item:ComponentConfigType= {
+const Item: ComponentConfigType = {
   nodePropsConfig: {
     extra: {
       type: PROPS_TYPES.reactNode,
@@ -117,8 +117,8 @@ const   Item:ComponentConfigType= {
       enumData: ['success', 'warning', 'error', 'validating'],
     },
   },
-}
+};
 export default {
   Form,
-  'Form.Item':Item
-}
+  'Form.Item': Item,
+};

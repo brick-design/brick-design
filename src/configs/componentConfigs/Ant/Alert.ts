@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Alert:ComponentConfigType={
+const Alert: ComponentConfigType = {
   propsConfig: {
     message: {
       label: '警告提示内容',

@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Carousel:ComponentConfigType= {
+const Carousel: ComponentConfigType = {
 
   propsConfig: {
     afterChange: {
@@ -42,4 +42,4 @@ const Carousel:ComponentConfigType= {
   },
 };
 
-export default Carousel
+export default Carousel;

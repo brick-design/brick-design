@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Tree:ComponentConfigType={
+const Tree: ComponentConfigType = {
   propsConfig: {
     autoExpandParent: {
       label: '父节点展开',
@@ -38,7 +38,7 @@ const Tree:ComponentConfigType={
   },
 };
 
-const TreeNode:ComponentConfigType={
+const TreeNode: ComponentConfigType = {
   propsConfig: {
     autoExpandParent: {
       label: '父节点展开',
@@ -74,9 +74,9 @@ const TreeNode:ComponentConfigType={
     },
   },
 
-}
+};
 
 export default {
   Tree,
-  'Tree.TreeNode':TreeNode
-}
+  'Tree.TreeNode': TreeNode,
+};

@@ -1,7 +1,8 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
-import {TreeSelect as AntTreeSelect } from 'Antd'
-const TreeSelect:ComponentConfigType={
+import { TreeSelect as AntTreeSelect } from 'Antd';
+
+const TreeSelect: ComponentConfigType = {
   nodePropsConfig: {
     maxTagPlaceholder: {
       type: PROPS_TYPES.reactNode,
@@ -27,7 +28,7 @@ const TreeSelect:ComponentConfigType={
     },
     defaultValue: {
       label: '指定默认选中的条目',
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray],
     },
     disabled: {
       label: '是否禁用',
@@ -45,12 +46,12 @@ const TreeSelect:ComponentConfigType={
     },
     dropdownStyle: {
       label: '下拉菜单的样式',
-      type: [PROPS_TYPES.json,PROPS_TYPES.objectArray],
+      type: [PROPS_TYPES.json, PROPS_TYPES.objectArray],
       childPropsConfig: {},
     },
     filterTreeNode: {
       label: '是否根据输入项进行筛选',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.function],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.function],
       placeholder: '(inputValue, treeNode)=>true',
     },
     getPopupContainer: {
@@ -139,7 +140,7 @@ const TreeSelect:ComponentConfigType={
     },
     treeDataSimpleMode: {
       label: 'treeDataSimpleMode',
-      type: [PROPS_TYPES.boolean,PROPS_TYPES.object],
+      type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
       childPropsConfig: {},
     },
     treeDefaultExpandAll: {
@@ -166,7 +167,7 @@ const TreeSelect:ComponentConfigType={
     },
     value: {
       label: '指定当前选中的条目',
-      type: [PROPS_TYPES.string,PROPS_TYPES.stringArray],
+      type: [PROPS_TYPES.string, PROPS_TYPES.stringArray],
     },
     onChange: {
       label: '选中节点函数',
@@ -193,8 +194,8 @@ const TreeSelect:ComponentConfigType={
   },
 };
 
-const TreeNode:ComponentConfigType= {
-  parentNodesRule:['TreeSelect.children'],
+const TreeNode: ComponentConfigType = {
+  parentNodesRule: ['TreeSelect.children'],
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,
@@ -242,8 +243,8 @@ const TreeNode:ComponentConfigType= {
     },
   },
 
-}
+};
 export default {
   TreeSelect,
-  'TreeSelect.TreeNode':TreeNode
-}
+  'TreeSelect.TreeNode': TreeNode,
+};

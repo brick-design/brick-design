@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Icon:ComponentConfigType= {
+const Icon: ComponentConfigType = {
   propsConfig: {
     type: {
       label: '图标类型',
@@ -39,4 +39,4 @@ const Icon:ComponentConfigType= {
   },
 };
 
-export default Icon
+export default Icon;

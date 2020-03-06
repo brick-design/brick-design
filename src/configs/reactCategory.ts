@@ -1,7 +1,6 @@
-import {createElement} from 'react'
 import { CategoryType } from '@/types/CategoryType';
 
-export const reactContainers:CategoryType = {
+export const reactContainers: CategoryType = {
   'Layout': {
     components: {
       'Layout': null,
@@ -98,7 +97,7 @@ export const reactContainers:CategoryType = {
     },
   },
   'Button': {
-    span:12,
+    span: 12,
     props: [{
       type: 'primary',
       children: 'primary',
@@ -137,38 +136,43 @@ export const reactContainers:CategoryType = {
     components: {
       List: null,
       'List.Item': null,
-      'List.Item.Meta':null,
+      'List.Item.Meta': null,
     },
   },
   'Tag': {
-    props: [{children:"Tag"}],
+    props: [{ children: 'Tag' }],
   },
   'Cascader': {
-    props: [{options:[{
+    props: [{
+      options: [{
         value: 'zhejiang',
-        label: 'Zhejiang',children:[{value: 'haha',
-          label: 'haha',}]}]}],
+        label: 'Zhejiang', children: [{
+          value: 'haha',
+          label: 'haha',
+        }],
+      }],
+    }],
   },
   'PageHeader': null,
   Pagination: {
     props: [{}],
   },
   'Tooltip': {
-    props: [{children:'Tooltip',title:'Tooltip'}],
+    props: [{ children: 'Tooltip', title: 'Tooltip' }],
   },
   'Spin': {
     props: [{}],
   },
   'Popover': {
-    props: [{children:'Popover',content:'Popover'}],
+    props: [{ children: 'Popover', content: 'Popover' }],
   },
   'Divider': {
-    props: [{children:'Divider'}],
+    props: [{ children: 'Divider' }],
   },
   'Carousel': null,
   'Badge': {
-    span:12,
-    props:[{count:25},{style:{ backgroundColor: '#52c41a' },count:109}]
+    span: 12,
+    props: [{ count: 25 }, { style: { backgroundColor: '#52c41a' }, count: 109 }],
   },
   'BackTop': null,
   'Anchor': {
@@ -180,9 +184,11 @@ export const reactContainers:CategoryType = {
   'Input': {
     components: {
       'Input': {
-        props:[{},{addonBefore: 'Http://',
+        props: [{}, {
+          addonBefore: 'Http://',
           addonAfter: '.com',
-          defaultValue: 'mysite'}]
+          defaultValue: 'mysite',
+        }],
       },
       'Input.Group': {},
     },
@@ -190,14 +196,18 @@ export const reactContainers:CategoryType = {
   'Upload': null,
   'Radio.Group': null,
   Switch: {
-    span:12,
-    props: [{checkedChildren:"开", unCheckedChildren:"关"},{loading:true}],
+    span: 12,
+    props: [{ checkedChildren: '开', unCheckedChildren: '关' }, { loading: true }],
   },
-  Avatar:{
-    span:12,
-    props:[{src:'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
-      size:100},{src:'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
-      size:100,shape:'square'}]
+  Avatar: {
+    span: 12,
+    props: [{
+      src: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
+      size: 100,
+    }, {
+      src: 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
+      size: 100, shape: 'square',
+    }],
   },
   'Affix': null,
   'Modal': null,
@@ -205,7 +215,7 @@ export const reactContainers:CategoryType = {
 
 };
 
-export const reactNonContainers:CategoryType = {
+export const reactNonContainers: CategoryType = {
   Typography: {
     components: {
       'Typography.Text': null,
@@ -214,14 +224,14 @@ export const reactNonContainers:CategoryType = {
     },
   },
   Icon: {
-    props: [{type:"heart"}],
+    props: [{ type: 'heart' }],
   },
   Checkbox: {
     components: {
       Checkbox: {
-        props:[{}]
+        props: [{}],
       },
-      'Checkbox.Group':null,
+      'Checkbox.Group': null,
 
     },
   },
@@ -231,13 +241,13 @@ export const reactNonContainers:CategoryType = {
   Input: {
     components: {
       'Input.TextArea': {
-        props:[{}]
+        props: [{}],
       },
       'Input.Search': {
-        props:[{}]
+        props: [{}],
       },
-      'Input.Password':{
-        props:[{visibilityToggle:true}]
+      'Input.Password': {
+        props: [{ visibilityToggle: true }],
       },
     },
 
@@ -245,10 +255,10 @@ export const reactNonContainers:CategoryType = {
   Radio: {
     components: {
       Radio: {
-        props:[{children:'Radio'}]
+        props: [{ children: 'Radio' }],
       },
       'Radio.Button': {
-        props:[{children:'Radio.Button'}]
+        props: [{ children: 'Radio.Button' }],
       },
     },
   },
@@ -258,6 +268,6 @@ export const reactNonContainers:CategoryType = {
   Slider: {
     props: [{}],
   },
-  Transfer:null
+  Transfer: null,
 
 };

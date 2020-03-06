@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Progress:ComponentConfigType={
+const Progress: ComponentConfigType = {
   propsConfig: {
     percent: {
       label: '百分比',
@@ -30,4 +30,4 @@ const Progress:ComponentConfigType={
   },
 };
 
-export default Progress
+export default Progress;

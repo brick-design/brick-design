@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Drawer:ComponentConfigType={
+const Drawer: ComponentConfigType = {
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,
@@ -89,4 +89,4 @@ const Drawer:ComponentConfigType={
   },
 };
 
-export default Drawer
+export default Drawer;

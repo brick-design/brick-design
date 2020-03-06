@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Switch:ComponentConfigType={
+const Switch: ComponentConfigType = {
   nodePropsConfig: {
     checkedChildren: {
       type: PROPS_TYPES.reactNode,
@@ -60,4 +60,4 @@ const Switch:ComponentConfigType={
   },
 };
 
-export default Switch
+export default Switch;

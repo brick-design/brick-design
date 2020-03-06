@@ -1,21 +1,21 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const AutoComplete:ComponentConfigType= {
+const AutoComplete: ComponentConfigType = {
   nodePropsConfig: {
     dataSource: {
       type: PROPS_TYPES.reactNode,
       childNodesRule: ['AutoComplete.Option', 'AutoComplete.OptGroup'],
     },
-    children:{
+    children: {
       type: PROPS_TYPES.reactNode,
     },
-},
+  },
   propsConfig: {
 
     dataSource: {
       label: '自动完成的数据源',
-      type: [PROPS_TYPES.objectArray,PROPS_TYPES.stringArray],
+      type: [PROPS_TYPES.objectArray, PROPS_TYPES.stringArray],
     },
     dropdownMenuStyle: {
       label: 'dropdown 菜单自定义样式',
@@ -24,7 +24,7 @@ const AutoComplete:ComponentConfigType= {
     },
     defaultValue: {
       label: '指定默认选中的条目',
-      type: [PROPS_TYPES.stringArray,PROPS_TYPES.string],
+      type: [PROPS_TYPES.stringArray, PROPS_TYPES.string],
     },
     filterOption: {
       label: '输入筛选',
@@ -49,7 +49,7 @@ const AutoComplete:ComponentConfigType= {
     },
     value: {
       label: '指定当前选中的条目',
-      type: [PROPS_TYPES.stringArray,PROPS_TYPES.string],
+      type: [PROPS_TYPES.stringArray, PROPS_TYPES.string],
     },
 
     allowClear: {
@@ -123,42 +123,42 @@ const AutoComplete:ComponentConfigType= {
     },
   },
 };
-const Option:ComponentConfigType= {
+const Option: ComponentConfigType = {
   propsConfig: {
     value: {
       label: 'value',
-        type: PROPS_TYPES.string,
+      type: PROPS_TYPES.string,
     },
     key: {
       label: 'key',
-        type: PROPS_TYPES.string,
+      type: PROPS_TYPES.string,
     },
   },
 
-}
-const OptGroup:ComponentConfigType= {
+};
+const OptGroup: ComponentConfigType = {
   nodePropsConfig: {
-    children:{
+    children: {
       type: PROPS_TYPES.reactNode,
       childNodesRule: ['AutoComplete.Option'],
-    }
+    },
 
   },
   propsConfig: {
     label: {
       label: 'label',
-        type: PROPS_TYPES.string,
+      type: PROPS_TYPES.string,
     },
     key: {
       label: 'key',
-        type: PROPS_TYPES.string,
+      type: PROPS_TYPES.string,
     },
-  }
-}
+  },
+};
 
 
 export default {
   AutoComplete,
-  'AutoComplete.Option':Option,
-  'AutoComplete.OptGroup':OptGroup
-}
+  'AutoComplete.Option': Option,
+  'AutoComplete.OptGroup': OptGroup,
+};

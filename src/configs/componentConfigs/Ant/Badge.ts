@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const Badge:ComponentConfigType={
+const Badge: ComponentConfigType = {
   nodePropsConfig: {
     count: {
       type: PROPS_TYPES.reactNode,
@@ -61,4 +61,4 @@ const Badge:ComponentConfigType={
   },
 };
 
-export default Badge
+export default Badge;

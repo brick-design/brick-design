@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Modal:ComponentConfigType={
+const Modal: ComponentConfigType = {
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,
@@ -144,4 +144,4 @@ const Modal:ComponentConfigType={
   },
 };
 
-export default Modal
+export default Modal;

@@ -6,13 +6,13 @@ import position from './position';
 import { CSS_TYPE } from '@/types/ConfigTypes';
 
 export interface CssConfigType {
-  [cssName:string]:{
-    label:string,
-    span:number,
-    labelSpan:number,
-    valueSpan:number,
-    type:CSS_TYPE,
-    props:any
+  [cssName: string]: {
+    label: string,
+    span: number,
+    labelSpan: number,
+    valueSpan: number,
+    type: CSS_TYPE,
+    props: any
   }
 }
 

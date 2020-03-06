@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Slider:ComponentConfigType={
+const Slider: ComponentConfigType = {
 
   propsConfig: {
     allowClear: {
@@ -12,7 +12,7 @@ const Slider:ComponentConfigType={
     defaultValue: {
       label: '初始取值',
       tip: '设置初始取值。当 range 为 false 时，使用 number，否则用 [number, number]',
-      type: [PROPS_TYPES.number,PROPS_TYPES.numberArray],
+      type: [PROPS_TYPES.number, PROPS_TYPES.numberArray],
     },
     disabled: {
       label: '是否禁用',
@@ -55,19 +55,19 @@ const Slider:ComponentConfigType={
       label: '步长',
       tip:
         '	步长，取值必须大于 0，并且可被 (max - min) 整除。当 marks 不为空对象时，可以设置 step 为 null，此时 Slider 的可选值仅有 marks 标出来的部分。',
-      type: [PROPS_TYPES.number,PROPS_TYPES.string],
+      type: [PROPS_TYPES.number, PROPS_TYPES.string],
     },
     tipFormatter: {
       label: '提示格式化',
       tip:
         'Slider 会把当前值传给 tipFormatter，并在 Tooltip 中显示 tipFormatter 的返回值，若为 null，则隐藏 Tooltip。',
-      type: [PROPS_TYPES.function,PROPS_TYPES.string],
+      type: [PROPS_TYPES.function, PROPS_TYPES.string],
       placeholder: '() => {}',
     },
     value: {
       label: '当前取值',
       tip: '设置当前取值。当 range 为 false 时，使用 number，否则用 [number, number]',
-      type: [PROPS_TYPES.number,PROPS_TYPES.numberArray],
+      type: [PROPS_TYPES.number, PROPS_TYPES.numberArray],
     },
     vertical: {
       label: '垂直方向',
@@ -105,4 +105,4 @@ const Slider:ComponentConfigType={
   },
 };
 
-export default Slider
+export default Slider;

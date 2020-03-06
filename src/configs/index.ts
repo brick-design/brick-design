@@ -17,15 +17,14 @@ const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
  * 非容器组件分类
  * @type {{Input, InputNumber, Slider, Checkbox, Rate, Radio, Icon, Typography}}
  */
-const NON_CONTAINER_CATEGORY = { ...reactNonContainers,...htmlNonContainers };
+const NON_CONTAINER_CATEGORY = { ...reactNonContainers, ...htmlNonContainers };
 
 
-
-const config:ConfigType={
+const config: ConfigType = {
   OriginalComponents,
   AllComponentConfigs,
   CONTAINER_CATEGORY,
   NON_CONTAINER_CATEGORY,
-}
+};
 
-export default config
+export default config;

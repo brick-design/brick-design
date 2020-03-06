@@ -1,6 +1,7 @@
-import {ComponentConfigType} from '@/types/ComponentConfigType'
+import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
-const a:ComponentConfigType= {
+
+const a: ComponentConfigType = {
   propsConfig: {
     target: {
       label: '规定在何处打开链接文档',
@@ -27,4 +28,4 @@ const a:ComponentConfigType= {
   },
 };
 
-export default a
+export default a;

@@ -1,6 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
-const TimePicker:ComponentConfigType={
+
+const TimePicker: ComponentConfigType = {
   propsConfig: {
     allowEmpty: {
       label: '是否展示清除按钮',
@@ -71,4 +72,4 @@ const TimePicker:ComponentConfigType={
   },
 };
 
-export default TimePicker
+export default TimePicker;

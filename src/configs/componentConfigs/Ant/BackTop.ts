@@ -1,7 +1,7 @@
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 
-const BackTop:ComponentConfigType= {
+const BackTop: ComponentConfigType = {
 
   propsConfig: {
     target: {
@@ -29,4 +29,4 @@ const BackTop:ComponentConfigType= {
   },
 };
 
-export default BackTop
+export default BackTop;

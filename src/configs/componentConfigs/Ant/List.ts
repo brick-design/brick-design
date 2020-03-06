@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const List:ComponentConfigType={
+const List: ComponentConfigType = {
   nodePropsConfig: {
     header: {
       type: PROPS_TYPES.reactNode,
@@ -82,7 +82,7 @@ const List:ComponentConfigType={
     },
   },
 };
-const Item:ComponentConfigType= {
+const Item: ComponentConfigType = {
   nodePropsConfig: {
     actions: {
       type: PROPS_TYPES.reactNode,
@@ -101,34 +101,34 @@ const Item:ComponentConfigType= {
       type: PROPS_TYPES.string,
     },
   },
-}
+};
 
-const Meta:ComponentConfigType=  {
-    nodePropsConfig: {
-      avatar: {
-        type: PROPS_TYPES.reactNode,
-      },
-      description: {
-        type: PROPS_TYPES.reactNode,
-      },
-      title: {
-        type: PROPS_TYPES.reactNode,
-      },
+const Meta: ComponentConfigType = {
+  nodePropsConfig: {
+    avatar: {
+      type: PROPS_TYPES.reactNode,
     },
-    propsConfig: {
-      description: {
-        label: '列表元素的描述内容',
-        type: PROPS_TYPES.string,
-      },
-      title: {
-        label: '列表元素的标题',
-        type: PROPS_TYPES.string,
-      },
+    description: {
+      type: PROPS_TYPES.reactNode,
     },
-  }
+    title: {
+      type: PROPS_TYPES.reactNode,
+    },
+  },
+  propsConfig: {
+    description: {
+      label: '列表元素的描述内容',
+      type: PROPS_TYPES.string,
+    },
+    title: {
+      label: '列表元素的标题',
+      type: PROPS_TYPES.string,
+    },
+  },
+};
 export default {
   List,
-  'List.Item':Item,
-  'List.Item.Meta':Meta
+  'List.Item': Item,
+  'List.Item.Meta': Meta,
 
-}
+};

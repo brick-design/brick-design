@@ -1,6 +1,6 @@
 import { CSS_TYPE } from '@/types/ConfigTypes';
 
-export default  {
+export default {
   backgroundColor: {
     label: '背景色',
     span: 24,
@@ -8,7 +8,7 @@ export default  {
     props: {
       inputProps: { placeholder: '请输入或在右侧选择' },
       isFont: false,
-      isShowColor: true
+      isShowColor: true,
     },
   },
 };

@@ -1,19 +1,19 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Popover:ComponentConfigType={
+const Popover: ComponentConfigType = {
 
   nodePropsConfig: {
-    content:{
+    content: {
       type: PROPS_TYPES.reactNode,
     },
-    title:{
+    title: {
       type: PROPS_TYPES.reactNode,
     },
-    children:{
+    children: {
       type: PROPS_TYPES.reactNode,
     },
-},
+  },
   mirrorModalField: {
     displayPropName: 'visible',
     // mounted: {
@@ -53,7 +53,7 @@ const Popover:ComponentConfigType={
     },
     overlayStyle: {
       label: '卡片样式',
-      type: [PROPS_TYPES.object,PROPS_TYPES.json],
+      type: [PROPS_TYPES.object, PROPS_TYPES.json],
     },
     placement: {
       label: '气泡框位置',
@@ -69,4 +69,4 @@ const Popover:ComponentConfigType={
     },
   },
 };
-export default Popover
+export default Popover;

@@ -1,7 +1,7 @@
 import { ComponentConfigType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 
-const Collapse:ComponentConfigType={
+const Collapse: ComponentConfigType = {
   propsConfig: {
     activeKey: {
       label: '当前激活 tab 面板的 key',
@@ -19,7 +19,7 @@ const Collapse:ComponentConfigType={
   },
 };
 
-const Panel:ComponentConfigType= {
+const Panel: ComponentConfigType = {
   nodePropsConfig: {
     header: {
       type: PROPS_TYPES.reactNode,
@@ -48,8 +48,8 @@ const Panel:ComponentConfigType= {
       type: PROPS_TYPES.string,
     },
   },
-}
+};
 export default {
   Collapse,
-  'Collapse.Panel':Panel
-}
+  'Collapse.Panel': Panel,
+};
