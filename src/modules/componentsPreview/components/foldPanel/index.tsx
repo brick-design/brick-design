@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { AutoComplete, Col, Collapse, Input, Row,Divider } from 'antd';
+import React, { memo, useEffect, useState } from 'react';
+import { AutoComplete, Col, Collapse, Divider, Input, Row } from 'antd';
 import { Icon } from '@/components';
 import map from 'lodash/map';
 import update from 'lodash/update';
@@ -11,6 +11,8 @@ import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import { CategoryType, ComponentCategoryType, ComponentInfoType } from '@/types/CategoryType';
 import { SelectedComponentInfoType } from '@/types/ModelType';
+import { usePrevious } from '@/utils';
+import { Dispatch } from 'redux';
 
 const { Panel } = Collapse;
 
@@ -19,96 +21,71 @@ const { Panel } = Collapse;
  * @param prevComponentsCategory
  * @param value 搜索字段
  * @param rule 规则字段
- * @returns {{componentsCategory, openKeys: Array}|{componentsCategory: *, openKeys: Array}}
+ * @returns {{filterCategory, filterOpenKeys: Array}|{filterCategory: *, filterOpenKeys: Array}}
  */
-function getFilterCategory(prevComponentsCategory:CategoryType, value?:string, rule?:string[] ) {
-  const openKeys:string[] = [];
-  const componentsCategory:CategoryType = {};
-  value=isEmpty(value)?undefined:value
+function getFilterCategory(prevComponentsCategory: CategoryType, value?: string, rule?: string[]) {
+  const filterOpenKeys: string[] = [];
+  const filterCategory: CategoryType = {};
+  value = isEmpty(value) ? undefined : value;
 
-  if(value&&rule){
-    rule=rule.filter((name)=>name.includes(value!))
-  }else if(!value&&!rule){
-    return {componentsCategory:prevComponentsCategory,openKeys}
+  if (value && rule) {
+    rule = rule.filter((name) => name.includes(value!));
+  } else if (!value && !rule) {
+    return { filterCategory: prevComponentsCategory, filterOpenKeys };
   }
   each(prevComponentsCategory, (infos, category) => {
-    const { components } = infos||{components:null};
+    const { components } = infos || { components: null };
     if (components) {
-      each(components,(componentInfo,componentName)=>{
-        if (!rule&&componentName.includes(value!)||rule&&rule.includes(componentName)) {
-          !openKeys.includes(category) && (openKeys.push(category));
-          update(componentsCategory, `${category}.components`, (componentInfos = {}) => {
+      each(components, (componentInfo, componentName) => {
+        if (!rule && componentName.includes(value!) || rule && rule.includes(componentName)) {
+          !filterOpenKeys.includes(category) && (filterOpenKeys.push(category));
+          update(filterCategory, `${category}.components`, (componentInfos = {}) => {
             componentInfos[componentName] = componentInfo;
             return componentInfos;
           });
         }
 
-      })
+      });
 
-    } else if (!rule&&category.includes(value!)||rule&&rule.includes(category)) {
-      openKeys.push(category);
-      componentsCategory[category] = infos;
+    } else if (!rule && category.includes(value!) || rule && rule.includes(category)) {
+      filterOpenKeys.push(category);
+      filterCategory[category] = infos;
     }
   });
-  return { openKeys, componentsCategory };
+  return { filterOpenKeys, filterCategory };
 }
 
 interface FoldPanelPropsType {
-  componentsCategory:CategoryType,  //组件分类
-  selectedComponentInfo:SelectedComponentInfoType, //选中组件的信息
-  searchValues:string[],
-  isShow:boolean
+  componentsCategory: CategoryType,  //组件分类
+  selectedComponentInfo: SelectedComponentInfoType, //选中组件的信息
+  searchValues: string[],
+  isShow: boolean,
+  dispatch: Dispatch,
+
 }
 
-interface FoldPanelStateType {
-  componentsCategory:CategoryType,
-  openKeys:string[],
-  searchValue:string
-}
-export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelStateType> {
-  constructor(props:FoldPanelPropsType) {
-    super(props);
-    const { componentsCategory } = props;
-    this.state = {
-      openKeys: [],
-      componentsCategory,
-      searchValue:'',
-    };
-  }
+function FoldPanel(props: FoldPanelPropsType) {
+  const { componentsCategory, selectedComponentInfo: { childNodesRule }, searchValues, isShow, dispatch } = props;
+  const [openKeys = [], setOpenKeys] = useState<string[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [category, setCategory] = useState(componentsCategory);
 
+  const prevIsShow = usePrevious(isShow);
+  const prevChildNodesRule = usePrevious(childNodesRule);
+  const prevCategory = usePrevious(category);
+  useEffect(() => {
+    if (isShow !== prevIsShow || isShow && !isEqual(prevChildNodesRule, childNodesRule)) {
+      const { filterOpenKeys, filterCategory } = getFilterCategory(componentsCategory, searchValue, childNodesRule);
+      if (!isEqual(filterCategory, prevCategory)) {
+        setOpenKeys(filterOpenKeys);
+        setCategory(filterCategory);
+      }
 
-  shouldComponentUpdate(nextProps:FoldPanelPropsType, nextState:FoldPanelStateType) {
-    const { isShow,selectedComponentInfo:{childNodesRule} } = nextProps;
-    const {selectedComponentInfo:{childNodesRule:prevChildNodesRule},isShow:prevIsShow}=this.props
-    const { componentsCategory, openKeys } = nextState;
-    const { componentsCategory: prevComponentsCategory, openKeys: prevOpenKeys} = this.state;
-    if(isShow&&prevIsShow)
-      return !isEqual(componentsCategory, prevComponentsCategory) || !isEqual(openKeys, prevOpenKeys)||!isEqual(childNodesRule,prevChildNodesRule);
-    return isShow
-  }
-
-  componentDidUpdate(prevProps:FoldPanelPropsType, prevState:FoldPanelStateType) {
-    const { isShow:prevIsShow,selectedComponentInfo:{childNodesRule:prevChildNodesRule} } = prevProps;
-    const {selectedComponentInfo: {childNodesRule },componentsCategory,isShow}=this.props
-    const {componentsCategory:prevComponentsCategory}=prevState
-    const {searchValue}=this.state
-    if (isShow !== prevIsShow||isShow&&!isEqual(prevChildNodesRule,childNodesRule)) {
-        const { openKeys=[], componentsCategory: nextComponentsCategory } = getFilterCategory(componentsCategory, searchValue, childNodesRule);
-      if (!isEqual(nextComponentsCategory, prevComponentsCategory)) return this.setState({
-        openKeys,
-        componentsCategory: nextComponentsCategory,
-      })
     }
-  }
+  }, [searchValue, prevIsShow, prevChildNodesRule, childNodesRule, prevCategory, isShow]);
 
-  collapseChange = (openKeys:any) => {
-    this.setState({
-      openKeys,
-    });
-  };
 
-  renderHeader(categoryName:string) {
-    const { openKeys } = this.state;
+  function renderHeader(categoryName: string) {
     return (
       <div className={styles['fold-header']}>
         <Icon
@@ -121,10 +98,11 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
     );
   }
 
-  renderDragItem = (span:number=24, key:string, componentName:string, defaultProps?:any) => {
+  function renderDragItem(span: number = 24, key: string, componentName: string, defaultProps?: any) {
     return (<Col span={span} key={key}>
       <DragAbleItem
         item={{ componentName, defaultProps }}
+        dispatch={dispatch}
       />
     </Col>);
   };
@@ -135,96 +113,95 @@ export default class FoldPanel extends Component<FoldPanelPropsType,FoldPanelSta
    * @param categoryName  分分类名字
    * @param isShow        是否展示分割分类组件名
    */
-  renderContent = (categoryInfo:ComponentInfoType|null, categoryName:string,isShow?:boolean) => {
-    let items = null,isShowCategoryName=false
-      if(!categoryInfo||isEmpty(categoryInfo.props||categoryInfo.components)){
-        items = this.renderDragItem(undefined, categoryName, categoryName);
-      }else {
-        const { span = 24, props, components } = categoryInfo;
-        const renderItems = props || components;
-        items=map(renderItems,(v:ComponentCategoryType|any,k)=>{
-          if(!isArray(renderItems)){
-            return this.renderContent(v,k,true)
-          }
-          /**
-           * 如果有默认属性显示分割分类
-           */
-          if(v) isShowCategoryName=true
-         return  this.renderDragItem(span as number,k,categoryName,v)
-      })
-      }
+  function renderContent(categoryInfo: ComponentInfoType | null, categoryName: string, isShow?: boolean) {
+    let items = null, isShowCategoryName = false;
+    if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
+      items = renderDragItem(undefined, categoryName, categoryName);
+    } else {
+      const { span = 24, props, components } = categoryInfo;
+      const renderItems = props || components;
+      items = map(renderItems, (v: ComponentCategoryType | any, k) => {
+        if (!isArray(renderItems)) {
+          return renderContent(v, k, true);
+        }
+        /**
+         * 如果有默认属性显示分割分类
+         */
+        if (v) isShowCategoryName = true;
+        return renderDragItem(span as number, k, categoryName, v);
+      });
+    }
 
     return (
       <Row key={categoryName} className={styles['fold-content']}>
         {items}
-        {isShowCategoryName&&isShow&&<Divider style={{fontSize:12,fontWeight:'normal',marginTop:10}}>{categoryName}</Divider>}
+        {isShowCategoryName && isShow &&
+        <Divider style={{ fontSize: 12, fontWeight: 'normal', marginTop: 10 }}>{categoryName}</Divider>}
       </Row>
     );
   };
 
-  searchFilter = (inputValue:string, option:any) => option.props.children.toUpperCase().includes(inputValue.toUpperCase());
+  const searchFilter = (inputValue: string, option: any) => option.props.children.toUpperCase().includes(inputValue.toUpperCase());
 
-  onChange = (value:any) => {
-    let { componentsCategory, selectedComponentInfo: { childNodesRule } } = this.props;
-    let openKeys:string[] = [];
+  function onChange(value: any) {
+    let filterOpenKeys: any[] = [], filterCategory = componentsCategory;
     if (isEmpty(value)) {
       if (childNodesRule) {
-        ({ openKeys, componentsCategory } = getFilterCategory(this.props.componentsCategory, undefined, childNodesRule));
+        ({ filterOpenKeys, filterCategory } = getFilterCategory(componentsCategory, undefined, childNodesRule));
       }
-      this.setState({
-        componentsCategory,
-        openKeys,
-        searchValue:value
-      });
+      setOpenKeys(filterOpenKeys);
+      setCategory(filterCategory);
+      setSearchValue(value);
+
     }
-  };
-
-  onSelect = (value:any) => {
-    const {selectedComponentInfo: { childNodesRule }}=this.props
-    const { openKeys, componentsCategory } = getFilterCategory(this.props.componentsCategory, value,childNodesRule);
-    this.setState({
-      componentsCategory,
-      openKeys,
-      searchValue:value
-    });
-  };
-
-
-  render() {
-    const { openKeys, componentsCategory } = this.state;
-
-    const { selectedComponentInfo: { childNodesRule }, searchValues } = this.props;
-    return (
-      <>
-        <AutoComplete
-          style={{ marginLeft: 20, marginRight: 20 }}
-          dataSource={childNodesRule || searchValues}
-          filterOption={this.searchFilter}
-          onSelect={this.onSelect}
-          onChange={this.onChange}
-        >
-          <Input.Search allowClear/>
-        </AutoComplete>
-        <div className={styles['fold-container']}>
-          {isEmpty(componentsCategory) ? <p style={{textAlign:'center'}}>为找当前选中组件可拖拽的组件</p> :
-            <Collapse
-              bordered={false}
-              activeKey={openKeys}
-              style={{ backgroundColor: '#fff' }}
-              onChange={this.collapseChange}>
-              {map(componentsCategory, (categoryInfo:ComponentInfoType, categoryName) => {
-                return <Panel style={{ border: 0 }}
-                                header={this.renderHeader(categoryName)}
-                                key={categoryName}
-                                showArrow={false}>
-                    {this.renderContent(categoryInfo, categoryName)}
-                  </Panel>;
-                })}
-
-            </Collapse>}
-        </div>
-      </>
-
-    );
   }
+
+  function onSelect(value: any) {
+    const { filterOpenKeys, filterCategory } = getFilterCategory(componentsCategory, value, childNodesRule);
+    setOpenKeys(filterOpenKeys);
+    setSearchValue(value);
+    setCategory(filterCategory);
+  }
+
+  return (
+    <>
+      <AutoComplete
+        style={{ marginLeft: 20, marginRight: 20 }}
+        dataSource={childNodesRule || searchValues}
+        filterOption={searchFilter}
+        onSelect={onSelect}
+        onChange={onChange}
+      >
+        <Input.Search allowClear/>
+      </AutoComplete>
+      <div className={styles['fold-container']}>
+        {isEmpty(category) ? <p style={{ textAlign: 'center' }}>为找当前选中组件可拖拽的组件</p> :
+          <Collapse
+            bordered={false}
+            activeKey={openKeys}
+            style={{ backgroundColor: '#fff' }}
+            onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}>
+            {map(category, (categoryInfo: ComponentInfoType, categoryName) => {
+              return <Panel style={{ border: 0 }}
+                            header={renderHeader(categoryName)}
+                            key={categoryName}
+                            showArrow={false}>
+                {renderContent(categoryInfo, categoryName)}
+              </Panel>;
+            })}
+
+          </Collapse>}
+      </div>
+    </>
+
+  );
 }
+
+export default memo<FoldPanelPropsType>(FoldPanel, (prevProps, nextProps) => {
+  const { isShow, selectedComponentInfo: { childNodesRule } } = nextProps;
+  const { isShow: prevIsShow, selectedComponentInfo: { childNodesRule: prevChildNodesRule } } = prevProps;
+  if (prevIsShow && isShow) {
+    return isEqual(childNodesRule, prevChildNodesRule);
+  }
+  return !isShow;
+});

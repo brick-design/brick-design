@@ -4,7 +4,7 @@ import { InputProps } from 'antd/es/input';
 import split from 'lodash/split';
 import { propsAreEqual } from '@/utils';
 
-const FunctionComponent = forwardRef((props: InputProps,ref:any) => {
+function FunctionComponent (props: InputProps,ref:any){
 
   const { value, onChange, ...rest } = props;
   const resultValue = value && split(value as string, '.')[1];
@@ -19,6 +19,5 @@ const FunctionComponent = forwardRef((props: InputProps,ref:any) => {
     value={resultValue}
     allowClear
     {...rest} />);
-});
-
-export default memo(FunctionComponent, propsAreEqual);
+}
+export default memo(forwardRef(FunctionComponent), propsAreEqual);

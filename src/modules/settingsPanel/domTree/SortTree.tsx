@@ -1,14 +1,13 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import map from 'lodash/map';
 import { Sortable } from '@/components';
 import styles from './index.less';
 import SortItem, { TreeNodeType } from './SortItem';
 import { getPath } from '@/utils';
-import get from 'lodash/get';
-import config from '@/configs';
+
 import {ACTION_TYPES} from '@/models'
 import {Dispatch} from 'redux'
-import { VirtualDOMType } from '@/types/ModelType';
+import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 interface SortTreePropsType {
   dispatch?:Dispatch,
   path?:string,
@@ -18,22 +17,30 @@ interface SortTreePropsType {
   childNodes?:VirtualDOMType[],
   isOnlyNode?:boolean,
   currentName?:string,
-  disabled?:boolean
+  disabled?:boolean,
+  selectedComponentInfo?:SelectedComponentInfoType,
+  hoverKey?:string
 }
-export default class SortTree extends PureComponent<SortTreePropsType> {
+
+function SortTree (props:SortTreePropsType) {
+  const { dispatch, path, domTreeKeys=[], isFold,
+    childNodesRule, childNodes=[], isOnlyNode, currentName,
+    disabled,
+    selectedComponentInfo,
+    hoverKey
+  } = props;
 
   /**
    * 拖拽排序
    * @param sortKeys
    */
-  onLayoutSortChange = (sortKeys:string[], a:any, evt:any) => {
+  function onLayoutSortChange (sortKeys:string[], a:any, evt:any) {
     /**
      * 获取拖住节点的信息
      * @type {any}
      */
     const dragNode = JSON.parse(evt.clone.dataset.info);
-    const { dispatch, path, domTreeKeys } = this.props;
-    dispatch&&dispatch({
+    dispatch!({
       type: ACTION_TYPES.onLayoutSortChange,
       payload:{
         sortKeys,
@@ -50,21 +57,22 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
    * @param index
    * @returns {*}
    */
-  renderSortItems = (componentConfig:TreeNodeType, index:number) => {
-    const { path, isFold, domTreeKeys = [] } = this.props;
+  function renderSortItems (componentConfig:TreeNodeType, index:number){
     const { key } = componentConfig;
-
     return (<SortItem domTreeKeys={[...domTreeKeys, key]}
                       isFold={isFold}
                       componentConfig={componentConfig}
                       path={getPath({path,index})}
                       parentPath={getPath({path,isContainer:true})}
-                      key={key}/>);
-  };
+                      key={key}
+                      dispatch={dispatch}
+                      selectedComponentInfo={selectedComponentInfo}
+                      hoverKey={hoverKey}
+    />);
+  }
 
 
-  putItem = (a:any, b:any, c:any) => {
-    const { childNodesRule, childNodes=[], isOnlyNode, currentName } = this.props;
+  function putItem(a:any, b:any, c:any){
     const dragName = c.dataset.name;
     const parentNodesRule = c.dataset.parents && JSON.parse(c.dataset.parents);
     if (isOnlyNode && childNodes.length === 1) return false;
@@ -76,25 +84,23 @@ export default class SortTree extends PureComponent<SortTreePropsType> {
     }
     return true;
   };
-
-  render() {
-    const { childNodes, disabled } = this.props;
-    return (
+   return (
       <Sortable
         options={{
-          group: { name: 'nested', put: this.putItem },
+          group: { name: 'nested', put: putItem },
           animation: 200,
           disabled,
           dataIdAttr: 'id',
           ghostClass: styles['item-background'],
           swapThreshold: 0.5,
         }}
-        onChange={this.onLayoutSortChange}
+        onChange={onLayoutSortChange}
 
       >
-        {map(childNodes, this.renderSortItems)}
+        {map(childNodes, renderSortItems)}
       </Sortable>
 
     );
   }
-}
+
+export default SortTree

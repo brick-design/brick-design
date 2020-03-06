@@ -130,7 +130,7 @@ function ToolBar(props:ToolBarPropsType) {
         func=funMap[title]||(()=>dispatch!({type,payload:{style}}))
       }
     return (
-      <Tooltip mouseEnterDelay={1} title={shortcutKey}>
+      <Tooltip key={key} mouseEnterDelay={1} title={shortcutKey}>
       <div
         style={{ color: isEnabled ? enabledColor : disabledColor }}
         className={styles['icon-container']}

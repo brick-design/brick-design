@@ -27,6 +27,7 @@ interface AllComponentsPropsType {
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={config.CONTAINER_CATEGORY}
                      searchValues={flattenDeepArray(config.CONTAINER_CATEGORY)}
+                     dispatch={dispatch}
           />
         </TabPane>
         <TabPane forceRender className={styles['tabs-panel']} tab={formatMessage({id:'BLOCK_NAME.componentsPreview.nonContainer'})} key="nonContainer">
@@ -34,6 +35,7 @@ interface AllComponentsPropsType {
                      selectedComponentInfo={selectedComponentInfo!}
                      componentsCategory={config.NON_CONTAINER_CATEGORY}
                      searchValues={flattenDeepArray(config.NON_CONTAINER_CATEGORY)}
+                     dispatch={dispatch}
 
           />
         </TabPane>

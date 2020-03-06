@@ -1,183 +1,155 @@
-import React, { Component } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Collapse, Dropdown, Icon, Menu, Tooltip } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
+import isUndefined from 'lodash/isUndefined';
 import SortTree from './SortTree';
 import styles from './index.less';
-import { getPath, reduxConnect } from '@/utils';
+import { usePrevious } from '@/utils';
 import config from '@/configs';
-import {ACTION_TYPES} from '@/models'
-import { PropsNodeType, SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
-import {Dispatch} from 'redux'
-import domTreeIcons from './domTreeIcons'
+import { ACTION_TYPES } from '@/models';
+import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
+import { Dispatch } from 'redux';
+import domTreeIcons from './domTreeIcons';
 
 const { Panel } = Collapse;
 const { Item } = Menu;
 
- export interface TreeNodeType extends VirtualDOMType{
-  parentKey?:string,
-  propName?:string,
-  isRequired?:boolean,
-  parentName?:string,
- isOnlyNode?:boolean,
-   label?:string,
-   tip?:string,
+export interface TreeNodeType extends VirtualDOMType {
+  parentKey?: string,
+  propName?: string,
+  isRequired?: boolean,
+  parentName?: string,
+  isOnlyNode?: boolean,
+  label?: string,
+  tip?: string,
 }
+
 interface SortItemPropsType {
-  dispatch?:Dispatch,
-  selectedComponentInfo?:SelectedComponentInfoType,
-  componentConfig:TreeNodeType,
-  domTreeKeys:string[],
-  hoverKey?:string,
-  isFold?:boolean,
-  path?:string,
-  parentPath?:string,
-  propPath?:string,
-  childNodesRule?:string[]
+  dispatch?: Dispatch,
+  selectedComponentInfo?: SelectedComponentInfoType,
+  componentConfig: TreeNodeType,
+  domTreeKeys: string[],
+  hoverKey?: string,
+  isFold?: boolean,
+  path?: string,
+  parentPath?: string,
+  propPath?: string,
+  childNodesRule?: string[]
 }
 
-interface SortItemStateType {
-  isUnfold:boolean
-}
+function SortItem(props: SortItemPropsType) {
 
-@reduxConnect(['selectedComponentInfo', 'hoverKey'])
-class SortItem extends Component<SortItemPropsType,SortItemStateType> {
+  let childPropName: string | undefined, isSelected = false;
+  const [isUnfold, setIsUnfold] = useState(false);
+  const {
+    selectedComponentInfo,
+    hoverKey,
+    childNodesRule,
+    componentConfig,
+    componentConfig: { key, parentKey, componentName, isRequired, label, tip, childNodes, parentName, propName, isOnlyNode },
+    path,
+    propPath,
+    dispatch,
+    domTreeKeys,
+    isFold,
+    parentPath,
+  } = props;
+  const selectedKey = get(selectedComponentInfo, 'selectedKey', '');
+  const prevPath = usePrevious(path);
+  const prevChildNodes = usePrevious(childNodes);
+  useEffect(() => {
+    if (prevPath !== path && selectedKey === key) {
+      dispatchData(ACTION_TYPES.selectComponent);
+    }
+  }, [prevPath, path, selectedKey, key]);
 
-  propName?:string
-  isSelected:boolean
+  useEffect(() => {
+    if (!isUndefined(prevChildNodes) && isEmpty(prevChildNodes) && !isEmpty(childNodes)) {
+      setIsUnfold(true);
+    }
+  }, [prevChildNodes, childNodes]);
 
+  const selectedDomTreeKeys:string[]=get(selectedComponentInfo,'domTreeKeys',[])
 
-  constructor(props:SortItemPropsType) {
-    super(props);
-    this.state = {
-      isUnfold:false,
-    };
-    this.isSelected=false;
-
+  if(!isEmpty(selectedDomTreeKeys)&&!isUnfold&&selectedDomTreeKeys.includes(key)){
+    setIsUnfold(true)
   }
 
-  static getDerivedStateFromProps(nextProps:SortItemPropsType, preState:SortItemStateType) {
-    const { componentConfig: { key }, isFold, selectedComponentInfo } = nextProps;
-    const domTreeKeys:string[]=get(selectedComponentInfo,'domTreeKeys',[])
-    const { isUnfold } = preState;
-    if (!isEmpty(domTreeKeys)) {
-      if (!isUnfold && domTreeKeys.includes(key)) {
-        return { isUnfold: true };
-      }
-    }
-    if (isFold) return { isUnfold: false };
-    return null;
-  }
-
-  componentDidMount() {
-    const { componentConfig: { key },selectedComponentInfo } = this.props;
-    const selectedKey=get(selectedComponentInfo,'selectedKey')
-    // 新添加组件默认选中,选中dom拖拽到其他容器中时更改选中信息
-    if (selectedKey===key) {
-      this.dispatchData(ACTION_TYPES.selectComponent);
-    }
-  }
-
-  componentDidUpdate(prevProps:SortItemPropsType, prevState:SortItemStateType) {
-    const { selectedComponentInfo: prevSelectedComponentInfo , path: prevPath ,componentConfig:{childNodes:prevChildNodes}} = prevProps;
-    const prevSelectedKey=get(prevSelectedComponentInfo,'selectedKey')
-    const { selectedComponentInfo, path, componentConfig: { key,childNodes } } = this.props;
-    const selectedKey=get(selectedComponentInfo,'selectedKey')
-    if(childNodes&&prevChildNodes!.length===0&&childNodes.length>0) this.setState({
-      isUnfold:true
-    })
+  if(isFold&&isUnfold) setIsUnfold(false)
 
 
-    /**
-     * 选中的dom更改顺序时更改选中信息
-     */
-    if (selectedKey === prevSelectedKey && prevPath !== path && selectedKey === key) {
-
-       this.dispatchData(ACTION_TYPES.selectComponent);
-    }
-
-
-  }
-
-  renderMenu = () => {
-    const { componentConfig: { parentKey, childNodes } } = this.props;
-    return (
-      <Menu onClick={this.handleMenuClick}>
-        {!this.propName && !isEmpty(childNodes) && <Item key={1}>清除</Item>}
-        {!parentKey && <Item key={3}>复制</Item>}
-        {!parentKey && <Item key={4}>删除</Item>}
-      </Menu>);
-  };
-
-  handleMenuClick = (e:any) => {
-    switch (e.key) {
-      case '1':
-        return this.clearChildNodes();
-      case '2':
-      case '3':
-        return this.copyComponent();
-      case '4':
-        return this.deleteComponent();
-    }
-  };
-
-  dispatchData = (actionType:string) => {
-    const { componentConfig,parentPath, componentConfig: { propName,isRequired,childNodes }, domTreeKeys, path, dispatch } = this.props;
-    let { propPath } = this.props;
-    if (this.propName) {
-      propPath = `${path}.${this.propName}`;
+  function dispatchData(actionType: string) {
+    let { propPath } = props;
+    if (childPropName) {
+      propPath = `${path}.${childPropName}`;
     }
     dispatch!({
       type: actionType,
       payload: {
-        propName: propName || this.propName,
+        propName: propName || childPropName,
         propPath,
         path,
         parentPath,
         componentConfig,
         domTreeKeys,
-        isRequiredHasChild:isRequired&&isEmpty(childNodes)
-      }
+        isRequiredHasChild: isRequired && isEmpty(childNodes),
+      },
     });
+  };
+
+  const deleteComponent = () => dispatchData(ACTION_TYPES.deleteComponent);
+  const copyComponent = () => dispatchData(ACTION_TYPES.copyComponent);
+  const clearChildNodes = () => dispatchData(ACTION_TYPES.clearChildNodes);
+
+  function handleMenuClick(e: any) {
+    switch (e.key) {
+      case '1':
+        return clearChildNodes();
+      case '2':
+      case '3':
+        return copyComponent();
+      case '4':
+        return deleteComponent();
+    }
+  };
+
+  function renderMenu() {
+    return (
+      <Menu onClick={handleMenuClick}>
+        {!childPropName && !isEmpty(childNodes) && <Item key={1}>清除</Item>}
+        {!parentKey && <Item key={3}>复制</Item>}
+        {!parentKey && <Item key={4}>删除</Item>}
+      </Menu>);
   };
 
   /**
    * 选中组件与取消选中
    */
-  selectComponent = () => {
-    if (this.isSelected) {
-      this.dispatchData(ACTION_TYPES.clearSelectedStatus);
+  function selectComponent() {
+    if (isSelected) {
+      dispatchData(ACTION_TYPES.clearSelectedStatus);
     } else {
-      this.dispatchData(ACTION_TYPES.selectComponent);
+      dispatchData(ACTION_TYPES.selectComponent);
     }
   };
 
-  /**
-   * 删除组件
-   */
-  deleteComponent = () => this.dispatchData(ACTION_TYPES.deleteComponent);
 
-  /**
-   * 复制组件
-   */
-  copyComponent = () => this.dispatchData(ACTION_TYPES.copyComponent);
-
-  clearChildNodes = () => this.dispatchData(ACTION_TYPES.clearChildNodes);
-
-  onMouseOver = (e:any) => {
+  function onMouseOver(e: any) {
     e.stopPropagation();
-    const { dispatch, selectedComponentInfo, componentConfig: { key } } = this.props;
-    isEmpty(selectedComponentInfo) &&dispatch&& dispatch({
+    const { dispatch, selectedComponentInfo, componentConfig: { key } } = props;
+    isEmpty(selectedComponentInfo) && dispatch!({
       type: ACTION_TYPES.overTarget,
-      payload:{
-        hoverKey: key
-      }
+      payload: {
+        hoverKey: key,
+      },
     });
   };
-  getIcon = (name:string) => {
-    if (get(domTreeIcons,`${name}`)) return get(domTreeIcons,`${name}`);
+
+  function getIcon(name: string) {
+    if (get(domTreeIcons, `${name}`)) return get(domTreeIcons, `${name}`);
     return domTreeIcons.Layout;
   };
 
@@ -186,23 +158,21 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
    * 渲染页面结构节点
    * @returns {*}
    */
-  renderHeader = () => {
-    const { isUnfold } = this.state;
-    const { componentConfig: { componentName, label,tip, childNodes, key }, hoverKey, selectedComponentInfo } = this.props;
+  function renderHeader() {
     const selectedColor = '#5E96FF';
     const unSelectedColor = '#555555';
     const selectedBGColor = '#F2F2F2';
     const hoveredBGColor = '#F1F1F1';
-    const color = this.isSelected ? selectedColor : unSelectedColor;
+    const color = isSelected ? selectedColor : unSelectedColor;
     const isHovered = key === hoverKey && isEmpty(selectedComponentInfo);
 
     return (
       <div
-        style={{ backgroundColor: this.isSelected ? selectedBGColor : isHovered ? hoveredBGColor : '#0000' }}
+        style={{ backgroundColor: isSelected ? selectedBGColor : isHovered ? hoveredBGColor : '#0000' }}
         className={styles['header-container']}
       >
-        <div onClick={this.selectComponent}
-             onMouseOver={this.onMouseOver}
+        <div onClick={selectComponent}
+             onMouseOver={onMouseOver}
              style={{ display: 'flex', flex: 1, alignItems: 'center', color }}>
           <Icon
             className={isUnfold ? styles.rotate90 : ''}
@@ -213,20 +183,24 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
               color: !isEmpty(childNodes) ? unSelectedColor : '#0000',
             }}
             type="caret-right"
-            onClick={this.onFoldChange}
+            onClick={(event) => {
+              event.stopPropagation()
+              setIsUnfold(!isUnfold)
+            }
+            }
           />
-          <Icon component={this.getIcon(componentName)} style={{ marginRight: 7 }}/>
-          {tip?<Tooltip title={tip}>
-          <span>{label || componentName}</span>
-          </Tooltip>: <span>{label || componentName}</span>}
+          <Icon component={getIcon(componentName)} style={{ marginRight: 7 }}/>
+          {tip ? <Tooltip title={tip}>
+            <span>{label || componentName}</span>
+          </Tooltip> : <span>{label || componentName}</span>}
         </div>
         {
-          this.isSelected &&
+          isSelected &&
           <Dropdown
             trigger={['click']}
-            overlay={this.renderMenu()}
+            overlay={renderMenu()}
           >
-            <Icon component={this.getIcon('more')} style={{ color }}/>
+            <Icon component={getIcon('more')} style={{ color }}/>
           </Dropdown>
         }
       </div>
@@ -235,22 +209,9 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
 
   /**
    * 渲染子组件或者属性节点
-   * @param childNodes
    * @returns {Array|*}
    */
-  renderSortTree = (childNodes:TreeNodeType[]|PropsNodeType, isOnlyNode?:boolean) => {
-    const {
-      path,
-      propPath,
-      dispatch,
-      isFold,
-      componentConfig,
-      componentConfig: { key, componentName, parentName, propName },
-      domTreeKeys = [],
-      childNodesRule,
-      parentPath
-    } = this.props;
-    const { isUnfold } = this.state;
+  function renderSortTree(isOnlyNode?: boolean) {
     const currentName = parentName ? `${parentName}.${propName}` : componentName;
     const newPath = propPath || path;
     if (isArray(childNodes)) {
@@ -263,16 +224,18 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
         currentName={currentName}
         childNodes={childNodes}
         domTreeKeys={domTreeKeys}
+        selectedComponentInfo={selectedComponentInfo}
+        hoverKey={hoverKey}
       />);
     }
-    this.propName = undefined;
+    childPropName = undefined;
     const { nodePropsConfig } = get(config.AllComponentConfigs, componentName);
     /**
      * 处理属性节点子组件
      */
     return map(childNodes, (propChildNode, propName) => {
-      this.propName = propName;
-      const { childNodesRule,label,tip,isRequired } = nodePropsConfig![propName];
+      childPropName = propName;
+      const { childNodesRule, label, tip, isRequired } = nodePropsConfig![propName];
       const propKey = `${key}${propName}`;
       const newComponentConfig = {
         ...componentConfig,
@@ -283,10 +246,13 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
         propName,
         label,
         tip,
-        isRequired
+        isRequired,
       };
       const propPath = `${path}.childNodes.${propName}`;
       return <SortItem
+        selectedComponentInfo={selectedComponentInfo}
+        hoverKey={hoverKey}
+        dispatch={dispatch}
         isFold={isFold}
         componentConfig={newComponentConfig}
         path={path}
@@ -298,70 +264,50 @@ class SortItem extends Component<SortItemPropsType,SortItemStateType> {
       />;
     });
 
-  };
-
-
-  onFoldChange = (event:any) => {
-    event && event.stopPropagation();
-    this.setState({ isUnfold: !this.state.isUnfold });
-  };
-
-
-  render() {
-    const {
-      childNodesRule,
-      componentConfig,
-      componentConfig: { childNodes, key, componentName, parentName, propName, isOnlyNode },
-      path,
-      propPath,
-      selectedComponentInfo,
-      dispatch,
-      domTreeKeys,
-    } = this.props;
-    const newPath = propPath || path;
-    const selectedKey=get(selectedComponentInfo,'selectedKey')
-    const { isUnfold } = this.state;
-    this.isSelected = selectedKey && !parentName ? selectedKey.includes(key) : selectedKey === key;
-    let sortTree = null;
-    const { parentNodesRule } = get(config.AllComponentConfigs, parentName || componentName);
-    const currentName = parentName ? `${parentName}.${propName}` : componentName;
-    if (!!childNodes) {
-      sortTree = isEmpty(childNodes) ?
-        <div style={{ marginLeft: 24 }}>
-          <SortTree
-            path={newPath}
-            dispatch={dispatch}
-            domTreeKeys={domTreeKeys}
-            childNodesRule={childNodesRule}
-            currentName={currentName}
-          />
-        </div> :
-        <Collapse
-          activeKey={isUnfold ? ['1'] : []}
-          style={{ marginLeft: 24 }}
-          bordered={false}
-        >
-          <Panel showArrow={false} key={'1'} header={<div/>} style={{ border: 0, backgroundColor: '#fff' }}>
-            {this.renderSortTree(childNodes, isOnlyNode)}
-          </Panel>
-        </Collapse>;
-    }
-
-    return (
-      <div
-        className={styles['sort-item']}
-        data-info={JSON.stringify(componentConfig)}
-        data-name={parentName || componentName}
-        data-parents={parentNodesRule && JSON.stringify(parentNodesRule)}
-        id={key}
-      >
-        {this.renderHeader()}
-
-        {sortTree}
-      </div>
-    );
   }
 
+
+  const newPath = propPath || path;
+  isSelected = selectedKey && !parentName ? selectedKey.includes(key) : selectedKey === key;
+  let sortTree = null;
+  const { parentNodesRule } = get(config.AllComponentConfigs, parentName || componentName);
+  const currentName = parentName ? `${parentName}.${propName}` : componentName;
+  if (!!childNodes) {
+    sortTree = isEmpty(childNodes) ?
+      <div style={{ marginLeft: 24 }}>
+        <SortTree
+          path={newPath}
+          dispatch={dispatch}
+          domTreeKeys={domTreeKeys}
+          childNodesRule={childNodesRule}
+          currentName={currentName}
+        />
+      </div> :
+      <Collapse
+        activeKey={isUnfold ? ['1'] : []}
+        style={{ marginLeft: 24 }}
+        bordered={false}
+      >
+        <Panel showArrow={false} key={'1'} header={<div/>} style={{ border: 0, backgroundColor: '#fff' }}>
+          {renderSortTree(isOnlyNode)}
+        </Panel>
+      </Collapse>;
+  }
+
+  return (
+    <div
+      className={styles['sort-item']}
+      data-info={JSON.stringify(componentConfig)}
+      data-name={parentName || componentName}
+      data-parents={parentNodesRule && JSON.stringify(parentNodesRule)}
+      id={key}
+    >
+      {renderHeader()}
+
+      {sortTree}
+    </div>
+  );
 }
 
-export default SortItem
+
+export default memo<SortItemPropsType>(SortItem);
