@@ -3,7 +3,6 @@ import map from 'lodash/map';
 import styles from '../style.less';
 import { Dispatch } from 'redux';
 import { formatMessage } from 'umi-plugin-react/locale';
-import get from 'lodash/get';
 import { ACTION_TYPES } from '@/models';
 
 interface ContextMenuPropsType {
@@ -67,6 +66,7 @@ function ContextMenu(props: ContextMenuPropsType) {
 
   }, [visible]);
 
+  if(!isSelected&&visible) setVisible(false)
   if(!visible) return null
   return (
       <div ref={root} className={styles['contextMenu-wrap']}>
