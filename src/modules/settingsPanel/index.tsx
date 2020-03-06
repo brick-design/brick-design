@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Tabs } from 'antd/lib/index';
 import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
@@ -6,27 +6,14 @@ import DomTree from './domTree';
 import { formatMessage } from 'umi-plugin-react/locale';
 
 const { TabPane } = Tabs;
-interface SettingPanelStateType {
-  activeKey:string
-}
-export default class SettingPanel extends Component<any,SettingPanelStateType> {
 
-  constructor(props:any) {
-    super(props);
-    this.state = {
-      activeKey: '1',
-    };
-  }
+function SettingPanel () {
 
-  onChange = (activeKey:any) => {
-    this.setState({ activeKey });
-  };
+  const [activeKey,setActiveKey]=useState('1')
 
-  render() {
-    const { activeKey } = this.state;
     return (
       <Tabs
-        onChange={this.onChange}
+        onChange={(activeKey:any)=>setActiveKey(activeKey)}
         activeKey={activeKey}
       >
         <TabPane forceRender key="1" tab={formatMessage({id:'BLOCK_NAME.setting.domTree'})}>
@@ -42,4 +29,5 @@ export default class SettingPanel extends Component<any,SettingPanelStateType> {
       </Tabs>
     );
   }
-}
+
+export default  SettingPanel
