@@ -1,4 +1,4 @@
-import React, { createElement, Component } from 'react';
+import React, { createElement, useEffect } from 'react';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import each from 'lodash/each';
@@ -8,25 +8,25 @@ import merge from 'lodash/merge';
 import classNames from 'classnames';
 import config from '@/configs';
 import isArray from 'lodash/isArray';
-import { diffProps, filterProps,  formatSpecialProps, getPath, reduxConnect } from '@/utils';
-import {ACTION_TYPES} from '@/models'
+import { diffProps, filterProps, formatSpecialProps, getPath, reduxConnect } from '@/utils';
+import { ACTION_TYPES } from '@/models';
 import styles from '../style.less';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
-import {Dispatch} from 'redux'
+import { Dispatch } from 'redux';
 import { MirrorModalFieldType } from '@/types/ComponentConfigType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ALL_CONTAINER_COMPONENT_NAMES, oAllComponents } from '@/modules/designPanel/confg';
 
 interface CommonContainerPropsType {
-  dispatch:Dispatch,
-  selectedComponentInfo:SelectedComponentInfoType,
-  hoverKey:string|null,
-  componentConfig:VirtualDOMType,
-  domTreeKeys:string[],
-  containerName:string,
-  index:string|number,
-  parentPath:string,
-  path:string
+  dispatch: Dispatch,
+  selectedComponentInfo: SelectedComponentInfoType,
+  hoverKey: string | null,
+  componentConfig: VirtualDOMType,
+  domTreeKeys: string[],
+  containerName: string,
+  index: string | number,
+  parentPath: string,
+  path: string
 
 }
 
@@ -34,28 +34,30 @@ interface CommonContainerPropsType {
  * 所有的容器组件名称
  */
 
-@reduxConnect(['selectedComponentInfo', 'hoverKey'])
-class CommonContainer extends Component<CommonContainerPropsType,any> {
 
+function CommonContainer(props: CommonContainerPropsType) {
+  const {
+    componentConfig,
+    domTreeKeys,
+    path,
+    parentPath,
+    containerName,
+    dispatch,
+    selectedComponentInfo,
+    hoverKey,
+    ...rest
+  } = props;
 
-  componentDidMount() {
-    if(this.requiredProp){
-      const {componentConfig,domTreeKeys,path,parentPath}=this.props
-      this.changeSelectedStatus(null, componentConfig, domTreeKeys,path, parentPath,  this.requiredProp)
+  const { key, childNodes, componentName, addPropsConfig } = componentConfig;
+
+  let requiredProp: string | undefined;
+  const { isHovered, isSelected } = selectedStatus(key);
+  useEffect(() => {
+    if (!isSelected && requiredProp) {
+      changeSelectedStatus(null, componentConfig, domTreeKeys, path, parentPath, requiredProp);
     }
-  }
+  }, [requiredProp, key, componentConfig, isSelected, domTreeKeys, path, parentPath]);
 
- componentDidUpdate(prevProps: Readonly<CommonContainerPropsType>, prevState: Readonly<any>) {
-    const {componentConfig:{key}}=this.props
-   const {isSelected}=this.selectedStatus(key)
-  if(!isSelected&&this.requiredProp){
-    const {componentConfig,domTreeKeys,path,parentPath}=this.props
-    this.changeSelectedStatus(null, componentConfig, domTreeKeys,path, parentPath,  this.requiredProp)
-  }
-
- }
-
-  private requiredProp?:string
   /**
    * 发送action
    * @param path
@@ -64,26 +66,23 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param componentConfig
    * @param domTreeKeys
    */
-  changeSelectedStatus = (event:Event|null, componentConfig:VirtualDOMType, domTreeKeys:string[], path?:string, parentPath?:string,selectedProp?:string) => {
+  function changeSelectedStatus(event: Event | null, componentConfig: VirtualDOMType, domTreeKeys: string[], path?: string, parentPath?: string, selectedProp?: string) {
     event && event.stopPropagation && event.stopPropagation();
     let propPath = null;
-    const { dispatch } = this.props;
-    const { key,childNodes} = componentConfig;
-    const {isSelected } =this.selectedStatus(key)
-    if (!isArray(childNodes)&&selectedProp) {
+    if (!isArray(childNodes) && selectedProp) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
     }
     dispatch({
       type: isSelected ? ACTION_TYPES.clearSelectedStatus : ACTION_TYPES.selectComponent,
-      payload:{
+      payload: {
         propPath,
         propName: selectedProp,
         path,
         parentPath,
         componentConfig,
         domTreeKeys,
-        isRequiredHasChild:!!this.requiredProp
-      }
+        isRequiredHasChild: !!requiredProp,
+      },
 
     });
   };
@@ -95,23 +94,23 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param componentConfig
    * @param selectedProp
    */
-  getDropTargetInfo=(event:Event,path:string, componentConfig:VirtualDOMType,selectedProp:string)=>{
-    event&& event.stopPropagation && event.stopPropagation();
+  function getDropTargetInfo(event: Event, path: string, componentConfig: VirtualDOMType, selectedProp: string) {
+    event && event.stopPropagation && event.stopPropagation();
+    if (!isEmpty(selectedComponentInfo)) return;
     let propPath = null;
-    const { dispatch} = this.props;
     if (selectedProp) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
     }
     dispatch({
-      type:ACTION_TYPES.getDropTargetInfo,
-      payload:{
+      type: ACTION_TYPES.getDropTargetInfo,
+      payload: {
         propPath,
         propName: selectedProp,
         path,
         componentConfig,
-      }
+      },
 
-    })
+    });
   }
 
   /**
@@ -121,34 +120,33 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param node
    * @param parentPath
    */
-  onDragStart=(event:Event,path:string,node:VirtualDOMType,parentPath?:string)=>{
-    event&& event.stopPropagation && event.stopPropagation();
-    const {dispatch}=this.props
+  function onDragStart(event: Event, path: string, node: VirtualDOMType, parentPath?: string) {
+    event && event.stopPropagation && event.stopPropagation();
     dispatch({
-      type:ACTION_TYPES.getDragData,
-      payload:{
-        dragData:{
-          dragPath:path,
-          dragParentPath:parentPath,
-          templateData:node
-        }
-      }
+      type: ACTION_TYPES.getDragData,
+      payload: {
+        dragData: {
+          dragPath: path,
+          dragParentPath: parentPath,
+          templateData: node,
+        },
+      },
 
-    })
-}
+    });
+  }
+
   /**
    * hover组件上触发
    * @param e
    * @param key
    */
-  onMouseOver = (event:Event, key:string) => {
+  function onMouseOver(event: Event, key: string) {
     event && event.stopPropagation && event.stopPropagation();
-    const { dispatch, selectedComponentInfo } = this.props;
     isEmpty(selectedComponentInfo) && dispatch({
       type: ACTION_TYPES.overTarget,
-      payload:{
-        hoverKey: key
-      }
+      payload: {
+        hoverKey: key,
+      },
     });
   };
 
@@ -159,10 +157,8 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param propName
    * @returns {Array}
    */
-  renderNodes = (childNodes:VirtualDOMType[], path:string, propName?:string, isOnlyNode?:boolean) => {
-    const {
-      componentConfig: { key: parentKey },
-      domTreeKeys = [] } = this.props;
+  function renderNodes(childNodes: VirtualDOMType[], path: string, propName?: string, isOnlyNode?: boolean) {
+    const parentKey = key;
     const resultChildNodes = map(childNodes, (node, index) => {
       const { componentName, props, key } = node;
       const { propsConfig } = get(config.AllComponentConfigs, componentName);
@@ -170,7 +166,7 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       /** 获取当前子组件在页面配置信息中位置路径 */
       const parentPath = getPath({ path, isContainer: true });
       /**  获取当前子组件在页面配置信息中父组件位置路径 */
-      const {isHovered,isSelected}=this.selectedStatus(key)
+      const { isHovered, isSelected } = selectedStatus(key);
       /** 如果有动画类名，添加到className中去 */
       const { className = [], animateClass } = props;
       /** 收集当前子组件所属页面组件树分支中的位置顺序 目的是与页面结构模块关联，精准展开并定位到选中的节点 */
@@ -180,29 +176,29 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
       /**收集当前节点的key*/
       resultDomTreeKeys.push(key);
 
-      const handleProps=filterProps(props)||{}
+      const handleProps = filterProps(props) || {};
       /** 根据组件类型处理属性 */
       const propsResult = ALL_CONTAINER_COMPONENT_NAMES.includes(componentName) ? {
         key,
         path: resultPath,
         parentPath,
-        draggable:true,
+        draggable: true,
         componentConfig: node,
         index,
         domTreeKeys: resultDomTreeKeys,
-        ...handleProps  //必须在使用否则类似tabsPanel的tab属性不起作用
+        ...handleProps,  //必须在使用否则类似tabsPanel的tab属性不起作用
       } : {
         key,
         ...handleProps,
-        className:this.handlePropsClassName(isSelected,isHovered,className,animateClass),
-        draggable:true,
-        onClick:(e:Event) => this.changeSelectedStatus( e, node, resultDomTreeKeys,resultPath, parentPath),
-        onMouseOver: (e:Event) => this.onMouseOver(e, key),
-        onDragEnter:this.getDropTargetInfo,
-        onDragStart:(e:Event)=>this.onDragStart(e,path,node,parentPath)
+        className: handlePropsClassName(isSelected, isHovered, className, animateClass),
+        draggable: true,
+        onClick: (e: Event) => changeSelectedStatus(e, node, resultDomTreeKeys, resultPath, parentPath),
+        onMouseOver: (e: Event) => onMouseOver(e, key),
+        onDragEnter: getDropTargetInfo,
+        onDragStart: (e: Event) => onDragStart(e, path, node, parentPath),
       };
 
-      return createElement(get(oAllComponents, componentName)||get(config.OriginalComponents,componentName,componentName), formatSpecialProps(propsResult, propsConfig));
+      return createElement(get(oAllComponents, componentName) || get(config.OriginalComponents, componentName, componentName), formatSpecialProps(propsResult, propsConfig));
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
@@ -216,12 +212,12 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param key
    * @returns {{isHovered: boolean, isSelected: (boolean|*)}}
    */
-  selectedStatus=(key:string)=>{
-    const {selectedComponentInfo:{selectedKey},hoverKey}=this.props
+  function selectedStatus(key: string) {
+    const { selectedKey } = selectedComponentInfo!;
     const isSelected = !!selectedKey && selectedKey.includes(key);
     /** 是否hover到当前组件 */
     const isHovered = hoverKey === key;
-    return {isHovered,isSelected}
+    return { isHovered, isSelected };
   }
 
   /**
@@ -231,8 +227,8 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param className
    * @param animateClass
    */
-  handlePropsClassName=(isSelected:boolean,isHovered:boolean,className:any, animateClass:string)=>
-    classNames(isSelected?styles['container-select-border']:isHovered && styles['container-hover-border'] , className, animateClass);
+  const handlePropsClassName = (isSelected: boolean, isHovered: boolean, className: any, animateClass: string) =>
+    classNames(isSelected ? styles['container-select-border'] : isHovered && styles['container-hover-border'], className, animateClass);
 
   /**
    * 处理弹窗类容器
@@ -240,13 +236,11 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
    * @param mirrorModalField
    * @param isSelected
    */
-  handleModalTypeContainer=(props:any,mirrorModalField:MirrorModalFieldType,isSelected:boolean,key:string)=>{
-    const {
-      selectedComponentInfo: {  domTreeKeys=[] },
-    }=this.props
+  const handleModalTypeContainer = (props: any, mirrorModalField: MirrorModalFieldType, isSelected: boolean, key: string) => {
+    const { domTreeKeys = [] } = selectedComponentInfo;
     const { displayPropName, mounted, style } = mirrorModalField;
-    if(mounted){
-      const{ propName, type }=mounted
+    if (mounted) {
+      const { propName, type } = mounted;
       const mountedNode = document.getElementById('dnd-container');
       props[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
     }
@@ -256,36 +250,23 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
      */
     const isVisible = domTreeKeys.includes(key);
     props[displayPropName] = isSelected || isVisible;
-    props.style=props.style?merge(props.style,style):{...style}
-  }
+    props.style = props.style ? merge(props.style, style) : { ...style };
+  };
+
   /**
    * 处理容器组件属性
    * @returns {*|{onMouseOver: (function(*=): void), onClick: (function(*=): *), onDragStart: (function(*=): void), onDragEnter: (function(*=): *)}}
    */
-  handleProps=()=>{
-    const {
-      componentConfig,
-      containerName,
-      parentPath,
-      path,
-      index,
-      domTreeKeys = [],
-      dispatch,
-      hoverKey,
-      selectedComponentInfo,
-      ...rest
-    } = this.props;
-    const  { key, componentName, props, childNodes,addPropsConfig }=componentConfig
-    this.requiredProp=undefined;
-    const propsResult = diffProps(rest,cloneDeep(props));
+  function handleProps() {
+    const { props } = componentConfig;
+    const propsResult = diffProps(rest, cloneDeep(props));
     const { animateClass, className } = propsResult;
-    const { mirrorModalField, nodePropsConfig, propsConfig} = get(config.AllComponentConfigs, componentName);
+    const { mirrorModalField, nodePropsConfig, propsConfig } = get(config.AllComponentConfigs, componentName);
     /** 收集当前子组件所属页面组件树分支中的位置顺序 目的是与页面结构模块关联，精准展开并定位到选中的节点 */
-    const{isHovered,isSelected}=this.selectedStatus(key)
-    propsResult.className =this.handlePropsClassName(isSelected,isHovered,className,animateClass)
+    propsResult.className = handlePropsClassName(isSelected, isHovered, className, animateClass);
 
-      /**默认选中的属性节点的属性名*/
-    let defaultSelectedProp:string;
+    /**默认选中的属性节点的属性名*/
+    let defaultSelectedProp: string;
     /**
      * 处理组件的子组件
      */
@@ -298,20 +279,20 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
          * 属性节点是否大于1个
          * @type {boolean}
          */
-        let isMultiProps=  Object.keys(nodePropsConfig).length>1
+        let isMultiProps = Object.keys(nodePropsConfig).length > 1;
         each(nodePropsConfig, (nodePropConfig, propName) => {
-          const { isOnlyNode, type,isRequired,childNodesRule } = nodePropConfig;
-          const childNodesPath=getPath({ path: propName, isContainer: true })||''
-          let analysisChildNodes = get(childNodes,childNodesPath ,childNodes);
+          const { isOnlyNode, type, isRequired, childNodesRule } = nodePropConfig;
+          const childNodesPath = getPath({ path: propName, isContainer: true }) || '';
+          let analysisChildNodes = get(childNodes, childNodesPath, childNodes);
           let analysisPath = path;
-          let analysisPropName:string|undefined;
+          let analysisPropName: string | undefined;
           defaultSelectedProp = propName;
           if (isEmpty(analysisChildNodes)) {
-            if(isRequired){
-              propsResult[propName]=createElement(get(config.OriginalComponents,get(childNodesRule,0,''),'div'))
-              return  this.requiredProp=propName
+            if (isRequired) {
+              propsResult[propName] = createElement(get(config.OriginalComponents, get(childNodesRule, 0, ''), 'div'));
+              return requiredProp = propName;
             }
-            return
+            return;
           }
           /**
            * 多属性节点处理
@@ -320,40 +301,38 @@ class CommonContainer extends Component<CommonContainerPropsType,any> {
             analysisPath = `${getPath({ path, isContainer: true })}.${propName}`;
             analysisPropName = propName;
           }
-          const reactNodes = this.renderNodes(analysisChildNodes, analysisPath, analysisPropName, isOnlyNode);
-          propsResult[propName] =type === PROPS_TYPES.functionReactNode? () => reactNodes:reactNodes;
+          const reactNodes = renderNodes(analysisChildNodes, analysisPath, analysisPropName, isOnlyNode);
+          propsResult[propName] = type === PROPS_TYPES.functionReactNode ? () => reactNodes : reactNodes;
         });
       } else {
-        propsResult.children = this.renderNodes(childNodes as VirtualDOMType[], path);
+        propsResult.children = renderNodes(childNodes as VirtualDOMType[], path);
       }
 
     }
 
     /** 对于弹窗类组件做特殊处理使其被选中时可展示 */
     if (mirrorModalField) {
-      this.handleModalTypeContainer(propsResult,mirrorModalField,isSelected,key)
+      handleModalTypeContainer(propsResult, mirrorModalField, isSelected, key);
     }
     /** 为组件添加选中时的效果样式 */
     /** 为选中组件添加id使图片生产工具可以找到要生成图片的节点 */
     isSelected && (propsResult.id = 'select-img');
-    this.requiredProp&&(defaultSelectedProp=this.requiredProp)
+    requiredProp && (defaultSelectedProp = requiredProp);
 
-    return{
-      ...formatSpecialProps(propsResult, merge({},propsConfig,addPropsConfig)),
-      onClick: (e:Event) => this.changeSelectedStatus(e, componentConfig, domTreeKeys,path, parentPath,  defaultSelectedProp),
-      onMouseOver: (e:Event) => this.onMouseOver(e, key),
-      onDragEnter:(e:Event) => this.getDropTargetInfo(e,path, componentConfig,defaultSelectedProp),
-      onDragStart:(e:Event)=>this.onDragStart(e,path,componentConfig,parentPath),
-    }
+    return {
+      ...formatSpecialProps(propsResult, merge({}, propsConfig, addPropsConfig)),
+      onClick: (e: Event) => changeSelectedStatus(e, componentConfig, domTreeKeys, path, parentPath, defaultSelectedProp),
+      onMouseOver: (e: Event) => onMouseOver(e, key),
+      onDragEnter: (e: Event) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp),
+      onDragStart: (e: Event) => onDragStart(e, path, componentConfig, parentPath),
+    };
   }
 
-  render() {
-    const {containerName}=this.props
-
-    return (
-      createElement(get(config.OriginalComponents, containerName, containerName), this.handleProps())
-    );
-  }
+  return (
+    createElement(get(config.OriginalComponents, containerName, containerName), handleProps())
+  );
 }
 
-export default CommonContainer
+export default reduxConnect(['selectedComponentInfo', 'hoverKey'])(CommonContainer);
+
+
