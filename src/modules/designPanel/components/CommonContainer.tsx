@@ -69,6 +69,8 @@ function CommonContainer(props: CommonContainerPropsType) {
   function changeSelectedStatus(event: Event | null, componentConfig: VirtualDOMType, domTreeKeys: string[], path?: string, parentPath?: string, selectedProp?: string) {
     event && event.stopPropagation && event.stopPropagation();
     let propPath = null;
+    const { key,childNodes} = componentConfig;
+    const {isSelected } =selectedStatus(key)
     if (!isArray(childNodes) && selectedProp) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
     }
