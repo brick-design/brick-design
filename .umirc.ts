@@ -30,8 +30,6 @@ const config:IConfig={
       },
     });
   },
-  history: 'hash',
-  hash:true,
   publicPath:'./',
   plugins: [
     [

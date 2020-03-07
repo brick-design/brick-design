@@ -26,9 +26,9 @@ const iframeSrcDoc=`<!DOCTYPE html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/vendors.chunk.css">
-    <link rel="stylesheet" href="/antdesigns.chunk.css">
-    <link rel="stylesheet" href="/umi.css">
+    <link rel="stylesheet" href="./vendors.chunk.css">
+    <link rel="stylesheet" href="./antdesigns.chunk.css">
+    <link rel="stylesheet" href="./umi.css">
 </head>
 <body>
 <div style="height: 100%" id="dnd-container">
