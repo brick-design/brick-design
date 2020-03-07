@@ -8,7 +8,7 @@ import each from 'lodash/each';
 import classNames from 'classnames';
 import get from 'lodash/get';
 import config from '@/configs';
-import { formatSpecialProps } from '@/utils';
+import { formatSpecialProps, useIframe } from '@/utils';
 import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ACTION_TYPES } from '@/models';
@@ -27,14 +27,7 @@ export default function Preview(props: PreviewPropsType) {
   const [visible, setVisible] = useState(false);
   const [spinShow,setSpinShow]=useState(true);
 
-  useEffect(()=>{
-    const iframe:any=document.getElementById("preview-iframe")
-    iframe.contentWindow.onload=()=>{
-      const previewPage:any=analysisPage(componentConfigs)
-      ReactDOM.render(previewPage,iframe.contentDocument.getElementById('dnd-container'))
-      setSpinShow(false)
-    }
-  },[])
+  useIframe({id:"preview-iframe",designPage:analysisPage(componentConfigs),setSpinShow})
   function analysisPage(childNodesArr: VirtualDOMType[], onlyNode?: boolean) {
 
     const resultComponents = map(childNodesArr, childNode => {

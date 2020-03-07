@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, memo, useEffect, useRef, useState } from 'react';
 import { Tabs } from 'antd';
 import { confirmModal } from '../../config';
 import map from 'lodash/map';
@@ -10,10 +10,11 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ObjectComponent, SortComponent } from '../index';
 import styles from '../../index.less';
 import { ACTION_TYPES } from '@/models';
-import { formatPropsFieldConfigPath, reduxConnect } from '@/utils';
+import { formatPropsFieldConfigPath, propsAreEqual, reduxConnect } from '@/utils';
 import { PropsConfigType } from '@/types/ComponentConfigType';
 import { Dispatch } from 'redux';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { connect } from 'dva';
 
 interface ObjectArrayPropsType {
   value?: any,
@@ -33,7 +34,7 @@ export interface PaneType {
 
 const { TabPane } = Tabs;
 
-function ObjectArrayComponent(props: ObjectArrayPropsType) {
+function ObjectArrayComponent(props: ObjectArrayPropsType,ref:any) {
 
   const { value, childPropsConfig, dispatch, type, parentFieldPath, field, onChange } = props;
   let nextTabIndex = useRef(0), childPropsConfigRef = useRef(childPropsConfig);
@@ -158,4 +159,4 @@ function ObjectArrayComponent(props: ObjectArrayPropsType) {
   );
 }
 
-export default reduxConnect()(ObjectArrayComponent);
+export default connect()(ObjectArrayComponent);

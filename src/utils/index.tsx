@@ -18,6 +18,7 @@ import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { CategoryType } from '@/types/CategoryType';
 import { namespace } from '@/models';
+import ReactDOM from 'react-dom'
 
 interface RenderPath {
   path?: string,
@@ -257,4 +258,20 @@ export function usePrevious(value: any) {
     ref.current = value;
   });
   return ref.current;
+}
+
+export function useIframe({id,designPage,setSpinShow}:any) {
+const divContainer=useRef<any>()
+  useEffect(()=>{
+    const iframe:any=document.getElementById(id)
+    iframe.contentWindow.onload=()=>{
+     divContainer.current=iframe.contentDocument.getElementById('dnd-container')
+      if(setSpinShow){
+        ReactDOM.render(designPage,divContainer.current)
+        setSpinShow(false)
+      }
+    }
+  },[])
+
+  return divContainer.current
 }

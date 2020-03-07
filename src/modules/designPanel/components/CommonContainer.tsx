@@ -246,8 +246,9 @@ function CommonContainer(props: CommonContainerPropsType) {
     const { displayPropName, mounted, style } = mirrorModalField;
     if (mounted) {
       const { propName, type } = mounted;
-      const mountedNode:any = document.getElementById('dnd-iframe');
-      props[propName] = type === PROPS_TYPES.function ? () => mountedNode.contentDocument.body : mountedNode.contentDocument.body;
+      const iframe:any = document.getElementById('dnd-iframe');
+      const mountedNode=iframe.contentDocument.body;
+      props[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
     }
 
     /**

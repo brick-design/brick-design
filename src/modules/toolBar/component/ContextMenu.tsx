@@ -24,10 +24,14 @@ function ContextMenu(props: ContextMenuPropsType) {
   const root: React.RefObject<any> = useRef(null);
   const [visible, setVisible] = useState(isSelected);
 
+
   useEffect(() => {
+    const iframe:any=document.getElementById('dnd-iframe')
     function handleContextMenu(event: any) {
+      const {x,y}=iframe.getBoundingClientRect()
       if (!isSelected) return;
       event.preventDefault();
+
       setVisible(true);
       const dom = root.current;
       const { clientX, clientY } = event;
@@ -38,35 +42,32 @@ function ContextMenu(props: ContextMenuPropsType) {
       const bottom = (innerHeight - clientY) > offsetHeight;
       const top = !bottom;
       if (right) {
-        dom.style.left = `${clientX}px`;
+        dom.style.left = `${clientX+x}px`;
       }
       if (left) {
-        dom.style.left = `${clientX - offsetWidth}px`;
+        dom.style.left = `${clientX - offsetWidth+x}px`;
       }
 
       if (bottom) {
-        dom.style.top = `${clientY}px`;
+        dom.style.top = `${clientY+y}px`;
       }
       if (top) {
-        dom.style.top = `${clientY - offsetHeight}px`;
+        dom.style.top = `${clientY - offsetHeight+y}px`;
       }
     }
-
-    addEventListener('contextmenu', handleContextMenu);
-    return () => removeEventListener('contextmenu', handleContextMenu);
-  }, [isSelected, visible]);
-
-  useEffect(() => {
     function handleClick() {
       if (visible) {
         setVisible(false);
-      }
-    }
-
+      }}
+    iframe.contentWindow.addEventListener('click', handleClick);
     addEventListener('click', handleClick);
-    return () => removeEventListener('click', handleClick);
-
-  }, [visible]);
+    iframe.contentWindow.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      iframe.contentWindow.removeEventListener('contextmenu', handleContextMenu)
+      removeEventListener('click', handleClick)
+      iframe.contentWindow.removeEventListener('click', handleClick)
+    };
+  }, [isSelected, visible]);
 
   if (!isSelected && visible) setVisible(false);
   if (!visible) return null;

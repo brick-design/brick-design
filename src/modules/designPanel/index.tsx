@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { reduxConnect } from '@/utils';
+import { reduxConnect, useIframe } from '@/utils';
 import {Spin} from 'antd';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -24,7 +24,6 @@ interface DesignPanelPropsType {
 function DesignPanel(props: DesignPanelPropsType) {
 
   const { componentConfigs, platformInfo, dispatch,selectedComponentInfo,hoverKey } = props;
-  const divContainer=useRef<any>()
   const [spinShow,setSpinShow]=useState(true)
 let componentNameResult:any,resultProps:any
 
@@ -40,25 +39,14 @@ let componentNameResult:any,resultProps:any
         hoverKey,
         dispatch
       };
+      designPage=React.createElement(get(oAllComponents, componentNameResult), resultProps)
     }
-
+    const divContainer:any=useIframe({id:"dnd-iframe",designPage,setSpinShow})
   useEffect(()=>{
-   const iframe:any=document.getElementById("dnd-iframe")
-    iframe.contentWindow.onload=()=>{
-      divContainer.current=iframe.contentDocument.getElementById('dnd-container')
-      designPage = React.createElement(get(oAllComponents, componentNameResult), resultProps);
-
-      ReactDOM.render(designPage,divContainer.current)
-      setSpinShow(false)
+    if(divContainer){
+      ReactDOM.render(designPage,divContainer)
     }
-  },[])
-
-  useEffect(()=>{
-    if(divContainer.current){
-      designPage = React.createElement(get(oAllComponents, componentNameResult), resultProps);
-      ReactDOM.render(designPage,divContainer.current)
-    }
-  },[divContainer,componentNameResult,resultProps])
+  },[divContainer,designPage])
 
 
 

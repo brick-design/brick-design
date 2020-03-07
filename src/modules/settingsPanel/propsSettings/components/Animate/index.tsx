@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { forwardRef, memo, useState } from 'react';
 import map from 'lodash/map';
 import { Button, Col, Dropdown, Row, TreeSelect } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 import options from './config';
+import { propsAreEqual } from '@/utils';
 
 const { TreeNode } = TreeSelect;
 
@@ -12,7 +13,7 @@ interface AnimatePropsType {
   onChange: (value: any) => void
 }
 
-function Animate(props: AnimatePropsType) {
+function Animate(props: AnimatePropsType,ref:any) {
   const { value, onChange } = props;
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -77,4 +78,4 @@ function Animate(props: AnimatePropsType) {
 }
 
 
-export default Animate;
+export default memo(forwardRef(Animate),propsAreEqual);

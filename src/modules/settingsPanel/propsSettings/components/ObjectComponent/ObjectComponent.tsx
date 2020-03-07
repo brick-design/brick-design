@@ -1,4 +1,4 @@
-import React, { createElement, memo } from 'react';
+import React, { createElement, forwardRef, memo } from 'react';
 import { Col, Form, Row, Tooltip } from 'antd';
 import { Icon } from '@/components';
 import { confirmModal, TYPES_TO_COMPONENT } from '../../config';
@@ -32,7 +32,7 @@ interface ObjectComponentPropsType extends FormComponentProps {
 const FormItem = Form.Item;
 
 
-function ObjectComponent(props: ObjectComponentPropsType) {
+function ObjectComponent(props: ObjectComponentPropsType,ref:any) {
   const { dispatch, parentFieldPath, type, tabIndex, form, childPropsConfig, field, isHideDivider } = props;
 
   function renderFormItemTitle(config: PropInfoType, field: string) {
@@ -135,7 +135,7 @@ export default reduxConnect()(Form.create<ObjectComponentPropsType>({
     const { onChange } = props;
     onChange && onChange(filterProps(allValues));
   },
-})(memo<ObjectComponentPropsType>(ObjectComponent, (prevProps, nextProps) => {
+})(memo<ObjectComponentPropsType>(forwardRef(ObjectComponent), (prevProps, nextProps) => {
   const { childPropsConfig, tabIndex, value } = nextProps;
   const { childPropsConfig: prevChildPropsConfig, tabIndex: prevTabIndex, value: prevValue } = prevProps;
   return isEqual(childPropsConfig, prevChildPropsConfig) && isEqual(prevTabIndex, tabIndex) && isEqual(prevValue, value);
