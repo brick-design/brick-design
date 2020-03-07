@@ -63,6 +63,11 @@ umi block add https://github.com/anye931123/react-visual-editor
 - CONTAINER_CATEGORY 容器组件分类
 - NON_CONTAINER_CATEGORY 非容器组件分类
 
+### 技术交流
+| QQ群 | 微信群 |
+| --- | --- |
+| ![QQ](./QQ.jpeg) | ![wechat](./Wechat.jpeg) |
+
 
 ## LICENSE
 
