@@ -188,6 +188,9 @@ function CommonContainer(props: CommonContainerPropsType) {
         componentConfig: node,
         index,
         domTreeKeys: resultDomTreeKeys,
+        selectedComponentInfo,
+        dispatch,
+        hoverKey,
         ...handleProps,  //必须在使用否则类似tabsPanel的tab属性不起作用
       } : {
         key,
@@ -243,8 +246,8 @@ function CommonContainer(props: CommonContainerPropsType) {
     const { displayPropName, mounted, style } = mirrorModalField;
     if (mounted) {
       const { propName, type } = mounted;
-      const mountedNode = document.getElementById('dnd-container');
-      props[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
+      const mountedNode:any = document.getElementById('dnd-iframe');
+      props[propName] = type === PROPS_TYPES.function ? () => mountedNode.contentDocument.body : mountedNode.contentDocument.body;
     }
 
     /**
@@ -252,7 +255,7 @@ function CommonContainer(props: CommonContainerPropsType) {
      */
     const isVisible = domTreeKeys.includes(key);
     props[displayPropName] = isSelected || isVisible;
-    props.style = props.style ? merge(props.style, style) : { ...style };
+    // props.style = props.style ? merge(props.style, style) : { ...style };
   };
 
   /**
@@ -327,6 +330,11 @@ function CommonContainer(props: CommonContainerPropsType) {
       onMouseOver: (e: Event) => onMouseOver(e, key),
       onDragEnter: (e: Event) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp),
       onDragStart: (e: Event) => onDragStart(e, path, componentConfig, parentPath),
+      onDragOver:(e:Event)=>e.preventDefault(),
+      onDrop:(e:Event)=>{
+        e.stopPropagation()
+        dispatch({type:ACTION_TYPES.addComponent})
+      }
     };
   }
 
@@ -335,6 +343,6 @@ function CommonContainer(props: CommonContainerPropsType) {
   );
 }
 
-export default reduxConnect(['selectedComponentInfo', 'hoverKey'])(CommonContainer);
+export default CommonContainer;
 
 

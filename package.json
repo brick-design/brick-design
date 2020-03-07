@@ -29,6 +29,7 @@
     "re-resizable": "^6.1.1",
     "react": ">=16.8.0",
     "react-color": "^2.18.0",
+    "react-dom": ">=16.8.0",
     "sortablejs": "^1.10.2",
     "umi-plugin-react": "^1.15.2",
     "uuid": "^3.4.0"
@@ -40,6 +41,7 @@
     "@types/react-color": "^3.0.1",
     "@types/sortablejs": "^1.10.2",
     "@types/uuid": "^3.4.7",
+    "@types/react-dom": "^16.9.5",
     "gh-pages": "^2.2.0",
     "umi": "^2.13.3",
     "umi-plugin-block-dev": "^3.0.3",

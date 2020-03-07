@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Button, Col, Dropdown, Input, Row } from 'antd';
 import { ChromePicker } from 'react-color';
 import { Icon } from '@/components';
@@ -20,7 +20,7 @@ interface StringComponentPropsType {
 }
 
 
-function StringComponent(props: StringComponentPropsType) {
+function StringComponent(props: StringComponentPropsType,ref:any) {
 
   const {
     value,
@@ -77,4 +77,4 @@ function StringComponent(props: StringComponentPropsType) {
   );
 }
 
-export default memo<StringComponentPropsType>(StringComponent, propsAreEqual);
+export default memo<StringComponentPropsType>(forwardRef(StringComponent), propsAreEqual);

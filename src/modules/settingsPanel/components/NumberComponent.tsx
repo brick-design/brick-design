@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Col, InputNumber, Row } from 'antd';
 import styles from './index.less';
 import { EnumComponent } from './index';
@@ -30,7 +30,7 @@ interface NumberComponentPropsType {
 }
 
 
-function NumberComponent(props: NumberComponentPropsType) {
+function NumberComponent(props: NumberComponentPropsType,ref:any) {
   const {
     units = UNITS,
     hasUnit = false,
@@ -81,4 +81,4 @@ function NumberComponent(props: NumberComponentPropsType) {
   );
 }
 
-export default memo<NumberComponentPropsType>(NumberComponent, propsAreEqual);
+export default memo<NumberComponentPropsType>(forwardRef(NumberComponent), propsAreEqual);

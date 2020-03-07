@@ -1,4 +1,4 @@
-import React, { createElement, useState } from 'react';
+import React, { createElement, useEffect, useState } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import styles from '../../styles.less';
 import map from 'lodash/map';
@@ -11,6 +11,10 @@ import config from '@/configs';
 import { formatSpecialProps } from '@/utils';
 import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ACTION_TYPES } from '@/models';
+import {Spin} from 'antd'
+import { oAllComponents } from '@/modules/designPanel/confg';
+import ReactDOM from 'react-dom';
 
 interface PreviewPropsType {
   componentConfigs: VirtualDOMType[],
@@ -21,7 +25,16 @@ interface PreviewPropsType {
 export default function Preview(props: PreviewPropsType) {
   const { componentConfigs, platformInfo } = props;
   const [visible, setVisible] = useState(false);
+  const [spinShow,setSpinShow]=useState(true);
 
+  useEffect(()=>{
+    const iframe:any=document.getElementById("preview-iframe")
+    iframe.contentWindow.onload=()=>{
+      const previewPage:any=analysisPage(componentConfigs)
+      ReactDOM.render(previewPage,iframe.contentDocument.getElementById('dnd-container'))
+      setSpinShow(false)
+    }
+  },[])
   function analysisPage(childNodesArr: VirtualDOMType[], onlyNode?: boolean) {
 
     const resultComponents = map(childNodesArr, childNode => {
@@ -68,8 +81,18 @@ export default function Preview(props: PreviewPropsType) {
   const style = { width: size[0], maxHeight: size[1] };
 
   return (
-    <div id='preview-container' style={style} className={styles['preview-container']}>
-      {analysisPage(componentConfigs)}
-    </div>);
+      <div style={style} className={classNames(`${styles['browser-mockup']} ${styles['with-url']}`)}>
+        <Spin size={'large'}
+              style={{maxHeight:'100%'}}
+              wrapperClassName={styles['dnd-container']}
+              spinning={spinShow}
+        >
+          <iframe id="preview-iframe"
+                  className={styles['dnd-container']}
+                  srcDoc={config.iframeSrcDoc}
+          />
+        </Spin>
+      </div>
+   );
 
 }

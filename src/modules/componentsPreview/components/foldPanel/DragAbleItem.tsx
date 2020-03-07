@@ -31,7 +31,6 @@ function DragAbleItem(props: DragAbleItemPropsType) {
   const {
     item, dispatch, item: { defaultProps, componentName },
   } = props;
-  console.log('render');
   const randomIndex: number = useRef(Math.floor(Math.random() * 10)).current;
 
   function renderDragComponent() {
