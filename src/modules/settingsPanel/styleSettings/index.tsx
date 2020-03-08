@@ -31,7 +31,7 @@ function StyleSettings(props: StyleSettingsPropsType) {
    * @param openKeys
    */
 
-  const renderHeader=useCallback((key: string,isFold:boolean)=> {
+  const renderHeader = useCallback((key: string, isFold: boolean) => {
     return (
       <div className={styleSheet['fold-header']}>
         <span>{formatMessage({ id: `BLOCK_NAME.styles.${key}` })}</span>
@@ -42,7 +42,7 @@ function StyleSettings(props: StyleSettingsPropsType) {
         />
       </div>
     );
-  },[])
+  }, []);
 
   function renderColItem(config: any, field: string) {
     const { label, tip = '', labelPlace = 'left', span = 6, type, labelSpan = 4, valueSpan = 20, props = { size: 'small' } } = config;
@@ -80,13 +80,14 @@ function StyleSettings(props: StyleSettingsPropsType) {
   function renderFormItem(styles: any, key: string) {
     return (
       <Panel showArrow={false} className={styleSheet['panel-border']}
-             header={renderHeader(key,openKeys.includes(key))}
+             header={renderHeader(key, openKeys.includes(key))}
              key={key}>
         <Row gutter={10}>
           {map(styles, renderColItem)}
         </Row>
       </Panel>);
   }
+
   return (
     <Form className={styleSheet['form-container']}>
       <Collapse activeKey={openKeys}

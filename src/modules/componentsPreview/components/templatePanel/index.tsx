@@ -34,15 +34,15 @@ function TemplatePanel(props: TemplatePanelPropsType) {
   /**
    * 预览模板截图
    */
-  const previewImg=useCallback((newImgSrc: string)=>{
+  const previewImg = useCallback((newImgSrc: string) => {
     setImgSrc(newImgSrc);
     setPreviewVisible(true);
-  },[])
+  }, []);
 
   /**
    * 删除指定id模板
    */
-  const deleteItem=useCallback((id: string)=> {
+  const deleteItem = useCallback((id: string) => {
     Modal.confirm({
       content: DELETE_TEMPLATE,
       onOk() {
@@ -53,13 +53,13 @@ function TemplatePanel(props: TemplatePanelPropsType) {
       },
     });
 
-  },[])
+  }, []);
 
   /**
    * 根据模板名称搜索模板
    * 如果搜索名称为空展示所有模板
    */
-  const onSearch=useCallback((e: any)=> {
+  const onSearch = useCallback((e: any) => {
     const searchValue = e.target.value;
 
     dispatch({
@@ -69,7 +69,7 @@ function TemplatePanel(props: TemplatePanelPropsType) {
       },
     });
 
-  },[])
+  }, []);
 
   return (
     <>
@@ -87,7 +87,7 @@ function TemplatePanel(props: TemplatePanelPropsType) {
           })}
         </div>
       </Spin>
-      <Modal visible={previewVisible} footer={null} onCancel={useCallback(() => setPreviewVisible(false),[])}>
+      <Modal visible={previewVisible} footer={null} onCancel={useCallback(() => setPreviewVisible(false), [])}>
         <img alt="example" style={{ width: '100%', height: 500 }} src={imgSrc}/>
       </Modal>
     </>

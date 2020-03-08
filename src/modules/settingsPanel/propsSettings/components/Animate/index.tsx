@@ -13,7 +13,7 @@ interface AnimatePropsType {
   onChange: (value: any) => void
 }
 
-function Animate(props: AnimatePropsType,ref:any) {
+function Animate(props: AnimatePropsType, ref: any) {
   const { value, onChange } = props;
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -78,4 +78,4 @@ function Animate(props: AnimatePropsType,ref:any) {
 }
 
 
-export default memo(forwardRef(Animate),propsAreEqual);
+export default memo(forwardRef(Animate), propsAreEqual);

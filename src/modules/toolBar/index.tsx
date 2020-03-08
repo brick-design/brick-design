@@ -36,7 +36,7 @@ interface ToolBarPropsType {
 
 function ToolBar(props: ToolBarPropsType) {
   const { selectedComponentInfo, componentConfigs, undo, redo, styleSetting, dispatch, platformInfo } = props;
-  const { style, isContainer,path } = selectedComponentInfo!;
+  const { style, isContainer, path } = selectedComponentInfo!;
 
   const [visible, setVisible] = useState(false);
   const [isShowTemplate, setIsShowTemplate] = useState(false);
@@ -73,19 +73,19 @@ function ToolBar(props: ToolBarPropsType) {
    * 生成复合组件
    *
    */
-  const isHasRequired=useMemo(()=>handleRequiredHasChild(selectedComponentInfo!, componentConfigs!),[selectedComponentInfo,componentConfigs])
-  const generateTemplate=useCallback(()=> {
+  const isHasRequired = useMemo(() => handleRequiredHasChild(selectedComponentInfo!, componentConfigs!), [selectedComponentInfo, componentConfigs]);
+  const generateTemplate = useCallback(() => {
     if (isHasRequired) return;
     setVisible(true);
     setIsShowTemplate(true);
-  },[isHasRequired])
+  }, [isHasRequired]);
 
   /**
    *  本方式是生成复合组件事件
    *  data   请求de参数
    */
 
-  const addTemplateInfo=useCallback((data: any)=> {
+  const addTemplateInfo = useCallback((data: any) => {
     const { templateName, srcImg } = data;
     const currentComponentInfo = get(componentConfigs, path, {});
     if (!isEmpty(currentComponentInfo)) {
@@ -99,7 +99,7 @@ function ToolBar(props: ToolBarPropsType) {
       });
     }
     setVisible(false);
-  },[path,componentConfigs]);
+  }, [path, componentConfigs]);
 
 
   /**
@@ -107,11 +107,11 @@ function ToolBar(props: ToolBarPropsType) {
    * @returns {*}
    */
 
-  const preview=useCallback(()=> {
+  const preview = useCallback(() => {
     if (isHasRequired) return;
     setVisible(!visible);
     setIsShowTemplate(false);
-  },[isHasRequired])
+  }, [isHasRequired]);
 
   const funMap: { [funName: string]: () => any } = {
     preview,
@@ -119,7 +119,7 @@ function ToolBar(props: ToolBarPropsType) {
   };
 
 
-  const renderMenu=useCallback((config: any, key: string)=> {
+  const renderMenu = useCallback((config: any, key: string) => {
     const { title, icon, shortcutKey, props = {}, type } = config;
     if (!isString(icon)) return createElement(icon, { key, ...props });
     const disabledColor = '#A4A4A4';
@@ -142,14 +142,14 @@ function ToolBar(props: ToolBarPropsType) {
         </div>
       </Tooltip>
     );
-  },[enabled])
+  }, [enabled]);
 
   function renderGroup(content: any, key: string) {
     const { span, group, style = {} } = content;
     return (
       <Col span={span} key={key}>
         <div style={{ display: 'flex', flex: 1, ...style }}>
-          {useMemo(()=>map(group, renderMenu),[enabled])}
+          {useMemo(() => map(group, renderMenu), [enabled])}
         </div>
       </Col>
     );
@@ -196,7 +196,7 @@ function ToolBar(props: ToolBarPropsType) {
       </Row>
       <ContextMenu dispatch={dispatch!}
                    isSelected={!isEmpty(selectedComponentInfo)}
-                   enableMenu={useMemo(()=>filter(CONTEXT_MENU, menu => enabled.includes(menu)),[enabled])}
+                   enableMenu={useMemo(() => filter(CONTEXT_MENU, menu => enabled.includes(menu)), [enabled])}
       />
     </>
   );

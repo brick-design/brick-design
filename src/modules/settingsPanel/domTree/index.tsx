@@ -18,12 +18,12 @@ function DomTree(props: DomTreePropsType) {
 
   const { dispatch, componentConfigs, selectedComponentInfo, hoverKey } = props;
 
-  const onMouseLeave=useCallback((e: any)=> {
+  const onMouseLeave = useCallback((e: any) => {
     e.stopPropagation();
     dispatch!({
       type: ACTION_TYPES.clearHovered,
     });
-  },[])
+  }, []);
 
   return (
     <div className={styles['sort-container']}>

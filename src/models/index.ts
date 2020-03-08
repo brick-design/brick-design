@@ -138,7 +138,7 @@ const Model: ModelType = {
         type: 'saveTemplateInfos',
         payload: {
           templateInfos: templateInfo ? [templateInfo] : [],
-        }
+        },
       });
     },
     * getTemplateList(_, { put }) {

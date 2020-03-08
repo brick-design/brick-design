@@ -32,7 +32,7 @@ interface ObjectComponentPropsType extends FormComponentProps {
 const FormItem = Form.Item;
 
 
-function ObjectComponent(props: ObjectComponentPropsType,ref:any) {
+function ObjectComponent(props: ObjectComponentPropsType, ref: any) {
   const { dispatch, parentFieldPath, type, tabIndex, form, childPropsConfig, field, isHideDivider } = props;
 
   function renderFormItemTitle(config: PropInfoType, field: string) {

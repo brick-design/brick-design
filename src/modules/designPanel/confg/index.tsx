@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import { flattenDeepArray } from '@/utils';
 import CommonContainer from '../components/CommonContainer';
 import NoneContainer from '../components/NoneContainer';
 import config from '@/configs';
-import each from 'lodash/each'
+import each from 'lodash/each';
 
 /**
  * 生成react组件容器

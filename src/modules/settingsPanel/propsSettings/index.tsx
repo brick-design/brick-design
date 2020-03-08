@@ -34,7 +34,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
     dispatch,
     propsSetting,
   } = props;
-  const {props:initProps,mergePropsConfig}=propsSetting!
+  const { props: initProps, mergePropsConfig } = propsSetting!;
 
   /**
    * 渲染form items
@@ -94,7 +94,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
   /**
    * 提交最终属性结果
    */
-  const submitProps=useCallback((e: any)=> {
+  const submitProps = useCallback((e: any) => {
     e.preventDefault();
     validateFields((err, values) => {
       dispatch!({
@@ -104,13 +104,13 @@ function PropsSettings(props: PropsSettingsPropsType) {
         },
       });
     });
-  },[])
+  }, []);
 
-  const resetProps=useCallback(()=> {
+  const resetProps = useCallback(() => {
     resetFields();
     setFieldsValue(initProps);
 
-  },[initProps])
+  }, [initProps]);
   return (
     <>
       {!isEmpty(mergePropsConfig) && (

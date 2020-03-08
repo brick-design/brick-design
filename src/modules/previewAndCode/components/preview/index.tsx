@@ -8,12 +8,10 @@ import each from 'lodash/each';
 import classNames from 'classnames';
 import get from 'lodash/get';
 import config from '@/configs';
-import { formatSpecialProps, handleModalTypeContainer, useIframe } from '@/utils';
+import { formatSpecialProps, handleModalTypeContainer } from '@/utils';
 import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ACTION_TYPES } from '@/models';
-import {Spin} from 'antd'
-import { oAllComponents } from '@/modules/designPanel/confg';
+import { Spin } from 'antd';
 import ReactDOM from 'react-dom';
 
 interface PreviewPropsType {
@@ -25,9 +23,15 @@ interface PreviewPropsType {
 export default function Preview(props: PreviewPropsType) {
   const { componentConfigs, platformInfo } = props;
   const [visible, setVisible] = useState(false);
-  const [spinShow,setSpinShow]=useState(true);
+  const [spinShow, setSpinShow] = useState(true);
 
- useIframe({id:"preview-iframe",designPage:()=>analysisPage(componentConfigs),setSpinShow})
+  useEffect(() => {
+    if (!spinShow) {
+      const iframe: any = document.getElementById('preview-iframe');
+      ReactDOM.render(analysisPage(componentConfigs) as any, iframe.contentDocument.getElementById('dnd-container'));
+    }
+  }, [spinShow, componentConfigs]);
+
   function analysisPage(childNodesArr: VirtualDOMType[], onlyNode?: boolean) {
 
     const resultComponents = map(childNodesArr, childNode => {
@@ -54,7 +58,7 @@ export default function Preview(props: PreviewPropsType) {
       cloneProps.className = classNames(className, animateClass);
       cloneProps.key = key;
       if (mirrorModalField) {
-       const{displayPropName,mountedProps}= handleModalTypeContainer(mirrorModalField,"preview-iframe")
+        const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'preview-iframe');
         cloneProps[displayPropName] = visible;
         merge(cloneProps, mountedProps);
         cloneProps.zIndex = 2000;
@@ -71,18 +75,19 @@ export default function Preview(props: PreviewPropsType) {
   const style = { width: size[0], maxHeight: size[1] };
 
   return (
-      <div style={style} className={classNames(`${styles['browser-mockup']} ${styles['with-url']}`)}>
-        <Spin size={'large'}
-              style={{maxHeight:'100%'}}
-              wrapperClassName={styles['dnd-container']}
-              spinning={spinShow}
-        >
-          <iframe id="preview-iframe"
-                  className={styles['dnd-container']}
-                  srcDoc={config.iframeSrcDoc}
-          />
-        </Spin>
-      </div>
-   );
+    <div style={style} className={classNames(`${styles['browser-mockup']} ${styles['with-url']}`)}>
+      <Spin size={'large'}
+            style={{ maxHeight: '100%' }}
+            wrapperClassName={styles['dnd-container']}
+            spinning={spinShow}
+      >
+        <iframe id="preview-iframe"
+                className={styles['dnd-container']}
+                srcDoc={config.iframeSrcDoc}
+                onLoad={() => setSpinShow(false)}
+        />
+      </Spin>
+    </div>
+  );
 
 }

@@ -36,7 +36,7 @@ function SortTree(props: SortTreePropsType) {
    * 拖拽排序
    * @param sortKeys
    */
-  const onLayoutSortChange=useCallback((sortKeys: string[], a: any, evt: any)=> {
+  const onLayoutSortChange = useCallback((sortKeys: string[], a: any, evt: any) => {
     /**
      * 获取拖住节点的信息
      * @type {any}
@@ -51,7 +51,7 @@ function SortTree(props: SortTreePropsType) {
         domTreeKeys,
       },
     });
-  },[domTreeKeys,path])
+  }, [domTreeKeys, path]);
 
   /**
    * 渲染排序节点
@@ -74,7 +74,7 @@ function SortTree(props: SortTreePropsType) {
   }
 
 
-  const putItem=useCallback((a: any, b: any, c: any)=> {
+  const putItem = useCallback((a: any, b: any, c: any) => {
     const dragName = c.dataset.name;
     const parentNodesRule = c.dataset.parents && JSON.parse(c.dataset.parents);
     if (isOnlyNode && childNodes.length === 1) return false;
@@ -85,7 +85,7 @@ function SortTree(props: SortTreePropsType) {
       return childNodesRule.includes(dragName);
     }
     return true;
-  },[isOnlyNode,childNodes,childNodesRule])
+  }, [isOnlyNode, childNodes, childNodesRule]);
   return (
     <Sortable
       options={{

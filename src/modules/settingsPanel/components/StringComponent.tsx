@@ -20,7 +20,7 @@ interface StringComponentPropsType {
 }
 
 
-function StringComponent(props: StringComponentPropsType,ref:any) {
+function StringComponent(props: StringComponentPropsType, ref: any) {
 
   const {
     value,
@@ -43,7 +43,7 @@ function StringComponent(props: StringComponentPropsType,ref:any) {
 
   useEffect(() => {
     let timer = setTimeout(() => onChange && onChange(color), 100);
-    return()=> clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [color]);
 
   function handleChangeColor(value: any) {

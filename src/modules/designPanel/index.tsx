@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { reduxConnect, useIframe } from '@/utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { reduxConnect } from '@/utils';
 import { Spin } from 'antd';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -41,12 +41,18 @@ function DesignPanel(props: DesignPanelPropsType) {
     };
     designPage = React.createElement(get(oAllComponents, componentNameResult), resultProps);
   }
-  const divContainer: any = useIframe({ id: 'dnd-iframe', designPage, setSpinShow });
+  // const divContainer: any = useIframe({ id: 'dnd-iframe', designPage, setSpinShow });
+  const divContainer = useRef(null);
+
   useEffect(() => {
-    if (divContainer) {
-      ReactDOM.render(designPage, divContainer);
+    if (!spinShow) {
+      if (!divContainer.current) {
+        const iframe: any = document.getElementById('dnd-iframe');
+        divContainer.current = iframe.contentDocument.getElementById('dnd-container');
+      }
+      ReactDOM.render(designPage, divContainer.current);
     }
-  }, [divContainer, designPage]);
+  }, [divContainer.current, designPage, spinShow]);
 
 
   const { size } = platformInfo!;
@@ -66,6 +72,7 @@ function DesignPanel(props: DesignPanelPropsType) {
                 id="dnd-iframe"
                 className={styles['dnd-container']}
                 srcDoc={config.iframeSrcDoc}
+                onLoad={() => setSpinShow(false)}
         />
       </Spin>
     </div>

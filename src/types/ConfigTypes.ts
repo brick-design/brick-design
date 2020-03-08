@@ -39,5 +39,5 @@ export interface ConfigType {
   NON_CONTAINER_CATEGORY: CategoryType, //非容器组件分类
   //所有的组件配置汇总
   AllComponentConfigs: { [componentName: string]: ComponentConfigType },
-  iframeSrcDoc:string
+  iframeSrcDoc: string
 }

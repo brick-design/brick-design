@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import map from 'lodash/map';
 import styles from '../style.less';
 import { Dispatch } from 'redux';
@@ -26,9 +26,10 @@ function ContextMenu(props: ContextMenuPropsType) {
 
 
   useEffect(() => {
-    const iframe:any=document.getElementById('dnd-iframe')
+    const iframe: any = document.getElementById('dnd-iframe');
+
     function handleContextMenu(event: any) {
-      const {x,y}=iframe.getBoundingClientRect()
+      const { x, y } = iframe.getBoundingClientRect();
       if (!isSelected) return;
       event.preventDefault();
 
@@ -42,30 +43,33 @@ function ContextMenu(props: ContextMenuPropsType) {
       const bottom = (innerHeight - clientY) > offsetHeight;
       const top = !bottom;
       if (right) {
-        dom.style.left = `${clientX+x}px`;
+        dom.style.left = `${clientX + x}px`;
       }
       if (left) {
-        dom.style.left = `${clientX - offsetWidth+x}px`;
+        dom.style.left = `${clientX - offsetWidth + x}px`;
       }
 
       if (bottom) {
-        dom.style.top = `${clientY+y}px`;
+        dom.style.top = `${clientY + y}px`;
       }
       if (top) {
-        dom.style.top = `${clientY - offsetHeight+y}px`;
+        dom.style.top = `${clientY - offsetHeight + y}px`;
       }
     }
+
     function handleClick() {
       if (visible) {
         setVisible(false);
-      }}
+      }
+    }
+
     iframe.contentWindow.addEventListener('click', handleClick);
     addEventListener('click', handleClick);
     iframe.contentWindow.addEventListener('contextmenu', handleContextMenu);
     return () => {
-      iframe.contentWindow.removeEventListener('contextmenu', handleContextMenu)
-      removeEventListener('click', handleClick)
-      iframe.contentWindow.removeEventListener('click', handleClick)
+      iframe.contentWindow.removeEventListener('contextmenu', handleContextMenu);
+      removeEventListener('click', handleClick);
+      iframe.contentWindow.removeEventListener('click', handleClick);
     };
   }, [isSelected, visible]);
 

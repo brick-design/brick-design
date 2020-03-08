@@ -30,7 +30,7 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
 
 
   useEffect(() => {
-    const iframe:any=document.getElementById('dnd-iframe')
+    const iframe: any = document.getElementById('dnd-iframe');
     const testDom = iframe.contentDocument.getElementById('select-img');
     if (!testDom) return;
     setSpinning(true);
@@ -41,7 +41,7 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
   }, []);
 
 
-  const submit=useCallback((e: any)=> {
+  const submit = useCallback((e: any) => {
     e.preventDefault();
     validateFields((err, fieldsValue) => {
       if (err) {
@@ -50,7 +50,7 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
       const { templateName } = fieldsValue;
       uploadFile && uploadFile({ templateName, srcImg });
     });
-  },[srcImg]);
+  }, [srcImg]);
 
   return (
     <Form>

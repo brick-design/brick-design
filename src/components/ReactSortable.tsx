@@ -4,15 +4,16 @@ import React, { Component } from 'react';
 import SortableJS from 'sortablejs';
 
 interface storeType {
-  [propName:string]:any
+  [propName: string]: any
 }
-const store:storeType = {
+
+const store: storeType = {
   nextSibling: null,
   activeComponent: null,
 };
 
 
-class Sortable extends Component<any,any> {
+class Sortable extends Component<any, any> {
   static propTypes = {
     options: PropTypes.object,
     onChange: PropTypes.func,
@@ -29,8 +30,9 @@ class Sortable extends Component<any,any> {
     style: {},
   };
 
-  sortable:any = null;
-  node:any
+  sortable: any = null;
+  node: any;
+
   componentDidMount() {
     const options = { ...this.props.options };
 
@@ -48,7 +50,7 @@ class Sortable extends Component<any,any> {
     ].forEach((name) => {
       const eventHandler = options[name];
 
-      options[name] = (...params:any) => {
+      options[name] = (...params: any) => {
         const [evt] = params;
 
         if (name === 'onChoose') {
@@ -90,7 +92,7 @@ class Sortable extends Component<any,any> {
     this.sortable = SortableJS.create(this.node, options);
   }
 
-  shouldComponentUpdate(nextProps:any) {
+  shouldComponentUpdate(nextProps: any) {
     // If onChange is null, it is an UnControlled component
     // Don't let React re-render it by setting return to false
     if (!nextProps.onChange) {
@@ -117,7 +119,7 @@ class Sortable extends Component<any,any> {
     return (
       <Component
         {...props}
-        ref={(node:any) => {
+        ref={(node: any) => {
           this.node = node;
         }}
       />

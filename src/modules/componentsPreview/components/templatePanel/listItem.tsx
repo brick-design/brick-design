@@ -29,7 +29,7 @@ function ListItem(props: ListItemPropsType) {
            payload: {
              dragData: item,
            },
-         }),[])}
+         }), [])}
          className={styles['list-item']}>
       <div onMouseOver={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
            className={styles['list-handler']}>
@@ -44,4 +44,4 @@ function ListItem(props: ListItemPropsType) {
   );
 }
 
-export default memo(ListItem,()=>true);
+export default memo(ListItem, () => true);

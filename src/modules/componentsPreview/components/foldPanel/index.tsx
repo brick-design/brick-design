@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Col, Collapse, Divider, Input, Row } from 'antd';
 import { Icon } from '@/components';
 import map from 'lodash/map';
@@ -87,7 +87,7 @@ function FoldPanel(props: FoldPanelPropsType) {
   /**
    * 渲染折叠Header
    */
-  const renderHeader=useCallback((categoryName: string,isFold:boolean)=> {
+  const renderHeader = useCallback((categoryName: string, isFold: boolean) => {
     return (
       <div className={styles['fold-header']}>
         <Icon
@@ -98,18 +98,18 @@ function FoldPanel(props: FoldPanelPropsType) {
         <span style={{ color: '#555555' }}>{categoryName}</span>
       </div>
     );
-  },[])
+  }, []);
   /**
    * 渲染拖拽item
    */
-  const renderDragItem=useCallback((span: number = 24, key: string, componentName: string, defaultProps?: any)=> {
+  const renderDragItem = useCallback((span: number = 24, key: string, componentName: string, defaultProps?: any) => {
     return (<Col span={span} key={key}>
       <DragAbleItem
         item={{ componentName, defaultProps }}
         dispatch={dispatch}
       />
     </Col>);
-  },[]);
+  }, []);
 
   /**
    * 渲染分类组件中的组件
@@ -117,7 +117,7 @@ function FoldPanel(props: FoldPanelPropsType) {
    * @param categoryName  分分类名字
    * @param isShow        是否展示分割分类组件名
    */
-  const renderContent=useCallback((categoryInfo: ComponentInfoType | null, categoryName: string, isShow?: boolean)=> {
+  const renderContent = useCallback((categoryInfo: ComponentInfoType | null, categoryName: string, isShow?: boolean) => {
     let items = null, isShowCategoryName = false;
     if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
       items = renderDragItem(undefined, categoryName, categoryName);
@@ -143,17 +143,17 @@ function FoldPanel(props: FoldPanelPropsType) {
         <Divider style={{ fontSize: 12, fontWeight: 'normal', marginTop: 10 }}>{categoryName}</Divider>}
       </Row>
     );
-  },[]);
+  }, []);
 
   /**
    * 搜索过滤回调
    */
-  const searchFilter = useCallback((inputValue: string, option: any) => option.props.children.toUpperCase().includes(inputValue.toUpperCase()),[]);
+  const searchFilter = useCallback((inputValue: string, option: any) => option.props.children.toUpperCase().includes(inputValue.toUpperCase()), []);
 
   /**
    * 搜搜指定组件
    */
-  const onChange=useCallback((value: any)=> {
+  const onChange = useCallback((value: any) => {
     let filterOpenKeys: any[] = [], filterCategory = componentsCategory;
     if (isEmpty(value)) {
       if (childNodesRule) {
@@ -164,17 +164,17 @@ function FoldPanel(props: FoldPanelPropsType) {
       setSearchValue(value);
 
     }
-  },[childNodesRule])
+  }, [childNodesRule]);
 
   /**
    * 搜索下拉框选中组件名称时的回调
    */
-  const onSelect=useCallback((value: any) =>{
+  const onSelect = useCallback((value: any) => {
     const { filterOpenKeys, filterCategory } = getFilterCategory(componentsCategory, value, childNodesRule);
     setOpenKeys(filterOpenKeys);
     setSearchValue(value);
     setCategory(filterCategory);
-  },[childNodesRule])
+  }, [childNodesRule]);
 
   return (
     <>
@@ -195,9 +195,9 @@ function FoldPanel(props: FoldPanelPropsType) {
             style={{ backgroundColor: '#fff' }}
             onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}>
             {map(category, (categoryInfo: ComponentInfoType, categoryName) => {
-             const isFold= openKeys.includes(categoryName)
+              const isFold = openKeys.includes(categoryName);
               return <Panel style={{ border: 0 }}
-                            header={renderHeader(categoryName,isFold)}
+                            header={renderHeader(categoryName, isFold)}
                             key={categoryName}
                             showArrow={false}>
                 {renderContent(categoryInfo, categoryName)}

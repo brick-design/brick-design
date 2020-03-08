@@ -11,8 +11,8 @@ const UNITS = [
 const formatValue = (value: string, units: string[], hasUnit: boolean) => {
   if (!value) return { formatNumber: undefined, formatUnit: 'px' };
   if (hasUnit) {
-    const formatNumber= parseInt(value)
-   return { formatNumber, formatUnit: value.split(`${formatNumber}`)[1] };
+    const formatNumber = parseInt(value);
+    return { formatNumber, formatUnit: value.split(`${formatNumber}`)[1] };
   } else {
     return { formatNumber: value };
   }
@@ -30,7 +30,7 @@ interface NumberComponentPropsType {
 }
 
 
-function NumberComponent(props: NumberComponentPropsType,ref:any) {
+function NumberComponent(props: NumberComponentPropsType, ref: any) {
   const {
     units = UNITS,
     hasUnit = false,
