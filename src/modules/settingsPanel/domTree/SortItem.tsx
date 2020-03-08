@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Collapse, Dropdown, Icon, Menu, Tooltip } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
@@ -42,7 +42,7 @@ interface SortItemPropsType {
 
 function SortItem(props: SortItemPropsType) {
 
-  let childPropName: string | undefined, isSelected = false;
+  let childPropName=useRef<string | undefined>(), isSelected = false;
   const [isUnfold, setIsUnfold] = useState(false);
   const {
     selectedComponentInfo,
@@ -56,6 +56,7 @@ function SortItem(props: SortItemPropsType) {
     domTreeKeys,
     isFold,
     parentPath,
+
   } = props;
   const selectedKey = get(selectedComponentInfo, 'selectedKey', '');
   const prevPath = usePrevious(path);
@@ -80,31 +81,31 @@ function SortItem(props: SortItemPropsType) {
 
   if (isFold && isUnfold) setIsUnfold(false);
 
-
-  function dispatchData(actionType: string) {
-    let { propPath } = props;
-    if (childPropName) {
-      propPath = `${path}.${childPropName}`;
+  const isRequiredHasChild=useMemo(()=>isRequired && isEmpty(childNodes),[childNodes])
+  const dispatchData=useCallback((actionType: string)=>{
+    let newPropPath=propPath ;
+    if (childPropName.current) {
+      newPropPath = `${path}.${childPropName.current}`;
     }
     dispatch!({
       type: actionType,
       payload: {
-        propName: propName || childPropName,
-        propPath,
+        propName: propName || childPropName.current,
+        propPath:newPropPath,
         path,
         parentPath,
         componentConfig,
         domTreeKeys,
-        isRequiredHasChild: isRequired && isEmpty(childNodes),
+        isRequiredHasChild,
       },
     });
-  };
+  },[childPropName.current,path,parentPath,componentConfig,domTreeKeys,isRequiredHasChild])
 
   const deleteComponent = () => dispatchData(ACTION_TYPES.deleteComponent);
   const copyComponent = () => dispatchData(ACTION_TYPES.copyComponent);
   const clearChildNodes = () => dispatchData(ACTION_TYPES.clearChildNodes);
 
-  function handleMenuClick(e: any) {
+  const handleMenuClick=(e: any)=> {
     switch (e.key) {
       case '1':
         return clearChildNodes();
@@ -116,14 +117,14 @@ function SortItem(props: SortItemPropsType) {
     }
   };
 
-  function renderMenu() {
+ const renderMenu=useCallback(()=> {
     return (
       <Menu onClick={handleMenuClick}>
-        {!childPropName && !isEmpty(childNodes) && <Item key={1}>清除</Item>}
+        {!childPropName.current && !isEmpty(childNodes) && <Item key={1}>清除</Item>}
         {!parentKey && <Item key={3}>复制</Item>}
         {!parentKey && <Item key={4}>删除</Item>}
       </Menu>);
-  };
+  },[childNodes,childPropName.current,parentKey]);
 
   /**
    * 选中组件与取消选中
@@ -139,7 +140,6 @@ function SortItem(props: SortItemPropsType) {
 
   function onMouseOver(e: any) {
     e.stopPropagation();
-    const { dispatch, selectedComponentInfo, componentConfig: { key } } = props;
     isEmpty(selectedComponentInfo) && dispatch!({
       type: ACTION_TYPES.overTarget,
       payload: {
@@ -148,10 +148,10 @@ function SortItem(props: SortItemPropsType) {
     });
   };
 
-  function getIcon(name: string) {
+  const getIcon=useCallback((name: string)=> {
     if (get(domTreeIcons, `${name}`)) return get(domTreeIcons, `${name}`);
     return domTreeIcons.Layout;
-  };
+  },[])
 
 
   /**
@@ -228,13 +228,13 @@ function SortItem(props: SortItemPropsType) {
         hoverKey={hoverKey}
       />);
     }
-    childPropName = undefined;
+
     const { nodePropsConfig } = get(config.AllComponentConfigs, componentName);
     /**
      * 处理属性节点子组件
      */
     return map(childNodes, (propChildNode, propName) => {
-      childPropName = propName;
+      !childPropName.current &&(childPropName.current = propName);
       const { childNodesRule, label, tip, isRequired } = nodePropsConfig![propName];
       const propKey = `${key}${propName}`;
       const newComponentConfig = {

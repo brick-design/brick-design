@@ -23,17 +23,13 @@ export default function Code(props: CodePropsType) {
     const { pageCodes, styleSheetCodes } = generatePageCode(componentConfigs);
     setCode(pageCodes);
     setStyle(styleSheetCodes);
-
   }, [componentConfigs]);
 
   useEffect(() => {
-    highlightCode();
-  }, [code, style]);
-
-  function highlightCode() {
     hljs.highlightBlock(codeRef.current);
     hljs.highlightBlock(styleRef.current);
-  }
+  }, [code, style]);
+
 
   return (
     <Tabs

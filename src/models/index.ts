@@ -136,7 +136,9 @@ const Model: ModelType = {
       });
       yield put({
         type: 'saveTemplateInfos',
-        templateInfos: templateInfo ? [templateInfo] : [],
+        payload: {
+          templateInfos: templateInfo ? [templateInfo] : [],
+        }
       });
     },
     * getTemplateList(_, { put }) {

@@ -30,7 +30,7 @@ function AllComponents(props: AllComponentsPropsType) {
                    selectedComponentInfo={selectedComponentInfo!}
                    componentsCategory={config.CONTAINER_CATEGORY}
                    searchValues={flattenDeepArray(config.CONTAINER_CATEGORY)}
-                   dispatch={dispatch}
+                   dispatch={dispatch!}
         />
       </TabPane>
       <TabPane forceRender className={styles['tabs-panel']}
@@ -39,7 +39,7 @@ function AllComponents(props: AllComponentsPropsType) {
                    selectedComponentInfo={selectedComponentInfo!}
                    componentsCategory={config.NON_CONTAINER_CATEGORY}
                    searchValues={flattenDeepArray(config.NON_CONTAINER_CATEGORY)}
-                   dispatch={dispatch}
+                   dispatch={dispatch!}
 
         />
       </TabPane>

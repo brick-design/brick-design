@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { Input, Modal, Spin } from 'antd';
 import map from 'lodash/map';
 import ListItem from './listItem';
@@ -22,18 +22,27 @@ function TemplatePanel(props: TemplatePanelPropsType) {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [imgSrc, setImgSrc] = useState('');
 
+  /**
+   * 获取模板列表数据
+   */
   useEffect(() => {
     dispatch({
       type: ACTION_TYPES.getTemplateList,
     });
   }, []);
 
-  function previewImg(newImgSrc: string) {
+  /**
+   * 预览模板截图
+   */
+  const previewImg=useCallback((newImgSrc: string)=>{
     setImgSrc(newImgSrc);
     setPreviewVisible(true);
-  };
+  },[])
 
-  function deleteItem(id: string) {
+  /**
+   * 删除指定id模板
+   */
+  const deleteItem=useCallback((id: string)=> {
     Modal.confirm({
       content: DELETE_TEMPLATE,
       onOk() {
@@ -44,11 +53,15 @@ function TemplatePanel(props: TemplatePanelPropsType) {
       },
     });
 
-  };
+  },[])
 
-
-  function onSearch(e: any) {
+  /**
+   * 根据模板名称搜索模板
+   * 如果搜索名称为空展示所有模板
+   */
+  const onSearch=useCallback((e: any)=> {
     const searchValue = e.target.value;
+
     dispatch({
       type: searchValue ? ACTION_TYPES.searchTemplate : ACTION_TYPES.getTemplateList,
       payload: {
@@ -56,7 +69,7 @@ function TemplatePanel(props: TemplatePanelPropsType) {
       },
     });
 
-  }
+  },[])
 
   return (
     <>
@@ -74,7 +87,7 @@ function TemplatePanel(props: TemplatePanelPropsType) {
           })}
         </div>
       </Spin>
-      <Modal visible={previewVisible} footer={null} onCancel={() => setPreviewVisible(false)}>
+      <Modal visible={previewVisible} footer={null} onCancel={useCallback(() => setPreviewVisible(false),[])}>
         <img alt="example" style={{ width: '100%', height: 500 }} src={imgSrc}/>
       </Modal>
     </>

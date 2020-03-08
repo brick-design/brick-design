@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Form, Input, Spin } from 'antd';
 import { DefaultImgBase64 } from '@/modules/toolBar/config';
 import html2canvas from 'html2canvas';
@@ -30,7 +30,8 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
 
 
   useEffect(() => {
-    const testDom = document.getElementById('select-img');
+    const iframe:any=document.getElementById('dnd-iframe')
+    const testDom = iframe.contentDocument.getElementById('select-img');
     if (!testDom) return;
     setSpinning(true);
     html2canvas(testDom).then((img) => {
@@ -40,7 +41,7 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
   }, []);
 
 
-  function submit(e: any) {
+  const submit=useCallback((e: any)=> {
     e.preventDefault();
     validateFields((err, fieldsValue) => {
       if (err) {
@@ -49,7 +50,7 @@ function GenerateTemplate(props: GenerateTemplatePropsType) {
       const { templateName } = fieldsValue;
       uploadFile && uploadFile({ templateName, srcImg });
     });
-  };
+  },[srcImg]);
 
   return (
     <Form>

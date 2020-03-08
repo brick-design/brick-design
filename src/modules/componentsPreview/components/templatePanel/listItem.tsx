@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import styles from '../index.less';
 import { Icon } from '@/components';
 import { ACTION_TYPES } from '@/models';
@@ -24,12 +24,12 @@ function ListItem(props: ListItemPropsType) {
   const { itemData, previewImg, deleteItem, item, dispatch } = props;
   return (
     <div draggable
-         onDragStart={() => dispatch({
+         onDragStart={useCallback(() => dispatch({
            type: ACTION_TYPES.getDragData,
            payload: {
              dragData: item,
            },
-         })}
+         }),[])}
          className={styles['list-item']}>
       <div onMouseOver={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
            className={styles['list-handler']}>
@@ -44,4 +44,4 @@ function ListItem(props: ListItemPropsType) {
   );
 }
 
-export default ListItem;
+export default memo(ListItem,()=>true);

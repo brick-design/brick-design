@@ -1,4 +1,4 @@
-import React, { createElement } from 'react';
+import React, { createElement, useCallback } from 'react';
 import { Button, Form, Tooltip } from 'antd';
 import map from 'lodash/map';
 import isEmpty from 'lodash/isEmpty';
@@ -34,6 +34,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
     dispatch,
     propsSetting,
   } = props;
+  const {props:initProps,mergePropsConfig}=propsSetting!
 
   /**
    * 渲染form items
@@ -93,7 +94,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
   /**
    * 提交最终属性结果
    */
-  function submitProps(e: any) {
+  const submitProps=useCallback((e: any)=> {
     e.preventDefault();
     validateFields((err, values) => {
       dispatch!({
@@ -103,16 +104,13 @@ function PropsSettings(props: PropsSettingsPropsType) {
         },
       });
     });
-  };
+  },[])
 
-  function resetProps() {
-    const { props } = propsSetting!;
+  const resetProps=useCallback(()=> {
     resetFields();
-    setFieldsValue(props);
+    setFieldsValue(initProps);
 
-  };
-
-  const { mergePropsConfig } = propsSetting!;
+  },[initProps])
   return (
     <>
       {!isEmpty(mergePropsConfig) && (

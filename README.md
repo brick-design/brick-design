@@ -66,7 +66,7 @@ umi block add https://github.com/anye931123/react-visual-editor
 ### 技术交流
 | QQ群 | 微信群 |
 | --- | --- |
-| <img src="./QQ.jpeg" width="60" /> | <img src="./Wechat.jpeg" width="60" /> |
+| <img src="./QQ.jpeg" width="100" /> | <img src="./Wechat.jpeg" width="100" /> |
 
 
 ## LICENSE

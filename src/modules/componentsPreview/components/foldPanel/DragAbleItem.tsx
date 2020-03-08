@@ -26,7 +26,12 @@ const defaultColors = [
   '#008B8B',
 ];
 
-
+/**
+ * 拖拽组件
+ * 组件拖拽时会将其携带的组件名称传入 store
+ * @param props
+ * @constructor
+ */
 function DragAbleItem(props: DragAbleItemPropsType) {
   const {
     item, dispatch, item: { defaultProps, componentName },
@@ -59,4 +64,4 @@ function DragAbleItem(props: DragAbleItemPropsType) {
   </div>);
 }
 
-export default memo<DragAbleItemPropsType>(DragAbleItem, () => true);
+export default memo(DragAbleItem, () => true);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { message } from 'antd';
 import each from 'lodash/each';
@@ -13,12 +13,14 @@ import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
+import isFunction from 'lodash/isFunction';
 import CommonContainer from '@/modules/designPanel/components/CommonContainer';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { CategoryType } from '@/types/CategoryType';
 import { namespace } from '@/models';
 import ReactDOM from 'react-dom'
+import { MirrorModalFieldType } from '@/types/ComponentConfigType';
 
 interface RenderPath {
   path?: string,
@@ -267,11 +269,30 @@ const divContainer=useRef<any>()
     iframe.contentWindow.onload=()=>{
      divContainer.current=iframe.contentDocument.getElementById('dnd-container')
       if(setSpinShow){
-        ReactDOM.render(designPage,divContainer.current)
+
+        ReactDOM.render(isFunction(designPage)?designPage():designPage,divContainer.current)
         setSpinShow(false)
       }
     }
   },[])
 
   return divContainer.current
+}
+
+
+/**
+ * 处理弹窗类容器
+ * @param mirrorModalField
+ */
+export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType,iframeId:string) {
+  const mountedProps:any={}
+  const { displayPropName, mounted} = mirrorModalField;
+  if (mounted) {
+    const { propName, type } = mounted;
+    const iframe:any = document.getElementById(iframeId);
+    const mountedNode=iframe.contentDocument.body;
+    mountedProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
+  }
+
+  return {displayPropName,mountedProps}
 }

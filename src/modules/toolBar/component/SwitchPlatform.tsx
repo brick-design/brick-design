@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Dropdown, Menu } from 'antd';
 import styles from '@/modules/toolBar/style.less';
 import { Icon } from '@/components';
@@ -35,18 +35,18 @@ function SwitchPlatform(props: SwitchPlatformPropsType) {
     });
   }, [isMobile, isVertical, mobileModel]);
 
-  function renderMenu() {
+  const renderMenu=useCallback(()=> {
     return (<Menu selectedKeys={[mobileModel]} onClick={({ key }: any) => setMobileModel(key)}>
       {map(menus, (_, key) => {
         return (<MenuItem key={key}>{key}</MenuItem>);
       })}
     </Menu>);
-  }
+  },[mobileModel])
 
   const dropProps = isMobile ? {} : { visible: false };
   return (
     <div className={styles['switch-container']}>
-      <Dropdown overlay={renderMenu()} {...dropProps} trigger={['hover']}>
+      <Dropdown overlay={useMemo(()=>renderMenu(),[mobileModel])} {...dropProps} trigger={['hover']}>
         <div
           className={styles['switch-platform']}
           onClick={() => setIsMobile(!isMobile)}

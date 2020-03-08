@@ -8,7 +8,7 @@ import each from 'lodash/each';
 import classNames from 'classnames';
 import get from 'lodash/get';
 import config from '@/configs';
-import { formatSpecialProps, useIframe } from '@/utils';
+import { formatSpecialProps, handleModalTypeContainer, useIframe } from '@/utils';
 import { PlatformInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { ACTION_TYPES } from '@/models';
@@ -27,7 +27,7 @@ export default function Preview(props: PreviewPropsType) {
   const [visible, setVisible] = useState(false);
   const [spinShow,setSpinShow]=useState(true);
 
-  useIframe({id:"preview-iframe",designPage:analysisPage(componentConfigs),setSpinShow})
+ useIframe({id:"preview-iframe",designPage:()=>analysisPage(componentConfigs),setSpinShow})
   function analysisPage(childNodesArr: VirtualDOMType[], onlyNode?: boolean) {
 
     const resultComponents = map(childNodesArr, childNode => {
@@ -54,12 +54,9 @@ export default function Preview(props: PreviewPropsType) {
       cloneProps.className = classNames(className, animateClass);
       cloneProps.key = key;
       if (mirrorModalField) {
-        const { displayPropName, mounted, style } = mirrorModalField;
-        const { propName, type } = mounted;
-        const mountedNode = document.getElementById('preview-container');
-        cloneProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
+       const{displayPropName,mountedProps}= handleModalTypeContainer(mirrorModalField,"preview-iframe")
         cloneProps[displayPropName] = visible;
-        merge(cloneProps.style, style);
+        merge(cloneProps, mountedProps);
         cloneProps.zIndex = 2000;
         cloneProps.onCancel = () => setVisible(!visible);
       }
