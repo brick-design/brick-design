@@ -77,7 +77,7 @@ function CommonContainer(props: CommonContainerPropsType) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
     }
     dispatch({
-      type: isSelected ? ACTION_TYPES.clearSelectedStatus : ACTION_TYPES.selectComponent,
+      type: isSelected&&event ? ACTION_TYPES.clearSelectedStatus : ACTION_TYPES.selectComponent,
       payload: {
         propPath,
         propName: selectedProp,
@@ -90,6 +90,13 @@ function CommonContainer(props: CommonContainerPropsType) {
 
     });
   },[hoverKey,selectedKey,requiredProp]);
+
+  useEffect(()=>{
+    if(isSelected){
+      changeSelectedStatus(null, componentConfig, domTreeKeys, path, parentPath, requiredProp);
+    }
+  },[])
+
   useEffect(() => {
     if (!isSelected && requiredProp) {
       changeSelectedStatus(null, componentConfig, domTreeKeys, path, parentPath, requiredProp);
@@ -114,7 +121,6 @@ function CommonContainer(props: CommonContainerPropsType) {
    */
   const getDropTargetInfo=useCallback((event: Event, path: string, componentConfig: VirtualDOMType, selectedProp: string)=> {
      event.stopPropagation();
-    if (!isEmpty(selectedComponentInfo)) return;
     let propPath = null;
     if (selectedProp) {
       propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
@@ -129,7 +135,7 @@ function CommonContainer(props: CommonContainerPropsType) {
       },
 
     });
-  },[selectedComponentInfo])
+  },[])
 
   /**
    * 拖拽当前组件时获取当前组件的信息
@@ -210,6 +216,8 @@ function CommonContainer(props: CommonContainerPropsType) {
         ...handleProps,  //必须在使用否则类似tabsPanel的tab属性不起作用
       } : {
         key,
+        isSelected,
+        path:resultPath,
         ...handleProps,
         className: handlePropsClassName(isSelected, isHovered, className, animateClass),
         draggable: true,
@@ -219,7 +227,7 @@ function CommonContainer(props: CommonContainerPropsType) {
         onDragStart: (e: Event) => onDragStart(e, path, node, parentPath),
       };
 
-      return createElement(get(oAllComponents, componentName) || get(config.OriginalComponents, componentName, componentName), formatSpecialProps(propsResult, propsConfig));
+      return createElement(get(oAllComponents, componentName), formatSpecialProps(propsResult, propsConfig));
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/

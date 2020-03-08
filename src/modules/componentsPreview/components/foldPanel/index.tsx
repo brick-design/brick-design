@@ -176,7 +176,6 @@ function FoldPanel(props: FoldPanelPropsType) {
     setCategory(filterCategory);
   },[childNodesRule])
 
-  console.log('hahaha>>>>>>')
   return (
     <>
       <AutoComplete

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import {  useEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { message } from 'antd';
 import each from 'lodash/each';
@@ -14,7 +14,6 @@ import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
 import isFunction from 'lodash/isFunction';
-import CommonContainer from '@/modules/designPanel/components/CommonContainer';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { PROPS_TYPES } from '@/types/ConfigTypes';
 import { CategoryType } from '@/types/CategoryType';
@@ -160,16 +159,6 @@ export function flattenDeepArray(data: CategoryType) {
   }));
 }
 
-/**
- * 生成react组件容器
- */
-export function generateContainers(componentNames: string[]) {
-  const components: any = {};
-  each(componentNames, componentName => {
-    components[componentName] = (props: any) => <CommonContainer {...props} containerName={componentName}/>;
-  });
-  return components;
-}
 
 /**
  * 过滤掉值为undefined的字段
