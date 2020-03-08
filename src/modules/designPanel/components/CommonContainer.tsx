@@ -45,6 +45,7 @@ function CommonContainer(props: CommonContainerPropsType) {
     dispatch,
     selectedComponentInfo,
     hoverKey,
+    index,
     ...rest
   } = props;
 
@@ -67,7 +68,7 @@ function CommonContainer(props: CommonContainerPropsType) {
 
   const { isHovered, isSelected } = selectedStatus(key,hoverKey,selectedKey);
 
-  const changeSelectedStatus=useCallback((event: Event | null, componentConfig: VirtualDOMType,
+  const changeSelectedStatus=useCallback((event: Event|null|undefined, componentConfig: VirtualDOMType,
                                           domTreeKeys: string[], path?: string, parentPath?: string, selectedProp?: string)=> {
     event && event.stopPropagation && event.stopPropagation();
     let propPath = null;
@@ -203,7 +204,7 @@ function CommonContainer(props: CommonContainerPropsType) {
       const handleProps = filterProps(props) || {};
       /** 根据组件类型处理属性 */
       const propsResult = ALL_CONTAINER_COMPONENT_NAMES.includes(componentName) ? {
-        key,
+        key:props.key||key,
         path: resultPath,
         parentPath,
         draggable: true,
@@ -217,7 +218,6 @@ function CommonContainer(props: CommonContainerPropsType) {
       } : {
         key,
         isSelected,
-        path:resultPath,
         ...handleProps,
         className: handlePropsClassName(isSelected, isHovered, className, animateClass),
         draggable: true,

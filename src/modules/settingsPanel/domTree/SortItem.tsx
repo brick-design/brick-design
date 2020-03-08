@@ -234,7 +234,7 @@ function SortItem(props: SortItemPropsType) {
      * 处理属性节点子组件
      */
     return map(childNodes, (propChildNode, propName) => {
-      !childPropName.current &&(childPropName.current = propName);
+      childPropName.current = propName;
       const { childNodesRule, label, tip, isRequired } = nodePropsConfig![propName];
       const propKey = `${key}${propName}`;
       const newComponentConfig = {
