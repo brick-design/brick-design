@@ -98,7 +98,7 @@ function ToolBar(props: ToolBarPropsType) {
         },
       });
     }
-    setVisible(!visible);
+    setVisible(false);
   },[path,componentConfigs]);
 
 
@@ -188,7 +188,7 @@ function ToolBar(props: ToolBarPropsType) {
         >
           {isShowTemplate ? <GenerateTemplate uploadFile={addTemplateInfo}/> :
             <PreviewAndCode componentConfigs={componentConfigs!}
-                            controlModal={useCallback(() => setVisible(false),[])}
+                            controlModal={() => setVisible(false)}
                             visible={visible}
                             platformInfo={platformInfo}
             />}
