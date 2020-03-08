@@ -20,6 +20,8 @@
 
 ![PC](./pc.png)
 
+![Code](./Code.png)
+
 ## Usage
 
 ```sh
