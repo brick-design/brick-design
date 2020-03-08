@@ -1,4 +1,4 @@
-import {  useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { connect } from 'dva';
 import { message } from 'antd';
 import each from 'lodash/each';
@@ -253,7 +253,7 @@ export function usePrevious(value: any) {
 
 export function useIframe({id,designPage,setSpinShow}:any) {
 const divContainer=useRef<any>()
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     const iframe:any=document.getElementById(id)
     iframe.contentWindow.onload=()=>{
      divContainer.current=iframe.contentDocument.getElementById('dnd-container')
