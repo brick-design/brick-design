@@ -13,9 +13,8 @@ import { CategoryType, ComponentCategoryType, ComponentInfoType } from '@/types/
 import { SelectedComponentInfoType } from '@/types/ModelType';
 import { usePrevious } from '@/utils';
 import { Dispatch } from 'redux';
-
 const { Panel } = Collapse;
-
+let dispatch:Dispatch
 /**
  * 获取过滤后的组件配置信息
  * @param prevComponentsCategory
@@ -54,6 +53,73 @@ function getFilterCategory(prevComponentsCategory: CategoryType, value?: string,
   });
   return { filterOpenKeys, filterCategory };
 }
+/**
+ * 搜索过滤回调
+ */
+function searchFilter  (inputValue: string, option: any) {
+  return option.props.children.toUpperCase().includes(inputValue.toUpperCase())
+}
+/**
+ * 渲染折叠Header
+ */
+function renderHeader (categoryName: string, isFold: boolean) {
+  return (
+    <div className={styles['fold-header']}>
+      <Icon
+        className={isFold ? styles.rotate90 : ''}
+        style={{ marginLeft: '5px', marginRight: '5px', transition: 'all 0.2s' }}
+        type="caret-right"
+      />
+      <span style={{ color: '#555555' }}>{categoryName}</span>
+    </div>
+  );
+}
+/**
+ * 渲染拖拽item
+ */
+function renderDragItem (span: number = 24, key: string, componentName: string, defaultProps?: any) {
+  return (<Col span={span} key={key}>
+    <DragAbleItem
+      item={{ componentName, defaultProps }}
+      dispatch={dispatch}
+    />
+  </Col>);
+}
+
+/**
+ * 渲染分类组件中的组件
+ * @param categoryInfo  分类信息
+ * @param categoryName  分分类名字
+ * @param isShow        是否展示分割分类组件名
+ */
+function renderContent(categoryInfo: ComponentInfoType | null, categoryName: string, isShow?: boolean) {
+  let items = null, isShowCategoryName = false;
+  if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
+    items = renderDragItem(undefined, categoryName, categoryName);
+  } else {
+    const { span = 24, props, components } = categoryInfo;
+    const renderItems = props || components;
+    items = map(renderItems, (v: ComponentCategoryType | any, k) => {
+      if (!isArray(renderItems)) {
+        return renderContent(v, k, true);
+      }
+      /**
+       * 如果有默认属性显示分割分类
+       */
+      if (v) isShowCategoryName = true;
+      return renderDragItem(span as number, k, categoryName, v);
+    });
+  }
+
+  return (
+    <Row key={categoryName} className={styles['fold-content']}>
+      {items}
+      {isShowCategoryName && isShow &&
+      <Divider style={{ fontSize: 12, fontWeight: 'normal', marginTop: 10 }}>{categoryName}</Divider>}
+    </Row>
+  );
+}
+
 
 interface FoldPanelPropsType {
   componentsCategory: CategoryType,  //组件分类
@@ -65,7 +131,8 @@ interface FoldPanelPropsType {
 }
 
 function FoldPanel(props: FoldPanelPropsType) {
-  const { componentsCategory, selectedComponentInfo: { childNodesRule }, searchValues, isShow, dispatch } = props;
+  const { componentsCategory, selectedComponentInfo: { childNodesRule }, searchValues, isShow } = props;
+  dispatch=props.dispatch
   const [openKeys = [], setOpenKeys] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [category, setCategory] = useState(componentsCategory);
@@ -84,71 +151,6 @@ function FoldPanel(props: FoldPanelPropsType) {
     }
   }, [searchValue, prevIsShow, prevChildNodesRule, childNodesRule, prevCategory, isShow]);
 
-  /**
-   * 渲染折叠Header
-   */
-  const renderHeader = useCallback((categoryName: string, isFold: boolean) => {
-    return (
-      <div className={styles['fold-header']}>
-        <Icon
-          className={isFold ? styles.rotate90 : ''}
-          style={{ marginLeft: '5px', marginRight: '5px', transition: 'all 0.2s' }}
-          type="caret-right"
-        />
-        <span style={{ color: '#555555' }}>{categoryName}</span>
-      </div>
-    );
-  }, []);
-  /**
-   * 渲染拖拽item
-   */
-  const renderDragItem = useCallback((span: number = 24, key: string, componentName: string, defaultProps?: any) => {
-    return (<Col span={span} key={key}>
-      <DragAbleItem
-        item={{ componentName, defaultProps }}
-        dispatch={dispatch}
-      />
-    </Col>);
-  }, []);
-
-  /**
-   * 渲染分类组件中的组件
-   * @param categoryInfo  分类信息
-   * @param categoryName  分分类名字
-   * @param isShow        是否展示分割分类组件名
-   */
-  const renderContent = useCallback((categoryInfo: ComponentInfoType | null, categoryName: string, isShow?: boolean) => {
-    let items = null, isShowCategoryName = false;
-    if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
-      items = renderDragItem(undefined, categoryName, categoryName);
-    } else {
-      const { span = 24, props, components } = categoryInfo;
-      const renderItems = props || components;
-      items = map(renderItems, (v: ComponentCategoryType | any, k) => {
-        if (!isArray(renderItems)) {
-          return renderContent(v, k, true);
-        }
-        /**
-         * 如果有默认属性显示分割分类
-         */
-        if (v) isShowCategoryName = true;
-        return renderDragItem(span as number, k, categoryName, v);
-      });
-    }
-
-    return (
-      <Row key={categoryName} className={styles['fold-content']}>
-        {items}
-        {isShowCategoryName && isShow &&
-        <Divider style={{ fontSize: 12, fontWeight: 'normal', marginTop: 10 }}>{categoryName}</Divider>}
-      </Row>
-    );
-  }, []);
-
-  /**
-   * 搜索过滤回调
-   */
-  const searchFilter = useCallback((inputValue: string, option: any) => option.props.children.toUpperCase().includes(inputValue.toUpperCase()), []);
 
   /**
    * 搜搜指定组件

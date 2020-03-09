@@ -98,6 +98,8 @@ const Divider: ComponentConfigType = {
   propsConfig: {},
 };
 const ItemGroup: ComponentConfigType = {
+  parentNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
+
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,
@@ -115,6 +117,7 @@ const ItemGroup: ComponentConfigType = {
   },
 };
 const SubMenu: ComponentConfigType = {
+  parentNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,
@@ -150,6 +153,7 @@ const SubMenu: ComponentConfigType = {
   },
 };
 const Item: ComponentConfigType = {
+  parentNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
   propsConfig: {
     children: {
       label: '内容',

@@ -23,83 +23,87 @@ interface SortTreePropsType {
   hoverKey?: string
 }
 
+
+
+/**
+ * 拖拽排序
+ * @param sortKeys
+ */
+function onLayoutSortChange (sortKeys: string[],  evt: any,props:SortTreePropsType)  {
+  const { dispatch, path, domTreeKeys } = props;
+  /**
+   * 获取拖住节点的信息
+   * @type {any}
+   */
+  const dragNode = JSON.parse(evt.clone.dataset.info);
+  dispatch!({
+    type: ACTION_TYPES.onLayoutSortChange,
+    payload: {
+      sortKeys,
+      path: getPath({ path, isContainer: true }),
+      dragNode,
+      domTreeKeys,
+    },
+  });
+};
+
+/**
+ * 渲染排序节点
+ * @param componentConfig
+ * @param index
+ * @returns {*}
+ */
+function renderSortItems(componentConfig: TreeNodeType, index: number,props:SortTreePropsType) {
+  const { path, isFold, domTreeKeys = [],dispatch,hoverKey,selectedComponentInfo } = props;
+  const { key } = componentConfig;
+  return (<SortItem domTreeKeys={[...domTreeKeys, key]}
+                    isFold={isFold}
+                    componentConfig={componentConfig}
+                    path={getPath({ path, index })}
+                    parentPath={getPath({ path, isContainer: true })}
+                    key={key}
+                    dispatch={dispatch}
+                    selectedComponentInfo={selectedComponentInfo}
+                    hoverKey={hoverKey}
+  />);
+}
+
+
+const putItem = ( c: any,props:SortTreePropsType) => {
+  const { childNodesRule, childNodes=[], isOnlyNode, currentName } = props;
+  const dragName = c.dataset.name;
+  const parentNodesRule = c.dataset.parents && JSON.parse(c.dataset.parents);
+  if (isOnlyNode && childNodes.length === 1) return false;
+  if (parentNodesRule) {
+    return parentNodesRule.includes(currentName);
+  }
+  if (childNodesRule) {
+    return childNodesRule.includes(dragName);
+  }
+  return true;
+};
+
+
 function SortTree(props: SortTreePropsType) {
   const {
-    dispatch, path, domTreeKeys = [], isFold,
-    childNodesRule, childNodes = [], isOnlyNode, currentName,
+   childNodes = [],
     disabled,
-    selectedComponentInfo,
-    hoverKey,
   } = props;
 
-  /**
-   * 拖拽排序
-   * @param sortKeys
-   */
-  const onLayoutSortChange = useCallback((sortKeys: string[], a: any, evt: any) => {
-    /**
-     * 获取拖住节点的信息
-     * @type {any}
-     */
-    const dragNode = JSON.parse(evt.clone.dataset.info);
-    dispatch!({
-      type: ACTION_TYPES.onLayoutSortChange,
-      payload: {
-        sortKeys,
-        path: getPath({ path, isContainer: true }),
-        dragNode,
-        domTreeKeys,
-      },
-    });
-  }, [domTreeKeys, path]);
-
-  /**
-   * 渲染排序节点
-   * @param componentConfig
-   * @param index
-   * @returns {*}
-   */
-  function renderSortItems(componentConfig: TreeNodeType, index: number) {
-    const { key } = componentConfig;
-    return (<SortItem domTreeKeys={[...domTreeKeys, key]}
-                      isFold={isFold}
-                      componentConfig={componentConfig}
-                      path={getPath({ path, index })}
-                      parentPath={getPath({ path, isContainer: true })}
-                      key={key}
-                      dispatch={dispatch}
-                      selectedComponentInfo={selectedComponentInfo}
-                      hoverKey={hoverKey}
-    />);
-  }
-
-
-  const putItem = useCallback((a: any, b: any, c: any) => {
-    const dragName = c.dataset.name;
-    const parentNodesRule = c.dataset.parents && JSON.parse(c.dataset.parents);
-    if (isOnlyNode && childNodes.length === 1) return false;
-    if (parentNodesRule) {
-      return parentNodesRule.includes(currentName);
-    }
-    if (childNodesRule) {
-      return childNodesRule.includes(dragName);
-    }
-    return true;
-  }, [isOnlyNode, childNodes, childNodesRule]);
   return (
     <Sortable
       options={{
-        group: { name: 'nested', put: putItem },
+        group: { name: 'nested', put: (a: any, b: any, c: any)=>putItem(c,props) },
         animation: 200,
         disabled,
         dataIdAttr: 'id',
         ghostClass: styles['item-background'],
         swapThreshold: 0.5,
       }}
-      onChange={onLayoutSortChange}
+      onChange={(sortKeys: string[], a: any, evt: any)=>onLayoutSortChange(sortKeys, evt,props)}
 
     >
-      {map(childNodes, renderSortItems)}
+      {map(childNodes, (node,index)=>renderSortItems(node,index,props))}
     </Sortable>
 
   );
