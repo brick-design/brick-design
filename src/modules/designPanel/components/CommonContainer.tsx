@@ -1,4 +1,4 @@
-import React, { createElement, forwardRef, RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { createElement, forwardRef, useEffect, useMemo, useRef } from 'react';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import each from 'lodash/each';
@@ -47,7 +47,7 @@ function selectedStatus(key: string, hoverKey: string | null, selectedKey?: stri
  * 改变选中状态
  */
 
-function changeSelectedStatus(event: Event | null | undefined,
+function changeSelectedStatus(event: any,
                               componentConfig: VirtualDOMType,
                               domTreeKeys: string[],
                               hoverKey:string|null,
@@ -158,8 +158,9 @@ function onDrop (e: Event) {
  * @param propName
  * @returns {Array}
  */
-function renderNodes(childNodes: VirtualDOMType[], path: string,parentProps:any, propName?: string, isOnlyNode?: boolean) {
-  const {key:parentKey,hoverKey,domTreeKeys,selectedComponentInfo}=parentProps
+function renderNodes(childNodes: VirtualDOMType[], path: string,parentProps:CommonContainerPropsType, propName?: string, isOnlyNode?: boolean) {
+  const {hoverKey,domTreeKeys,selectedComponentInfo,componentConfig:{key:parentKey}}=parentProps
+
   const {selectedKey}=selectedComponentInfo
   const resultChildNodes = map(childNodes, (node, index) => {
     const { componentName, props, key } = node;
@@ -315,11 +316,11 @@ function handleProps(parentProps:any,isSelected:boolean, isHovered:boolean,requi
 
   return {
     ...formatSpecialProps(propsResult, merge({}, propsConfig, addPropsConfig)),
-    onClick: (e: Event) => changeSelectedStatus(e, componentConfig, domTreeKeys,hoverKey,
+    onClick: (e: any) => changeSelectedStatus(e, componentConfig, domTreeKeys,hoverKey,
     selectedKey,requiredProp.current, path, parentPath, defaultSelectedProp),
-    onMouseOver: (e: Event) => onMouseOver(e, key,noHasSelectedInfo),
-    onDragEnter: (e: Event) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp,noHasSelectedInfo),
-    onDragStart: (e: Event) => onDragStart(e, path, componentConfig, parentPath),
+    onMouseOver: (e: any) => onMouseOver(e, key,noHasSelectedInfo),
+    onDragEnter: (e: any) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp,noHasSelectedInfo),
+    onDragStart: (e: any) => onDragStart(e, path, componentConfig, parentPath),
     onDragOver,
     onDrop
   };

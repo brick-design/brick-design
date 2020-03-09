@@ -388,6 +388,7 @@ const Model: ModelType = {
         undo,
         redo,
         styleSetting: props.style,
+        hoverKey:null
 
       };
     },

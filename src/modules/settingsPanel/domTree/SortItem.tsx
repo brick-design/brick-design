@@ -5,6 +5,7 @@ import map from 'lodash/map';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isUndefined from 'lodash/isUndefined';
+import isEqual from 'lodash/isEqual'
 import SortTree from './SortTree';
 import styles from './index.less';
 import { usePrevious } from '@/utils';
@@ -13,7 +14,6 @@ import { ACTION_TYPES } from '@/models';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { Dispatch } from 'redux';
 import domTreeIcons from './domTreeIcons';
-
 const { Panel } = Collapse;
 const { Item } = Menu;
 let dispatch:Dispatch
@@ -268,33 +268,34 @@ function SortItem(props: SortItemPropsType) {
   const selectedDomTreeKeys: string[] = get(selectedComponentInfo, 'domTreeKeys', []);
   const prevPath = usePrevious(path);
   const prevChildNodes = usePrevious(childNodes);
-
+  const isRequiredHasChild = useMemo(() => isRequired && isEmpty(childNodes), [childNodes]);
 
   useEffect(() => {
-    if (!isUndefined(prevChildNodes) && isEmpty(prevChildNodes) && !isEmpty(childNodes)) {
+    if (!isUndefined(prevChildNodes)&&isEmpty(prevChildNodes) && !isEmpty(childNodes)) {
       setIsUnfold(true);
     }
   }, [prevChildNodes, childNodes]);
-
-
-  if (!isEmpty(selectedDomTreeKeys) && !isUnfold && selectedDomTreeKeys.includes(key)) {
-    setIsUnfold(true);
-  }
-
-  if (isFold && isUnfold) setIsUnfold(false);
-
-  const isRequiredHasChild = useMemo(() => isRequired && isEmpty(childNodes), [childNodes]);
-
-  /**
-   * 当拖拽item未夸层级改变顺序时item的path路径就会改变如果此时是选中状态就会
-   * 再次触发选中action 更新selectComponentInfo
-   */
   useEffect(() => {
     const {path,componentConfig:{key}}=props
     if (prevPath !== path && selectedKey === key) {
       dispatchData(ACTION_TYPES.selectComponent,props,childPropName.current,isRequiredHasChild);
     }
   }, [prevPath, props, selectedKey,isRequiredHasChild]);
+
+  useEffect(()=>{
+    if (isFold && isUnfold) setIsUnfold(false);
+  },[isFold,isUnfold])
+
+  if (!isEmpty(selectedDomTreeKeys) && !isUnfold && selectedDomTreeKeys.includes(key)) {
+    setIsUnfold(true);
+  }
+
+
+
+  /**
+   * 当拖拽item未夸层级改变顺序时item的path路径就会改变如果此时是选中状态就会
+   * 再次触发选中action 更新selectComponentInfo
+   */
 
   /**
    * 如果是当前节点为属性节点就使用属性节点path
