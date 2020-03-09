@@ -87,8 +87,9 @@ function changeSelectedStatus(event: Event | null | undefined,
  * @param componentConfig
  * @param selectedProp
  */
-function getDropTargetInfo (event: Event, path: string, componentConfig: VirtualDOMType, selectedProp: string) {
+function getDropTargetInfo (event: Event, path: string, componentConfig: VirtualDOMType, selectedProp: string,noHasSelectedInfo?:boolean) {
   event.stopPropagation();
+  if(noHasSelectedInfo!==undefined&&!noHasSelectedInfo) return
   let propPath = null;
   if (selectedProp) {
     propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
@@ -133,14 +134,15 @@ function onDragStart (event: Event, path: string, node: VirtualDOMType, parentPa
  */
 function onMouseOver(event: Event, key: string,noHasSelectedInfo:boolean) {
   event.stopPropagation();
+  if(noHasSelectedInfo){
+    dispatch({
+      type: ACTION_TYPES.overTarget,
+      payload: {
+        hoverKey: key,
+      },
+    });
+  }
 
-  if(noHasSelectedInfo)
-  dispatch({
-    type: ACTION_TYPES.overTarget,
-    payload: {
-      hoverKey: key,
-    },
-  });
 }
 
 const onDragOver=(e: Event) => e.preventDefault()
@@ -245,12 +247,15 @@ function handleProps(parentProps:any,isSelected:boolean, isHovered:boolean,requi
   } = parentProps;
   requiredProp.current=undefined
   const  { key, componentName, props, childNodes,addPropsConfig }=componentConfig
-  const propsResult = diffProps(rest, cloneDeep(props));
+  const propsResult = useMemo(()=>diffProps(rest, cloneDeep(props)),[rest, props]);
   const { animateClass, className } = propsResult;
   const { mirrorModalField, nodePropsConfig, propsConfig } = useMemo(() => get(config.AllComponentConfigs, componentName), []);
   /** 收集当前子组件所属页面组件树分支中的位置顺序 目的是与页面结构模块关联，精准展开并定位到选中的节点 */
   propsResult.className = useMemo(() => handlePropsClassName(isSelected, isHovered, className, animateClass), [isSelected, isHovered, className, animateClass]);
-
+  /**
+   * 是否有选中的组件
+   */
+  const noHasSelectedInfo= isEmpty(selectedComponentInfo)
   /**默认选中的属性节点的属性名*/
   let defaultSelectedProp: string;
   /**
@@ -298,7 +303,7 @@ function handleProps(parentProps:any,isSelected:boolean, isHovered:boolean,requi
 
   /** 对于弹窗类组件做特殊处理使其被选中时可展示 */
   if (mirrorModalField) {
-    const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'dnd-iframe')
+    const { displayPropName, mountedProps } = useMemo(()=>handleModalTypeContainer(mirrorModalField, 'dnd-iframe'),[])
     const isVisible = selectedDomTreeKeys.includes(key);
     propsResult[displayPropName] = isSelected || isVisible;
     merge(propsResult, mountedProps);
@@ -312,8 +317,8 @@ function handleProps(parentProps:any,isSelected:boolean, isHovered:boolean,requi
     ...formatSpecialProps(propsResult, merge({}, propsConfig, addPropsConfig)),
     onClick: (e: Event) => changeSelectedStatus(e, componentConfig, domTreeKeys,hoverKey,
     selectedKey,requiredProp.current, path, parentPath, defaultSelectedProp),
-    onMouseOver: (e: Event) => onMouseOver(e, key,isEmpty(selectedComponentInfo)),
-    onDragEnter: (e: Event) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp),
+    onMouseOver: (e: Event) => onMouseOver(e, key,noHasSelectedInfo),
+    onDragEnter: (e: Event) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp,noHasSelectedInfo),
     onDragStart: (e: Event) => onDragStart(e, path, componentConfig, parentPath),
     onDragOver,
     onDrop

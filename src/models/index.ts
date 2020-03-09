@@ -253,13 +253,13 @@ const Model: ModelType = {
         }
       }
       if (parentPath) {
-        update(componentConfigs, parentPath, childNodes => {
+        update(componentConfigs, parentPath, (childNodes=[]) => {
           if (isOnlyNode) return [info];
           return [...childNodes, info];
         });
 
         if (dragParentPath) {
-          update(componentConfigs, dragParentPath, (childNodes) => childNodes.filter((node: VirtualDOMType) => node.key !== info.key));
+          update(componentConfigs, dragParentPath, (childNodes=[]) => childNodes.filter((node: VirtualDOMType) => node.key !== info.key));
         }
       } else {
         componentConfigs.push(info);
