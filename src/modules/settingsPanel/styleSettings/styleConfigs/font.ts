@@ -137,7 +137,8 @@ export default {
       enumData: size,
       placeholder: '请输入或者选择字体大小',
     },
-  }, or: {
+  },
+  color: {
     label: '字体颜色',
     span: 6,
     labelSpan: 0,
