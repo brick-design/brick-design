@@ -268,6 +268,7 @@ function SortItem(props: SortItemPropsType) {
   const selectedDomTreeKeys: string[] = get(selectedComponentInfo, 'domTreeKeys', []);
   const prevPath = usePrevious(path);
   const prevChildNodes = usePrevious(childNodes);
+  const prevSelectedDomTreeKeys=usePrevious(selectedDomTreeKeys)
   const isRequiredHasChild = useMemo(() => isRequired && isEmpty(childNodes), [childNodes]);
 
   useEffect(() => {
@@ -286,7 +287,7 @@ function SortItem(props: SortItemPropsType) {
     if (isFold && isUnfold) setIsUnfold(false);
   },[isFold,isUnfold])
 
-  if (!isEmpty(selectedDomTreeKeys) && !isUnfold && selectedDomTreeKeys.includes(key)) {
+  if (!isEqual(prevSelectedDomTreeKeys,selectedDomTreeKeys)&&!isEmpty(selectedDomTreeKeys) && !isUnfold && selectedDomTreeKeys.includes(key)) {
     setIsUnfold(true);
   }
 
