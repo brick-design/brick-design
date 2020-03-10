@@ -67,7 +67,7 @@ function SwitchMultiTypes(props: SwitchMultiTypesPropsType, ref: any) {
 
   useEffect(() => {
     setFieldsValue({ [field]: value });
-  });
+  },[type]);
 
   if (type === PROPS_TYPES.boolean) {
     extraObj.valuePropName = 'checked';
