@@ -8,7 +8,7 @@ import isUndefined from 'lodash/isUndefined';
 import isEqual from 'lodash/isEqual'
 import SortTree from './SortTree';
 import styles from './index.less';
-import { usePrevious } from '@/utils';
+import { getPath, usePrevious } from '@/utils';
 import config from '@/configs';
 import { ACTION_TYPES } from '@/models';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
@@ -45,7 +45,7 @@ function dispatchData (actionType: string,props:SortItemPropsType,childPropName?
   const { componentConfig,parentPath, componentConfig: { propName }, domTreeKeys, path } = props;
   let { propPath } = props;
   if (childPropName) {
-    propPath = `${path}.${childPropName}`;
+    propPath = `${getPath({path,isContainer:true})}.${childPropName}`;
   }
   dispatch!({
     type: actionType,
