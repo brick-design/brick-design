@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { reduxConnect } from '@/utils';
 import { Spin } from 'antd';
 import get from 'lodash/get';
@@ -20,10 +20,29 @@ interface DesignPanelPropsType {
   platformInfo?: PlatformInfoType
 }
 
+let dispatch: Dispatch;
+
+function onDragover(e: any) {
+  e.preventDefault();
+
+}
+
+function onDrop(e: any) {
+  e.stopPropagation();
+  dispatch({ type: ACTION_TYPES.addComponent });
+}
+
+/**
+ * 鼠标离开设计区域清除hover状态
+ */
+function onMouseLeave() {
+  dispatch!({ type: ACTION_TYPES.clearHovered })
+}
 
 function DesignPanel(props: DesignPanelPropsType) {
 
-  const { componentConfigs, platformInfo, dispatch, selectedComponentInfo, hoverKey } = props;
+  const { componentConfigs, platformInfo, selectedComponentInfo, hoverKey } = props;
+  dispatch = props.dispatch!;
   const [spinShow, setSpinShow] = useState(true);
   let componentNameResult: any, resultProps: any;
 
@@ -45,15 +64,24 @@ function DesignPanel(props: DesignPanelPropsType) {
   const divContainer = useRef(null);
 
   useEffect(() => {
+    const iframe: any = document.getElementById('dnd-iframe');
+    iframe.contentWindow.addEventListener('dragover', onDragover);
+    iframe.contentWindow.addEventListener('drop', onDrop);
     if (!spinShow) {
-      if (!divContainer.current) {
-        const iframe: any = document.getElementById('dnd-iframe');
-        divContainer.current = iframe.contentDocument.getElementById('dnd-container');
-      }
+      divContainer.current = iframe.contentDocument.getElementById('dnd-container');
       ReactDOM.render(designPage, divContainer.current);
     }
-  }, [divContainer.current, designPage, spinShow]);
+    return () => {
+      iframe.contentWindow.removeEventListener('dragover', onDragover);
+      iframe.contentWindow.removeEventListener('drop', onDrop);
+    };
 
+  }, [spinShow]);
+
+  useEffect(() => {
+    if (divContainer.current)
+      ReactDOM.render(designPage, divContainer.current);
+  }, [divContainer.current, designPage]);
 
   const { size } = platformInfo!;
 
@@ -61,18 +89,20 @@ function DesignPanel(props: DesignPanelPropsType) {
   const style = { width: size[0], maxHeight: size[1], transition: 'all 700ms' };
 
   return (
-    <div style={style} className={classNames(`${styles['browser-mockup']} ${styles['with-url']}`)}>
+    <div style={style}
+         className={classNames(`${styles['browser-mockup']} ${styles['with-url']}`)}
+    >
       <Spin size={'large'}
             style={{ maxHeight: '100%' }}
             wrapperClassName={styles['dnd-container']}
             spinning={spinShow}
       >
 
-        <iframe onMouseLeave={() => dispatch!({ type: ACTION_TYPES.clearHovered })}
+        <iframe onMouseLeave={onMouseLeave}
                 id="dnd-iframe"
                 className={styles['dnd-container']}
                 srcDoc={config.iframeSrcDoc}
-                onLoad={() => setSpinShow(false)}
+                onLoad={useCallback(() => setSpinShow(false),[])}
         />
       </Spin>
     </div>

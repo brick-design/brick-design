@@ -148,12 +148,6 @@ function onMouseOver(event: Event, key: string,noHasSelectedInfo:boolean) {
 
 }
 
-const onDragOver=(e: Event) => e.preventDefault()
-function onDrop (e: Event) {
-  e.stopPropagation();
-  dispatch({ type: ACTION_TYPES.addComponent });
-}
-
 /**
  * 渲染组件的子节点
  * @param childNodes
@@ -324,8 +318,6 @@ function handleProps(parentProps:any,isSelected:boolean, isHovered:boolean,requi
     onMouseOver: (e: any) => onMouseOver(e, key,noHasSelectedInfo),
     onDragEnter: (e: any) => getDropTargetInfo(e, path, componentConfig, defaultSelectedProp,noHasSelectedInfo),
     onDragStart: (e: any) => onDragStart(e, path, componentConfig, parentPath),
-    onDragOver,
-    onDrop
   };
 }
 

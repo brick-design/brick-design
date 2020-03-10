@@ -20,6 +20,7 @@ const Collapse: ComponentConfigType = {
 };
 
 const Panel: ComponentConfigType = {
+  parentNodesRule:['Collapse'],
   nodePropsConfig: {
     header: {
       type: PROPS_TYPES.reactNode,
