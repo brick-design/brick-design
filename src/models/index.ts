@@ -253,13 +253,13 @@ const Model: ModelType = {
         }
       }
       if (parentPath) {
-        update(componentConfigs, parentPath, (childNodes=[]) => {
+        update(componentConfigs, parentPath, (childNodes = []) => {
           if (isOnlyNode) return [info];
           return [...childNodes, info];
         });
 
         if (dragParentPath) {
-          update(componentConfigs, dragParentPath, (childNodes=[]) => childNodes.filter((node: VirtualDOMType) => node.key !== info.key));
+          update(componentConfigs, dragParentPath, (childNodes = []) => childNodes.filter((node: VirtualDOMType) => node.key !== info.key));
         }
       } else {
         componentConfigs.push(info);
@@ -329,7 +329,7 @@ const Model: ModelType = {
      */
     clearSelectedStatus(state) {
       const { selectedComponentInfo, propsSetting, undo, redo, styleSetting, componentConfigs } = state;
-      if (handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType, componentConfigs)) {
+      if (handleRequiredHasChild(selectedComponentInfo, componentConfigs)) {
         return state;
       }
       undo.push({ selectedComponentInfo, propsSetting, styleSetting });
@@ -352,7 +352,7 @@ const Model: ModelType = {
      */
     selectComponent(state, { payload }) {
       const { undo, redo, selectedComponentInfo, propsSetting, componentConfigs } = state;
-      if (handleRequiredHasChild(selectedComponentInfo as SelectedComponentInfoType, componentConfigs)) {
+      if (handleRequiredHasChild(selectedComponentInfo, componentConfigs, payload)) {
         return state;
       }
       const { propPath, path, propName, componentConfig, parentPath, domTreeKeys, isRequiredHasChild } = payload;
@@ -388,7 +388,7 @@ const Model: ModelType = {
         undo,
         redo,
         styleSetting: props.style,
-        hoverKey:null
+        hoverKey: null,
 
       };
     },

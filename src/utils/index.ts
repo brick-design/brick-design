@@ -207,8 +207,13 @@ export const formatPropsFieldConfigPath = (type: PROPS_TYPES, field: string, par
  * @param componentConfigs
  * @returns {boolean}
  */
-export const handleRequiredHasChild = (selectedComponentInfo: SelectedComponentInfoType, componentConfigs: VirtualDOMType[]) => {
-  const { isRequiredHasChild, path, propPath } = selectedComponentInfo;
+export const handleRequiredHasChild = (selectedComponentInfo: SelectedComponentInfoType | {}, componentConfigs: VirtualDOMType[], payload?: any) => {
+  const { isRequiredHasChild, path, propPath, selectedKey } = selectedComponentInfo as SelectedComponentInfoType;
+  if (payload) {
+    const { propName, componentConfig: { key } } = payload;
+    const newSelectedKey = propName ? `${key}${propName}` : key;
+    if (newSelectedKey === selectedKey) return false;
+  }
   if (!isRequiredHasChild) return false;
   const childNodesPath = getPath({ path: propPath || path, isContainer: true }) || '';
   const result = isEmpty(get(componentConfigs, childNodesPath));

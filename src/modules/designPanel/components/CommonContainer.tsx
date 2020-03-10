@@ -8,7 +8,7 @@ import merge from 'lodash/merge';
 import classNames from 'classnames';
 import config from '@/configs';
 import isArray from 'lodash/isArray';
-import { diffProps, filterProps, formatSpecialProps, getPath, handleModalTypeContainer } from '@/utils';
+import { diffProps, filterProps, formatSpecialProps, getPath, handleModalTypeContainer, usePrevious } from '@/utils';
 import { ACTION_TYPES } from '@/models';
 import styles from '../style.less';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
@@ -341,9 +341,8 @@ function CommonContainer(props: CommonContainerPropsType,ref:any) {
   const { key} = componentConfig;
   const { selectedKey} = selectedComponentInfo!;
 
-
   let requiredProp=useRef<string|undefined>();
-
+  const prevPath:any=usePrevious(path)
 
   const { isHovered, isSelected } = selectedStatus(key, hoverKey, selectedKey);
 
@@ -354,10 +353,12 @@ function CommonContainer(props: CommonContainerPropsType,ref:any) {
   }, []);
 
   useEffect(() => {
-    if (!isSelected && requiredProp.current) {
+
+    if (!isSelected && requiredProp.current||isSelected&&prevPath&&path!==prevPath) {
+
       changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, requiredProp.current);
     }
-  }, [requiredProp.current, key, componentConfig, isSelected,hoverKey, selectedKey, domTreeKeys, path, parentPath]);
+  }, [requiredProp.current, key, componentConfig, isSelected,hoverKey, selectedKey, domTreeKeys, path,prevPath, parentPath]);
 
 
   return (
