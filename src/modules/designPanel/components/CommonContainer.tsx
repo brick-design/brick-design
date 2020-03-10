@@ -60,6 +60,7 @@ function changeSelectedStatus(event: any,
   let propPath = null;
   const { key, childNodes } = componentConfig;
   const { isSelected } = selectedStatus(key, hoverKey, selectedKey);
+  selectedProp=requiredProp||selectedProp
   if (!isArray(childNodes) && selectedProp) {
     propPath = `${getPath({ path, isContainer: true })}.${selectedProp}`;
   }
@@ -339,7 +340,7 @@ function CommonContainer(props: CommonContainerPropsType,ref:any) {
 
   dispatch=props.dispatch
   const { key} = componentConfig;
-  const { selectedKey} = selectedComponentInfo!;
+  const { selectedKey,propName} = selectedComponentInfo!;
 
   let requiredProp=useRef<string|undefined>();
   const prevPath:any=usePrevious(path)
@@ -348,7 +349,7 @@ function CommonContainer(props: CommonContainerPropsType,ref:any) {
 
   useEffect(() => {
     if (isSelected) {
-      changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, requiredProp.current);
+      changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, propName);
     }
   }, []);
 
@@ -356,9 +357,9 @@ function CommonContainer(props: CommonContainerPropsType,ref:any) {
 
     if (!isSelected && requiredProp.current||isSelected&&prevPath&&path!==prevPath) {
 
-      changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, requiredProp.current);
+      changeSelectedStatus(null, componentConfig, domTreeKeys,hoverKey, selectedKey, requiredProp.current, path, parentPath, propName);
     }
-  }, [requiredProp.current, key, componentConfig, isSelected,hoverKey, selectedKey, domTreeKeys, path,prevPath, parentPath]);
+  }, [requiredProp.current,propName, key, componentConfig, isSelected,hoverKey, selectedKey, domTreeKeys, path,prevPath, parentPath]);
 
 
   return (
