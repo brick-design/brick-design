@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import isObject from 'lodash/isObject';
+import isEqual from 'lodash/isEqual'
 import { propsAreEqual } from '@/utils';
 
 const { TextArea } = Input;
@@ -17,7 +18,7 @@ function JsonTextArea(props: JsonTextAreaPropsType, ref: any) {
     try {
       let strObj;
       eval(`strObj=${json}`);
-      if (isObject(strObj)) {
+      if (isObject(strObj)&&!isEqual(value,strObj)) {
         onChange && onChange(strObj);
       }
 

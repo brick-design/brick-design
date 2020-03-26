@@ -3,11 +3,12 @@ import { reactContainers, reactNonContainers } from './reactCategory';
 import * as Ants from 'antd/es';
 import { ConfigType } from '@/types/ConfigTypes';
 import AllComponentConfigs from './componentConfigs';
+import * as customComponents from '../customComponents'
 
 /**
  * 原始组件集
  */
-const OriginalComponents = Ants;
+const OriginalComponents = {...Ants,...customComponents};
 
 /**
  * 容器组件分类
