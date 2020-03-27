@@ -16,7 +16,7 @@ const DemoChart: ComponentConfigType = {
     data: {
       label: 'data',
       type: [PROPS_TYPES.objectArray,PROPS_TYPES.json],
-      childPropsConfig:{
+      childPropsConfig:[{
         genre:{
           label:'genre',
           type:PROPS_TYPES.string
@@ -29,7 +29,7 @@ const DemoChart: ComponentConfigType = {
           label:'income',
           type:PROPS_TYPES.number
         }
-      }
+      }]
     },
     width:{
       label:'宽度',
