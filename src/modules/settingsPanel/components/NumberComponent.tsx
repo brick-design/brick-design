@@ -8,8 +8,9 @@ const UNITS = [
   'px', '%', 'em', 'rem',
 ];
 
-const formatValue = (value: string, units: string[], hasUnit: boolean) => {
+const formatValue = (value: string|number, units: string[], hasUnit: boolean) => {
   if (!value) return { formatNumber: undefined, formatUnit: 'px' };
+  if (typeof value==='number') return { formatNumber: value, formatUnit: 'px' };
   if (hasUnit) {
     const formatNumber = parseInt(value);
     return { formatNumber, formatUnit: value.split(`${formatNumber}`)[1] };

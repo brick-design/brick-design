@@ -3,10 +3,26 @@ import { CategoryType } from '@/types/CategoryType';
 export const reactContainers: CategoryType = {
   'Layout': {
     components: {
-      'Layout': null,
-      'Layout.Footer': null,
-      'Layout.Content': null,
-      'Layout.Header': null,
+      'Layout': { props:[{
+          style: {
+            height: 100,
+          }
+        }] },
+      'Layout.Header': { props:[{
+          style: {
+            height: 50,
+          }
+        }] },
+      'Layout.Footer': { props:[{
+          style: {
+            height: 50,
+          }
+        }] },
+      'Layout.Content': { props:[{
+          style: {
+            height: 100,
+          }
+        }] },
       'Layout.Sider': null,
     },
   },
@@ -16,6 +32,39 @@ export const reactContainers: CategoryType = {
       'Col': null,
     },
 
+  },
+  'Button': {
+    span: 12,
+    props: [{
+      type: 'primary',
+      children: 'primary',
+    }, {
+      type: 'danger',
+      children: 'danger',
+    }, {
+      type: 'dashed',
+      children: 'dashed',
+    }, {
+      type: 'primary',
+      icon: 'search',
+      children: 'srch',
+    }, {
+      type: 'primary',
+      loading: true,
+      children: 'load',
+    }],
+  },
+  'Input': {
+    components: {
+      'Input': {
+        props: [{}, {
+          addonBefore: 'Http://',
+          addonAfter: '.com',
+          defaultValue: 'mysite',
+        }],
+      },
+      'Input.Group': null,
+    },
   },
   'Tabs': {
     components: {
@@ -96,27 +145,6 @@ export const reactContainers: CategoryType = {
       'Form.Item': null,
     },
   },
-  'Button': {
-    span: 12,
-    props: [{
-      type: 'primary',
-      children: 'primary',
-    }, {
-      type: 'danger',
-      children: 'danger',
-    }, {
-      type: 'dashed',
-      children: 'dashed',
-    }, {
-      type: 'primary',
-      icon: 'search',
-      children: 'srch',
-    }, {
-      type: 'primary',
-      loading: true,
-      children: 'load',
-    }],
-  },
   'Select': {
     components: {
       'Select': null,
@@ -179,18 +207,6 @@ export const reactContainers: CategoryType = {
     components: {
       'Anchor': null,
       'Anchor.Link': null,
-    },
-  },
-  'Input': {
-    components: {
-      'Input': {
-        props: [{}, {
-          addonBefore: 'Http://',
-          addonAfter: '.com',
-          defaultValue: 'mysite',
-        }],
-      },
-      'Input.Group': {},
     },
   },
   'Upload': null,
