@@ -4,8 +4,8 @@
 
 ## 特性
 
-- :fire:**任意拖拽嵌套**：通过组件预览面板拖拽组件，到设计面板实现任意嵌套，设计面板中的组件也可随意拖拽嵌套
-- :computer:**实时预览**：设计面板中会实时展示组件的属性效果和样式效果，并且与真实页面无异
+- :fire:**任意拖拽嵌套**：通过组件预览面板拖拽组件，到设计面板实现任意嵌套，或者拖拽到DomTree中指定容器节点，DomTree与设计面板中的组件也可随意拖拽嵌套
+- :computer:**实时预览**：设计面板中会实时展示组件的属性效果和样式效果，并且与真实页面无异，所见即所得
 - :christmas_tree:**DomTree展示**：页面组件dom树的展示并实现组件dom实时追踪
 - :gift:**可视化属性配置**：结合React 特性和JS语法定制了可视化的组件属性配置，实现复杂数据结构的可视化配置
 - :fireworks:**可视化样式配置**：通过样式配置面板修改样式，实时在页面中显示样式效果
@@ -75,6 +75,7 @@ umi block add https://github.com/anye931123/react-visual-editor
 - AllComponentConfigs 所有的组件配置信息
 - CONTAINER_CATEGORY 容器组件分类
 - NON_CONTAINER_CATEGORY 非容器组件分类
+- iframeSrcDoc 设计面板iframe模板
 ### 技术交流
 | QQ群 |
 | --- |

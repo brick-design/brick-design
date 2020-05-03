@@ -5,6 +5,7 @@ import styles from './index.less';
 import { ACTION_TYPES } from '@/models';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { Dispatch } from 'redux';
+import { onDragover, onDrop } from '@/modules/designPanel';
 
 interface DomTreePropsType {
   componentConfigs?: VirtualDOMType[],
@@ -26,7 +27,7 @@ function DomTree(props: DomTreePropsType) {
   }, []);
 
   return (
-    <div className={styles['sort-container']}>
+    <div onDrop={onDrop} onDragOver={onDragover} className={styles['sort-container']}>
       <div onMouseLeave={onMouseLeave} style={{ width: '100%' }}>
         <SortTree disabled
                   dispatch={dispatch}

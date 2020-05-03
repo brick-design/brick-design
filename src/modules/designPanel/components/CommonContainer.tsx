@@ -88,7 +88,7 @@ function changeSelectedStatus(event: any,
  * @param componentConfig
  * @param selectedProp
  */
-function getDropTargetInfo (event: Event, path: string, componentConfig: VirtualDOMType, selectedProp: string,noHasSelectedInfo?:boolean) {
+export function getDropTargetInfo (event: Event, path?: string, componentConfig?: VirtualDOMType, selectedProp?: string,noHasSelectedInfo?:boolean) {
   event.stopPropagation();
   /**
    * 如果当前有选择组件那么设计面板拖拽嵌套被禁用

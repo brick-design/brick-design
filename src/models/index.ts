@@ -192,7 +192,8 @@ const Model: ModelType = {
         dragData,
         dropTargetInfo,
       } = state;
-      const { defaultProps = {}, componentName, templateData, dragPath, dragParentPath } = dragData!;
+      if(!dragData) return  state
+      const { defaultProps = {}, componentName, templateData, dragPath, dragParentPath } = dragData;
       const { propPath, path, isOnlyNode, isContainer, childNodesRule, componentName: selectedComponentName, propName } = dropTargetInfo! || selectedComponentInfo;
       // 找到新添加组件所要放置的路径位置
       const parentPath = getPath({ path: propPath || path, isContainer: true });

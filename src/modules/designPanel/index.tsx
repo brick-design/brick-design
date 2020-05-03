@@ -22,12 +22,12 @@ interface DesignPanelPropsType {
 
 let dispatch: Dispatch;
 
-function onDragover(e: any) {
+export function onDragover(e: any) {
   e.preventDefault();
 
 }
 
-function onDrop(e: any) {
+export function onDrop(e: any) {
   e.stopPropagation();
   dispatch({ type: ACTION_TYPES.addComponent });
 }

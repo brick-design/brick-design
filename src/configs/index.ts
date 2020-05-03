@@ -20,6 +20,10 @@ const CONTAINER_CATEGORY = { ...reactContainers, ...htmlContainers };
  */
 const NON_CONTAINER_CATEGORY = { ...reactNonContainers, ...htmlNonContainers };
 
+/**
+ * 设计面板iframe 模板，如果集成到项目中，需要将拖拽组件所依赖的样式在模板中设置，
+ * 否则设计面板渲染的页面将是无样式的效果
+ */
 const iframeSrcDoc = `<!DOCTYPE html>
 <html lang="en">
 <head>

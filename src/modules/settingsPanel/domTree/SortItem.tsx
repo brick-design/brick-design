@@ -14,6 +14,7 @@ import { ACTION_TYPES } from '@/models';
 import { SelectedComponentInfoType, VirtualDOMType } from '@/types/ModelType';
 import { Dispatch } from 'redux';
 import domTreeIcons from './domTreeIcons';
+import { getDropTargetInfo } from '@/modules/designPanel/components/CommonContainer';
 const { Panel } = Collapse;
 const { Item } = Menu;
 let dispatch:Dispatch
@@ -331,6 +332,18 @@ function SortItem(props: SortItemPropsType) {
       data-name={parentName || componentName}
       data-parents={parentNodesRule && JSON.stringify(parentNodesRule)}
       id={key}
+      onDragEnter={(e:any)=>{
+        //如果选中组件就不在获取拖放容器的信息
+        if(isSelected) return
+        //如果目标组件为非容器组件就重置目标容器信息
+        if(!childNodes) return getDropTargetInfo(e)
+        let propNameResult=propName
+        //如果当前目标是多属性节点容器，获取容器的最后一属性节点作为目标容器
+        if(!propNameResult&&!isArray(childNodes)){
+          propNameResult=Object.keys(childNodes).pop()
+        }
+        getDropTargetInfo(e,path,componentConfig,propNameResult)
+      }}
     >
       {renderHeader(isUnfold,props,isSelected,setIsUnfold,childPropName)}
 
