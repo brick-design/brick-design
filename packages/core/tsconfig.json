@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "allowUnreachableCode": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "outDir": "lib",
+    "jsx": "react",
+    "baseUrl": "."
+  },
+  "lib": [ // 编译过程中需要引入的库文件的列表
+    "es5",
+    "es2015",
+    "es2016",
+    "es2017",
+    "es2018",
+    "dom"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

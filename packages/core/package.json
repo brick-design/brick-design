@@ -1,0 +1,31 @@
+{
+  "name": "brickd-core",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "sideEffects": [
+    "dist/*",
+    "lib/**/style/*",
+    "*.less"
+  ],
+  "dependencies": {
+    "immer": "^6.0.5",
+    "redux": "^4.0.5",
+    "lodash": "^4.17.15",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/uuid": "^3.4.7"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  }
+}

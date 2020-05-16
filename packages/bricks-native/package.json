@@ -1,0 +1,21 @@
+{
+  "name": "@lego-editor/components-native",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/core.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+  }
+}

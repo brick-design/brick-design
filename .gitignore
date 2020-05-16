@@ -6,3 +6,4 @@
 .umi
 .umi-production
 .idea
+packages/*/lib

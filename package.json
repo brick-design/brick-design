@@ -1,52 +1,7 @@
 {
-  "name": "react-visual-editor",
-  "version": "0.0.1",
-  "description": "react可视化编辑工具",
-  "authors": {
-    "name": "anye",
-    "email": "1278998669@qq.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/anye931123/react-visual-editor"
-  },
-  "homepage": "https://anye931123.github.io/react-visual-editor",
-  "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
-  },
-  "dependencies": {
-    "animate.css": "^3.7.2",
-    "bizcharts": "^3.5.8",
-    "classnames": "^2.2.6",
-    "dva": "^2.4.1",
-    "highlight.js": "^9.17.1",
-    "html2canvas": "^1.0.0-rc.5",
-    "lodash": "^4.17.15",
-    "prop-types": "^15.7.2",
-    "rc-animate": "^2.10.2",
-    "re-resizable": "^6.1.1",
-    "react": ">=16.8.0",
-    "react-color": "^2.18.0",
-    "react-dom": ">=16.8.0",
-    "sortablejs": "^1.10.2",
-    "umi-plugin-react": "^1.15.2",
-    "uuid": "^3.4.0"
-  },
+  "name": "root",
+  "private": true,
   "devDependencies": {
-    "@types/classnames": "^2.2.9",
-    "@types/highlight.js": "^9.12.3",
-    "@types/lodash": "^4.14.149",
-    "@types/react-color": "^3.0.1",
-    "@types/react-dom": "^16.9.5",
-    "@types/sortablejs": "^1.10.2",
-    "@types/uuid": "^3.4.7",
-    "gh-pages": "^2.2.0",
-    "umi": "^2.13.3",
-    "umi-plugin-block-dev": "^3.0.3",
-    "umi-types": "^0.5.12"
-  },
-  "license": "MIT"
+    "lerna": "^3.20.2"
+  }
 }
