@@ -1,5 +1,5 @@
-import ACTION_TYPES from "../actionTypes";
-import {LEGO_BRIDGE} from "../../store";
+import ACTION_TYPES from '../actionTypes';
+import { LEGO_BRIDGE } from '../../store';
 
 export interface SelectedInfoBaseType {
     key:string,

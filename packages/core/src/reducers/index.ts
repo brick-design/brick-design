@@ -1,19 +1,19 @@
-import {StateType} from "../types";
+import { StateType } from '../types';
 import ACTION_TYPES from '../actions/actionTypes';
 import {
-    addComponent,
-    clearChildNodes,
-    onLayoutSortChange,
-    deleteComponent,
-    copyComponent
-} from "./handleComponentConfig";
-import {getDragSource, getDropTarget} from "./handleDragDrop";
-import {clearHovered, overTarget} from "./handleHover";
-import {changePlatform} from "./handlePlatform";
-import {addPropsConfig, deletePropsConfig, submitProps} from "./handleProps";
-import {clearSelectedStatus, selectComponent} from "./handleSelectedComponent";
-import {changeStyles} from "./handleStyles";
-import {Reducer} from "redux";
+  addComponent,
+  clearChildNodes,
+  copyComponent,
+  deleteComponent,
+  onLayoutSortChange,
+} from './handleComponentConfig';
+import { getDragSource, getDropTarget } from './handleDragDrop';
+import { clearHovered, overTarget } from './handleHover';
+import { changePlatform } from './handlePlatform';
+import { addPropsConfig, deletePropsConfig, submitProps } from './handleProps';
+import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
+import { changeStyles } from './handleStyles';
+import { Reducer } from 'redux';
 
 export  const reducer:Reducer=function(state:StateType,action:any){
     const {type,payload}=action

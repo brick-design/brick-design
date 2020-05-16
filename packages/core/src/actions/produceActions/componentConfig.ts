@@ -1,5 +1,5 @@
-import ACTION_TYPES from "../actionTypes";
-import {LEGO_BRIDGE} from "../../store";
+import ACTION_TYPES from '../actionTypes';
+import { LEGO_BRIDGE } from '../../store';
 
 export const addComponent=()=> LEGO_BRIDGE.dispatch({type:ACTION_TYPES.addComponent})
 export const copyComponent=()=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.copyComponent})

@@ -1,7 +1,7 @@
-import {createElement, useContext} from "react";
-import LegoContext from "./LegoContext";
-import {LEGO_BRIDGE,createLegStore} from "../store";
-import {flattenDeepArray} from "../utils";
+import { createElement } from 'react';
+import LegoContext from './LegoContext';
+import { createLegStore, LEGO_BRIDGE } from '../store';
+import { flattenDeepArray } from '../utils';
 
 export  function LegoProvider({children,initState,config}:any) {
     if(!LEGO_BRIDGE.config) {

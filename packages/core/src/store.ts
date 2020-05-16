@@ -1,7 +1,7 @@
-import {createStore, Store,Dispatch} from 'redux'
-import {reducer} from './reducers'
-import {ConfigType, StateType} from "./types";
-import {flattenDeepArray} from "./utils";
+import { createStore, Dispatch, Store } from 'redux';
+import { reducer } from './reducers';
+import { ConfigType, StateType } from './types';
+
 type LegoBridge={
     dispatch:Dispatch,
     containers:string[]|null,

@@ -18,7 +18,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "brickd-core": "^0.0.1"
+    "brickd-core": "^0.0.1",
+    "lodash": "^4.17.15"
 
   },
   "peerDependencies": {

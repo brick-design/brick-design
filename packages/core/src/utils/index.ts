@@ -1,16 +1,10 @@
-import {
-    ChildNodesType,
-    ComponentConfigsType,
-    PropsNodeType,
-    SelectedInfoType,
-    VirtualDOMType
-} from "../types";
-import uuid from "uuid";
-import each from "lodash/each";
-import get from "lodash/get";
-import flattenDeep from "lodash/flattenDeep";
-import map from "lodash/map";
-import {LEGO_BRIDGE} from "../store";
+import { ChildNodesType, ComponentConfigsType, PropsNodeType, SelectedInfoType, VirtualDOMType } from '../types';
+import uuid from 'uuid';
+import each from 'lodash/each';
+import get from 'lodash/get';
+import flattenDeep from 'lodash/flattenDeep';
+import map from 'lodash/map';
+import { LEGO_BRIDGE } from '../store';
 
 /**
  * 复制组件

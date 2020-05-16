@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { AutoComplete, Col, Collapse, Divider, Input, Row,Icon } from 'antd';
+import { AutoComplete, Col, Collapse, Divider, Icon, Input, Row } from 'antd';
 import map from 'lodash/map';
 import update from 'lodash/update';
 import each from 'lodash/each';
@@ -8,8 +8,9 @@ import DragAbleItem from './DragAbleItem';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
-import { CategoryType, ComponentCategoryType, ComponentInfoType,useSelector } from 'brickd-core';
+import { CategoryType, ComponentCategoryType, ComponentInfoType, useSelector } from 'brickd-core';
 import { usePrevious } from '../utils';
+
 const { Panel } = Collapse;
 /**
  * 获取过滤后的组件配置信息

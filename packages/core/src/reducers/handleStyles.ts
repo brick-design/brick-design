@@ -1,6 +1,6 @@
-import { update } from "lodash";
-import {StateType} from "../types";
-import produce from "immer";
+import { update } from 'lodash';
+import { StateType } from '../types';
+import produce from 'immer';
 
 /**
  * 样式改变时调用

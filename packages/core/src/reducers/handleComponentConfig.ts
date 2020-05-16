@@ -1,11 +1,11 @@
-import {StateType} from "../types";
-import {copyConfig, deleteChildNodes, getLocation, getNewDOMCollection} from "../utils";
-import get from "lodash/get";
-import update from "lodash/update";
-import {produce,original} from "immer";
-import uuid from "uuid";
-import {LayoutSortPayload} from "../actions";
-import {LEGO_BRIDGE} from "../store";
+import { StateType } from '../types';
+import { copyConfig, deleteChildNodes, getLocation, getNewDOMCollection } from '../utils';
+import get from 'lodash/get';
+import update from 'lodash/update';
+import { produce } from 'immer';
+import uuid from 'uuid';
+import { LayoutSortPayload } from '../actions';
+import { LEGO_BRIDGE } from '../store';
 
 /**
  * 往画板或者容器组件添加组件

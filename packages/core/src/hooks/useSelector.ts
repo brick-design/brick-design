@@ -1,7 +1,7 @@
-import {useReducer, useRef, useLayoutEffect, useContext} from 'react'
-import { shallowEqual} from "../utils";
-import get from 'lodash/get'
-import LegoContext from "../components/LegoContext";
+import { useContext, useLayoutEffect, useReducer, useRef } from 'react';
+import { shallowEqual } from '../utils';
+import get from 'lodash/get';
+import LegoContext from '../components/LegoContext';
 
 
 const handleState = (selector: string[], storeState: any) => selector.reduce((states: any, key: string) => {

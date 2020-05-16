@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import styles from './index.less';
 import SortItem from './SortItem';
-import {  onLayoutSortChange,NodeProps,SelectedInfoBaseType} from 'brickd-core';
+import { NodeProps, onLayoutSortChange, SelectedInfoBaseType } from 'brickd-core';
 import ReactSortable from '../components/ReactSortable';
+
 interface SortTreePropsType {
     isFold?: boolean,
     childNodes: string[],

@@ -1,4 +1,4 @@
-import { each, get } from "lodash";
+import { each, get } from 'lodash';
 import { StateType } from '../types';
 
 /**

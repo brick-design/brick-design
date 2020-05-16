@@ -1,4 +1,4 @@
-import {PropsConfigType} from "./ComponentConfigTypes";
+import { PropsConfigType } from './ComponentConfigTypes';
 
 export type PropsNodeType= {
     [propName: string]: string[]

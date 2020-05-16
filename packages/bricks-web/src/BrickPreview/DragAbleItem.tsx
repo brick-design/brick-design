@@ -1,7 +1,7 @@
 import React, { createElement, memo, useRef } from 'react';
 import styles from './index.less';
 import get from 'lodash/get';
-import {getDragSource,LEGO_BRIDGE} from 'brickd-core';
+import { getDragSource, LEGO_BRIDGE } from 'brickd-core';
 
 interface DragAbleItemPropsType {
   dragSource: {

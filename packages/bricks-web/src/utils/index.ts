@@ -1,5 +1,5 @@
-import {useEffect, useRef} from "react";
-import {HookState} from "../BrickTree/SortItem";
+import { useEffect, useRef } from 'react';
+import { HookState } from '../BrickTree/SortItem';
 
 export function usePrevious<T>(value: any) {
     const ref = useRef<T>();

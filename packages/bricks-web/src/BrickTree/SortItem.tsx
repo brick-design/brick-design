@@ -1,31 +1,28 @@
-import React, {memo, useEffect, useState} from 'react';
-import {Collapse, Dropdown, Icon, Menu} from 'antd';
+import React, { memo, useEffect, useState } from 'react';
+import { Collapse, Dropdown, Icon, Menu } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
-import isEqual from 'lodash/isEqual'
+import isEqual from 'lodash/isEqual';
 import SortTree from './SortTree';
 import styles from './index.less';
-import {usePrevious, controlUpdate} from '../utils';
+import { controlUpdate, usePrevious } from '../utils';
 import {
     ChildNodesType,
     clearChildNodes,
+    ComponentConfigsType,
     copyComponent,
     deleteComponent,
-    NodeProps, NodePropsConfigType,
-    useSelector,
     LEGO_BRIDGE,
+    NodeProps,
+    NodePropsConfigType,
     SelectedInfoBaseType,
-    ComponentConfigsType,
-    SelectedInfoType
+    SelectedInfoType,
+    useSelector,
 } from 'brickd-core';
-import { getDropTargetInfo,
-    handleSelectedStatus,
-    onMouseOver,
-    selectedStatus,} from 'brickd'
+import { getDropTargetInfo, handleSelectedStatus, onMouseOver, selectedStatus } from 'brickd';
 import domTreeIcons from './domTreeIcons';
-
 
 
 const {Panel} = Collapse;

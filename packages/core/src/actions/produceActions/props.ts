@@ -1,6 +1,6 @@
-import ACTION_TYPES from "../actionTypes";
-import {LEGO_BRIDGE} from "../../store";
-import {PropsConfigType} from "../../types";
+import ACTION_TYPES from '../actionTypes';
+import { LEGO_BRIDGE } from '../../store';
+import { PropsConfigType } from '../../types';
 
 export type AddPropsConfigInfo={
     newPropField?:string,

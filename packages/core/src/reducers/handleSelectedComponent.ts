@@ -1,8 +1,8 @@
-import get from "lodash/get";
-import { merge } from "lodash";
-import {StateType} from "../types";
-import {SelectComponentType} from "../actions";
-import {LEGO_BRIDGE} from "../store";
+import get from 'lodash/get';
+import { merge } from 'lodash';
+import { StateType } from '../types';
+import { SelectComponentType } from '../actions';
+import { LEGO_BRIDGE } from '../store';
 
 /**
  * 选中组件

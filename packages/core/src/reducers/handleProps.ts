@@ -1,7 +1,8 @@
-import { merge, update,  isEmpty } from "lodash";
-import {getFieldInPropsLocation} from "../utils";
-import {StateType} from "../types";
-import produce from "immer";
+import { isEmpty, merge, update } from 'lodash';
+import { getFieldInPropsLocation } from '../utils';
+import { StateType } from '../types';
+import produce from 'immer';
+
 /**
  * 添加属性配置
  * @param state

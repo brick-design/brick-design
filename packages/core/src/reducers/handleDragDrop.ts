@@ -1,6 +1,6 @@
-import {generateVDOM} from "../utils";
-import {StateType} from "../types";
-import {DragSourcePayload} from "../actions";
+import { generateVDOM } from '../utils';
+import { StateType } from '../types';
+import { DragSourcePayload } from '../actions';
 
 /**
  * 获取拖拽组件数据

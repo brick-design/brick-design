@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import styles from '../style.less';
 import {
     ChildNodesType,
@@ -26,7 +25,7 @@ import isEqual from 'lodash/isEqual';
  * @param animateClass
  */
 export function handlePropsClassName(isSelected: boolean, isHovered: boolean, className: any, animateClass: string) {
-    return classNames(isSelected ? styles['container-select-border'] : isHovered && styles['container-hover-border'], className, animateClass);
+    return `${isSelected ? styles['container-select-border'] : isHovered && styles['container-hover-border']} ${className} ${animateClass}`;
 }
 
 /**

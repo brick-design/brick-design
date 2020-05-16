@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import SortTree from './SortTree';
 import styles from './index.less';
-import {clearHovered, ComponentConfigsType,useSelector} from 'brickd-core';
-import { onDragover, onDrop,} from 'brickd'
+import { clearHovered, ComponentConfigsType, useSelector } from 'brickd-core';
+import { onDragover, onDrop } from 'brickd';
+
 export function BrickTree() {
   const {componentConfigs}=useSelector<{componentConfigs:ComponentConfigsType}>(['componentConfigs'],(prevState,nextState)=>{
     const {componentConfigs:{root:prevRoot}}=prevState

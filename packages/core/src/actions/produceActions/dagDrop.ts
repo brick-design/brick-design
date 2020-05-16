@@ -1,6 +1,6 @@
-import ACTION_TYPES from "../actionTypes";
-import {ComponentConfigsType} from "../../types";
-import {LEGO_BRIDGE} from "../../store";
+import ACTION_TYPES from '../actionTypes';
+import { ComponentConfigsType } from '../../types';
+import { LEGO_BRIDGE } from '../../store';
 
 export type DragSourcePayload={
     componentName?:string,
