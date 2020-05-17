@@ -35,8 +35,9 @@ export function handlePropsClassName(isSelected: boolean, isHovered: boolean, cl
  * @param parentKey
  * @param componentConfigs
  * @param parentPropName
+ * @param isOnlyNode
  */
-function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType, parentPropName?: string,isOnlyNode?:boolean) {
+function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType, parentPropName?: string,isOnlyNode?:boolean,isRequired?:boolean) {
     const resultChildNodes = map(childNodes, (key) => {
         const {componentName} = componentConfigs[key];
         /** 根据组件类型处理属性 */
@@ -52,7 +53,9 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
     });
 
     /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
-    if (isOnlyNode) return resultChildNodes[0];
+    if (isOnlyNode) {
+            return resultChildNodes[0]||isRequired&&<div/>
+    }
 
     return resultChildNodes;
 }
@@ -60,21 +63,26 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
 export function handleChildNodes(domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType) {
     const {childNodes,componentName} = componentConfigs[parentKey]
     let nodeProps: any = {}
-    if (Array.isArray(childNodes)) {
-        nodeProps.children = renderNodes(childNodes, domTreeKeys, parentKey, componentConfigs)
-    }else {
-        const {nodePropsConfig}=LEGO_BRIDGE.config!.AllComponentConfigs[componentName]
-        each(childNodes, (nodes: string[], propName: string) => {
-            nodeProps[propName] = renderNodes(
-                nodes,
-                [...domTreeKeys, `${parentKey}${propName}`],
-                parentKey,
-                componentConfigs,
-                propName,
-                nodePropsConfig![propName].isOnlyNode
-            )
-        })
+    if(childNodes){
+        if (Array.isArray(childNodes)) {
+            nodeProps.children = renderNodes(childNodes, domTreeKeys, parentKey, componentConfigs)
+        }else {
+            const {nodePropsConfig}=LEGO_BRIDGE.config!.AllComponentConfigs[componentName]
+            each(childNodes, (nodes: string[], propName: string) => {
+                const {isOnlyNode,isRequired}=nodePropsConfig![propName]
+                nodeProps[propName] = renderNodes(
+                  nodes,
+                  [...domTreeKeys, `${parentKey}${propName}`],
+                  parentKey,
+                  componentConfigs,
+                  propName,
+                  isOnlyNode,
+                  isRequired
+                )
+            })
+        }
     }
+
     return nodeProps
 }
 
@@ -137,7 +145,8 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     } = specialProps;
     let propName: string | undefined
     if (childNodes && !Array.isArray(childNodes)) {
-        propName = Object.keys(childNodes as PropsNodeType).pop()
+        propName = Object.keys(childNodes as PropsNodeType)[0]
+        console.log('哈哈哈哈propName》》》》》》',propName)
     }
     return {
         onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),

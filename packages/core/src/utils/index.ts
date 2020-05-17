@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
+import { SelectComponentType } from '../actions';
 
 /**
  * 复制组件
@@ -59,10 +60,7 @@ function deleteArrChild(componentConfigs:ComponentConfigsType,childNodes:string[
 }
 /**
  * 获取路径
- * @param location
- * @param index
- * @param propName
- */
+ * */
 export function getLocation(key:string,propName?:string):string[] {
     const basePath=[key,'childNodes']
     return propName?[...basePath,propName]:basePath;
@@ -118,51 +116,21 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
  * 处理子节点非空
  * @param selectedInfo
  * @param componentConfigs
- * @returns {boolean}
+ * @param payload
  */
-export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: any) => {
-    //todo
-    // const { isRequiredHasChild, location, selectedKey } = selectedInfo;
-    // if (payload) {
-    //     const { propName, componentConfig: { key } } = payload;
-    //     const newSelectedKey = propName ? `${key}${propName}` : key;
-    //     if (newSelectedKey === selectedKey) return false;
-    // }
-    // if (!isRequiredHasChild) return false;
-    // const childNodesLocation = getFatherLocation(location);
-    // const result = isEmpty(get(componentConfigs, childNodesLocation));
-    // if (result) {
-    //     console.warn('当前选中组件必须拥有子组件');
-    // }
-    // return result;
-
-};
-
-export const handleComponentInfo = (payload: any) => {
-    const { propName, componentConfig } = payload;
-    const { fatherName, childNodes } = componentConfig;
-    let { componentName } = componentConfig;
-    componentName = fatherName || componentName;
-    const isContainer = !!childNodes;
-    let { nodePropsConfig } = get(LEGO_BRIDGE.config.AllComponentConfigs, componentName), childNodesRule, isOnlyNode;
-    if (nodePropsConfig) {
-        if (propName) {
-            ({ childNodesRule, isOnlyNode } = get(nodePropsConfig, propName));
-        } else {
-            each(nodePropsConfig, (config) => {
-                ({ childNodesRule, isOnlyNode } = config);
-            });
+export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: SelectComponentType) => {
+    const {  selectedKey,propName:selectedPropName } = selectedInfo;
+    const {componentName,childNodes}=componentConfigs[selectedKey]
+    const {nodePropsConfig}=get(LEGO_BRIDGE.config.AllComponentConfigs,componentName)
+    if(nodePropsConfig&&nodePropsConfig[selectedPropName].isRequired&&childNodes[selectedPropName].length===0){
+        if (payload) {
+            const { propName,key} = payload;
+            if (selectedKey === key&&propName===selectedPropName) return false;
         }
-
+        return true
     }
-    return {
-        isContainer,
-        isOnlyNode,
-        childNodesRule,
-        componentName,
-    };
+    return false
 };
-
 
 
 export const generateVDOM=(componentName:string,defaultProps:any={})=>{

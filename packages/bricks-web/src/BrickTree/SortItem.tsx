@@ -76,12 +76,16 @@ function renderHeader(isUnfold: boolean,
                       setIsUnfold: any,
                       componentName: string,
                       childNodes?: ChildNodesType) {
-    const {propName, specialProps, specialProps: {key}} = props;
+    const { specialProps, specialProps: {key}} = props;
     const selectedColor = '#5E96FF';
     const unSelectedColor = '#555555';
     const selectedBGColor = '#F2F2F2';
     const hoveredBGColor = '#F1F1F1';
     const color = isSelected ? selectedColor : unSelectedColor;
+    let propName=props.propName
+    if(childNodes&&!Array.isArray(childNodes)) {
+        propName=Object.keys(childNodes)[0]
+    }
     return (
         <div
             style={{backgroundColor: isSelected ? selectedBGColor : isHovered ? hoveredBGColor : '#0000'}}
@@ -171,7 +175,7 @@ export const stateSelector=['selectedInfo', 'hoverKey','componentConfigs']
 
 function SortItem(props: SortItemPropsType) {
     const {
-        specialProps: {key,parentPropName,parentKey},
+        specialProps: {key,parentPropName,parentKey,domTreeKeys},
         isFold,
         propName,
         propChildNodes,
@@ -225,7 +229,7 @@ function SortItem(props: SortItemPropsType) {
                 if (!propNameResult && !isArray(childNodes)) {
                     propNameResult = Object.keys(childNodes).pop()
                 }
-                getDropTargetInfo(e, key, propNameResult)
+                getDropTargetInfo(e, domTreeKeys,key, propNameResult)
             }}
         >
             {renderHeader(isUnfold, props, isSelected, isHovered, setIsUnfold, propName || componentName, childNodes)}

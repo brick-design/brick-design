@@ -7,7 +7,6 @@ const Dropdown: ComponentConfigType = {
       type: PROPS_TYPES.reactNode,
       childNodesRule: ['Menu'],
       isOnlyNode: true,
-      isRequired: true,
     },
     children: {
       type: PROPS_TYPES.reactNode,

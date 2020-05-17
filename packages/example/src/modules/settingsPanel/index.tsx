@@ -19,10 +19,10 @@ const {styleSetting,propsSetting,selectedInfo}=useSelector(['styleSetting','prop
         <BrickTree/>
       </TabPane>
       <TabPane forceRender key="2" tab={'属性配置'}>
-        <PropsSettings propsSetting={propsSetting} selectedInfo={selectedInfo}/>
+        {/*<PropsSettings propsSetting={propsSetting} selectedInfo={selectedInfo}/>*/}
       </TabPane>
       <TabPane forceRender key="3" tab={'样式配置'}>
-        <StyleSettings styleSetting={styleSetting}/>
+        {/*<StyleSettings styleSetting={styleSetting}/>*/}
       </TabPane>
 
     </Tabs>

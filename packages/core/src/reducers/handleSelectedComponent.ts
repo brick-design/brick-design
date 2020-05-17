@@ -3,6 +3,7 @@ import { merge } from 'lodash';
 import { StateType } from '../types';
 import { SelectComponentType } from '../actions';
 import { LEGO_BRIDGE } from '../store';
+import { handleRequiredHasChild } from '../utils';
 
 /**
  * 选中组件
@@ -13,16 +14,27 @@ import { LEGO_BRIDGE } from '../store';
 
 export function selectComponent(state:StateType, payload:SelectComponentType ) {
     const { undo, redo, selectedInfo, propsSetting,componentConfigs } = state;
-    //todo
-    // if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs!, payload)) {
-    //     return state;
-    // }
+    if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs, payload)) {
+        return state;
+    }
     const { propName, domTreeKeys,key,parentKey,parentPropName } = payload;
-    if(selectedInfo&&selectedInfo.selectedKey===key) return {
-        ...state,
-        selectedInfo: {
-            propName, domTreeKeys,selectedKey: key,parentKey,parentPropName
+
+    if(selectedInfo&&selectedInfo.selectedKey===key&&!propName){
+        if(selectedInfo.propName){
+            domTreeKeys.push(`${key}${selectedInfo.propName}`)
         }
+        return {
+            ...state,
+            selectedInfo: {
+                ...selectedInfo,
+                domTreeKeys,
+                parentKey,
+                parentPropName
+            }
+        }
+    }
+    if (propName) {
+        domTreeKeys.push(`${key}${propName}`);
     }
     const { props, addPropsConfig = {},componentName} = componentConfigs[key];
     //todo
@@ -31,9 +43,7 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
 
     const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
     undo.push({ selectedInfo, propsSetting });
-    if (propName) {
-        domTreeKeys.push(`${key}${propName}`);
-    }
+
     redo.length = 0;
     return {
         ...state,
@@ -60,11 +70,10 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state:StateType) {
-    const { selectedInfo,dropTarget, propsSetting, undo, redo, styleSetting } = state;
-    //todo
-    // if (handleRequiredHasChild(selectedInfo!, componentConfigs!)) {
-    //     return state;
-    // }
+    const { selectedInfo,dropTarget, propsSetting,componentConfigs, undo, redo, styleSetting } = state;
+    if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
+        return state;
+    }
     undo.push({ selectedInfo, propsSetting, styleSetting,dropTarget });
     redo.length = 0;
     return {
