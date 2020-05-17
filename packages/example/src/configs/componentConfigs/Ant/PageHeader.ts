@@ -1,8 +1,7 @@
 import Avatar from './Avatar';
 import Tag from './Tag';
 import Breadcrumb from './Breadcrumb';
-import { ComponentConfigTypes } from 'brickd-core';
-import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
 
 const PageHeader: ComponentConfigTypes = {
   nodePropsConfig: {

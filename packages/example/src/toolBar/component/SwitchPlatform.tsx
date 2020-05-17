@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Dropdown, Menu,Icon } from 'antd';
+import { Dropdown, Icon, Menu } from 'antd';
 import styles from '@/toolBar/style.less';
 import map from 'lodash/map';
 import { PlatformMenusType } from '@/toolBar/config';
-import {changePlatform, PlatformInfoType} from 'brickd-core';
+import { changePlatform, PlatformInfoType } from 'brickd-core';
 
 interface SwitchPlatformPropsType {
   platformInfo?: PlatformInfoType,

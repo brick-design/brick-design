@@ -1,5 +1,5 @@
 import React, { createElement, useCallback, useEffect, useMemo, useState } from 'react';
-import { Col, Modal, Row, Tooltip,Icon } from 'antd';
+import { Col, Icon, Row, Tooltip } from 'antd';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
@@ -9,9 +9,8 @@ import isString from 'lodash/isString';
 import menus, { CONTEXT_MENU, ENABLED } from './config';
 import styles from './style.less';
 
-import {PlatformInfoType, redo, SelectedInfoType, undo, VirtualDOMType} from 'brickd-core';
+import { redo, undo, useSelector } from 'brickd-core';
 import ContextMenu from './component/ContextMenu';
-import {useSelector} from "brickd-core";
 
 const REST_STYLE = 'resetStyle';
 const UNDO = 'undo';

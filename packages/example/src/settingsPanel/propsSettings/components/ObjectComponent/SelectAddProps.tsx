@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Input, Select, Tooltip } from 'antd';
 import map from 'lodash/map';
-import { Dispatch } from 'redux';
 import { TYPES_TO_COMPONENT } from '@/settingsPanel/propsSettings/config';
-import {addPropsConfig} from "brickd-core";
+import { addPropsConfig } from 'brickd-core';
 
 const { Option } = Select;
 

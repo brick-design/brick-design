@@ -1,8 +1,8 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
 import * as Ants from 'antd/es';
-import { ConfigType } from 'brickd-core';
 import AllComponentConfigs from './componentConfigs';
+
 /**
  * 容器组件分类
  */

@@ -1,5 +1,5 @@
 import React, { createElement, forwardRef, memo } from 'react';
-import { Col, Form, Row, Tooltip,Icon } from 'antd';
+import { Col, Form, Icon, Row, Tooltip } from 'antd';
 import { confirmModal, TYPES_TO_COMPONENT } from '../../config';
 import map from 'lodash/map';
 import get from 'lodash/get';
@@ -10,9 +10,8 @@ import { filterProps, formatPropsFieldConfigLocation, reduxConnect } from '@/uti
 import isArray from 'lodash/isArray';
 import { SwitchMultiTypes } from '../index';
 import each from 'lodash/each';
-import { PropInfoType, PropsConfigType ,PROPS_TYPES} from 'brickd-core';
+import { deletePropsConfig, PropInfoType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 import { FormComponentProps } from 'antd/es/form';
-import {deletePropsConfig} from "brickd-core";
 
 interface ObjectComponentPropsType extends FormComponentProps {
   childPropsConfig: PropsConfigType,

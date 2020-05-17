@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import map from 'lodash/map';
 import styles from '../style.less';
-import {clearChildNodes, copyComponent, deleteComponent} from 'brickd-core';
+import { clearChildNodes, copyComponent, deleteComponent } from 'brickd-core';
 
 interface ContextMenuPropsType {
   isSelected: boolean,

@@ -7,10 +7,10 @@ import get from 'lodash/get';
 import each from 'lodash/each';
 import { DEFAULT_PROPS, TYPES_TO_COMPONENT } from './config';
 import styles from './index.less';
-import { filterProps} from '@/utils';
+import { filterProps } from '@/utils';
 import SwitchMultiTypes from './components/SwitchMultiTypes';
 import { FormComponentProps } from 'antd/lib/form';
-import {PropsSettingType, SelectedInfoType, submitProps, PropInfoType ,PROPS_TYPES} from 'brickd-core';
+import { PropInfoType, PROPS_TYPES, PropsSettingType, SelectedInfoType, submitProps } from 'brickd-core';
 
 
 const FormItem = Form.Item;

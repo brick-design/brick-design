@@ -1,11 +1,11 @@
 import {
-    addComponent,
-    clearSelectedStatus,
-    getDragSource,
-    getDropTarget,
-    overTarget,
-    selectComponent,
-    SelectedInfoBaseType,
+  addComponent,
+  clearSelectedStatus,
+  getDragSource,
+  getDropTarget,
+  overTarget,
+  selectComponent,
+  SelectedInfoBaseType,
 } from 'brickd-core';
 
 

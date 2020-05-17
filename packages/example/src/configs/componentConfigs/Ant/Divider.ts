@@ -1,5 +1,4 @@
-import { PROPS_TYPES } from 'brickd-core';
-import { ComponentConfigTypes } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
 
 const Divider: ComponentConfigTypes = {
   propsConfig: {

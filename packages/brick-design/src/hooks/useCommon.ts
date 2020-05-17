@@ -3,7 +3,6 @@ import { CommonContainerPropsType, controlUpdate, HookState, stateSelector } fro
 import { useEffect, useMemo } from 'react';
 import { handleSelectedStatus, selectedStatus } from '../common/events';
 import get from 'lodash/get';
-import each from 'lodash/each';
 
 export function useCommon(allProps: CommonContainerPropsType) {
     const {specialProps, specialProps: {key}} = allProps

@@ -1,11 +1,11 @@
 import { StateType } from '../types';
 import ACTION_TYPES from '../actions/actionTypes';
 import {
-  addComponent,
-  clearChildNodes,
-  copyComponent,
-  deleteComponent,
-  onLayoutSortChange,
+    addComponent,
+    clearChildNodes,
+    copyComponent,
+    deleteComponent,
+    onLayoutSortChange,
 } from './handleComponentConfig';
 import { getDragSource, getDropTarget } from './handleDragDrop';
 import { clearHovered, overTarget } from './handleHover';
@@ -14,7 +14,8 @@ import { addPropsConfig, deletePropsConfig, submitProps } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles } from './handleStyles';
 import { Reducer } from 'redux';
-import {redo, undo} from './handleRedoUndo'
+import { redo, undo } from './handleRedoUndo';
+
 export  const reducer:Reducer=function(state:StateType,action:any){
     const {type,payload}=action
     switch (type) {

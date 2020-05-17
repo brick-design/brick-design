@@ -10,7 +10,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ObjectComponent, SortComponent } from '../index';
 import styles from '../../index.less';
 import { formatPropsFieldConfigLocation } from '@/utils';
-import { PropsConfigType,PROPS_TYPES,addPropsConfig } from 'brickd-core';
+import { addPropsConfig, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 
 interface ObjectArrayPropsType {
   value?: any,

@@ -1,6 +1,6 @@
 {
   "name": "brickd",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
@@ -18,12 +18,13 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "brickd-core": "^0.0.1",
     "lodash": "^4.17.15"
 
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "brickd-core": "^0.0.1",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
 
   }
 }

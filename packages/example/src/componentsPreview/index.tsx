@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Tabs } from 'antd';
 import { flattenDeepArray } from '@/utils';
 import styles from './index.less';
-import {BrickPreview} from 'bricks-web'
-import {LEGO_BRIDGE} from 'brickd-core'
+import { BrickPreview } from 'bricks-web';
+import { LEGO_BRIDGE } from 'brickd-core';
+
 const { TabPane } = Tabs;
 
 function AllComponents() {

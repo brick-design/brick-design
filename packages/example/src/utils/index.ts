@@ -1,5 +1,5 @@
-import {useEffect, useRef} from 'react';
-import {connect} from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import each from 'lodash/each';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -9,7 +9,7 @@ import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
-import {PROPS_TYPES,CategoryType} from 'brickd-core';
+import { CategoryType, PROPS_TYPES } from 'brickd-core';
 
 /**
  * redux封装函数

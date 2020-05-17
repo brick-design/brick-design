@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import isObject from 'lodash/isObject';
-import isEqual from 'lodash/isEqual'
+import isEqual from 'lodash/isEqual';
 import { propsAreEqual } from '@/utils';
 
 const { TextArea } = Input;

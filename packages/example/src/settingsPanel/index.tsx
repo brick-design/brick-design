@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Tabs } from 'antd/lib/index';
 import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
-import {useSelector} from 'brickd-core'
-import {BrickTree} from 'bricks-web'
+import { useSelector } from 'brickd-core';
+import { BrickTree } from 'bricks-web';
 
 const { TabPane } = Tabs;
 function SettingPanel() {

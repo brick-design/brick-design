@@ -1,5 +1,5 @@
 import React, { createElement, useCallback, useState } from 'react';
-import { Col, Collapse, Form, Row, Tooltip,Icon } from 'antd';
+import { Col, Collapse, Form, Icon, Row, Tooltip } from 'antd';
 import map from 'lodash/map';
 import each from 'lodash/each';
 import get from 'lodash/get';
@@ -7,8 +7,7 @@ import cssConfig from './styleConfigs';
 import styleSheet from './index.less';
 import { CSS_TYPE_TO_COMPONENT } from './config';
 import { FormComponentProps } from 'antd/lib/form';
-import { Dispatch } from 'redux';
-import {changeStyles} from "brickd-core";
+import { changeStyles } from 'brickd-core';
 
 const FormItem = Form.Item;
 const { Panel } = Collapse;

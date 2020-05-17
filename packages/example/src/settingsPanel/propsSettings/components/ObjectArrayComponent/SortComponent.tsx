@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from '../../index.less';
-import map from 'lodash/map';
 import each from 'lodash/each';
 import { PaneType } from '@/settingsPanel/propsSettings/components/ObjectArrayComponent/ObjectArrayComponent';
 

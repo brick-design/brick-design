@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SettingsPanel from './settingsPanel';
-import  styles from './index.less';
+import styles from './index.less';
 import AllComponents from './componentsPreview';
 import ToolBar from './toolBar';
 import { Resizable } from 're-resizable';
 import 'antd/dist/antd.css';
 import 'animate.css/animate.min.css';
-import {LegoProvider} from 'brickd-core'
-import {BrickDesign} from 'brickd'
-import config from "@/configs";
+import { LegoProvider } from 'brickd-core';
+import { BrickDesign } from 'brickd';
+import config from '@/configs';
+
 const COMMON_ENABLE = {
     top: false,
     right: false,

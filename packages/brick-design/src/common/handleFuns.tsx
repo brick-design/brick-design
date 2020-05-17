@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from '../style.less';
 import {
-    ChildNodesType,
-    ComponentConfigsType,
-    LEGO_BRIDGE,
-    MirrorModalFieldType,
-    PROPS_TYPES,
-    PropsNodeType,
-    SelectedInfoBaseType,
-    SelectedInfoType,
+  ChildNodesType,
+  ComponentConfigsType,
+  LEGO_BRIDGE,
+  MirrorModalFieldType,
+  PROPS_TYPES,
+  PropsNodeType,
+  SelectedInfoBaseType,
+  SelectedInfoType,
 } from 'brickd-core';
 import { getDropTargetInfo, handleSelectedStatus, onDragStart, onMouseOver } from './events';
 import map from 'lodash/map';
