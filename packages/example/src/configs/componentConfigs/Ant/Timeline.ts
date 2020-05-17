@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Timeline: ComponentConfigType = {
+const Timeline: ComponentConfigTypes = {
   nodePropsConfig: {
     pending: {
       type: PROPS_TYPES.reactNode,
@@ -37,7 +37,7 @@ const Timeline: ComponentConfigType = {
     },
   },
 };
-const Item: ComponentConfigType = {
+const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     dot: {
       type: PROPS_TYPES.reactNode,

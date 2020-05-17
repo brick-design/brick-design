@@ -1,14 +1,4 @@
-import React, {
-    CSSProperties,
-    HTMLAttributes,
-    IframeHTMLAttributes,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
-import styles from './style.less';
+import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
@@ -30,11 +20,8 @@ const onIframeLoad = () => {
 /**
  * 鼠标离开设计区域清除hover状态
  */
-interface BrickDesignProps {
+interface BrickDesignProps extends IframeHTMLAttributes<any>{
     onLoadEnd?: () => void,
-    iframeProps?:IframeHTMLAttributes<any>,
-    containerProps?:HTMLAttributes<any>,
-
 }
 
 const stateSelector = ['componentConfigs', 'platformInfo']
@@ -87,7 +74,7 @@ export function BrickDesign(props: BrickDesignProps) {
 
     const style = {width: size[0], maxHeight: size[1], transition: 'all 700ms'};
 
-    const {onLoadEnd,iframeProps,containerProps} = props
+    const {onLoadEnd} = props
     return (<iframe onMouseLeave={clearHovered}
                     id="dnd-iframe"
                     style={{border: 0, ...style}}
@@ -97,7 +84,7 @@ export function BrickDesign(props: BrickDesignProps) {
                         onLoadEnd && onLoadEnd()
                         setSpinShow(false)
                     }, [])}
-                    {...iframeProps}
+                    {...props}
             />
     );
 }

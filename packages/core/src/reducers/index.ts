@@ -14,7 +14,7 @@ import { addPropsConfig, deletePropsConfig, submitProps } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles } from './handleStyles';
 import { Reducer } from 'redux';
-
+import {redo, undo} from './handleRedoUndo'
 export  const reducer:Reducer=function(state:StateType,action:any){
     const {type,payload}=action
     switch (type) {
@@ -50,6 +50,10 @@ export  const reducer:Reducer=function(state:StateType,action:any){
             return clearSelectedStatus(state);
         case ACTION_TYPES.changeStyles:
             return changeStyles(state,payload);
+        case ACTION_TYPES.undo:
+            return undo(state);
+        case ACTION_TYPES.redo:
+            return redo(state);
         default:
             return  state
 

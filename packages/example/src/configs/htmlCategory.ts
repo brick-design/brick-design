@@ -1,4 +1,4 @@
-import { CategoryType } from '@/types/CategoryType';
+import { CategoryType } from 'brickd-core';
 
 export const htmlContainers: CategoryType = {
   'HTMLTag': {

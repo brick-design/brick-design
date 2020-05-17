@@ -39,6 +39,8 @@ function Container(allProps: CommonContainerPropsType, ref: any) {
     componentConfigs,
     SelectedDomKeys
   } = useCommon(allProps);
+  if(!componentName) return null
+
   let modalProps: any = {};
   if (mirrorModalField) {
     const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'dnd-iframe');
@@ -46,10 +48,10 @@ function Container(allProps: CommonContainerPropsType, ref: any) {
     modalProps = { [displayPropName]: isVisible, ...mountedProps };
   }
 
-  const { className, animateClass } = props;
+  const { className, animateClass,...restProps } = props;
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
-      ...props,
+      ...restProps,
       className: handlePropsClassName(isSelected, isHovered, className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
       ...handleChildNodes(domTreeKeys, key, componentConfigs),

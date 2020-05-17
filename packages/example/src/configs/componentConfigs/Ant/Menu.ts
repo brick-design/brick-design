@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Menu: ComponentConfigType = {
+const Menu: ComponentConfigTypes = {
   nodePropsConfig: {
     overflowedIndicator: {
       type: PROPS_TYPES.reactNode,
@@ -94,10 +94,10 @@ const Menu: ComponentConfigType = {
     },
   },
 };
-const Divider: ComponentConfigType = {
+const Divider: ComponentConfigTypes = {
   propsConfig: {},
 };
-const ItemGroup: ComponentConfigType = {
+const ItemGroup: ComponentConfigTypes = {
   fatherNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
 
   nodePropsConfig: {
@@ -116,7 +116,7 @@ const ItemGroup: ComponentConfigType = {
     },
   },
 };
-const SubMenu: ComponentConfigType = {
+const SubMenu: ComponentConfigTypes = {
   fatherNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
   nodePropsConfig: {
     title: {
@@ -152,7 +152,7 @@ const SubMenu: ComponentConfigType = {
 
   },
 };
-const Item: ComponentConfigType = {
+const Item: ComponentConfigTypes = {
   fatherNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
   propsConfig: {
     children: {

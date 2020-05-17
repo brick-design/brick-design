@@ -17,7 +17,7 @@ export function useCommon(allProps: CommonContainerPropsType) {
     /**
      * 当组件跨容器拖拽嵌套时,触发
      */
-    const {props, addPropsConfig, childNodes, componentName} = componentConfigs[key]
+    const {props, addPropsConfig, childNodes, componentName} = componentConfigs[key]||{}
     const {mirrorModalField, propsConfig,nodePropsConfig} = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export function useCommon(allProps: CommonContainerPropsType) {
         /**
          * 如果组件为选中状态那就更新selectedInfo
          */
-        if(nodePropsConfig){
+        if(nodePropsConfig&&componentName){
             for(let prop of Object.keys(nodePropsConfig)){
                 const {isRequired}=nodePropsConfig[prop]
                 if(isRequired&&childNodes![prop].length===0){

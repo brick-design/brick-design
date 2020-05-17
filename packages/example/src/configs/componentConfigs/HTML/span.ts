@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const span: ComponentConfigType = {
+const span: ComponentConfigTypes = {
   propsConfig: {
     children: {
       label: '文本内容',

@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Alert: ComponentConfigType = {
+const Alert: ComponentConfigTypes = {
   propsConfig: {
     message: {
       label: '警告提示内容',

@@ -17,10 +17,12 @@ function NoneContainer(allProps: CommonContainerPropsType, ref: any){
         propsConfig,
         isHovered, isSelected
     } = useCommon(allProps)
-    const {className, animateClass} = props
+  if(!componentName) return null
+
+  const {className, animateClass,...restProps} = props
     return (
         createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
-            ...props,
+            ...restProps,
             className: handlePropsClassName(isSelected, isHovered, className, animateClass),
             ...handleEvents(specialProps, isSelected),
             ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),

@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Breadcrumb: ComponentConfigType = {
+const Breadcrumb: ComponentConfigTypes = {
   nodePropsConfig: {
     separator: {
       type: PROPS_TYPES.reactNode,
@@ -50,7 +50,7 @@ const Breadcrumb: ComponentConfigType = {
     },
   },
 };
-const Item: ComponentConfigType = {
+const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     overlay: {
       label: '菜单',
@@ -79,7 +79,7 @@ const Item: ComponentConfigType = {
     },
   },
 };
-const Separator: ComponentConfigType = {
+const Separator: ComponentConfigTypes = {
   propsConfig: {
     children: {
       label: '要显示的分隔符',

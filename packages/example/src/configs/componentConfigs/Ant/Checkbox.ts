@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Checkbox: ComponentConfigType = {
+const Checkbox: ComponentConfigTypes = {
   propsConfig: {
     children: {
       label: '内容',
@@ -37,7 +37,7 @@ const Checkbox: ComponentConfigType = {
   },
 };
 
-const Group: ComponentConfigType = {
+const Group: ComponentConfigTypes = {
   propsConfig: {
     defaultValue: {
       label: '默认选中的选项',

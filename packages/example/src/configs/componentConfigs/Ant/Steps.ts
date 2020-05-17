@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Steps: ComponentConfigType = {
+const Steps: ComponentConfigTypes = {
   nodePropsConfig: {
     progressDot: {
       type: PROPS_TYPES.functionReactNode,
@@ -64,7 +64,7 @@ const Steps: ComponentConfigType = {
   },
 };
 
-const Step: ComponentConfigType = {
+const Step: ComponentConfigTypes = {
   nodePropsConfig: {
     description: {
       type: PROPS_TYPES.reactNode,

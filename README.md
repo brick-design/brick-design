@@ -1,6 +1,7 @@
-<h1 align='center'>brick-design</h1>
+<h1 align='center'>Brick Design</h1>
 
 [![npm package](https://img.shields.io/npm/v/brickd.svg?style=flat-square)](https://www.npmjs.org/package/brickd)
+[![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 
 ## 特性
 
@@ -33,7 +34,7 @@ npm install brickd brickd-core bricks-web --save
 ```
 ### 栗子
 ```jsx
-
+暂无
 ```
 
 ## LICENSE

@@ -9,8 +9,7 @@ import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
-import {PROPS_TYPES} from '@/types/ConfigTypes';
-import {CategoryType} from '@/types/CategoryType';
+import {PROPS_TYPES,CategoryType} from 'brickd-core';
 
 /**
  * redux封装函数

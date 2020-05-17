@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Collapse: ComponentConfigType = {
+const Collapse: ComponentConfigTypes = {
   propsConfig: {
     activeKey: {
       label: '当前激活 tab 面板的 key',
@@ -19,7 +19,7 @@ const Collapse: ComponentConfigType = {
   },
 };
 
-const Panel: ComponentConfigType = {
+const Panel: ComponentConfigTypes = {
   fatherNodesRule:['Collapse'],
   nodePropsConfig: {
     header: {

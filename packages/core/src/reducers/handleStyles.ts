@@ -10,9 +10,9 @@ import produce from 'immer';
  */
 export function changeStyles(state:StateType, payload:any) {
     const { style } = payload;
-    const { undo, redo, selectedInfo, componentConfigs, styleSetting } = state;
+    const { undo, redo, selectedInfo, componentConfigs } = state;
     if (!selectedInfo) return state;
-    undo.push({ componentConfigs, styleSetting });
+    undo.push({ componentConfigs });
     redo.length = 0;
 
     return {

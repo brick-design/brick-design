@@ -54,11 +54,11 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
             domTreeKeys,
             parentKey,
             parentPropName,
+            style:props.style
         },
         propsSetting: { propsConfig, mergePropsConfig, addPropsConfig, props },
         undo,
         redo,
-        styleSetting: props.style,
         hoverKey: null,
 
     };
@@ -70,18 +70,17 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state:StateType) {
-    const { selectedInfo,dropTarget, propsSetting,componentConfigs, undo, redo, styleSetting } = state;
+    const { selectedInfo,dropTarget, propsSetting,componentConfigs, undo, redo } = state;
     if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
         return state;
     }
-    undo.push({ selectedInfo, propsSetting, styleSetting,dropTarget });
+    undo.push({ selectedInfo, propsSetting,dropTarget });
     redo.length = 0;
     return {
         ...state,
         dropTarget:null,
         selectedInfo: null,
         propsSetting: null,
-        styleSetting: null,
         undo,
         redo,
     };

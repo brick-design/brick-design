@@ -1,5 +1,5 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType, NodePropsConfigType, PropsConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NodePropsConfigType, PropsConfigType } from 'brickd-core';
 
 const commonNodePropsConfig: NodePropsConfigType = {
   dateRender: {
@@ -84,7 +84,7 @@ const commonPropsConfig: PropsConfigType = {
   },
 
 };
-const DatePicker: ComponentConfigType = {
+const DatePicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
@@ -132,7 +132,7 @@ const DatePicker: ComponentConfigType = {
   },
 };
 
-const MonthPicker: ComponentConfigType = {
+const MonthPicker: ComponentConfigTypes = {
   nodePropsConfig: {
     monthCellContentRender: {
       type: PROPS_TYPES.functionReactNode,
@@ -157,7 +157,7 @@ const MonthPicker: ComponentConfigType = {
     },
   },
 };
-const WeekPicker: ComponentConfigType = {
+const WeekPicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,
@@ -179,7 +179,7 @@ const WeekPicker: ComponentConfigType = {
   },
 };
 
-const RangePicker: ComponentConfigType = {
+const RangePicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
       type: PROPS_TYPES.functionReactNode,

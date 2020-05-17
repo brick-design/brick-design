@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const TimePicker: ComponentConfigType = {
+const TimePicker: ComponentConfigTypes = {
   propsConfig: {
     allowEmpty: {
       label: '是否展示清除按钮',

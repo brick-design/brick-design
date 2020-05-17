@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Drawer: ComponentConfigType = {
+const Drawer: ComponentConfigTypes = {
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,

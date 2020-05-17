@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Radio: ComponentConfigType = {
+const Radio: ComponentConfigTypes = {
   propsConfig: {
     children: {
       label: '内容',
@@ -29,7 +29,7 @@ const Radio: ComponentConfigType = {
   },
 };
 
-const Button: ComponentConfigType = {
+const Button: ComponentConfigTypes = {
   propsConfig: {
     children: {
       label: '内容',
@@ -41,7 +41,7 @@ const Button: ComponentConfigType = {
     },
   },
 };
-const Group: ComponentConfigType = {
+const Group: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
       type: PROPS_TYPES.reactNode,

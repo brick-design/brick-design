@@ -71,6 +71,8 @@ export function addComponent(state: StateType) {
             throw new Error(`${propName || dropComponentName}:只允许拖拽${childNodesRule.toString()}组件`);
         }
     }
+    undo.push({componentConfigs});
+    redo.length = 0;
     return {
         ...state,
         componentConfigs:produce(componentConfigs,oldConfigs=>{

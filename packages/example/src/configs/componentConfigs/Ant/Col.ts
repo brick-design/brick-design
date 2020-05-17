@@ -1,5 +1,5 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
 const DEFAULT_CONFIG = {
   span: {
@@ -12,7 +12,7 @@ const DEFAULT_CONFIG = {
   },
 };
 
-const Col: ComponentConfigType = {
+const Col: ComponentConfigTypes = {
   propsConfig: {
     offset: {
       label: '间隔格数',

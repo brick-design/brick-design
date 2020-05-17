@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Card: ComponentConfigType = {
+const Card: ComponentConfigTypes = {
   nodePropsConfig: {
     cover: {
       type: PROPS_TYPES.reactNode,
@@ -94,7 +94,7 @@ const Card: ComponentConfigType = {
   },
 };
 
-const Grid: ComponentConfigType = {
+const Grid: ComponentConfigTypes = {
   propsConfig: {
     hoverable: {
       label: '鼠标移过时可浮起',
@@ -104,7 +104,7 @@ const Grid: ComponentConfigType = {
   },
 };
 
-const Meta: ComponentConfigType = {
+const Meta: ComponentConfigTypes = {
   nodePropsConfig: {
     avatar: {
       type: PROPS_TYPES.reactNode,

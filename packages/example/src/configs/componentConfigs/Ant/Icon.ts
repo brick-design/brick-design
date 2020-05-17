@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Icon: ComponentConfigType = {
+const Icon: ComponentConfigTypes = {
   propsConfig: {
     type: {
       label: '图标类型',

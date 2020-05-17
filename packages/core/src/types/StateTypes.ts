@@ -21,6 +21,7 @@ export interface SelectedInfoType extends ParentNodeInfo{
     selectedKey: string,
     propName?: string,
     domTreeKeys?: string[],
+    style?:any
 
 
 }
@@ -36,13 +37,6 @@ export interface DragSourceType extends ParentNodeInfo{
     vDOMCollection?: ComponentConfigsType,
     dragKey?: string,
     defaultProps?:any
-}
-
-export interface TemplateInfoType {
-    img: string,
-    id: string,
-    name: string,
-    config: string
 }
 
 export interface DropTargetType {
@@ -69,13 +63,11 @@ export interface StateType {
     componentConfigs:ComponentConfigsType,
     selectedInfo: SelectedInfoType | null,
     propsSetting: PropsSettingType | null,
-    styleSetting: any,
     undo: any[],
     redo: any[],
-    templateInfos: TemplateInfoType[],
     hoverKey: null | string,
     dragSource: DragSourceType | null,
     dropTarget: null | DropTargetType,
     platformInfo: PlatformInfoType,
-    propsConfigSheet?:PropsConfigSheetType
+    // propsConfigSheet?:PropsConfigSheetType
 }

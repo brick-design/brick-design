@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Anchor: ComponentConfigType = {
+const Anchor: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
       type: PROPS_TYPES.reactNode,
@@ -36,7 +36,7 @@ const Anchor: ComponentConfigType = {
     },
   },
 };
-const Link: ComponentConfigType = {
+const Link: ComponentConfigTypes = {
   fatherNodesRule: ['Anchor', 'Anchor.Link.children'],
   nodePropsConfig: {
     title: {

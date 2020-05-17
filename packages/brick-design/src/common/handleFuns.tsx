@@ -146,7 +146,6 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     let propName: string | undefined
     if (childNodes && !Array.isArray(childNodes)) {
         propName = Object.keys(childNodes as PropsNodeType)[0]
-        console.log('哈哈哈哈propName》》》》》》',propName)
     }
     return {
         onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),

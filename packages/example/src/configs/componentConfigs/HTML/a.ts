@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const a: ComponentConfigType = {
+const a: ComponentConfigTypes = {
   propsConfig: {
     target: {
       label: '规定在何处打开链接文档',

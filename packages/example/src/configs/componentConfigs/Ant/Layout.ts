@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Layout: ComponentConfigType = {
+const Layout: ComponentConfigTypes = {
   propsConfig: {
     hasSider: {
       label: '子元素是否有sider',
@@ -15,7 +15,7 @@ const Layout: ComponentConfigType = {
   },
 };
 
-const Header: ComponentConfigType = {
+const Header: ComponentConfigTypes = {
 
   propsConfig: {
     className: {
@@ -24,7 +24,7 @@ const Header: ComponentConfigType = {
     },
   },
 };
-const Footer: ComponentConfigType = {
+const Footer: ComponentConfigTypes = {
   propsConfig: {
     className: {
       label: '样式类名',
@@ -32,7 +32,7 @@ const Footer: ComponentConfigType = {
     },
   },
 };
-const Sider: ComponentConfigType = {
+const Sider: ComponentConfigTypes = {
   nodePropsConfig: {
     trigger: {
       type: PROPS_TYPES.reactNode,
@@ -105,7 +105,7 @@ const Sider: ComponentConfigType = {
     },
   },
 };
-const Content: ComponentConfigType = {
+const Content: ComponentConfigTypes = {
   propsConfig: {
     className: {
       label: '样式类名',

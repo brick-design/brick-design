@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Form: ComponentConfigType = {
+const Form: ComponentConfigTypes = {
   propsConfig: {
     hideRequiredMark: {
       label: '隐藏所有表单项的必选标记',
@@ -44,7 +44,7 @@ const Form: ComponentConfigType = {
   },
 };
 
-const Item: ComponentConfigType = {
+const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     extra: {
       type: PROPS_TYPES.reactNode,

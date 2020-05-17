@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Tree: ComponentConfigType = {
+const Tree: ComponentConfigTypes = {
   propsConfig: {
     autoExpandFather: {
       label: '父节点展开',
@@ -38,7 +38,7 @@ const Tree: ComponentConfigType = {
   },
 };
 
-const TreeNode: ComponentConfigType = {
+const TreeNode: ComponentConfigTypes = {
   propsConfig: {
     autoExpandFather: {
       label: '父节点展开',

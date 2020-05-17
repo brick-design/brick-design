@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Input: ComponentConfigType = {
+const Input: ComponentConfigTypes = {
   nodePropsConfig: {
     addonAfter: {
       type: PROPS_TYPES.reactNode,
@@ -104,7 +104,7 @@ const Input: ComponentConfigType = {
     },
   },
 };
-const Group: ComponentConfigType = {
+const Group: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
       type: PROPS_TYPES.reactNode,
@@ -124,7 +124,7 @@ const Group: ComponentConfigType = {
     },
   },
 };
-const Search: ComponentConfigType = {
+const Search: ComponentConfigTypes = {
   nodePropsConfig: {
     enterButton: {
       type: PROPS_TYPES.reactNode,
@@ -148,7 +148,7 @@ const Search: ComponentConfigType = {
     ...Input.propsConfig,
   },
 };
-const TextArea: ComponentConfigType = {
+const TextArea: ComponentConfigTypes = {
   propsConfig: {
     autoSize: {
       label: '自适应内容高度',
@@ -174,7 +174,7 @@ const TextArea: ComponentConfigType = {
     },
   },
 };
-const Password: ComponentConfigType = {
+const Password: ComponentConfigTypes = {
   propsConfig: {
     visibilityToggle: {
       label: '是否显示切换按钮',

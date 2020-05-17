@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Dropdown: ComponentConfigType = {
+const Dropdown: ComponentConfigTypes = {
   nodePropsConfig: {
     overlay: {
       type: PROPS_TYPES.reactNode,
@@ -55,7 +55,7 @@ const Dropdown: ComponentConfigType = {
     },
   },
 };
-const Button: ComponentConfigType = {
+const Button: ComponentConfigTypes = {
   nodePropsConfig: {
     overlay: {
       type: PROPS_TYPES.reactNode,

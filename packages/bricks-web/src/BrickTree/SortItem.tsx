@@ -52,7 +52,6 @@ function renderMenu(domKey: string, isOnlyNode?: boolean, isClear?: boolean) {
     let isRoot = domKey === 'root'
     return (
         <Menu onClick={handleMenuClick}>
-            //todo
             {isClear && <Item key={1}>清除</Item>}
             {!isRoot && !isOnlyNode && <Item key={3}>复制</Item>}
             {!isRoot && <Item key={4}>删除</Item>}
@@ -187,7 +186,7 @@ function SortItem(props: SortItemPropsType) {
     const {isHovered, isSelected} = selectedStatus(propName?`${key}${propName}`:key, hoverKey,
         selectedPropName?`${selectedKey}${selectedPropName}`:selectedKey);
     const vDom = componentConfigs[key]
-    const {childNodes: vDomChildNodes, componentName} = vDom
+    const {childNodes: vDomChildNodes, componentName} = vDom||{}
     const childNodes: ChildNodesType | undefined = propChildNodes || vDomChildNodes
     const [isUnfold, setIsUnfold] = useState(true);
     // 保存子组件dom
@@ -208,6 +207,7 @@ function SortItem(props: SortItemPropsType) {
         if (isFold && isUnfold) setIsUnfold(false);
     }, [isFold, isUnfold])
 
+    if(!componentName) return null
     if (!isEqual(prevSDTKeys, nextSDTKeys) && nextSDTKeys && !isUnfold && nextSDTKeys.includes(key)) {
         setIsUnfold(true);
     }

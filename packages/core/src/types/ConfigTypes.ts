@@ -21,16 +21,6 @@ export enum PROPS_TYPES {
 }
 
 /**
- * 样式类型定义
- */
-export enum CSS_TYPE {
-  string = 'string',
-  enum = 'enum',
-  number = 'number',
-};
-
-
-/**
  * 全局配置类型定义
  */
 export interface ConfigType {
@@ -39,5 +29,4 @@ export interface ConfigType {
   NON_CONTAINER_CATEGORY: CategoryType, //非容器组件分类
   //所有的组件配置汇总
   AllComponentConfigs: { [componentName: string]: ComponentConfigTypes },
-  iframeSrcDoc: string
 }

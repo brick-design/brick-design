@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const List: ComponentConfigType = {
+const List: ComponentConfigTypes = {
   nodePropsConfig: {
     header: {
       type: PROPS_TYPES.reactNode,
@@ -82,7 +82,7 @@ const List: ComponentConfigType = {
     },
   },
 };
-const Item: ComponentConfigType = {
+const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     actions: {
       type: PROPS_TYPES.reactNode,
@@ -103,7 +103,7 @@ const Item: ComponentConfigType = {
   },
 };
 
-const Meta: ComponentConfigType = {
+const Meta: ComponentConfigTypes = {
   nodePropsConfig: {
     avatar: {
       type: PROPS_TYPES.reactNode,

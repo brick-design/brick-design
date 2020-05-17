@@ -1,5 +1,5 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
 const Option = {
   value: {
@@ -15,7 +15,7 @@ const Option = {
     type: PROPS_TYPES.objectArray,
   },
 };
-const Cascader: ComponentConfigType = {
+const Cascader: ComponentConfigTypes = {
 
   nodePropsConfig: {
     displayRender: {

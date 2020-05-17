@@ -1,10 +1,10 @@
 import Avatar from './Avatar';
 import Tag from './Tag';
 import Breadcrumb from './Breadcrumb';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const PageHeader: ComponentConfigType = {
+const PageHeader: ComponentConfigTypes = {
   nodePropsConfig: {
     title: {
       type: PROPS_TYPES.reactNode,

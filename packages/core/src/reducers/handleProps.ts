@@ -10,11 +10,11 @@ import produce from 'immer';
  * @returns {{propsSetting: *}}
  */
 export function addPropsConfig(state:StateType, payload:any) {
+    if(!payload) return state
     const { newPropField, fatherFieldLocation, childPropsConfig, propType } = payload;
     const { propsSetting, undo, redo } = state;
     const { addPropsConfig, propsConfig } = propsSetting!;
     let isAdd = true;
-    //todo
   let newAddPropsConfig=produce(addPropsConfig,oldAddPropsConfig=>{
       update(oldAddPropsConfig, fatherFieldLocation, (propsContent: any) => {
         // 对象数组 添加一个对象时的逻辑

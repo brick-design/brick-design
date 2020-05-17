@@ -1,7 +1,7 @@
-import { PROPS_TYPES } from '@/types/ConfigTypes';
-import { ComponentConfigType } from '@/types/ComponentConfigType';
+import { PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes } from 'brickd-core';
 
-const Divider: ComponentConfigType = {
+const Divider: ComponentConfigTypes = {
   propsConfig: {
     dashed: {
       label: '是否虚线',

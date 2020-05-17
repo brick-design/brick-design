@@ -1,7 +1,7 @@
-import { ComponentConfigType } from '@/types/ComponentConfigType';
-import { PROPS_TYPES } from '@/types/ConfigTypes';
+import { ComponentConfigTypes } from 'brickd-core';
+import { PROPS_TYPES } from 'brickd-core';
 
-const Select: ComponentConfigType = {
+const Select: ComponentConfigTypes = {
 
   nodePropsConfig: {
     dropdownRender: {
@@ -225,7 +225,7 @@ const Select: ComponentConfigType = {
   },
 };
 
-const OptGroup: ComponentConfigType = {
+const OptGroup: ComponentConfigTypes = {
   fatherNodesRule: ['Select.children'],
   nodePropsConfig: {
     label: {
@@ -247,7 +247,7 @@ const OptGroup: ComponentConfigType = {
     },
   },
 };
-const Option: ComponentConfigType = {
+const Option: ComponentConfigTypes = {
   fatherNodesRule: ['Select.children', 'Select.OptGroup.children'],
   propsConfig: {
     children: {
