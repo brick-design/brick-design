@@ -13,15 +13,13 @@ export function handleSelectedStatus(
     event: Event | null,
     isSelected: boolean,
     specialProps: SelectedInfoBaseType
-    , propName: string | undefined) {
+    , propName?: string) {
     event && event.stopPropagation()
 
     // selectedProp = requiredProp || selectedProp
     if (isSelected) {
-        console.log('清除')
         clearSelectedStatus()
     } else {
-        console.log('选中')
         selectComponent({...specialProps, propName})
     }
 
@@ -43,15 +41,17 @@ export function onMouseOver(event: Event, key: string) {
 /**
  * 获取要放入组件的容器信息
  * @param event
+ * @param domTreeKeys
  * @param selectedKey
  * @param propName
  */
-export function getDropTargetInfo(event: Event, selectedKey?: string, propName?: string) {
+export function getDropTargetInfo(event: Event,domTreeKeys?:string[], selectedKey?: string, propName?: string) {
     event.stopPropagation();
 
     getDropTarget({
         propName,
         selectedKey,
+        domTreeKeys
     })
 
 }

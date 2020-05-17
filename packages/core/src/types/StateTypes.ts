@@ -48,6 +48,7 @@ export interface TemplateInfoType {
 export interface DropTargetType {
     selectedKey:string
     propName: string,
+    domTreeKeys:string[]
 }
 
 export type PlatformStyleType = (number|string)[]

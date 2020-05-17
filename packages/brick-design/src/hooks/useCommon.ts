@@ -22,7 +22,7 @@ export function useCommon(allProps: CommonContainerPropsType) {
          * 如果组件为选中状态那就更新selectedInfo
          */
         if (isSelected) {
-            handleSelectedStatus(null, isSelected, specialProps, undefined);
+            handleSelectedStatus(null, false, specialProps);
         }
     }, []);
 

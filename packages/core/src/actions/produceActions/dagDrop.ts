@@ -13,6 +13,7 @@ export type DragSourcePayload={
 export const getDragSource=(payload:DragSourcePayload)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.getDragSource,payload})
 export type DropTargetPayload={
     selectedKey?:string,
-    propName?:string
+    propName?:string,
+    domTreeKeys?:string[]
 }
 export const getDropTarget=(payload:DropTargetPayload)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.getDropTarget,payload})

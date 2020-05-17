@@ -7,7 +7,7 @@ import { ConfigType, StateType } from '../types';
 interface LegoProviderProps {
     children?:any,
     initState?:StateType,
-    config:ConfigType
+    config?:ConfigType
 }
 export  function LegoProvider({children,initState,config}:LegoProviderProps) {
     if(!LEGO_BRIDGE.config) {

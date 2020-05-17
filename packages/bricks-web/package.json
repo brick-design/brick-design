@@ -22,7 +22,6 @@
     "brickd": "^0.0.1",
     "brickd-core": "^0.0.1",
     "sortablejs": "^1.10.2",
-    "react": "^16.8.0",
     "lodash": "^4.17.15"
   },
   "peerDependencies": {
