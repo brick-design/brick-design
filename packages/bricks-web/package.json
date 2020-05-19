@@ -1,31 +1,35 @@
 {
   "name": "bricks-web",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "dist/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "types": "./lib/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "father build && tsc"
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^0.0.2",
-    "sortablejs": "^1.10.2",
-    "lodash": "^4.17.15"
+    "brickd": "^0.0.3",
+    "lodash": "^4.17.15",
+    "brickd-core": "^0.0.3",
+    "sortablejs": "^1.10.2"
   },
   "peerDependencies": {
-    "brickd-core": "^0.0.2",
     "react": "^16.8.0"
+  },
+  "devDependencies": {
+    "father": "^2.29.3"
   }
 }

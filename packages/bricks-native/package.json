@@ -16,6 +16,7 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "dependencies": {
+  "devDependencies": {
+    "father": "^2.29.3"
   }
 }

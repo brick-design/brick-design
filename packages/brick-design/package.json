@@ -1,31 +1,34 @@
 {
   "name": "brickd",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "dist/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "types": "./lib/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "father build && tsc"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
-
+    "lodash": "^4.17.15",
+    "brickd-core": "^0.0.3"
   },
   "peerDependencies": {
-    "brickd-core": "^0.0.1",
+    "brickd-core": "^0.0.3",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
-
+  },
+  "devDependencies": {
+    "father": "^2.29.3"
   }
 }

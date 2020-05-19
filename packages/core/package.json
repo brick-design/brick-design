@@ -1,18 +1,19 @@
 {
   "name": "brickd-core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "dist/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./es/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "fahter bulid"
   },
   "files": [
-    "lib"
+    "lib",
+    "es"
   ],
   "sideEffects": [
     "dist/*",
@@ -21,13 +22,14 @@
   ],
   "dependencies": {
     "immer": "^6.0.5",
-    "redux": "^4.0.5",
     "lodash": "^4.17.15",
+    "redux": "^4.0.5",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",
-    "@types/uuid": "^3.4.7"
+    "@types/uuid": "^3.4.7",
+    "father": "^2.29.3"
   },
   "peerDependencies": {
     "react": "^16.8.0"

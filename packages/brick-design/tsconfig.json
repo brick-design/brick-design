@@ -1,8 +1,19 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "lib",
-    "baseUrl": "./src"
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "declarationDir": "./lib",
+    "emitDeclarationOnly": true,
+    "jsx": "react"
   },
-  "include": ["src/index.tsx","typings.d.ts"]
+  "include": ["./src", "./typing.d.ts"],
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts"
+  ]
 }

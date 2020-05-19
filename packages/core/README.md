@@ -1,4 +1,4 @@
-# `core`
+# brickd-core
 
 > TODO: description
 

@@ -7,3 +7,4 @@
 .umi-production
 .idea
 packages/*/lib
+packages/*/es
