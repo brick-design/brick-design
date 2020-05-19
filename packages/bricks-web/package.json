@@ -6,6 +6,7 @@
   "homepage": "",
   "license": "MIT",
   "main": "lib/index.js",
+  "module": "dist/index.js",
   "types": "lib/index.d.ts",
   "directories": {
     "lib": "lib",

@@ -1,10 +1,10 @@
-import { LEGO_BRIDGE, useSelector } from 'brickd-core';
-import { CommonContainerPropsType, controlUpdate, HookState, stateSelector } from '../common/handleFuns';
+import { LEGO_BRIDGE, PropsNodeType, useSelector } from 'brickd-core';
+import { CommonPropsType, controlUpdate, HookState, stateSelector } from '../common/handleFuns';
 import { useEffect, useMemo } from 'react';
 import { handleSelectedStatus, selectedStatus } from '../common/events';
 import get from 'lodash/get';
 
-export function useCommon(allProps: CommonContainerPropsType) {
+export function useCommon(allProps: CommonPropsType) {
     const {specialProps, specialProps: {key}} = allProps
     const {selectedInfo, hoverKey, componentConfigs} = useSelector<HookState>(stateSelector,
         (prevState, nextState) => controlUpdate(prevState, nextState, key))
@@ -33,7 +33,7 @@ export function useCommon(allProps: CommonContainerPropsType) {
         if(nodePropsConfig&&componentName){
             for(let prop of Object.keys(nodePropsConfig)){
                 const {isRequired}=nodePropsConfig[prop]
-                if(isRequired&&childNodes![prop].length===0){
+                if(isRequired&&(childNodes as PropsNodeType)[prop].length===0){
                     handleSelectedStatus(null,false,specialProps,prop)
                     break
                 }

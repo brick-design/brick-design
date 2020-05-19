@@ -1,11 +1,30 @@
 {
   "name": "root",
   "private": true,
+  "author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anye931123/react-visual-editor.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "drag",
+    "drop",
+    "draggable",
+    "droppable",
+    "drag-and-drop",
+    "web-design",
+    "typescript"
+  ],
   "scripts": {
     "clean:lerna": "lerna clean --yes",
     "bootstrap:lerna": "lerna bootstrap"
   },
   "devDependencies": {
     "lerna": "^3.20.2"
+  },
+  "engines": {
+    "node": ">= 10.0"
   }
 }

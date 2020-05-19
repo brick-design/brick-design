@@ -17,13 +17,15 @@ export interface VirtualDOMType {
     childNodes?:ChildNodesType
 }
 
-export interface SelectedInfoType extends ParentNodeInfo{
+export interface SelectedInfoBaseType extends ParentNodeInfo {
+    key:string,
+    domTreeKeys:string[],
+}
+
+export type SelectedInfoType =Omit<SelectedInfoBaseType, 'key'>&{
     selectedKey: string,
     propName?: string,
-    domTreeKeys?: string[],
     style?:any
-
-
 }
 
 export interface PropsSettingType {
@@ -36,12 +38,11 @@ export interface PropsSettingType {
 export interface DragSourceType extends ParentNodeInfo{
     vDOMCollection?: ComponentConfigsType,
     dragKey?: string,
-    defaultProps?:any
 }
 
 export interface DropTargetType {
     selectedKey:string
-    propName: string,
+    propName?: string,
     domTreeKeys:string[]
 }
 

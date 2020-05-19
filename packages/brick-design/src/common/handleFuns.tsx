@@ -156,7 +156,7 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
 }
 
 
-export interface CommonContainerPropsType {
+export interface CommonPropsType {
     specialProps: SelectedInfoBaseType,
     [propsName: string]: any
 
@@ -165,4 +165,4 @@ export interface CommonContainerPropsType {
 
 export const stateSelector=['selectedInfo', 'hoverKey','componentConfigs']
 
-export function propAreEqual(prevProps, nextProps) {return isEqual(prevProps.specialProps, nextProps.specialProps)}
+export function propAreEqual(prevProps:CommonPropsType, nextProps:CommonPropsType):boolean {return isEqual(prevProps.specialProps, nextProps.specialProps)}

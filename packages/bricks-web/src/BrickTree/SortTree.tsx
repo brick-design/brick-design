@@ -37,10 +37,13 @@ const putItem = (c: any, props: SortTreePropsType) => {
     const  fatherNodesRule= c.dataset.farules;
     const dragName=c.dataset.name
     if(fatherNodesRule&&!JSON.parse(fatherNodesRule).include(componentName)) return false
-    if ( nodeProps?.isOnlyNode&&childNodes.length === 1) return false;
-    if (nodeProps?.childNodesRule) {
-        return nodeProps?.childNodesRule.includes(dragName);
+    if(nodeProps){
+        if ( nodeProps.isOnlyNode&&childNodes.length === 1) return false;
+        if (nodeProps.childNodesRule) {
+            return nodeProps.childNodesRule.includes(dragName);
+        }
     }
+
     return true;
 };
 

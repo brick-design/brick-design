@@ -5,7 +5,7 @@ import { formatSpecialProps } from '../utils';
 import { LEGO_BRIDGE } from 'brickd-core';
 
 import {
-  CommonContainerPropsType,
+  CommonPropsType,
   handleChildNodes,
   handleEvents,
   handleModalTypeContainer,
@@ -18,7 +18,7 @@ import { useCommon } from '../hooks/useCommon';
 /**
  * 所有的容器组件名称
  */
-function Container(allProps: CommonContainerPropsType, ref: any) {
+function Container(allProps: CommonPropsType, ref: any) {
   const {
     specialProps,
     specialProps: {
@@ -68,6 +68,6 @@ function Container(allProps: CommonContainerPropsType, ref: any) {
   );
 }
 
-export default memo(forwardRef(Container), propAreEqual);
+export default memo<CommonPropsType>(forwardRef(Container), propAreEqual);
 
 

@@ -14,7 +14,7 @@ export function getDragSource(state:StateType, payload:DragSourcePayload) {
     return {
         ...state,
         dragSource:{
-            vDOMCollection:componentName?generateVDOM(componentName!,defaultProps):vDOMCollection,
+            vDOMCollection:componentName?generateVDOM(componentName,defaultProps):vDOMCollection,
             dragKey,
             parentKey,
             parentPropName

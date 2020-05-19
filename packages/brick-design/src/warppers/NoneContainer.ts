@@ -1,12 +1,12 @@
 import { createElement, forwardRef, memo } from 'react';
 import get from 'lodash/get';
 import { LEGO_BRIDGE } from 'brickd-core';
-import { CommonContainerPropsType, handleEvents, handlePropsClassName, propAreEqual } from '../common/handleFuns';
+import { CommonPropsType, handleEvents, handlePropsClassName, propAreEqual } from '../common/handleFuns';
 import { formatSpecialProps } from '../utils';
 import merge from 'lodash/merge';
 import { useCommon } from '../hooks/useCommon';
 
-function NoneContainer(allProps: CommonContainerPropsType, ref: any){
+function NoneContainer(allProps: CommonPropsType, ref: any){
     const {
         specialProps,
         ...rest
@@ -38,4 +38,4 @@ function NoneContainer(allProps: CommonContainerPropsType, ref: any){
 
 }
 
-export default memo(forwardRef(NoneContainer), propAreEqual);
+export default memo<CommonPropsType>(forwardRef(NoneContainer), propAreEqual);

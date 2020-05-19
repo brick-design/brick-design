@@ -1,32 +1,8 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es6",
-    "baseUrl": ".",
-    "declaration": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
     "outDir": "lib",
-    "jsx": "react",
-    "sourceMap": true,
-    "lib": ["dom", "es2017"],
-    "skipLibCheck": true,
-    "strictNullChecks": true
+    "baseUrl": "./src"
   },
-  "lib": [ // 编译过程中需要引入的库文件的列表
-    "es5",
-    "es2015",
-    "es2016",
-    "es2017",
-    "es2018",
-    "dom"
-  ],
-  "include": [
-    "src/**/*",
-    "./typings.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib"
-  ]
+  "include": ["src/index.tsx","typings.d.ts"]
 }

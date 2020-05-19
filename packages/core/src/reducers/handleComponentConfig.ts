@@ -32,7 +32,7 @@ export function addComponent(state: StateType) {
      * 当拖拽的父key与drop目标key一直说明未移动
      * 当拖拽的key与drop目标key一直说明是他自己
      */
-    if(parentKey&&parentKey===selectedKey||domTreeKeys&&domTreeKeys.includes(dragKey)) return state
+    if(parentKey&&parentKey===selectedKey||domTreeKeys&&domTreeKeys.includes(dragKey!)) return state
 
     if(!componentConfigs.root) {
         undo.push({componentConfigs});
@@ -49,10 +49,10 @@ export function addComponent(state: StateType) {
     /**
      * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
      */
-    const dragComponentName=get(dragKey?componentConfigs[dragKey]:vDOMCollection.root,'componentName')
+    const dragComponentName=get(dragKey?componentConfigs[dragKey]:vDOMCollection!.root,'componentName')
     const dropComponentName=get(componentConfigs[selectedKey!],'componentName')
-    const {fatherNodesRule} = get(LEGO_BRIDGE.config.AllComponentConfigs,dragComponentName );
-    const {nodePropsConfig}=get(LEGO_BRIDGE.config.AllComponentConfigs,dropComponentName)
+    const {fatherNodesRule} = get(LEGO_BRIDGE.config!.AllComponentConfigs,dragComponentName );
+    const {nodePropsConfig}=get(LEGO_BRIDGE.config!.AllComponentConfigs,dropComponentName)
 
     /**
      * 父组件约束限制，减少不必要的组件错误嵌套

@@ -121,8 +121,9 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
 export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: SelectComponentType) => {
     const {  selectedKey,propName:selectedPropName } = selectedInfo;
     const {componentName,childNodes}=componentConfigs[selectedKey]
-    const {nodePropsConfig}=get(LEGO_BRIDGE.config.AllComponentConfigs,componentName)
-    if(nodePropsConfig&&nodePropsConfig[selectedPropName].isRequired&&childNodes[selectedPropName].length===0){
+    const {nodePropsConfig}=get(LEGO_BRIDGE.config!.AllComponentConfigs,componentName)
+    if(selectedPropName&&nodePropsConfig![selectedPropName].isRequired&&
+      (childNodes as PropsNodeType)[selectedPropName].length===0){
         if (payload) {
             const { propName,key} = payload;
             if (selectedKey === key&&propName===selectedPropName) return false;
@@ -139,8 +140,8 @@ export const generateVDOM=(componentName:string,defaultProps:any={})=>{
         componentName: componentName,
         props: defaultProps
     }
-    if (LEGO_BRIDGE.containers.includes(componentName)) {
-        const {nodePropsConfig} = get(LEGO_BRIDGE.config.AllComponentConfigs, componentName);
+    if (LEGO_BRIDGE.containers!.includes(componentName)) {
+        const {nodePropsConfig} = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
         vDOM.childNodes=[]
         // 是否为多属性节点
         if(nodePropsConfig){

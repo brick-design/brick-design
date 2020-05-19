@@ -1,4 +1,4 @@
-import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
 import { clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
@@ -9,12 +9,17 @@ import { onDragover, onDrop } from './common/events';
 export * from './common/events'
 
 
-const onIframeLoad = () => {
+const onIframeLoad = (divContainer:any,designPage:any) => {
     const head = document.head.cloneNode(true)
     const iframe: any = document.getElementById('dnd-iframe');
     const iframeDocument = iframe.contentDocument
     iframeDocument.head.remove()
     iframeDocument.documentElement.insertBefore(head, iframeDocument.body)
+    divContainer.current = iframe.contentDocument.getElementById('dnd-container');
+    ReactDOM.render(
+      <LegoProvider>
+          {designPage}
+      </LegoProvider>, divContainer.current);
 }
 
 /**
@@ -28,14 +33,14 @@ const stateSelector = ['componentConfigs', 'platformInfo']
 
 export function BrickDesign(props: BrickDesignProps) {
     const {componentConfigs, platformInfo} = useSelector(stateSelector);
-    const [spinShow, setSpinShow] = useState(true);
     let designPage: any = useMemo(() => {
         if (!componentConfigs.root) return null
         const {root: {componentName}} = componentConfigs;
         const props = {
             specialProps: {
                 domTreeKeys: ['root'],
-                key: "root"
+                key: "root",
+                parentKey:''
             }
         }
         return LEGO_BRIDGE.containers!.includes(componentName) ? <Container {...props} /> : <NoneContainer {...props}/>
@@ -47,19 +52,12 @@ export function BrickDesign(props: BrickDesignProps) {
         const iframe: any = document.getElementById('dnd-iframe');
         iframe.contentWindow.addEventListener('dragover', onDragover);
         iframe.contentWindow.addEventListener('drop', onDrop);
-        if (!spinShow) {
-            divContainer.current = iframe.contentDocument.getElementById('dnd-container');
-            ReactDOM.render(
-                <LegoProvider>
-                    {designPage}
-                </LegoProvider>, divContainer.current);
-        }
         return () => {
             iframe.contentWindow.removeEventListener('dragover', onDragover);
             iframe.contentWindow.removeEventListener('drop', onDrop);
         };
 
-    }, [spinShow]);
+    }, [divContainer.current]);
 
     useEffect(() => {
         if (divContainer.current)
@@ -80,9 +78,8 @@ export function BrickDesign(props: BrickDesignProps) {
                     style={{border: 0, ...style}}
                     srcDoc={iframeSrcDoc}
                     onLoad={useCallback(() => {
-                        onIframeLoad()
+                        onIframeLoad(divContainer,designPage)
                         onLoadEnd && onLoadEnd()
-                        setSpinShow(false)
                     }, [])}
                     {...props}
             />

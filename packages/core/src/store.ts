@@ -5,13 +5,12 @@ import { ConfigType, StateType } from './types';
 type LegoBridge={
     dispatch:Dispatch,
     containers:string[]|null,
-    config:ConfigType|null,
+    config?:ConfigType,
     store:Store|null
 }
 export const LEGO_BRIDGE:LegoBridge={
     dispatch:(action)=>action,
-    config:null,
-    containers : null,
+    containers: null,
     store:null
 
 }

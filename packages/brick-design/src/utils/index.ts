@@ -1,5 +1,3 @@
-import flattenDeep from 'lodash/flattenDeep';
-import map from 'lodash/map';
 import each from 'lodash/each';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
@@ -9,19 +7,6 @@ import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
 import isUndefined from 'lodash/isUndefined';
 import { useEffect, useRef } from 'react';
-
-/**
- * 用于获取组件名字数组
- * @param data
- * @returns {Array}
- */
-export function flattenDeepArray(data: any) {
-    return flattenDeep(map(data, (v, k) => {
-        if (v && v.components) return map(v.components, (_, subK) => subK);
-        return k;
-    }));
-}
-
 
 export const SPECIAL_STRING_CONSTANTS: any = {
     'null': null,

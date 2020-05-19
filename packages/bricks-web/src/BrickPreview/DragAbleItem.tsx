@@ -40,7 +40,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
     if (!defaultProps) {
       return componentName;
     }
-    return createElement(get(LEGO_BRIDGE.config?.OriginalComponents, componentName, componentName), defaultProps);
+    return createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), defaultProps);
   }
 
   // 没有设置默认属性说明组件无法展示，设置背景色

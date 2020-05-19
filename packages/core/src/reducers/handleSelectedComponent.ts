@@ -39,7 +39,7 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
     const { props, addPropsConfig = {},componentName} = componentConfigs[key];
     //todo
     // const { isContainer, isOnlyNode, childNodesRule, componentName } = handleComponentInfo(payload);
-    let { propsConfig } = get(LEGO_BRIDGE.config.AllComponentConfigs, componentName);
+    let { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
 
     const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
     undo.push({ selectedInfo, propsSetting });
