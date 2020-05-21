@@ -9,7 +9,7 @@ import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import { CategoryType, ComponentCategoryType, ComponentInfoType, useSelector } from 'brickd-core';
-import { usePrevious } from '../utils';
+import { flattenDeepArray, usePrevious } from '../utils';
 
 const { Panel } = Collapse;
 /**
@@ -119,13 +119,13 @@ function renderContent(categoryInfo: ComponentInfoType | null, categoryName: str
 
 interface FoldPanelPropsType {
   componentsCategory: CategoryType,  //组件分类
-  searchValues: string[],
-  isShow: boolean,
+  isShow?: boolean,
 
 }
 
 function BrickPreview(props: FoldPanelPropsType) {
-  const { componentsCategory,  searchValues, isShow } = props;
+  const { componentsCategory, isShow=true } = props;
+  const searchValues=flattenDeepArray(componentsCategory)
   const { selectedInfo } = useSelector(['selectedInfo']);
   const  { childNodesRule }=selectedInfo||{};
   const [openKeys = [], setOpenKeys] = useState<string[]>([]);

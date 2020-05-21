@@ -23,21 +23,38 @@
 
 ![Code](packages/docs/Code.png)
 
-## Usage
-
+###  📦 Install
 ```sh
 yarn add brickd brickd-core bricks-web
-
-//or
-
-npm install brickd brickd-core bricks-web --save
-
-import 
 ```
-### 栗子
+
+```bash
+npm install brickd brickd-core bricks-web
+```
+## Usage
 ```jsx
+import { LegoProvider } from 'brickd-core';
+import {BrickDesign} from 'brickd';
+import {BrickTree,BrickPreview} from 'bricks-web'
 
+const App = () => (
+  <LegoProvider config={{...}}>
+<div>
+    <BrickPreview componentsCategory={...}/>
+    <BrickDesign />
+<BrickTree/>
+</div>
+  </LegoProvider>
+
+);
 ```
+And import style manually:
+
+```jsx
+import 'bricks-web/dist/index.css';
+import 'brickd/dist/index.css';
+```
+
 
 ## LICENSE
 

@@ -17,7 +17,6 @@ function AllComponents() {
         <div className={styles['tabs-container']}>
         <BrickPreview isShow={activeKey === 'container'}
                    componentsCategory={LEGO_BRIDGE.config!.CONTAINER_CATEGORY}
-                   searchValues={LEGO_BRIDGE.containers!}
 
         />
         </div>
@@ -26,7 +25,6 @@ function AllComponents() {
                tab={'nonContainer'} key="nonContainer">
         <BrickPreview isShow={activeKey === 'nonContainer'}
                    componentsCategory={LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY}
-                   searchValues={flattenDeepArray(LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY)}
 
 
         />

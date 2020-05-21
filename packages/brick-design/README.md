@@ -19,7 +19,7 @@ import {BrickTree,BrickPreview} from 'bricks-web'
 const App = () => (
   <LegoProvider config={{...}}>
 <div>
-    <BrickPreview componentsCategory={...} searchValues={...} isShow={true}/>
+    <BrickPreview componentsCategory={...}/>
     <BrickDesign />
 <BrickTree/>
 </div>
