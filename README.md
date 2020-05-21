@@ -17,11 +17,11 @@
 - :dvd:**组件库替换**：通过简单的配置可以对接任何React组件库
 
 ## SNAPSHOT
-![mobile](docs/mobile.png)
+![mobile](packages/docs/mobile.png)
 
-![PC](docs/pc.png)
+![PC](packages/docs/pc.png)
 
-![Code](docs/Code.png)
+![Code](packages/docs/Code.png)
 
 ## Usage
 
@@ -31,6 +31,8 @@ yarn add brickd brickd-core bricks-web
 //or
 
 npm install brickd brickd-core bricks-web --save
+
+import 
 ```
 ### 栗子
 ```jsx

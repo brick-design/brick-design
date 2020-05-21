@@ -1,13 +1,13 @@
 {
   "name": "brickd",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "./lib/index.js",
-  "module": "./es/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -17,7 +17,7 @@
     "es"
   ],
   "scripts": {
-    "build": "father build && tsc"
+    "build": "father build"
   },
   "dependencies": {
     "lodash": "^4.17.15",

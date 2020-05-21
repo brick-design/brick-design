@@ -9,7 +9,7 @@
   "module": "./es/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "fahter bulid"
+    "build": "father build"
   },
   "files": [
     "lib",

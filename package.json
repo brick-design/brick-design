@@ -22,7 +22,8 @@
     "bootstrap:lerna": "lerna bootstrap"
   },
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "lerna": "^3.20.2",
+    "typescript": "^3.9.3"
   },
   "engines": {
     "node": ">= 10.0"

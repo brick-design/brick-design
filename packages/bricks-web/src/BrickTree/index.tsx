@@ -22,14 +22,13 @@ export function BrickTree() {
     <div
         onDrop={onDrop}
          onDragOver={onDragover}
+        onMouseLeave={onMouseLeave}
          className={styles['sort-container']}>
-      <div onMouseLeave={onMouseLeave} style={{ width: '100%' }}>
         <SortTree disabled
                   childNodes={['root']}
                   specialProps={{key:'root',domTreeKeys:[],parentKey:''}}
                   componentName={''}
         />
-      </div>
     </div>
   );
 }

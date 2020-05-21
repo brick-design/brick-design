@@ -29,10 +29,10 @@ interface BrickDesignProps extends IframeHTMLAttributes<any>{
     onLoadEnd?: () => void,
 }
 
-const stateSelector = ['componentConfigs', 'platformInfo']
+const stateSelector = ['componentConfigs']
 
 export function BrickDesign(props: BrickDesignProps) {
-    const {componentConfigs, platformInfo} = useSelector(stateSelector);
+    const {componentConfigs} = useSelector(stateSelector);
     let designPage: any = useMemo(() => {
         if (!componentConfigs.root) return null
         const {root: {componentName}} = componentConfigs;
@@ -67,15 +67,10 @@ export function BrickDesign(props: BrickDesignProps) {
                 </LegoProvider>, divContainer.current);
     }, [divContainer.current, designPage]);
 
-
-    const {size} = platformInfo;
-
-    const style = {width: size[0], maxHeight: size[1], transition: 'all 700ms'};
-
     const {onLoadEnd} = props
     return (<iframe onMouseLeave={clearHovered}
                     id="dnd-iframe"
-                    style={{border: 0, ...style}}
+                    style={{border: 0,width:'100%',height:'100%'}}
                     srcDoc={iframeSrcDoc}
                     onLoad={useCallback(() => {
                         onIframeLoad(divContainer,designPage)
