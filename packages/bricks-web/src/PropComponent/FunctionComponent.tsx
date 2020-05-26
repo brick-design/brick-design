@@ -2,7 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import { Input } from 'antd';
 import { InputProps } from 'antd/es/input';
 import split from 'lodash/split';
-import { propsAreEqual } from '../../../utils';
+import { propsAreEqual } from '../utils';
 
 function FunctionComponent(props: InputProps, ref: any) {
 

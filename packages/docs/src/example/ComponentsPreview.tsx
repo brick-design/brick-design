@@ -14,17 +14,18 @@ function AllComponents() {
           onChange={(newActiveKey: string) => setActiveKey(newActiveKey)}>
       <TabPane forceRender className={styles['tabs-panel']}
                tab={'container'} key="container">
-        <div className={styles['tabs-container']}>
-        <BrickPreview isShow={activeKey === 'container'}
-                   componentsCategory={LEGO_BRIDGE.config!.CONTAINER_CATEGORY}
+        <BrickPreview
+          isShow={activeKey === 'container'}
+          componentsCategory={LEGO_BRIDGE.config!.CONTAINER_CATEGORY}
+          className={styles['preview-container']}
 
         />
-        </div>
       </TabPane>
       <TabPane forceRender className={styles['tabs-panel']}
                tab={'nonContainer'} key="nonContainer">
         <BrickPreview isShow={activeKey === 'nonContainer'}
                    componentsCategory={LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY}
+                      className={styles['preview-container']}
 
 
         />

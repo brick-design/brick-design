@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Button, Col, Dropdown, Icon, Input, Row } from 'antd';
 import { ChromePicker } from 'react-color';
-import { propsAreEqual } from '../../utils';
+import { propsAreEqual } from '../utils';
 
 interface StringComponentPropsType {
   isFont: boolean,

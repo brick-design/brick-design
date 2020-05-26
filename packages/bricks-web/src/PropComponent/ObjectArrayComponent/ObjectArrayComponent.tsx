@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Tabs } from 'antd';
-import { confirmModal } from '../../config';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
-import { ObjectComponent, SortComponent } from '../index';
+import SortComponent from './SortComponent';
+import ObjectComponent  from '../ObjectComponent/ObjectComponent'
 import styles from '../../index.less';
-import { formatPropsFieldConfigLocation } from '../../../../utils';
+import { formatPropsFieldConfigLocation } from '../../utils';
 import { addPropsConfig, PROPS_TYPES, PropsConfigType } from 'brickd-core';
+import { confirmModal } from '../index';
 
 interface ObjectArrayPropsType {
   value?: any,

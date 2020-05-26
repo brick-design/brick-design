@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useEffect, useState } from 'react';
 import { Col, InputNumber, Row } from 'antd';
 import styles from './index.less';
-import { EnumComponent } from './index';
+import { EnumComponent } from 'bricks-web';
 import { propsAreEqual } from '../../utils';
 
 const UNITS = [

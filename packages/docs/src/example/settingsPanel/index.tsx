@@ -4,10 +4,11 @@ import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
 import { useSelector } from 'brickd-core';
 import { BrickTree } from 'bricks-web';
+import styles from '../index.less'
 
 const { TabPane } = Tabs;
 function SettingPanel() {
-const {styleSetting,propsSetting,selectedInfo}=useSelector(['styleSetting','propsSetting', 'selectedInfo'])
+const {propsSetting,selectedInfo}=useSelector(['propsSetting', 'selectedInfo'])
   const [activeKey, setActiveKey] = useState('1');
 
   return (
@@ -16,7 +17,7 @@ const {styleSetting,propsSetting,selectedInfo}=useSelector(['styleSetting','prop
       activeKey={activeKey}
     >
       <TabPane forceRender key="1" tab={'组件树'}>
-        <BrickTree/>
+        <BrickTree className={styles['brick-tree']} />
       </TabPane>
       <TabPane forceRender key="2" tab={'属性配置'}>
         <PropsSettings propsSetting={propsSetting} selectedInfo={selectedInfo}/>

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/es/select';
-import { propsAreEqual } from '../../../utils';
+import { propsAreEqual } from '../utils';
 
 function StringArray(props: SelectProps, ref: any) {
   return <Select

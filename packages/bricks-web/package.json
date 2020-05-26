@@ -9,12 +9,11 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
-    "lib": "lib",
+    "lib": "dist",
     "test": "__tests__"
   },
   "files": [
-    "lib",
-    "es"
+    "dist"
   ],
   "scripts": {
     "build": "father build"
@@ -24,7 +23,8 @@
     "brickd": "^0.0.4",
     "brickd-core": "^0.0.3",
     "lodash": "^4.17.15",
-    "sortablejs": "^1.10.2"
+    "sortablejs": "^1.10.2",
+    "react-color": "^2.18.0"
   },
   "peerDependencies": {
     "react": "^16.8.0"

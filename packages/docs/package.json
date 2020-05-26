@@ -11,20 +11,18 @@
   "dependencies": {
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
-    "brickd": "^0.0.3",
+    "brickd": "^0.0.4",
     "brickd-core": "^0.0.3",
-    "bricks-web": "^0.0.3",
+    "bricks-web": "^0.0.5",
     "classnames": "^2.2.6",
     "dumi": "^1.0.25",
     "highlight.js": "^9.17.1",
     "html2canvas": "^1.0.0-rc.5",
-    "immer": "^6.0.3",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "rc-animate": "^2.10.2",
     "re-resizable": "^6.1.1",
     "react": "^16.13.1",
-    "react-color": "^2.18.0",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {

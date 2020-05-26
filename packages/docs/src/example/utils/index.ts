@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
 import each from 'lodash/each';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -11,19 +10,6 @@ import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
 import { CategoryType, PROPS_TYPES } from 'brickd-core';
 
-/**
- * redux封装函数
- * @param props
- * @returns {Function}
- */
-export function reduxConnect(props?: string[], options?: object) {
-  return connect((state: any) => {
-      const resultProps: any = {};
-      each(props, (prop) => resultProps[prop] = state[prop]);
-      return resultProps;
-    }, undefined, undefined, { ...options },
-  );
-}
 
 
 export const SPECIAL_STRING_CONSTANTS: any = {

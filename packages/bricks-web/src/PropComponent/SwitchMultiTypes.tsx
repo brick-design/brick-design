@@ -1,8 +1,7 @@
 import React, { createElement, forwardRef, useEffect, useState } from 'react';
 import { Form, Tooltip } from 'antd';
-import { TYPES_TO_COMPONENT } from '../config';
 import styles from '../index.less';
-import EnumComponent from '../../components/EnumComponent';
+import EnumComponent from './EnumComponent';
 import isArray from 'lodash/isArray';
 import isNumber from 'lodash/isNumber';
 import isString from 'lodash/isString';
@@ -14,6 +13,7 @@ import get from 'lodash/get';
 import keys from 'lodash/keys';
 import { FormComponentProps } from 'antd/lib/form';
 import { PROPS_TYPES, PropsConfigType } from 'brickd-core';
+import {TYPES_TO_COMPONENT} from '../index'
 
 const FormItem = Form.Item;
 

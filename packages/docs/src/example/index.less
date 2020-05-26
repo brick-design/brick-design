@@ -2,7 +2,6 @@
 
 .wrapper {
   background: white;
-  height: 100%;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 4px 0 rgba(174, 174, 174, 0.50);
@@ -39,10 +38,18 @@
 
 }
 
+.brick-tree{
+  height: calc(100vh - 200px);
+}
 
+.preview-container{
+  height: calc(@content-height - 10px);
+}
 
 .tabs-container {
   background: #fff;
+  width: 100%;
+  height: calc(100vh - 200px);
 }
 
 

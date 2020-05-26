@@ -4,7 +4,7 @@ import { Button, Col, Dropdown, Row, TreeSelect } from 'antd';
 import classNames from 'classnames';
 import styles from './index.less';
 import options from './config';
-import { propsAreEqual } from '../../../../utils';
+import { propsAreEqual } from '../../../utils';
 
 const { TreeNode } = TreeSelect;
 

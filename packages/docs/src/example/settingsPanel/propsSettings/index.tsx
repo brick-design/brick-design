@@ -8,7 +8,7 @@ import each from 'lodash/each';
 import { DEFAULT_PROPS, TYPES_TO_COMPONENT } from './config';
 import styles from './index.less';
 import { filterProps } from '../../utils';
-import SwitchMultiTypes from './components/SwitchMultiTypes';
+import {SwitchMultiTypes} from 'bricks-web';
 import { FormComponentProps } from 'antd/lib/form';
 import { PropInfoType, PROPS_TYPES, PropsSettingType, SelectedInfoType, submitProps } from 'brickd-core';
 
@@ -83,7 +83,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
         )}
       </FormItem>
     );
-  };
+  }
 
   /**
    * 提交最终属性结果

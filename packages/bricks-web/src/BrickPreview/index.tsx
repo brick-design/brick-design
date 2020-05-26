@@ -120,11 +120,12 @@ function renderContent(categoryInfo: ComponentInfoType | null, categoryName: str
 interface FoldPanelPropsType {
   componentsCategory: CategoryType,  //组件分类
   isShow?: boolean,
+  className?:string
 
 }
 
 function BrickPreview(props: FoldPanelPropsType) {
-  const { componentsCategory, isShow=true } = props;
+  const { componentsCategory, isShow=true,className } = props;
   const searchValues=flattenDeepArray(componentsCategory)
   const { selectedInfo } = useSelector(['selectedInfo']);
   const  { childNodesRule }=selectedInfo||{};
@@ -174,7 +175,7 @@ function BrickPreview(props: FoldPanelPropsType) {
   }, [childNodesRule]);
 
   return (
-    <>
+    <div className={`${styles['container']}  ${className}`}>
       <AutoComplete
         style={{ marginLeft: 20, marginRight: 20 }}
         dataSource={childNodesRule || searchValues}
@@ -203,7 +204,7 @@ function BrickPreview(props: FoldPanelPropsType) {
 
           </Collapse>}
       </div>
-    </>
+    </div>
 
   );
 }

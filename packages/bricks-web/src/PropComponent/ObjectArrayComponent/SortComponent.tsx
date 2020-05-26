@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from '../../index.less';
 import each from 'lodash/each';
+import map from 'lodash/map'
 import { PaneType } from './ObjectArrayComponent';
+import Sortable from '../../components/ReactSortable';
 
 interface SortComponentPropsType {
   onSortChange: (data: any) => any,
@@ -34,21 +36,20 @@ function SortComponent(props: SortComponentPropsType) {
   };
 
   return (
-    // <Sortable
-    //   options={{
-    //     animation: 200,
-    //     dataIdAttr: 'id',
-    //     ghostClass: styles['item-background'],
-    //     swapThreshold: 0.5,
-    //     direction: 'horizontal',
-    //     scroll: true,
-    //   }}
-    //   style={{ display: 'flex', overflow: 'auto', paddingBottom: 10, paddingTop: 1 }}
-    //   onChange={onLayoutSortChange}
-    // >
-    //   {map(sortData, renderSortItem)}
-    // </Sortable>
-      null
+    <Sortable
+      options={{
+        animation: 200,
+        dataIdAttr: 'id',
+        ghostClass: styles['item-background'],
+        swapThreshold: 0.5,
+        direction: 'horizontal',
+        scroll: true,
+      }}
+      style={{ display: 'flex', overflow: 'auto', paddingBottom: 10, paddingTop: 1 }}
+      onChange={onLayoutSortChange}
+    >
+      {map(sortData, renderSortItem)}
+    </Sortable>
   );
 }
 

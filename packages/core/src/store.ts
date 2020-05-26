@@ -15,7 +15,18 @@ export const LEGO_BRIDGE:LegoBridge={
 
 }
 
+export const STATES={
+    componentConfigs:'componentConfigs',
+    selectedInfo:'selectedInfo',
+    propsSetting:'propsSetting',
+    undo:'undo',
+    redo:'redo',
+    hoverKey:'hoverKey',
+    dragSource:'dragSource',
+    dropTarget:'dropTarget',
+    platformInfo:'platformInfo'
 
+}
 const legoState:StateType={
     componentConfigs: {}, // 所有组件信息
     selectedInfo: null, // 选中组件的信息

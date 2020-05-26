@@ -33,9 +33,10 @@ const platformMenus: PlatformMenusType = {
     // { title: 'preview', icon: 'eye' },
     // { title: '导出代码', icon: 'export', event: 'outputFiles' },
     // { title: 'generateTemplate', icon: 'block' },
-    { title: 'switchPlatform', icon: SwitchPlatform, props: { menus: platformMenus } },
     { title: 'undo', icon: 'undo', shortcutKey: 'command+z/control+z', type: undo },
     { title: 'redo', icon: 'redo', shortcutKey: 'command+shift+z/control+shift+z', type: redo },
+    { title: 'switchPlatform', icon: SwitchPlatform, props: { menus: platformMenus } },
+
   ],
 },
   {

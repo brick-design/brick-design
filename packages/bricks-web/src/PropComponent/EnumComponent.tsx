@@ -2,9 +2,9 @@ import React, { forwardRef, memo } from 'react';
 import { Select, Tooltip } from 'antd';
 import map from 'lodash/map';
 import isObject from 'lodash/isObject';
-import styles from './index.less';
+import styles from '../index.less';
 import { SelectProps } from 'antd/lib/select';
-import { propsAreEqual } from '../../utils';
+import { propsAreEqual } from '../utils';
 
 const { Option } = Select;
 

@@ -1,17 +1,19 @@
 import React, { createElement, forwardRef, memo } from 'react';
 import { Col, Form, Icon, Row, Tooltip } from 'antd';
-import { confirmModal, TYPES_TO_COMPONENT } from '../../config';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
 import SelectAddProps from './SelectAddProps';
 import styles from '../../index.less';
-import { filterProps, formatPropsFieldConfigLocation, reduxConnect } from '../../../../utils';
+import { filterProps, formatPropsFieldConfigLocation } from '../../utils';
 import isArray from 'lodash/isArray';
-import { SwitchMultiTypes } from '../index';
 import each from 'lodash/each';
 import { deletePropsConfig, PropInfoType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 import { FormComponentProps } from 'antd/es/form';
+import SwitchMultiTypes from '../SwitchMultiTypes'
+import { confirmModal, TYPES_TO_COMPONENT } from '../../index';
+
+
 
 interface ObjectComponentPropsType extends FormComponentProps {
   childPropsConfig: PropsConfigType,
@@ -114,7 +116,7 @@ function ObjectComponent(props: ObjectComponentPropsType, ref: any) {
 }
 
 
-export default reduxConnect()(Form.create<ObjectComponentPropsType>({
+export default Form.create<ObjectComponentPropsType>({
   mapPropsToFields(props) {
     const { value } = props;
     const formatFields: any = {};
@@ -129,4 +131,4 @@ export default reduxConnect()(Form.create<ObjectComponentPropsType>({
   const { childPropsConfig, tabIndex, value } = nextProps;
   const { childPropsConfig: prevChildPropsConfig, tabIndex: prevTabIndex, value: prevValue } = prevProps;
   return isEqual(childPropsConfig, prevChildPropsConfig) && isEqual(prevTabIndex, tabIndex) && isEqual(prevValue, value);
-})));
+}))
