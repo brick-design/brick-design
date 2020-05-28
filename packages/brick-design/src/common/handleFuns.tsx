@@ -60,8 +60,8 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
     return resultChildNodes;
 }
 
-export function handleChildNodes(domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType) {
-    const {childNodes,componentName} = componentConfigs[parentKey]
+export function handleChildNodes(domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType,childNodes:ChildNodesType) {
+    const {componentName} = componentConfigs[parentKey]
     let nodeProps: any = {}
     if(childNodes){
         if (Array.isArray(childNodes)) {
@@ -150,7 +150,7 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     return {
         onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),
         onMouseOver: (e: any) => onMouseOver(e, key),
-        onDragEnter: (e: any) => childNodes?getDropTargetInfo(e,domTreeKeys, key, propName):getDropTargetInfo(e),
+        onDragEnter: (e: any) => !childNodes&&getDropTargetInfo(e),
         onDragStart: (e: any) => onDragStart(e, key, parentKey!, parentPropName),
     };
 }

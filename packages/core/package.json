@@ -15,11 +15,6 @@
     "lib",
     "es"
   ],
-  "sideEffects": [
-    "dist/*",
-    "lib/**/style/*",
-    "*.less"
-  ],
   "dependencies": {
     "immer": "^6.0.5",
     "lodash": "^4.17.15",
@@ -29,7 +24,8 @@
   "devDependencies": {
     "@types/lodash": "^4.14.149",
     "@types/uuid": "^3.4.7",
-    "father": "^2.29.3"
+    "father": "^2.29.3",
+    "@types/react": "^16.9.35"
   },
   "peerDependencies": {
     "react": "^16.8.0"

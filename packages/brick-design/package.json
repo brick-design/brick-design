@@ -9,12 +9,11 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
-    "lib": "lib",
+    "lib": "dist",
     "test": "__tests__"
   },
   "files": [
-    "lib",
-    "es"
+    "dist"
   ],
   "scripts": {
     "build": "father build"

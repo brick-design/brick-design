@@ -1,5 +1,5 @@
 import { StateType } from '../types';
-import { copyConfig, deleteChildNodes, getLocation, getNewDOMCollection } from '../utils';
+import { copyConfig, deleteChildNodes, getLocation} from '../utils';
 import get from 'lodash/get';
 import update from 'lodash/update';
 import { produce } from 'immer';
@@ -86,12 +86,6 @@ export function addComponent(state: StateType) {
             if(parentKey){
                 update(oldConfigs,getLocation(parentKey,parentPropName),childNodes=>childNodes.filter((nodeKey:string)=>nodeKey!==dragKey))
             }
-
-            if(vDOMCollection){
-                //为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
-                Object.assign(oldConfigs,getNewDOMCollection(vDOMCollection,newKey))
-            }
-
         }),
         dragSource: null,
         dropTarget: null,

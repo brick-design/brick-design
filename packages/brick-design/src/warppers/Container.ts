@@ -1,8 +1,8 @@
-import { createElement, forwardRef, memo } from 'react';
+import { createElement, forwardRef, memo, useEffect, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { formatSpecialProps } from '../utils';
-import { LEGO_BRIDGE } from 'brickd-core';
+import { DragSourceType, LEGO_BRIDGE, useSelector } from 'brickd-core';
 
 import {
   CommonPropsType,
@@ -13,8 +13,12 @@ import {
   propAreEqual,
 } from '../common/handleFuns';
 import { useCommon } from '../hooks/useCommon';
+import { getDropTargetInfo } from '..';
 
 
+interface DragSourceState {
+  dragSource:DragSourceType
+}
 /**
  * 所有的容器组件名称
  */
@@ -39,6 +43,29 @@ function Container(allProps: CommonPropsType, ref: any) {
     componentConfigs,
     SelectedDomKeys
   } = useCommon(allProps);
+
+  useEffect(()=>{
+    setChildren(childNodes)
+  },[childNodes])
+
+  const [children,setChildren]=useState(childNodes)
+  const {dragSource}=useSelector<DragSourceState>(['dragSource'])
+const onDragEnter=(e:Event)=>{
+    e.stopPropagation()
+  getDropTargetInfo(e,domTreeKeys, key)
+  const {dragKey}=dragSource
+  if(dragKey&&dragKey!==key){
+    if(Array.isArray(childNodes)){
+      setChildren([...childNodes,dragKey])
+    }else {
+
+    }
+  }
+}
+const onDragLeave=(e:Event)=>{
+  e.stopPropagation()
+  setChildren(childNodes)
+}
   if(!componentName) return null
 
   let modalProps: any = {};
@@ -54,7 +81,9 @@ function Container(allProps: CommonPropsType, ref: any) {
       ...restProps,
       className: handlePropsClassName(isSelected, isHovered, className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
-      ...handleChildNodes(domTreeKeys, key, componentConfigs),
+      onDragEnter,
+      onDragLeave,
+      ...handleChildNodes(domTreeKeys, key, componentConfigs,children!),
       ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),
       draggable: true,
       /**

@@ -1,6 +1,8 @@
-import { generateVDOM } from '../utils';
+import { generateVDOM, getNewDOMCollection } from '../utils';
 import { StateType } from '../types';
 import { DragSourcePayload, DropTargetPayload } from '../actions';
+import produce from 'immer'
+import uuid from 'uuid';
 
 /**
  * 获取拖拽组件数据
@@ -9,16 +11,30 @@ import { DragSourcePayload, DropTargetPayload } from '../actions';
  * @returns {{dragSource: *}}
  */
 export function getDragSource(state:StateType, payload:DragSourcePayload) {
-    const { componentName,defaultProps,vDOMCollection,dragKey, parentKey, parentPropName} = payload;
+    let {componentConfigs,undo}=state
+    let { componentName,defaultProps,vDOMCollection,dragKey, parentKey, parentPropName} = payload;
+    if(componentName){
+        vDOMCollection=generateVDOM(componentName,defaultProps)
+    }
+    if(componentConfigs.root&&vDOMCollection){
+        undo.push(componentConfigs)
+        dragKey=uuid()
+        componentConfigs=produce(componentConfigs,oldConfigs=>{
+            //为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
+            Object.assign(oldConfigs,getNewDOMCollection(vDOMCollection!,dragKey!))
 
+        })
+    }
     return {
         ...state,
         dragSource:{
-            vDOMCollection:componentName?generateVDOM(componentName,defaultProps):vDOMCollection,
+            vDOMCollection,
             dragKey,
             parentKey,
             parentPropName
         },
+        componentConfigs,
+        undo
     };
 }
 
