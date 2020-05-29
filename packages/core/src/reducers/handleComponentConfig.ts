@@ -49,7 +49,7 @@ export function addComponent(state: StateType) {
     /**
      * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
      */
-    const dragComponentName=get(dragKey?componentConfigs[dragKey]:vDOMCollection!.root,'componentName')
+    const dragComponentName=get(componentConfigs[dragKey],'componentName')
     const dropComponentName=get(componentConfigs[selectedKey!],'componentName')
     const {fatherNodesRule} = get(LEGO_BRIDGE.config!.AllComponentConfigs,dragComponentName );
     const {nodePropsConfig}=get(LEGO_BRIDGE.config!.AllComponentConfigs,dropComponentName)
@@ -175,6 +175,9 @@ export function deleteComponent(state: StateType) {
                 return {}
             }else {
                 update(oldConfig,getLocation(parentKey,parentPropName),childNodes=>childNodes.filter((childKey:string)=>childKey!==selectedKey))
+                if(oldConfig[selectedKey].childNodes){
+                    deleteChildNodes(oldConfig,oldConfig[selectedKey].childNodes!)
+                }
                 delete oldConfig[selectedKey]
             }
         }),

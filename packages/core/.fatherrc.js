@@ -1,8 +1,8 @@
 export default {
   entry:'src/index.ts',
-  esm:{
-    type:'babel',
+  esm: {
+    type: 'rollup',
+    file: 'index',
     importLibToEs: true
-  },
-  cjs:'babel'
+  }
 }

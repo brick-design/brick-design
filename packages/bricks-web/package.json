@@ -1,6 +1,6 @@
 {
   "name": "bricks-web",
-  "version": "0.0.5",
+  "version": "0.0.10",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^0.0.4",
-    "brickd-core": "^0.0.3",
+    "brickd": "^0.0.7",
+    "brickd-core": "^0.0.6",
     "lodash": "^4.17.15",
-    "sortablejs": "^1.10.2",
-    "react-color": "^2.18.0"
+    "react-color": "^2.18.0",
+    "sortablejs": "^1.10.2"
   },
   "peerDependencies": {
     "react": "^16.8.0"

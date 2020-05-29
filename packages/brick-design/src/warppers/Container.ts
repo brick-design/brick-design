@@ -1,24 +1,35 @@
 import { createElement, forwardRef, memo, useEffect, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import { formatSpecialProps } from '../utils';
-import { DragSourceType, LEGO_BRIDGE, useSelector } from 'brickd-core';
+import { formatSpecialProps, usePrevious } from '../utils';
+import { DragSourceType, LEGO_BRIDGE, useSelector, produce, DropTargetType } from 'brickd-core';
 
 import {
-  CommonPropsType,
+  CommonPropsType, controlUpdate,
   handleChildNodes,
   handleEvents,
   handleModalTypeContainer,
-  handlePropsClassName,
-  propAreEqual,
+  handlePropsClassName, HookState,
+  propAreEqual, stateSelector,
 } from '../common/handleFuns';
 import { useCommon } from '../hooks/useCommon';
 import { getDropTargetInfo } from '..';
 
 
-interface DragSourceState {
-  dragSource:DragSourceType
+export interface DragDropTypes extends HookState{
+  dragSource: DragSourceType,
+  dropTarget: DropTargetType
 }
+
+function dragDropUpdate(prevState:DragDropTypes, nextState:DragDropTypes,key:string){
+  const selectedKey = get(nextState.dropTarget, 'selectedKey');
+  const prevSelectedKey = get(prevState.dropTarget, 'selectedKey');
+  const dragKey = get(nextState.dragSource, 'dragKey');
+  const prevDragKey = get(prevState.dragSource, 'dragKey');
+  return selectedKey !== key && prevSelectedKey === key ||
+    selectedKey === key && prevSelectedKey !== key || dragKey !== prevDragKey;
+}
+
 /**
  * 所有的容器组件名称
  */
@@ -31,6 +42,9 @@ function Container(allProps: CommonPropsType, ref: any) {
     },
     ...rest
   } = allProps;
+
+  const { dragSource, dropTarget }=useSelector<DragDropTypes>(['dragSource', 'dropTarget'],
+    (prevState, nextState) => dragDropUpdate(prevState,nextState,key))
   const {
     props,
     addPropsConfig,
@@ -41,49 +55,51 @@ function Container(allProps: CommonPropsType, ref: any) {
     isHovered,
     isSelected,
     componentConfigs,
-    SelectedDomKeys
+    SelectedDomKeys,
   } = useCommon(allProps);
+  const [children, setChildren] = useState(childNodes);
+  const onDragEnter = (e: Event) => {
+    e.stopPropagation();
+    const { dragKey } = dragSource;
+    if (dragKey && !domTreeKeys.includes(dragKey) && !SelectedDomKeys) {
+      let propName;
+      if (Array.isArray(childNodes)) {
+        setChildren([...childNodes, dragKey]);
+      } else {
+        setChildren(produce(childNodes, oldChild => {
+          propName = Object.keys(oldChild!)[0];
+          oldChild![propName] = [...oldChild![propName], dragKey];
+        }));
+      }
+      getDropTargetInfo(e, domTreeKeys, key, propName);
+    }
+  };
 
   useEffect(()=>{
+    if(childNodes!==children)
     setChildren(childNodes)
   },[childNodes])
-
-  const [children,setChildren]=useState(childNodes)
-  const {dragSource}=useSelector<DragSourceState>(['dragSource'])
-const onDragEnter=(e:Event)=>{
-    e.stopPropagation()
-  getDropTargetInfo(e,domTreeKeys, key)
-  const {dragKey}=dragSource
-  if(dragKey&&dragKey!==key){
-    if(Array.isArray(childNodes)){
-      setChildren([...childNodes,dragKey])
-    }else {
-
-    }
+  if (dropTarget&&dropTarget.selectedKey!==key&&children!==childNodes) {
+    setChildren(childNodes);
   }
-}
-const onDragLeave=(e:Event)=>{
-  e.stopPropagation()
-  setChildren(childNodes)
-}
-  if(!componentName) return null
+
+  if (!componentName) return null;
 
   let modalProps: any = {};
   if (mirrorModalField) {
     const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'dnd-iframe');
-    const isVisible = isSelected || SelectedDomKeys&&SelectedDomKeys.includes(key);
+    const isVisible = isSelected || SelectedDomKeys && SelectedDomKeys.includes(key);
     modalProps = { [displayPropName]: isVisible, ...mountedProps };
   }
 
-  const { className, animateClass,...restProps } = props;
+  const { className, animateClass, ...restProps } = props;
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
       className: handlePropsClassName(isSelected, isHovered, className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
       onDragEnter,
-      onDragLeave,
-      ...handleChildNodes(domTreeKeys, key, componentConfigs,children!),
+      ...handleChildNodes(domTreeKeys, key, componentConfigs, children!),
       ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),
       draggable: true,
       /**

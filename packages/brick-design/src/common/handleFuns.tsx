@@ -39,7 +39,8 @@ export function handlePropsClassName(isSelected: boolean, isHovered: boolean, cl
  */
 function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType, parentPropName?: string,isOnlyNode?:boolean,isRequired?:boolean) {
     const resultChildNodes = map(childNodes, (key) => {
-        const {componentName} = componentConfigs[key];
+        const {componentName} = componentConfigs[key]||{};
+        if(!componentName) return null
         /** 根据组件类型处理属性 */
         const props = {
             specialProps:{

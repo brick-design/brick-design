@@ -16,7 +16,7 @@ function AllComponents() {
                tab={'container'} key="container">
         <BrickPreview
           isShow={activeKey === 'container'}
-          componentsCategory={LEGO_BRIDGE.config!.CONTAINER_CATEGORY}
+          isContainer
           className={styles['preview-container']}
 
         />
@@ -24,7 +24,6 @@ function AllComponents() {
       <TabPane forceRender className={styles['tabs-panel']}
                tab={'nonContainer'} key="nonContainer">
         <BrickPreview isShow={activeKey === 'nonContainer'}
-                   componentsCategory={LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY}
                       className={styles['preview-container']}
 
 

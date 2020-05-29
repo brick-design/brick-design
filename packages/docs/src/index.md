@@ -16,7 +16,7 @@ features:
     desc: 高性能的组件渲染
   - icon: https://gw.alipayobjects.com/zos/bmw-prod/d1ee0c6f-5aed-4a45-a507-339a4bfe076c/k7bjsocq_w144_h144.png
     title: 为组件开发而生
-    desc: 独特的 Markdown 扩展，可嵌入 Demo、可导入外部 Demo 甚至插入自定义 React 组件，使得组件的文档不仅能看，还好用
+    desc: 自由拖拽组合，实时预览效果
 footer: Open-source MIT Licensed | Copyright © 2019-present<br />Powered by self
 ---
 

@@ -8,7 +8,7 @@ import DragAbleItem from './DragAbleItem';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
-import { CategoryType, ComponentCategoryType, ComponentInfoType, useSelector } from 'brickd-core';
+import { CategoryType, ComponentCategoryType, ComponentInfoType, LEGO_BRIDGE, useSelector } from 'brickd-core';
 import { flattenDeepArray, usePrevious } from '../utils';
 
 const { Panel } = Collapse;
@@ -118,14 +118,15 @@ function renderContent(categoryInfo: ComponentInfoType | null, categoryName: str
 
 
 interface FoldPanelPropsType {
-  componentsCategory: CategoryType,  //组件分类
+  isContainer?:boolean,
   isShow?: boolean,
   className?:string
 
 }
 
 function BrickPreview(props: FoldPanelPropsType) {
-  const { componentsCategory, isShow=true,className } = props;
+  const { isContainer, isShow=true,className } = props;
+  const componentsCategory=isContainer?LEGO_BRIDGE.config!.CONTAINER_CATEGORY:LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY
   const searchValues=flattenDeepArray(componentsCategory)
   const { selectedInfo } = useSelector(['selectedInfo']);
   const  { childNodesRule }=selectedInfo||{};

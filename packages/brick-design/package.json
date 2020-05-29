@@ -1,6 +1,6 @@
 {
   "name": "brickd",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
@@ -20,14 +20,14 @@
   },
   "dependencies": {
     "lodash": "^4.17.15",
-    "brickd-core": "^0.0.3"
+    "brickd-core": "^0.0.6"
   },
   "peerDependencies": {
-    "brickd-core": "^0.0.3",
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
   "devDependencies": {
-    "father": "^2.29.3"
+    "father": "^2.29.3",
+    "@types/lodash": "^4.14.149"
   }
 }

@@ -1,19 +1,18 @@
 {
   "name": "brickd-core",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
   "license": "MIT",
-  "main": "./lib/index.js",
-  "module": "./es/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "father build"
   },
   "files": [
-    "lib",
-    "es"
+    "dist"
   ],
   "dependencies": {
     "immer": "^6.0.5",

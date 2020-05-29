@@ -37,7 +37,7 @@ export interface PropsSettingType {
 
 export interface DragSourceType extends ParentNodeInfo{
     vDOMCollection?: ComponentConfigsType,
-    dragKey?: string,
+    dragKey: string,
 }
 
 export interface DropTargetType {
