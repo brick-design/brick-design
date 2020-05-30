@@ -1,6 +1,8 @@
 <h1 align='center'>react-visual-editor</h1>
 
 ### 新版地址：[Brick Design](https://github.com/anye931123/react-visual-editor/tree/brickd)，新版本重新设计了数据结构，重新设计架构，性能大提升，在现有功能基础上会增加一些新的功能，正在开发中……欢迎关注！
+
+### [demo示例](https://github.com/brick-design/brick-design-demo)
 ## 特性
 
 - :fire:**任意拖拽嵌套**：通过组件预览面板拖拽组件，到设计面板实现任意嵌套，或者拖拽到DomTree中指定容器节点，DomTree与设计面板中的组件也可随意拖拽嵌套
