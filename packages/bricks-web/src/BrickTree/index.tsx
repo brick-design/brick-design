@@ -11,8 +11,8 @@ export function BrickTree(props:BrickTreeProps) {
   const {componentConfigs}=useSelector<{componentConfigs:ComponentConfigsType}>(['componentConfigs'],(prevState,nextState)=>{
     const {componentConfigs:{root:prevRoot}}=prevState
     const {componentConfigs:{root}}=nextState
-    if(!prevRoot&&root) return true
-    return false
+    return !!(!prevRoot && root);
+
   })
   const onMouseLeave = useCallback((e: any) => {
     e.stopPropagation();

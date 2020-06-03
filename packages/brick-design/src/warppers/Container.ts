@@ -1,27 +1,28 @@
 import { createElement, forwardRef, memo, useEffect, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import { formatSpecialProps, usePrevious } from '../utils';
-import { DragSourceType, LEGO_BRIDGE, useSelector, produce, DropTargetType } from 'brickd-core';
+import { formatSpecialProps } from '../utils';
+import { DragSourceType, DropTargetType, LEGO_BRIDGE, produce, useSelector } from 'brickd-core';
 
 import {
-  CommonPropsType, controlUpdate,
+  CommonPropsType,
   handleChildNodes,
   handleEvents,
   handleModalTypeContainer,
-  handlePropsClassName, HookState,
-  propAreEqual, stateSelector,
+  handlePropsClassName,
+  HookState,
+  propAreEqual,
 } from '../common/handleFuns';
 import { useCommon } from '../hooks/useCommon';
 import { getDropTargetInfo } from '..';
 
 
-export interface DragDropTypes extends HookState{
+export interface DragDropTypes extends HookState {
   dragSource: DragSourceType,
   dropTarget: DropTargetType
 }
 
-function dragDropUpdate(prevState:DragDropTypes, nextState:DragDropTypes,key:string){
+function dragDropUpdate(prevState: DragDropTypes, nextState: DragDropTypes, key: string) {
   const selectedKey = get(nextState.dropTarget, 'selectedKey');
   const prevSelectedKey = get(prevState.dropTarget, 'selectedKey');
   const dragKey = get(nextState.dragSource, 'dragKey');
@@ -43,8 +44,8 @@ function Container(allProps: CommonPropsType, ref: any) {
     ...rest
   } = allProps;
 
-  const { dragSource, dropTarget }=useSelector<DragDropTypes>(['dragSource', 'dropTarget'],
-    (prevState, nextState) => dragDropUpdate(prevState,nextState,key))
+  const { dragSource, dropTarget } = useSelector<DragDropTypes>(['dragSource', 'dropTarget'],
+    (prevState, nextState) => dragDropUpdate(prevState, nextState, key));
   const {
     props,
     addPropsConfig,
@@ -58,28 +59,31 @@ function Container(allProps: CommonPropsType, ref: any) {
     SelectedDomKeys,
   } = useCommon(allProps);
   const [children, setChildren] = useState(childNodes);
+
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    const { dragKey } = dragSource;
-    if (dragKey && !domTreeKeys.includes(dragKey) && !SelectedDomKeys) {
+    const { dragKey,parentKey, } = dragSource;
+    if (dragKey && !domTreeKeys.includes(dragKey)&& !SelectedDomKeys) {
       let propName;
-      if (Array.isArray(childNodes)) {
-        setChildren([...childNodes, dragKey]);
-      } else {
-        setChildren(produce(childNodes, oldChild => {
-          propName = Object.keys(oldChild!)[0];
-          oldChild![propName] = [...oldChild![propName], dragKey];
-        }));
+      if(parentKey!==key){
+        if (Array.isArray(childNodes)) {
+          setChildren([...childNodes, dragKey]);
+        } else {
+          setChildren(produce(childNodes, oldChild => {
+            propName = Object.keys(oldChild!)[0];
+            oldChild![propName] = [...oldChild![propName], dragKey];
+          }));
+        }
       }
       getDropTargetInfo(e, domTreeKeys, key, propName);
     }
   };
 
-  useEffect(()=>{
-    if(childNodes!==children)
-    setChildren(childNodes)
-  },[childNodes])
-  if (dropTarget&&dropTarget.selectedKey!==key&&children!==childNodes) {
+  useEffect(() => {
+      setChildren(childNodes);
+  }, [childNodes]);
+
+  if ((!dropTarget|| dropTarget.selectedKey !== key) && children !== childNodes) {
     setChildren(childNodes);
   }
 

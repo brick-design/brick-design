@@ -57,7 +57,6 @@ function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?:
 }
 
 export function useSelector<T>(selector: string[], controlUpdate?: ControlUpdate<T>, stateDeep?: string) {
-    // @ts-ignore
     if (process.env.NODE_ENV !== 'production' && !selector) {
         throw new Error(`You must pass a selector to useSelector`)
     }

@@ -1,31 +1,152 @@
 {
-  "name": "root",
-  "private": true,
-  "author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/anye931123/react-visual-editor.git"
-  },
-  "keywords": [
-    "react",
-    "reactjs",
-    "drag",
-    "drop",
-    "draggable",
-    "droppable",
-    "drag-and-drop",
-    "web-design",
-    "typescript"
-  ],
-  "scripts": {
-    "clean:lerna": "lerna clean --yes",
-    "bootstrap:lerna": "lerna bootstrap"
-  },
-  "devDependencies": {
-    "lerna": "^3.20.2",
-    "typescript": "^3.9.3"
-  },
-  "engines": {
-    "node": ">= 10.0"
-  }
+	"name": "root",
+	"private": true,
+	"author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/anye931123/react-visual-editor.git"
+	},
+	"keywords": [
+		"react",
+		"reactjs",
+		"drag",
+		"drop",
+		"draggable",
+		"droppable",
+		"drag-and-drop",
+		"web-design",
+		"typescript"
+	],
+	"scripts": {
+		"clean": "lerna clean --yes",
+		"bootstrap": "lerna bootstrap",
+		"build": "lerna run build --stream",
+		"test": "jest --coverage",
+		"precommit:lint": "lint-staged",
+		"watch": "lerna run --parallel --stream watch",
+		"precommit:format": "pretty-quick --staged",
+		"start": "lerna run --parallel --stream start",
+		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.7.5",
+		"@babel/core": "^7.7.5",
+		"@babel/plugin-proposal-class-properties": "^7.7.4",
+		"@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+		"@babel/preset-env": "^7.7.5",
+		"@babel/preset-typescript": "^7.10.1",
+		"@commitlint/cli": "^8.2.0",
+		"@commitlint/config-conventional": "^8.2.0",
+		"@types/classnames": "^2.2.10",
+		"@types/enzyme": "^3.10.5",
+		"@types/jest": "^25.2.3",
+		"@types/lodash": "^4.14.149",
+		"@types/react": "^16.9.35",
+		"@types/sortablejs": "^1.10.4",
+		"@types/uuid": "^3.4.7",
+		"@typescript-eslint/eslint-plugin": "^2.8.0",
+		"@typescript-eslint/parser": "^2.8.0",
+		"babel-jest": "^26.0.1",
+		"enzyme": "^3.11.0",
+		"enzyme-adapter-react-16": "^1.15.2",
+		"eslint": "^6.7.0",
+		"eslint-config-prettier": "^6.7.0",
+		"eslint-config-react-app": "^5.0.2",
+		"eslint-plugin-prettier": "^3.1.1",
+		"eslint-plugin-react": "^7.16.0",
+		"eslint-plugin-react-hooks": "^2.3.0",
+		"husky": "^4.2.5",
+		"jest": "^26.0.1",
+		"jest-environment-jsdom-fourteen": "^1.0.1",
+		"jest-resolve": "^26.0.1",
+		"jest-watch-typeahead": "^0.6.0",
+		"lerna": "^3.20.2",
+		"prettier": "^2.0.5",
+		"pretty-quick": "^2.0.1",
+		"ts-jest": "^26.1.0",
+		"typescript": "^3.9.3"
+	},
+	"engines": {
+		"node": ">= 10.0"
+	},
+	"dependencies": {
+		"antd": "3.26.16",
+		"dumi": "^1.0.25",
+		"father": "^2.29.3",
+		"react": "^16.13.1",
+		"react-dom": "^16.13.1"
+	},
+
+	"jest": {
+		"clearMocks": true,
+		"cacheDirectory": ".jest-cache",
+		"setupFilesAfterEnv": [
+			"<rootDir>/jest/setup-enzyme.js"
+		],
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx"
+		],
+		"modulePaths": [
+			"<rootDir>/packages/"
+		],
+		"moduleNameMapper": {
+			"^brickd-core$": "core/dist",
+			"^brickd$": "brick-design/dist",
+			"^bricks-web$": "bricks-web/dist"
+		},
+		"collectCoverageFrom": [
+			"packages/**/*.{ts,tsx}",
+			"!**/node_modules/**",
+			"!**/dist/**",
+			"!**/__tests__/**",
+			"!packages/docs/**/*.{ts,tsx}",
+			"!**/typing.d.ts"
+		],
+		"testMatch": [
+			"<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+			"<rootDir>/packages/brick-design/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+			"<rootDir>/packages/bricks-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
+		],
+		"transform": {
+			"^.+\\.(ts|tsx)$": "ts-jest"
+		},
+		"globals": {
+			"ts-jest": {
+				"tsConfig": "tsconfig.jest.json",
+				"diagnostics": {
+					"pathRegex": "/.(spec|test).ts$/"
+				}
+			}
+		}
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"eslint --fix",
+			"prettier"
+		]
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "all",
+		"useTabs": true,
+		"overrides": [
+			{
+				"files": "*.md",
+				"options": {
+					"useTabs": false
+				}
+			},
+			{
+				"files": "*.json",
+				"options": {
+					"useTabs": false,
+					"tabWidth": 2
+				}
+			}
+		]
+	}
 }

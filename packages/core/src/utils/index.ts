@@ -2,8 +2,8 @@ import { ChildNodesType, ComponentConfigsType, PropsNodeType, SelectedInfoType, 
 import uuid from 'uuid';
 import each from 'lodash/each';
 import get from 'lodash/get';
-import flattenDeep from 'lodash/flattenDeep';
-import map from 'lodash/map';
+// import flattenDeep from 'lodash/flattenDeep';
+// import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
 import { SelectComponentType } from '../actions';
 
@@ -32,8 +32,8 @@ export const copyConfig = (componentConfigs: ComponentConfigsType, selectedKey: 
 
 function copyChildNodes(componentConfigs:ComponentConfigsType,childNodes:string[]) {
     const newChildKeys=[]
-    for(let oldKey of childNodes){
-        let newChildKey=uuid()
+    for(const oldKey of childNodes){
+        const newChildKey=uuid()
         newChildKeys.push(newChildKey)
         copyConfig(componentConfigs,oldKey,newChildKey)
     }
@@ -50,7 +50,7 @@ export function deleteChildNodes(componentConfigs:ComponentConfigsType,childNode
 
 }
 function deleteArrChild(componentConfigs:ComponentConfigsType,childNodes:string[]) {
-    for(let key of childNodes){
+    for(const key of childNodes){
         const childNodesInfo= componentConfigs[key].childNodes
         if(childNodesInfo){
             deleteChildNodes(componentConfigs,childNodesInfo)
@@ -89,7 +89,7 @@ export const getNewDOMCollection = (vDOMCollection: ComponentConfigsType,rootKey
             if(Array.isArray(childNodes)){
                 vDom.childNodes=childNodes.map((key)=>keyMap[key])
             }else if(childNodes){
-                let newChildNodes:PropsNodeType={}
+                const newChildNodes:PropsNodeType={}
                 each(childNodes,(nodes,propName)=>{
                     newChildNodes[propName]=nodes.map((key)=>keyMap[key])
                 })
@@ -161,10 +161,10 @@ export const generateVDOM=(componentName:string,defaultProps:any={})=>{
  * @returns {Array}
  */
 export function flattenDeepArray(data: any) {
-    return flattenDeep(map(data, (v, k) => {
-        if (v && v.components) return map(v.components, (_, subK) => subK);
-        return k;
-    }));
+    return Object.keys(data).map((v ) => {
+        if (data[v] && data[v].components) return Object.keys(data[v].components).map( (subK) => subK);
+        return v;
+    }).flat(Infinity) as string[];
 }
 
 export function update(o:any,paths:string[],func:(t:any)=>any) {
@@ -199,7 +199,7 @@ export  function shallowEqual(objA:any, objB:any) {
 
     if (keysA.length !== keysB.length) return false
 
-    for (let key of keysA) {
+    for (const key of keysA) {
         if (!Object.prototype.hasOwnProperty.call(objB, key) || !is(objA[key], objB[key])) {
             return false
         }

@@ -11,13 +11,15 @@ import uuid from 'uuid';
  * @returns {{dragSource: *}}
  */
 export function getDragSource(state:StateType, payload:DragSourcePayload) {
+    // eslint-disable-next-line prefer-const
     let {componentConfigs,undo}=state
+    // eslint-disable-next-line prefer-const
     let { componentName,defaultProps,vDOMCollection,dragKey, parentKey, parentPropName} = payload;
     if(componentName){
         vDOMCollection=generateVDOM(componentName,defaultProps)
     }
     if(componentConfigs.root&&vDOMCollection){
-        undo.push(componentConfigs)
+        undo.push({componentConfigs})
         dragKey=uuid()
         componentConfigs=produce(componentConfigs,oldConfigs=>{
             //为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
@@ -54,14 +56,10 @@ export function getDropTarget(state:StateType,  payload:DropTargetPayload ) {
         dropTarget: null,
         hoverKey: null,
     };
-    const { selectedKey,propName,domTreeKeys } = payload;
+    const { selectedKey } = payload;
     return {
         ...state,
-        dropTarget: {
-            selectedKey,
-            propName,
-            domTreeKeys
-        },
+        dropTarget: payload,
         hoverKey: selectedKey,
     };
 }

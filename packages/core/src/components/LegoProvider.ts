@@ -9,7 +9,7 @@ interface LegoProviderProps {
     initState?:StateType,
     config?:ConfigType
 }
-export  function LegoProvider({children,initState,config}:LegoProviderProps) {
+export  function LegoProvider({children,initState,config}:LegoProviderProps={}) {
     if(!LEGO_BRIDGE.config&&!config) {
         throw Error('config未初始化')
     }else if(!LEGO_BRIDGE.config) {

@@ -9,8 +9,12 @@
     "jsx": "react",
     "strict": true,
     "lib": ["dom", "esnext"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": [".*"]
+    }
   },
+
   "include": ["./src"],
   "exclude": [
     "node_modules",

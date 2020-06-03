@@ -1,6 +1,5 @@
 import { CategoryType } from './CategoryTypes';
 import { ComponentConfigTypes } from './ComponentConfigTypes';
-import {ReactNode} from 'react'
 /**
  * 属性类型定义
  */

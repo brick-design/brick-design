@@ -6,6 +6,5 @@
 .umi
 .umi-production
 .idea
-packages/*/lib
-packages/*/es
 packages/*/dist
+.jest-cache

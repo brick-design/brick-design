@@ -24,7 +24,8 @@ export function addComponent(state: StateType) {
      * 如果没有拖拽的组件不做添加动作, 如果没有
      */
     const {selectedKey,  propName,domTreeKeys} = selectedInfo||dropTarget||{};
-    if (!dragSource||componentConfigs.root&&!selectedKey) return state
+    if (!dragSource) return state
+    if(componentConfigs.root&&!selectedKey) return {...state,...(undo.pop()),dragSource:null}
     const { vDOMCollection,dragKey, parentKey,parentPropName} = dragSource;
 
 
@@ -76,8 +77,7 @@ export function addComponent(state: StateType) {
     return {
         ...state,
         componentConfigs:produce(componentConfigs,oldConfigs=>{
-            //
-            let newKey=dragKey||uuid()
+            const newKey=dragKey||uuid()
             //添加新组件到指定容器中
             update(oldConfigs,getLocation(selectedKey!,propName),childNodes=>{
                 return [...childNodes,newKey]
