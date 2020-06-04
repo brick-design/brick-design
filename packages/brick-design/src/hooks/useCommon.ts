@@ -31,7 +31,7 @@ export function useCommon(allProps: CommonPropsType) {
          * 如果组件为选中状态那就更新selectedInfo
          */
         if(nodePropsConfig&&componentName){
-            for(let prop of Object.keys(nodePropsConfig)){
+            for(const prop of Object.keys(nodePropsConfig)){
                 const {isRequired}=nodePropsConfig[prop]
                 if(isRequired&&(childNodes as PropsNodeType)[prop].length===0){
                     handleSelectedStatus(null,false,specialProps,prop)

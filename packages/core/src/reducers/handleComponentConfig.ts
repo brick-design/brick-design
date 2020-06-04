@@ -25,7 +25,7 @@ export function addComponent(state: StateType) {
      */
     const {selectedKey,  propName,domTreeKeys} = selectedInfo||dropTarget||{};
     if (!dragSource) return state
-    if(componentConfigs.root&&!selectedKey) return {...state,...(undo.pop()),dragSource:null}
+    if(componentConfigs.root&&!selectedKey) return {...state,...(undo.pop()),dragSource:null} as StateType
     const { vDOMCollection,dragKey, parentKey,parentPropName} = dragSource;
 
 
@@ -44,7 +44,7 @@ export function addComponent(state: StateType) {
             dragSource:null,
             undo,
             redo
-        }
+        } as StateType
     }
 
     /**
@@ -91,7 +91,7 @@ export function addComponent(state: StateType) {
         dropTarget: null,
         undo,
         redo,
-    };
+    } as StateType;
 }
 
 /**
@@ -146,7 +146,7 @@ export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload)
         }),
         undo,
         redo,
-    };
+    } as StateType;
 }
 
 /**

@@ -1,4 +1,5 @@
 import { PropsConfigType } from './ComponentConfigTypes';
+import { Action } from 'redux';
 
 export type PropsNodeType= {
     [propName: string]: string[]
@@ -60,12 +61,17 @@ export interface ComponentConfigsType{
     [key:string]:VirtualDOMType
 }
 
+export interface BrickAction extends Action<string>{
+    payload?:any
+}
+
+export type UndoRedoType=Partial<Omit<StateType, 'undo'|'redo'>>
 export interface StateType {
     componentConfigs:ComponentConfigsType,
     selectedInfo: SelectedInfoType | null,
     propsSetting: PropsSettingType | null,
-    undo: any[],
-    redo: any[],
+    undo: UndoRedoType[],
+    redo: UndoRedoType[],
     hoverKey: null | string,
     dragSource: DragSourceType | null,
     dropTarget: null | DropTargetType,

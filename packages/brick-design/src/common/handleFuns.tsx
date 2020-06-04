@@ -140,7 +140,6 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
         key,
         parentKey,
         parentPropName,
-      domTreeKeys
     } = specialProps;
     let propName: string | undefined
     if (childNodes && !Array.isArray(childNodes)) {
@@ -149,7 +148,6 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     return {
         onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),
         onMouseOver: (e: any) => onMouseOver(e, key),
-        onDragEnter: (e: any) => !childNodes&&getDropTargetInfo(e),
         onDragStart: (e: any) => onDragStart(e, key, parentKey!, parentPropName),
     };
 }

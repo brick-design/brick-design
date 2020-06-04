@@ -1,12 +1,12 @@
 import { createStore, Dispatch, Store } from 'redux';
 import { reducer } from './reducers';
-import { ConfigType, StateType } from './types';
+import { BrickAction, ConfigType, StateType } from './types';
 
 type LegoBridge={
     dispatch:Dispatch,
     containers:string[]|null,
     config?:ConfigType,
-    store:Store|null
+    store:Store<StateType,BrickAction>|null
 }
 export const LEGO_BRIDGE:LegoBridge={
     dispatch:(action)=>action,
@@ -27,7 +27,7 @@ export const STATES={
     platformInfo:'platformInfo'
 
 }
-const legoState:StateType={
+export const legoState:StateType={
     componentConfigs: {}, // 所有组件信息
     selectedInfo: null, // 选中组件的信息
     propsSetting: null,  // 属性设置暂存属性数据

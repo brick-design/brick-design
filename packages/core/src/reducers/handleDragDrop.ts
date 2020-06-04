@@ -37,7 +37,7 @@ export function getDragSource(state:StateType, payload:DragSourcePayload) {
         },
         componentConfigs,
         undo
-    };
+    } as StateType;
 }
 
 /**
@@ -50,16 +50,17 @@ export function getDropTarget(state:StateType,  payload:DropTargetPayload ) {
      * 如果location为undefined说明当前组件不是容器组件
      * 清除dropTarget信息
      */
-    const {selectedInfo}=state
-    if (!payload.selectedKey||selectedInfo) return {
+    const {selectedInfo,dragSource}=state
+    const {selectedKey,domTreeKeys}=payload
+    if(dragSource&&dragSource.dragKey===selectedKey&&!domTreeKeys||selectedInfo) return  state
+    if (!domTreeKeys) return {
         ...state,
         dropTarget: null,
         hoverKey: null,
-    };
-    const { selectedKey } = payload;
+    } as StateType;
     return {
         ...state,
         dropTarget: payload,
         hoverKey: selectedKey,
-    };
+    } as StateType;
 }

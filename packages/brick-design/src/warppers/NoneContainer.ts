@@ -1,10 +1,11 @@
 import { createElement, forwardRef, memo } from 'react';
 import get from 'lodash/get';
-import { LEGO_BRIDGE } from 'brickd-core';
+import { LEGO_BRIDGE, produce } from 'brickd-core';
 import { CommonPropsType, handleEvents, handlePropsClassName, propAreEqual } from '../common/handleFuns';
 import { formatSpecialProps } from '../utils';
 import merge from 'lodash/merge';
 import { useCommon } from '../hooks/useCommon';
+import { getDropTargetInfo } from '..';
 
 function NoneContainer(allProps: CommonPropsType, ref: any){
     const {
@@ -21,13 +22,19 @@ function NoneContainer(allProps: CommonPropsType, ref: any){
     } = useCommon(allProps)
   if(!componentName) return null
 
+  const onDragEnter = (e: Event) => {
+    e.stopPropagation();
+    getDropTargetInfo(e,undefined,specialProps.key)
+  };
+
   const {className, animateClass,...restProps} = props
     return (
         createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
             ...restProps,
             className: handlePropsClassName(isSelected, isHovered, className, animateClass,true),
             ...handleEvents(specialProps, isSelected),
-            ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),
+          onDragEnter,
+          ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),
             draggable: true,
             /**
              * 设置组件id方便抓取图片

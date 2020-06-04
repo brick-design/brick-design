@@ -15,7 +15,7 @@ export function addPropsConfig(state:StateType, payload:any) {
     const { propsSetting, undo, redo } = state;
     const { addPropsConfig, propsConfig } = propsSetting!;
     let isAdd = true;
-  let newAddPropsConfig=produce(addPropsConfig,oldAddPropsConfig=>{
+  const newAddPropsConfig=produce(addPropsConfig,oldAddPropsConfig=>{
       update(oldAddPropsConfig, fatherFieldLocation, (propsContent: any) => {
         // 对象数组 添加一个对象时的逻辑
         if (childPropsConfig) return childPropsConfig;
@@ -45,7 +45,7 @@ export function addPropsConfig(state:StateType, payload:any) {
         },
         undo,
         redo,
-    };
+    } as StateType;
 }
 
 /**
@@ -59,7 +59,7 @@ export function deletePropsConfig(state:StateType, payload:any) {
     const { fatherFieldLocation, field } = payload;
     const { addPropsConfig, propsConfig, props } = propsSetting!;
     const fieldInPropsLocation = getFieldInPropsLocation(fatherFieldLocation);
-    let newAddPropsConfig=produce(addPropsConfig,oldAddPropsConfig=>{
+    const newAddPropsConfig=produce(addPropsConfig,oldAddPropsConfig=>{
         update(oldAddPropsConfig, fatherFieldLocation, prevPropsConfig => {
             delete prevPropsConfig[field];
             return prevPropsConfig;
@@ -67,7 +67,7 @@ export function deletePropsConfig(state:StateType, payload:any) {
     })
 
 
-    let newProps=produce(props,(oldProps:any)=>{
+    const newProps=produce(props,(oldProps:any)=>{
         update(oldProps, fieldInPropsLocation, prevProps => {
             if (typeof prevProps === 'object') {
                 delete prevProps[field];
@@ -89,7 +89,7 @@ export function deletePropsConfig(state:StateType, payload:any) {
         },
         undo,
         redo,
-    };
+    } as StateType;
 }
 
 /**
@@ -102,10 +102,8 @@ export function submitProps(state:StateType, payload:any) {
     const { props } = payload;
     const { propsSetting, componentConfigs, selectedInfo, undo, redo } = state;
     const {selectedKey}=selectedInfo!
-
     undo.push({ componentConfigs, propsSetting });
     redo.length = 0;
-    console.log('属性配置提交成功！！');
     return {
         ...state,
         propsSetting: {
@@ -125,7 +123,7 @@ export function submitProps(state:StateType, payload:any) {
         }),
         undo,
         redo,
-    };
+    } as StateType;
 }
 
 

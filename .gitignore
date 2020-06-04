@@ -8,3 +8,4 @@
 .idea
 packages/*/dist
 .jest-cache
+coverage

@@ -9,5 +9,5 @@ export function changePlatform(state:StateType, payload:PlatformInfoType) {
     return {
         ...state,
         platformInfo: payload
-    };
+    } as StateType;
 }

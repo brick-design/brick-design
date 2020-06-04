@@ -1,4 +1,4 @@
-import { StateType } from '../types';
+import { StateType, BrickAction } from '../types';
 import ACTION_TYPES from '../actions/actionTypes';
 import {
     addComponent,
@@ -13,10 +13,13 @@ import { changePlatform } from './handlePlatform';
 import { addPropsConfig, deletePropsConfig, submitProps } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles } from './handleStyles';
-import { Reducer } from 'redux';
 import { redo, undo } from './handleRedoUndo';
+import {  Reducer } from 'redux';
 
-export  const reducer:Reducer=function(state:StateType,action:any){
+
+
+export  const reducer:Reducer<StateType,BrickAction>=(prevState,action)=>{
+    const state=prevState as StateType
     const {type,payload}=action
     switch (type) {
         case ACTION_TYPES.addComponent:
