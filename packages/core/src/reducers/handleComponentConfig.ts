@@ -105,7 +105,6 @@ export function copyComponent(state: StateType) {
      * 未选中组件不做任何操作
      */
     if (!selectedInfo||selectedInfo.selectedKey==='root') {
-        console.warn(!selectedInfo?'请选择你要复制的组件':'禁止复制根节点或者OnlyNode节点')
         return state
     }
     const {selectedKey,parentPropName,parentKey} = selectedInfo;
@@ -161,8 +160,6 @@ export function deleteComponent(state: StateType) {
      * 未选中组件将不做任何操作
      */
     if (!selectedInfo) {
-        //todo
-        console.error('请选择你要删除的组件')
         return state
     }
     const {selectedKey, parentKey,parentPropName} = selectedInfo;
@@ -198,7 +195,6 @@ export function clearChildNodes(state: StateType) {
     const {componentConfigs, selectedInfo, undo, redo} = state;
     if (!selectedInfo) {
         //todo
-        console.warn("请选择要清除子节点的组件")
         return state
     }
     const {selectedKey,propName} = selectedInfo;

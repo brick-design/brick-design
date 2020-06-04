@@ -19,14 +19,13 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
     }
     const { propName, domTreeKeys,key,parentKey,parentPropName } = payload;
 
-    if(selectedInfo&&selectedInfo.selectedKey===key&&!propName){
-        if(selectedInfo.propName){
-            domTreeKeys.push(`${key}${selectedInfo.propName}`)
-        }
+    if(selectedInfo&&selectedInfo.selectedKey===key){
+        domTreeKeys.push(`${key}${propName}`)
         return {
             ...state,
             selectedInfo: {
                 ...selectedInfo,
+                propName,
                 domTreeKeys,
                 parentKey,
                 parentPropName
@@ -37,9 +36,7 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
         domTreeKeys.push(`${key}${propName}`);
     }
     const { props, addPropsConfig = {},componentName} = componentConfigs[key];
-    //todo
-    // const { isContainer, isOnlyNode, childNodesRule, componentName } = handleComponentInfo(payload);
-    let { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+    const { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
 
     const mergePropsConfig = merge({}, propsConfig, addPropsConfig);
     undo.push({ selectedInfo, propsSetting });
@@ -71,7 +68,7 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
  */
 export function clearSelectedStatus(state:StateType) {
     const { selectedInfo,dropTarget, propsSetting,componentConfigs, undo, redo } = state;
-    if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
+    if (!selectedInfo||selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
         return state;
     }
     undo.push({ selectedInfo, propsSetting,dropTarget });

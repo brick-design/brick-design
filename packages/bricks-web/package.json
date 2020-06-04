@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^0.0.7",
+    "brickd": "^0.0.8",
     "brickd-core": "^0.0.6",
     "lodash": "^4.17.15",
     "react-color": "^2.18.0",

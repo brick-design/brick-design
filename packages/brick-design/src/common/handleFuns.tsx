@@ -24,8 +24,8 @@ import isEqual from 'lodash/isEqual';
  * @param className
  * @param animateClass
  */
-export function handlePropsClassName(isSelected: boolean, isHovered: boolean, className: any, animateClass: string) {
-    return `${isSelected ? styles['container-select-border'] : isHovered && styles['container-hover-border']} ${className} ${animateClass}`;
+export function handlePropsClassName(isSelected: boolean, isHovered: boolean, className: any, animateClass: string,isNoneContainer?:boolean) {
+    return `${isSelected ? styles['container-select-border'] : isHovered && styles[`${isNoneContainer?'none-':''}container-hover-border`]} ${className} ${animateClass}`;
 }
 
 /**
@@ -63,7 +63,7 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
 
 export function handleChildNodes(domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType,childNodes:ChildNodesType) {
     const {componentName} = componentConfigs[parentKey]
-    let nodeProps: any = {}
+    const nodeProps: any = {}
     if(childNodes){
         if (Array.isArray(childNodes)) {
             nodeProps.children = renderNodes(childNodes, domTreeKeys, parentKey, componentConfigs)
@@ -127,8 +127,6 @@ export function controlUpdate(prevState: HookState, nextState: HookState, key: s
             prevSelectedKey !== key && selectedKey === key ||
             prevState.hoverKey === key && nextState.hoverKey !== key ||
             prevState.hoverKey !== key && nextState.hoverKey === key;
-
-
     }
     return true
 }

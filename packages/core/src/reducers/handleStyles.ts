@@ -1,4 +1,3 @@
-import { update } from 'lodash';
 import { StateType } from '../types';
 import produce from 'immer';
 import { stylePayload } from '../actions';
@@ -15,17 +14,12 @@ export function changeStyles(state:StateType, payload:stylePayload) {
     if (!selectedInfo) return state;
     undo.push({ componentConfigs });
     redo.length = 0;
-
     return {
         ...state,
         componentConfigs:produce(componentConfigs!,oldConfigs=>{
-            update(oldConfigs,selectedInfo.selectedKey, componentConfig => {
-                componentConfig.props.style = style;
-                return componentConfig;
-            });
+            oldConfigs[selectedInfo.selectedKey].props.style=style
         }),
         undo,
         redo,
     };
-
 }
