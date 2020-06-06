@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import { merge } from 'lodash';
 import { StateType } from '../types';
-import { SelectComponentType } from '../actions';
+import { SelectComponentPayload } from '../actions';
 import { LEGO_BRIDGE } from '../store';
 import { handleRequiredHasChild } from '../utils';
 
@@ -12,7 +12,7 @@ import { handleRequiredHasChild } from '../utils';
  * @returns {{ undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedInfo: {selectedKey: *, location: *, domTreeKeys: *[], fatherLocation: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
  */
 
-export function selectComponent(state:StateType, payload:SelectComponentType ) {
+export function selectComponent(state:StateType, payload:SelectComponentPayload ) {
     const { undo, redo, selectedInfo, propsSetting,componentConfigs } = state;
     const { propName, domTreeKeys,key,parentKey,parentPropName } = payload;
 

@@ -5,7 +5,7 @@ import get from 'lodash/get';
 // import flattenDeep from 'lodash/flattenDeep';
 // import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
-import { SelectComponentType } from '../actions';
+import { SelectComponentPayload} from '../actions';
 
 /**
  * 复制组件
@@ -118,7 +118,7 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
  * @param componentConfigs
  * @param payload
  */
-export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: SelectComponentType) => {
+export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: SelectComponentPayload) => {
     const {  selectedKey,propName:selectedPropName } = selectedInfo;
     if(payload){
         const { propName,key} = payload;
@@ -132,7 +132,7 @@ export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, component
 };
 
 
-export const generateVDOM=(componentName:string,defaultProps:any={})=>{
+export const generateVDOM=(componentName:string,defaultProps?:any)=>{
 
     const vDOM:VirtualDOMType={
         componentName: componentName,

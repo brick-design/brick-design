@@ -4,7 +4,7 @@ import { DragSourcePayload, DropTargetPayload } from '../../actions';
 import { LEGO_BRIDGE, legoState } from '../../store';
 import config from '../configs'
 import { flattenDeepArray } from '../../utils';
-import { StateType } from '../../types';
+import { ComponentConfigsType, StateType } from '../../types';
 beforeAll(()=>{
   LEGO_BRIDGE.config=config
   LEGO_BRIDGE.containers=flattenDeepArray(config.CONTAINER_CATEGORY)
@@ -22,11 +22,13 @@ describe("drag测试",()=>{
   const action={type:ACTION_TYPES.getDragSource,payload}
   it('当componentConfigs没有root节点',()=>{
        const state= reducer(legoState,action)
-        expect(state.dragSource).toEqual({vDOMCollection:{root:{componentName:'a',props:{},childNodes:[]}}})
+        expect(state.dragSource).toEqual({vDOMCollection:{root:{componentName:'a',childNodes:[]}}})
     })
   it('当componentConfigs有root节点',()=>{
-    const state= reducer({...legoState,componentConfigs:{root:{componentName:'a',props:{}}}},action)
+    const componentConfigs:ComponentConfigsType={root:{componentName:'a'}}
+    const state= reducer({...legoState,componentConfigs},action)
     expect(state.dragSource?.dragKey).not.toBeUndefined()
+    expect(state.undo).toEqual([{componentConfigs}])
   })
   it('拖拽设计面板中的组建',()=>{
     const prevState:StateType={

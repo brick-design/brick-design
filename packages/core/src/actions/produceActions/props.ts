@@ -9,12 +9,12 @@ export type AddPropsConfigInfo={
     propType?:string
 }
 export const addPropsConfig=(payload:AddPropsConfigInfo)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.addPropsConfig,payload})
-export type DeletePropsConfigInfo={
+export type DeletePropsConfigPayload={
     fatherFieldLocation:string,
     field:string
 }
-export const deletePropsConfig=(payload:DeletePropsConfigInfo)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.deletePropsConfig,payload})
-export type SubmitPropsType={
+export const deletePropsConfig=(payload:DeletePropsConfigPayload)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.deletePropsConfig,payload})
+export type SubmitPropsPayload={
     props:any
 }
-export const submitProps=(payload:SubmitPropsType)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.submitProps,payload})
+export const submitProps=(payload:SubmitPropsPayload)=>LEGO_BRIDGE.dispatch({type:ACTION_TYPES.submitProps,payload})

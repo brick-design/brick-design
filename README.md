@@ -3,7 +3,7 @@
 [![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
 [![npm version](https://img.shields.io/npm/v/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
-[![codecov](https://codecov.io/gh/anye931123/react-visual-editor/branch/brickd/graph/badge.svg)](https://codecov.io/gh/anye931123/react-visual-editor)
+[![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/brickd/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
 ## 特性
 

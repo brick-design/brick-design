@@ -54,6 +54,17 @@ export function addComponent(state: StateType) {
     const {fatherNodesRule} = get(LEGO_BRIDGE.config!.AllComponentConfigs,dragComponentName );
     const {nodePropsConfig}=get(LEGO_BRIDGE.config!.AllComponentConfigs,dropComponentName)
 
+
+    /**
+     * 子组件约束限制，减少不必要的组件错误嵌套
+     */
+    if(propName){
+        const childNodesRule=nodePropsConfig![propName].childNodesRule
+        if (childNodesRule && !childNodesRule.includes(dragComponentName)) {
+            // todo
+            throw new Error(`${propName}:只允许拖拽${childNodesRule.toString()}组件`);
+        }
+    }
     /**
      * 父组件约束限制，减少不必要的组件错误嵌套
      */
@@ -61,25 +72,15 @@ export function addComponent(state: StateType) {
         // todo
        throw new Error(`${dragComponentName}:只允许放入${fatherNodesRule.toString()}组件或者属性中`);
     }
-    /**
-     * 子组件约束限制，减少不必要的组件错误嵌套
-     */
-    if(nodePropsConfig&&propName){
-        const childNodesRule=nodePropsConfig[propName].childNodesRule
-        if (childNodesRule && !childNodesRule.includes(dragComponentName)) {
-            // todo
-            throw new Error(`${propName || dropComponentName}:只允许拖拽${childNodesRule.toString()}组件`);
-        }
-    }
+
     undo.push({componentConfigs});
     redo.length = 0;
     return {
         ...state,
         componentConfigs:produce(componentConfigs,oldConfigs=>{
-            const newKey=dragKey||uuid()
             //添加新组件到指定容器中
             update(oldConfigs,getLocation(selectedKey!,propName),childNodes=>{
-                return [...childNodes,newKey]
+                return [...childNodes,dragKey]
             })
             //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用
             if(parentKey){
@@ -113,7 +114,7 @@ export function copyComponent(state: StateType) {
         ...state,
         componentConfigs:produce(componentConfigs,oldConfigs=>{
             const newKey=uuid()
-            update(oldConfigs,getLocation(parentKey,parentPropName),childNodes=>[...childNodes,newKey])
+            update(oldConfigs,getLocation(parentKey!,parentPropName),childNodes=>[...childNodes,newKey])
             copyConfig(oldConfigs, selectedKey,newKey);
         }),
         undo,

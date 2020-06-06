@@ -13,7 +13,7 @@ export interface ParentNodeInfo {
 }
 export interface VirtualDOMType {
     componentName: string,
-    props: any,
+    props?: any,
     addPropsConfig?: string,
     childNodes?:ChildNodesType
 }
