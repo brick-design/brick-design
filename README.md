@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
+[![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
 
 ## 特性
 
@@ -35,12 +36,11 @@ npm install brickd brickd-core bricks-web
 ```jsx
 import { LegoProvider } from 'brickd-core';
 import {BrickDesign} from 'brickd';
-import {BrickTree,BrickPreview} from 'bricks-web'
-
+import {BrickTree,BrickPreview} from 'bricks-web';
 const App = () => (
   <LegoProvider config={{...}}>
 <div>
-    <BrickPreview componentsCategory={...}/>
+    <BrickPreview/>
     <BrickDesign />
 <BrickTree/>
 </div>
@@ -54,6 +54,7 @@ And import style manually:
 import 'bricks-web/dist/index.css';
 import 'brickd/dist/index.css';
 ```
+## [example](https://github.com/brick-design/brick-design-demo)
 
 
 ## LICENSE

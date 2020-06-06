@@ -14,24 +14,25 @@ import { handleRequiredHasChild } from '../utils';
 
 export function selectComponent(state:StateType, payload:SelectComponentType ) {
     const { undo, redo, selectedInfo, propsSetting,componentConfigs } = state;
-    if (selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs, payload)) {
-        return state;
-    }
     const { propName, domTreeKeys,key,parentKey,parentPropName } = payload;
 
-    if(selectedInfo&&selectedInfo.selectedKey===key){
-        domTreeKeys.push(`${key}${propName}`)
-        return {
-            ...state,
-            selectedInfo: {
-                ...selectedInfo,
-                propName,
-                domTreeKeys,
-                parentKey,
-                parentPropName
+    if(selectedInfo&&selectedInfo.propName){
+        if (selectedInfo.selectedKey===key&&selectedInfo.propName===propName||
+          handleRequiredHasChild(selectedInfo, componentConfigs, payload)) {
+            return state;
+        }else if(selectedInfo.selectedKey===key&&selectedInfo.propName!==propName){
+            domTreeKeys.push(`${key}${propName}`)
+            return {
+                ...state,
+                selectedInfo: {
+                    ...selectedInfo,
+                    propName,
+                    domTreeKeys
+                }
             }
         }
     }
+
     if (propName) {
         domTreeKeys.push(`${key}${propName}`);
     }
@@ -68,7 +69,7 @@ export function selectComponent(state:StateType, payload:SelectComponentType ) {
  */
 export function clearSelectedStatus(state:StateType) {
     const { selectedInfo,dropTarget, propsSetting,componentConfigs, undo, redo } = state;
-    if (!selectedInfo||selectedInfo&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
+    if (!selectedInfo||selectedInfo.propName&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
         return state;
     }
     undo.push({ selectedInfo, propsSetting,dropTarget });

@@ -28,10 +28,9 @@ export function addComponent(state: StateType) {
     if(componentConfigs.root&&!selectedKey) return {...state,...(undo.pop()),dragSource:null} as StateType
     const { vDOMCollection,dragKey, parentKey,parentPropName} = dragSource;
 
-
     /**
-     * 当拖拽的父key与drop目标key一直说明未移动
-     * 当拖拽的key与drop目标key一直说明是他自己
+     * 当拖拽的父key与drop目标key一致说明未移动
+     * 当拖拽的key包含在drop目标的domTreeKeys,说明拖拽组件是目标组件的父组件或者是自身
      */
     if(parentKey&&parentKey===selectedKey||domTreeKeys&&domTreeKeys.includes(dragKey!)) return state
 
