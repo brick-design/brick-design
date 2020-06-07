@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { AllHTMLAttributes, ComponentProps, ReactElement } from 'react';
 import styles from './style.less';
 import {
-  ChildNodesType,
-  ComponentConfigsType,
-  LEGO_BRIDGE,
-  MirrorModalFieldType,
-  PROPS_TYPES,
-  PropsNodeType,
-  SelectedInfoBaseType,
-  SelectedInfoType,
+    ChildNodesType,
+    ComponentConfigsType,
+    LEGO_BRIDGE,
+    MirrorModalFieldType,
+    PROPS_TYPES, PropsConfigSheetType,
+    PropsNodeType,
+    SelectedInfoBaseType,
+    SelectedInfoType, StatePropsType,
 } from 'brickd-core';
 import { getDropTargetInfo, handleSelectedStatus, onDragStart, onMouseOver } from './events';
 import map from 'lodash/map';
@@ -114,7 +114,8 @@ export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType,
 export type HookState = {
     selectedInfo: SelectedInfoType,
     hoverKey: string,
-    componentConfigs: ComponentConfigsType
+    componentConfigs: ComponentConfigsType,
+    propsConfigSheet:PropsConfigSheetType
 }
 
 export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
@@ -153,13 +154,13 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
 }
 
 
-export interface CommonPropsType {
+export interface CommonPropsType extends AllHTMLAttributes<any>{
     specialProps: SelectedInfoBaseType,
     [propsName: string]: any
 
 }
 
 
-export const stateSelector=['selectedInfo', 'hoverKey','componentConfigs']
+export const stateSelector:StatePropsType[]=['selectedInfo', 'hoverKey','componentConfigs','propsConfigSheet']
 
 export function propAreEqual(prevProps:CommonPropsType, nextProps:CommonPropsType):boolean {return isEqual(prevProps.specialProps, nextProps.specialProps)}

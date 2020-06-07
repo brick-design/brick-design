@@ -2,7 +2,7 @@ import { createElement, forwardRef, memo, useEffect, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { formatSpecialProps } from '../utils';
-import { DragSourceType, DropTargetType, LEGO_BRIDGE, produce, useSelector } from 'brickd-core';
+import { DragSourceType, DropTargetType, getAddPropsConfig, LEGO_BRIDGE, produce, useSelector } from 'brickd-core';
 
 import {
   CommonPropsType,
@@ -48,7 +48,6 @@ function Container(allProps: CommonPropsType, ref: any) {
     (prevState, nextState) => dragDropUpdate(prevState, nextState, key));
   const {
     props,
-    addPropsConfig,
     childNodes,
     componentName,
     mirrorModalField,
@@ -57,6 +56,7 @@ function Container(allProps: CommonPropsType, ref: any) {
     isSelected,
     componentConfigs,
     SelectedDomKeys,
+    propsConfigSheet
   } = useCommon(allProps);
   const [children, setChildren] = useState(childNodes);
 
@@ -104,7 +104,9 @@ function Container(allProps: CommonPropsType, ref: any) {
       ...handleEvents(specialProps, isSelected, childNodes),
       onDragEnter,
       ...handleChildNodes(domTreeKeys, key, componentConfigs, children!),
-      ...formatSpecialProps(props, merge({}, propsConfig, addPropsConfig)),
+      ...formatSpecialProps(props, produce(propsConfig,oldPropsConfig=>{
+        merge(oldPropsConfig,getAddPropsConfig(propsConfigSheet,key))
+      })),
       draggable: true,
       /**
        * 设置组件id方便抓取图片

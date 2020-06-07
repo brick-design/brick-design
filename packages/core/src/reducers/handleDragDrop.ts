@@ -50,7 +50,7 @@ export function getDragSource(state:StateType, payload:DragSourcePayload) {
  * @param state
  * @param payload
  */
-export function getDropTarget(state:StateType,  payload:DropTargetPayload ) {
+export function getDropTarget(state:StateType,  payload:DropTargetPayload ):StateType {
     /**
      * 如果location为undefined说明当前组件不是容器组件
      * 清除dropTarget信息
@@ -62,7 +62,7 @@ export function getDropTarget(state:StateType,  payload:DropTargetPayload ) {
         ...state,
         dropTarget: null,
         hoverKey: null,
-    } as StateType;
+    };
     return {
         ...state,
         dropTarget: payload,
