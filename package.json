@@ -94,9 +94,9 @@
 			"<rootDir>/packages/"
 		],
 		"moduleNameMapper": {
-			"^brickd-core$": "core/dist",
-			"^brickd$": "brick-design/dist",
-			"^bricks-web$": "bricks-web/dist"
+			"^brickd-core$": "core/src",
+			"^brickd$": "brick-design/src",
+			"^bricks-web$": "bricks-web/src"
 		},
 		"collectCoverageFrom": [
 			"packages/**/*.{ts,tsx}",

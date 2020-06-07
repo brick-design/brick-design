@@ -135,6 +135,24 @@ describe('addComponent', () => {
         reducer(prevState, { type: ACTION_TYPES.addComponent }),
       ).toThrow('div:只允许放入div.children组件或者属性中');
     });
+    it('当选中的组件有属性节点时', () => {
+      const prevState: StateType = {
+        ...legoState,
+        componentConfigs: {
+          root: {
+            componentName: 'p',
+          },
+          '1': {
+            componentName: 'div',
+          },
+        },
+        dragSource: { dragKey: '1', parentKey: '' },
+        dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: [] },
+      };
+      expect(() =>
+        reducer(prevState, { type: ACTION_TYPES.addComponent }),
+      ).toThrow('div:只允许放入div.children组件或者属性中');
+    });
   });
 
   describe('子组件约束限制', () => {

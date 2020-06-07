@@ -1,9 +1,9 @@
-import { PROPS_TYPES } from './ConfigTypes';
+import {  PROPS_NODE_TYPE, PROPS_TYPES } from './ConfigTypes';
 
 /**
  * 组件属性的配置信息
  */
-export interface PropsConfigType {
+export interface PropsConfigType{
   [propName: string]: PropInfoType
 }
 
@@ -59,7 +59,7 @@ export interface PropInfoType {
  */
 export interface NodeProps {
   // 节点属性的类型，只可以填写reactNode和functionReactNode
-  type: PROPS_TYPES.reactNode | PROPS_TYPES.functionReactNode,
+  type: PROPS_NODE_TYPE.reactNode | PROPS_NODE_TYPE.functionReactNode,
   // 节点属性的功能描述，在都dom树面板hover单属性上会显示
   tip?: string,
   //节点属性的文字展示，不填写默认展示属性名
@@ -99,7 +99,7 @@ export interface MirrorModalFieldType {
  * 组件配置的数据结构
  */
 
-export interface ComponentConfigTypes {
+export interface ComponentConfigTypes extends Omit<NodeProps, 'type'|'tip'|'params'|'label'>{
   //父组件约束，许多组件只能作为特定组件的子组件，这些组件需要设置，父组件约束放置放错，导致错误显示或者报错，
   //注意要明确约束到父组件的节点属性
   fatherNodesRule?: string[],

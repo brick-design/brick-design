@@ -7,6 +7,7 @@ import { iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
 
 export * from './common/events'
+export * from './components'
 
 
 const onIframeLoad = (divContainer:any,designPage:any) => {
@@ -33,7 +34,7 @@ const stateSelector = ['componentConfigs']
 
 export function BrickDesign(props: BrickDesignProps) {
     const {componentConfigs} = useSelector(stateSelector);
-    let designPage: any = useMemo(() => {
+    const designPage: any = useMemo(() => {
         if (!componentConfigs.root) return null
         const {root: {componentName}} = componentConfigs;
         const props = {

@@ -52,25 +52,33 @@ export function addComponent(state: StateType):StateType {
     const dragComponentName=get(componentConfigs[dragKey],'componentName')
     const dropComponentName=get(componentConfigs[selectedKey!],'componentName')
     const {fatherNodesRule} = get(LEGO_BRIDGE.config!.AllComponentConfigs,dragComponentName );
-    const {nodePropsConfig}=get(LEGO_BRIDGE.config!.AllComponentConfigs,dropComponentName)
-
+    const {nodePropsConfig,childNodesRule,isOnlyNode}=get(LEGO_BRIDGE.config!.AllComponentConfigs,dropComponentName)
 
     /**
      * 子组件约束限制，减少不必要的组件错误嵌套
      */
-    if(propName){
-        const childNodesRule=nodePropsConfig![propName].childNodesRule
-        if (childNodesRule && !childNodesRule.includes(dragComponentName)) {
-            // todo
-            throw new Error(`${propName}:只允许拖拽${childNodesRule.toString()}组件`);
+    const childRules=propName?nodePropsConfig![propName].childNodesRule:childNodesRule
+    if(childRules){
+        if (!childRules.includes(dragComponentName)) {
+            const msg=`${propName}:只允许拖拽${childRules.toString()}组件`
+            if(LEGO_BRIDGE.errorCallback){
+                LEGO_BRIDGE.errorCallback(msg)
+            }else {
+                throw new Error(msg);
+
+            }
         }
     }
     /**
      * 父组件约束限制，减少不必要的组件错误嵌套
      */
     if (fatherNodesRule && !fatherNodesRule.includes(propName ? `${dropComponentName}.${propName}` : `${dropComponentName}`)) {
-        // todo
-       throw new Error(`${dragComponentName}:只允许放入${fatherNodesRule.toString()}组件或者属性中`);
+        const msg=`${dragComponentName}:只允许放入${fatherNodesRule.toString()}组件或者属性中`
+        if(LEGO_BRIDGE.errorCallback){
+            LEGO_BRIDGE.errorCallback(msg)
+        }else {
+            throw new Error(msg);
+        }
     }
 
     undo.push({componentConfigs});

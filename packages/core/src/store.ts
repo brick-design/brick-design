@@ -5,11 +5,14 @@ import { BrickAction, ConfigType, StateType } from './types';
 type LegoBridge={
     containers:string[]|null,
     config?:ConfigType,
-    store:Store<StateType,BrickAction>|null
+    store:Store<StateType,BrickAction>|null,
+    errorCallback?:(msg:string)=>void,
+    warnCallback?:(msg:string)=>void
 }
 export const LEGO_BRIDGE:LegoBridge={
     containers: null,
-    store:null
+    store:null,
+
 
 }
 

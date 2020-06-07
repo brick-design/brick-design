@@ -80,3 +80,4 @@ export interface StateType {
     platformInfo: PlatformInfoType,
     propsConfigSheet:PropsConfigSheetType
 }
+export type StatePropsType=keyof StateType

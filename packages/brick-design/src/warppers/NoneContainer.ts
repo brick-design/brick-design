@@ -1,6 +1,6 @@
 import { createElement, forwardRef, memo } from 'react';
 import get from 'lodash/get';
-import { LEGO_BRIDGE, produce } from 'brickd-core';
+import { LEGO_BRIDGE } from 'brickd-core';
 import { CommonPropsType, handleEvents, handlePropsClassName, propAreEqual } from '../common/handleFuns';
 import { formatSpecialProps } from '../utils';
 import merge from 'lodash/merge';

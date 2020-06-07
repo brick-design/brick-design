@@ -13,12 +13,14 @@ export enum PROPS_TYPES {
   stringArray = 'stringArray',
   enum = 'enum',
   json = 'json',
-  boolean = 'boolean',
+  boolean = 'boolean'
+}
+export enum PROPS_NODE_TYPE{
   reactNode = 'reactNode',
   functionReactNode = 'functionReactNode',
-  animate = 'animate',
 }
 
+export type ALL_TYPE=PROPS_TYPES|PROPS_NODE_TYPE
 /**
  * 全局配置类型定义
  */

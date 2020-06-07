@@ -1,7 +1,7 @@
 import { LEGO_BRIDGE, PropsNodeType, useSelector } from 'brickd-core';
 import { CommonPropsType, controlUpdate, HookState, stateSelector } from '../common/handleFuns';
 import { useEffect, useMemo } from 'react';
-import { handleSelectedStatus, selectedStatus } from '../common/events';
+import { handleSelectedStatus, selectedStatus } from '..';
 import get from 'lodash/get';
 
 export function useCommon(allProps: CommonPropsType) {
