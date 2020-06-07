@@ -1,13 +1,13 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Menu: ComponentConfigTypes = {
   nodePropsConfig: {
     overflowedIndicator: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       isOnlyNode: true,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Menu.ItemGroup', 'Menu.Item', 'Menu.SubMenu', 'Menu.Divider'],
     },
   },
@@ -101,10 +101,10 @@ const ItemGroup: ComponentConfigTypes = {
 
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Menu.Item'],
     },
   },
@@ -119,10 +119,10 @@ const SubMenu: ComponentConfigTypes = {
   fatherNodesRule:['Menu.children','Menu.ItemGroup.children','Item','Menu.SubMenu.children'],
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Menu.Item', 'Menu.SubMenu', 'Menu.ItemGroup'],
     },
   },

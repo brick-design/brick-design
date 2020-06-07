@@ -1,4 +1,4 @@
-import {  PROPS_NODE_TYPE, PROPS_TYPES } from './ConfigTypes';
+import {  NODE_PROPS_TYPES, PROPS_TYPES } from './ConfigTypes';
 
 /**
  * 组件属性的配置信息
@@ -59,7 +59,7 @@ export interface PropInfoType {
  */
 export interface NodeProps {
   // 节点属性的类型，只可以填写reactNode和functionReactNode
-  type: PROPS_NODE_TYPE.reactNode | PROPS_NODE_TYPE.functionReactNode,
+  type: NODE_PROPS_TYPES.reactNode | NODE_PROPS_TYPES.functionReactNode,
   // 节点属性的功能描述，在都dom树面板hover单属性上会显示
   tip?: string,
   //节点属性的文字展示，不填写默认展示属性名

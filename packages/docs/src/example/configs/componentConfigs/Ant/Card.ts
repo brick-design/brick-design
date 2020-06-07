@@ -1,21 +1,21 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Card: ComponentConfigTypes = {
   nodePropsConfig: {
     cover: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     extra: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     tabBarExtraContent: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
@@ -106,13 +106,13 @@ const Grid: ComponentConfigTypes = {
 const Meta: ComponentConfigTypes = {
   nodePropsConfig: {
     avatar: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     description: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

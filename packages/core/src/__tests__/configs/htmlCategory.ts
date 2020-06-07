@@ -9,7 +9,8 @@ export const htmlContainers: CategoryType = {
       'span': null,
     },
   },
-  p:null
+  p:null,
+  h:null
 };
 
 

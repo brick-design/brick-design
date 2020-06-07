@@ -1,16 +1,16 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Breadcrumb: ComponentConfigTypes = {
   nodePropsConfig: {
     separator: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     itemRender: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['route', 'params', 'routes', 'locations'],
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
@@ -54,12 +54,12 @@ const Item: ComponentConfigTypes = {
     overlay: {
       label: '菜单',
       tip: '哈哈哈',
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: [],
       childNodesRule: ['Menu'],
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

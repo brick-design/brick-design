@@ -1,12 +1,12 @@
-import { ComponentConfigTypes, PROPS_TYPES} from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Drawer: ComponentConfigTypes = {
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   mirrorModalField: {

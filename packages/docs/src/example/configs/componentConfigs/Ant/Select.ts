@@ -1,29 +1,29 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Select: ComponentConfigTypes = {
 
   nodePropsConfig: {
     dropdownRender: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['menuNode', 'props'],
     },
     maxTagPlaceholder: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     suffixIcon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     removeIcon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     clearIcon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     menuItemSelectedIcon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Select.OptGroup', 'Select.Option'],
     },
   },
@@ -228,10 +228,10 @@ const OptGroup: ComponentConfigTypes = {
   fatherNodesRule: ['Select.children'],
   nodePropsConfig: {
     label: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Select.Option'],
     },
   },

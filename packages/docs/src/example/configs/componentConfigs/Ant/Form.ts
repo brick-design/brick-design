@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Form: ComponentConfigTypes = {
   propsConfig: {
@@ -46,16 +46,16 @@ const Form: ComponentConfigTypes = {
 const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     extra: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     help: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     label: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       isOnlyNode: true,
     },
   },

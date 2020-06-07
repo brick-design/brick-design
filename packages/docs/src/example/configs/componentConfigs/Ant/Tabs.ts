@@ -1,13 +1,13 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Tabs: ComponentConfigTypes = {
 
   nodePropsConfig: {
     tabBarExtraContent: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       isRequired: true,
       childNodesRule: ['Tabs.TabPane'],
     },
@@ -107,10 +107,10 @@ const TabPane: ComponentConfigTypes = {
   fatherNodesRule: ['Tabs.children'],
   nodePropsConfig: {
     tab: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

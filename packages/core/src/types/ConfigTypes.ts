@@ -15,12 +15,12 @@ export enum PROPS_TYPES {
   json = 'json',
   boolean = 'boolean'
 }
-export enum PROPS_NODE_TYPE{
+export enum NODE_PROPS_TYPES{
   reactNode = 'reactNode',
   functionReactNode = 'functionReactNode',
 }
 
-export type ALL_TYPE=PROPS_TYPES|PROPS_NODE_TYPE
+export type ALL_TYPE=PROPS_TYPES|NODE_PROPS_TYPES
 /**
  * 全局配置类型定义
  */

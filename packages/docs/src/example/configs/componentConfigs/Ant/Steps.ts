@@ -1,14 +1,14 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Steps: ComponentConfigTypes = {
   nodePropsConfig: {
     progressDot: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       isOnlyNode: true,
       params: ['iconDot', `{index, status, title, description}`],
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   }
   ,
@@ -66,19 +66,19 @@ const Steps: ComponentConfigTypes = {
 const Step: ComponentConfigTypes = {
   nodePropsConfig: {
     description: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     }
     ,
     icon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     }
     ,
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     }
     ,
     subTitle: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

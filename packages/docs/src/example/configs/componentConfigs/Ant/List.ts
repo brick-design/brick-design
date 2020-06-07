@@ -1,26 +1,26 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const List: ComponentConfigTypes = {
   nodePropsConfig: {
     header: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '头部',
     },
     footer: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '底部',
     },
 
     loadMore: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     renderItem: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['item'],
       isOnlyNode: true,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
 
   },
@@ -84,10 +84,10 @@ const List: ComponentConfigTypes = {
 const Item: ComponentConfigTypes = {
   nodePropsConfig: {
     actions: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     extra: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
@@ -105,13 +105,13 @@ const Item: ComponentConfigTypes = {
 const Meta: ComponentConfigTypes = {
   nodePropsConfig: {
     avatar: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     description: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

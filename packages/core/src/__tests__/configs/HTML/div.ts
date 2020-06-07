@@ -1,10 +1,10 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from '../../../types';
 
 const div: ComponentConfigTypes = {
   fatherNodesRule:['div.children'],
   nodePropsConfig:{
     children:{
-      type:PROPS_TYPES.reactNode,
+      type:NODE_PROPS_TYPES.reactNode,
       childNodesRule:['img','div','span'],
     }
   },

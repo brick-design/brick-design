@@ -2,7 +2,7 @@ import { StateType } from '../types';
 import { copyConfig, deleteChildNodes, getLocation, HandleInfoType } from '../utils';
 import get from 'lodash/get';
 import update from 'lodash/update';
-import { original, produce } from 'immer';
+import {  produce } from 'immer';
 import uuid from 'uuid';
 import { LayoutSortPayload } from '../actions';
 import { LEGO_BRIDGE } from '../store';
@@ -60,9 +60,10 @@ export function addComponent(state: StateType):StateType {
     const childRules=propName?nodePropsConfig![propName].childNodesRule:childNodesRule
     if(childRules){
         if (!childRules.includes(dragComponentName)) {
-            const msg=`${propName}:只允许拖拽${childRules.toString()}组件`
+            const msg=`${propName||dropComponentName}:只允许拖拽${childRules.toString()}组件`
             if(LEGO_BRIDGE.errorCallback){
-                LEGO_BRIDGE.errorCallback(msg)
+                 LEGO_BRIDGE.errorCallback(msg)
+                return state
             }else {
                 throw new Error(msg);
 
@@ -76,6 +77,7 @@ export function addComponent(state: StateType):StateType {
         const msg=`${dragComponentName}:只允许放入${fatherNodesRule.toString()}组件或者属性中`
         if(LEGO_BRIDGE.errorCallback){
             LEGO_BRIDGE.errorCallback(msg)
+            return state
         }else {
             throw new Error(msg);
         }

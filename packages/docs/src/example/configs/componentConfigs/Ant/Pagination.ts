@@ -1,9 +1,9 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Pagination: ComponentConfigTypes = {
   nodePropsConfig: {
     itemRender: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       isOnlyNode: true,
       params: ['page', 'type', 'originalElement'],
     },

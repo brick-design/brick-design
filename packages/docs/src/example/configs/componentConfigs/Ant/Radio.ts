@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Radio: ComponentConfigTypes = {
   propsConfig: {
@@ -43,7 +43,7 @@ const Button: ComponentConfigTypes = {
 const Group: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Radio', 'Radio.Button'],
     },
   },

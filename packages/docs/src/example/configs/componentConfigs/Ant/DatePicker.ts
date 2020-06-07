@@ -1,16 +1,16 @@
-import { ComponentConfigTypes, NodePropsConfigType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, NodePropsConfigType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 
 const commonNodePropsConfig: NodePropsConfigType = {
   dateRender: {
-    type: PROPS_TYPES.functionReactNode,
+    type: NODE_PROPS_TYPES.functionReactNode,
     params: ['currentDate', 'today'],
   },
   placeholder: {
-    type: PROPS_TYPES.reactNode,
+    type: NODE_PROPS_TYPES.reactNode,
     childNodesRule: ['DatePicker.RangePicker'],
   },
   suffixIcon: {
-    type: PROPS_TYPES.reactNode,
+    type: NODE_PROPS_TYPES.reactNode,
   },
 };
 const commonPropsConfig: PropsConfigType = {
@@ -86,7 +86,7 @@ const commonPropsConfig: PropsConfigType = {
 const DatePicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['mode'],
     }, ...commonNodePropsConfig,
   },
@@ -134,11 +134,11 @@ const DatePicker: ComponentConfigTypes = {
 const MonthPicker: ComponentConfigTypes = {
   nodePropsConfig: {
     monthCellContentRender: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['date', 'locale'],
     },
     renderExtraFooter: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['mode'],
     }, ...commonNodePropsConfig,
   },
@@ -159,7 +159,7 @@ const MonthPicker: ComponentConfigTypes = {
 const WeekPicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['mode'],
     }, ...commonNodePropsConfig,
   },
@@ -181,7 +181,7 @@ const WeekPicker: ComponentConfigTypes = {
 const RangePicker: ComponentConfigTypes = {
   nodePropsConfig: {
     renderExtraFooter: {
-      type: PROPS_TYPES.functionReactNode,
+      type: NODE_PROPS_TYPES.functionReactNode,
       params: ['mode'],
     }, ...commonNodePropsConfig,
   },

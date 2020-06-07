@@ -1,9 +1,9 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Anchor: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Anchor.Link'],
     },
   },
@@ -39,10 +39,10 @@ const Link: ComponentConfigTypes = {
   fatherNodesRule: ['Anchor', 'Anchor.Link.children'],
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Anchor.Link'],
     },
   },

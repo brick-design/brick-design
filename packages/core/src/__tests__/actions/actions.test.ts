@@ -1,7 +1,7 @@
 import {
   addComponent,
   addPropsConfig,
-  AddPropsConfigInfo,
+  AddPropsConfigPayload,
   changePlatform,
   clearChildNodes,
   clearHovered,
@@ -58,7 +58,7 @@ describe('actions test', () => {
       payload: changePlatformPayload,
     });
     //props
-    const addPropsConfigPayload: AddPropsConfigInfo = { fatherFieldLocation: '' };
+    const addPropsConfigPayload: AddPropsConfigPayload = { fatherFieldLocation: '' };
     expect(addPropsConfig(addPropsConfigPayload)).toEqual({
       type: ACTION_TYPES.addPropsConfig,
       payload: addPropsConfigPayload,

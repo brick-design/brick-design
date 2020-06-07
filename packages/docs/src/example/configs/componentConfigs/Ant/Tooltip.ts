@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Tooltip: ComponentConfigTypes = {
   mirrorModalField: {
@@ -7,10 +7,10 @@ const Tooltip: ComponentConfigTypes = {
 
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

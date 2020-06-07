@@ -1,16 +1,16 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 import { TreeSelect as AntTreeSelect } from 'antd';
 
 const TreeSelect: ComponentConfigTypes = {
   nodePropsConfig: {
     maxTagPlaceholder: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     suffixIcon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
@@ -197,10 +197,10 @@ const TreeNode: ComponentConfigTypes = {
   fatherNodesRule: ['TreeSelect.children'],
   nodePropsConfig: {
     title: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

@@ -1,21 +1,21 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Input: ComponentConfigTypes = {
   nodePropsConfig: {
     addonAfter: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '后置标签',
     },
     addonBefore: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '前置标签',
     },
     prefix: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '前缀图标',
     },
     suffix: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       label: '后缀图标',
     },
   },
@@ -106,7 +106,7 @@ const Input: ComponentConfigTypes = {
 const Group: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Input'],
     },
   },
@@ -126,7 +126,7 @@ const Group: ComponentConfigTypes = {
 const Search: ComponentConfigTypes = {
   nodePropsConfig: {
     enterButton: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {

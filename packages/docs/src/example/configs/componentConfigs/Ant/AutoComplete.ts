@@ -1,13 +1,13 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const AutoComplete: ComponentConfigTypes = {
   nodePropsConfig: {
     dataSource: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['AutoComplete.Option', 'AutoComplete.OptGroup'],
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
@@ -138,7 +138,7 @@ const Option: ComponentConfigTypes = {
 const OptGroup: ComponentConfigTypes = {
   nodePropsConfig: {
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['AutoComplete.Option'],
     },
 

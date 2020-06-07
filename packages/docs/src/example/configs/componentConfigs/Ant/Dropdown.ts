@@ -1,14 +1,14 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Dropdown: ComponentConfigTypes = {
   nodePropsConfig: {
     overlay: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Menu'],
       isOnlyNode: true,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       isOnlyNode: true,
       isRequired: true,
     },
@@ -57,14 +57,14 @@ const Dropdown: ComponentConfigTypes = {
 const Button: ComponentConfigTypes = {
   nodePropsConfig: {
     overlay: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
       childNodesRule: ['Menu'],
     },
     icon: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
     children: {
-      type: PROPS_TYPES.reactNode,
+      type: NODE_PROPS_TYPES.reactNode,
     },
   },
   propsConfig: {
