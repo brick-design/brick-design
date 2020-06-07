@@ -13,52 +13,49 @@ import produce from 'immer';
  * @returns {{ undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedInfo: {selectedKey: *, location: *, domTreeKeys: *[], fatherLocation: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
  */
 
-export function selectComponent(state:StateType, payload:SelectComponentPayload ):StateType {
-    const { undo, redo, selectedInfo, propsConfigSheet,componentConfigs } = state;
-    const { propName, domTreeKeys,key,parentKey,parentPropName } = payload;
-
-    if (propName) {
-    if(selectedInfo&&selectedInfo.selectedKey===key){
-        if (selectedInfo.propName===propName||
-          handleRequiredHasChild(selectedInfo, componentConfigs, payload)) {
-            return state;
-        }else{
-            domTreeKeys.push(`${key}${propName}`)
-            return {
-                ...state,
-                selectedInfo: {
-                    ...selectedInfo,
-                    propName,
-                    domTreeKeys
-                }
-            }
-        }
-    }
-        domTreeKeys.push(`${key}${propName}`);
-    }
-    const { props,componentName} = componentConfigs[key];
-    const { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
-    undo.push({ selectedInfo });
-    redo.length = 0;
-    return {
+export function selectComponent(state: StateType, payload: SelectComponentPayload): StateType {
+  const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state;
+  const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
+  if (selectedInfo) {
+    const { selectedKey, propName: selectedPropName } = selectedInfo;
+    if (selectedKey === key && selectedPropName == propName || handleRequiredHasChild(selectedInfo, componentConfigs)) return state;
+    if (selectedKey === key && selectedPropName !== propName) {
+      domTreeKeys.push(`${key}${propName}`);
+      return {
         ...state,
-        dropTarget: null,
         selectedInfo: {
-            selectedKey:key,
-            propName,
-            domTreeKeys,
-            parentKey,
-            parentPropName,
-            props,
-            propsConfig:produce(propsConfig,oldPropsConfig=>{
-                merge(oldPropsConfig,propsConfigSheet[key])
-            })
+          ...selectedInfo,
+          propName,
+          domTreeKeys,
         },
-        undo,
-        redo,
-        hoverKey: null,
+      };
+    }
+  }
 
-    };
+  propName && domTreeKeys.push(`${key}${propName}`);
+  const { props, componentName } = componentConfigs[key];
+  const { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  undo.push({ selectedInfo });
+  redo.length = 0;
+  return {
+    ...state,
+    dropTarget: null,
+    selectedInfo: {
+      selectedKey: key,
+      propName,
+      domTreeKeys,
+      parentKey,
+      parentPropName,
+      props,
+      propsConfig: produce(propsConfig, oldPropsConfig => {
+        merge(oldPropsConfig, propsConfigSheet[key]);
+      }),
+    },
+    undo,
+    redo,
+    hoverKey: null,
+
+  };
 }
 
 /**
@@ -66,18 +63,18 @@ export function selectComponent(state:StateType, payload:SelectComponentPayload 
  * @param state
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
-export function clearSelectedStatus(state:StateType) {
-    const { selectedInfo,componentConfigs, undo, redo } = state;
-    if (!selectedInfo||selectedInfo.propName&&handleRequiredHasChild(selectedInfo, componentConfigs)) {
-        return state;
-    }
-    undo.push({ selectedInfo });
-    redo.length = 0;
-    return {
-        ...state,
-        dropTarget:null,
-        selectedInfo: null,
-        undo,
-        redo,
-    };
+export function clearSelectedStatus(state: StateType) {
+  const { selectedInfo, componentConfigs, undo, redo } = state;
+  if (!selectedInfo || handleRequiredHasChild(selectedInfo, componentConfigs)) {
+    return state;
+  }
+  undo.push({ selectedInfo });
+  redo.length = 0;
+  return {
+    ...state,
+    dropTarget: null,
+    selectedInfo: null,
+    undo,
+    redo,
+  };
 }

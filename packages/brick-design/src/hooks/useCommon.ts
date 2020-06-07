@@ -17,10 +17,9 @@ export function useCommon(allProps: CommonPropsType) {
      * 当组件跨容器拖拽嵌套时,触发
      */
     const {props, childNodes, componentName} = componentConfigs[key]||{}
-    const {mirrorModalField, propsConfig,nodePropsConfig} = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+    const {mirrorModalField, propsConfig,nodePropsConfig,childNodesRule,isOnlyNode,isRequired} = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
 
     useEffect(() => {
-
         if (isSelected) {
             handleSelectedStatus(null, false, specialProps);
         }
@@ -38,6 +37,9 @@ export function useCommon(allProps: CommonPropsType) {
                     break
                 }
             }
+        }else if (isRequired&&childNodes!.length==0) {
+            handleSelectedStatus(null,false,specialProps)
+
         }
     },[childNodes])
 

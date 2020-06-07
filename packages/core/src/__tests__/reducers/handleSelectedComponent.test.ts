@@ -12,7 +12,40 @@ afterAll(()=>{
   LEGO_BRIDGE.config=undefined
 })
 describe('selectInfo',()=>{
+  test('如果 selectedInfo===null ',()=>{
+    const prevState:StateType={
+      ...legoState,
+      componentConfigs:{
+        root:{
+          componentName:'span',
+          childNodes:{
+            children:['1'],
+            test:[]
+          }
+        }
+      }
+    }
+    const payload:SelectComponentPayload={
+      key:'root',
+      parentKey:'',
+      domTreeKeys:['root'],
+      propName:'test'
+    }
 
+    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const expectState:StateType={
+      ...prevState,
+      selectedInfo:{
+        selectedKey:'root',
+        propsConfig:config.AllComponentConfigs['span'].propsConfig,
+        propName:'test',
+        domTreeKeys:['root','roottest'],
+        parentKey:''
+      }
+
+    }
+    expect(state).toEqual(expectState)
+  })
   test('选中没有属性节点的组件组件',()=>{
     const selectedInfo:SelectedInfoType={
       selectedKey:'root',
@@ -62,7 +95,6 @@ describe('selectInfo',()=>{
     const selectedInfo:SelectedInfoType={
       selectedKey:'1',
       domTreeKeys:['root','1'],
-      propName:'test',
       parentKey:'root',
       propsConfig:{}
     }

@@ -156,16 +156,12 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
  * @param componentConfigs
  * @param payload
  */
-export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType, payload?: SelectComponentPayload) => {
+export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType) => {
   const { selectedKey, propName: selectedPropName } = selectedInfo;
-  if (payload) {
-    const { propName, key } = payload;
-    if (selectedKey === key && propName === selectedPropName) return true;
-  }
   const { componentName, childNodes } = componentConfigs[selectedKey];
-  const { nodePropsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
-  return !!(selectedPropName && nodePropsConfig![selectedPropName].isRequired &&
-    (childNodes as PropsNodeType)[selectedPropName].length === 0);
+  const { nodePropsConfig,isRequired } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  return selectedPropName && nodePropsConfig![selectedPropName].isRequired &&
+    get(childNodes,selectedPropName).length === 0||isRequired&&childNodes!.length===0;
 
 };
 
