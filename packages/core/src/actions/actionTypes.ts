@@ -16,7 +16,7 @@ export default {
     addPropsConfig: `addPropsConfig`,
     deletePropsConfig: `deletePropsConfig`,
     changeStyles: `changeStyles`,
-    submitProps: `submitProps`,
+    changeProps: `changeProps`,
     overTarget: `overTarget`,
     clearHovered: `clearHovered`,
     undo: `undo`,
@@ -24,4 +24,6 @@ export default {
     getDragSource: `getDragSource`,
     getDropTarget: `getDropTarget`,
     changePlatform: `changePlatform`,
+    resetProps:'resetProps',
+    resetStyles:'resetStyles'
 }

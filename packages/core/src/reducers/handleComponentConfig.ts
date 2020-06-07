@@ -1,8 +1,8 @@
 import { StateType } from '../types';
-import { copyConfig, deleteChildNodes, getLocation} from '../utils';
+import { copyConfig, deleteChildNodes, getLocation, HandleInfoType } from '../utils';
 import get from 'lodash/get';
 import update from 'lodash/update';
-import { produce } from 'immer';
+import { original, produce } from 'immer';
 import uuid from 'uuid';
 import { LayoutSortPayload } from '../actions';
 import { LEGO_BRIDGE } from '../store';
@@ -12,7 +12,7 @@ import { LEGO_BRIDGE } from '../store';
  * @param state
  * @returns {{componentConfigs: *}}
  */
-export function addComponent(state: StateType) {
+export function addComponent(state: StateType):StateType {
     const {
         undo, redo,
         componentConfigs,
@@ -91,7 +91,7 @@ export function addComponent(state: StateType) {
         dropTarget: null,
         undo,
         redo,
-    } as StateType;
+    };
 }
 
 /**
@@ -99,8 +99,8 @@ export function addComponent(state: StateType) {
  * @param state
  * @returns {{componentConfigs: *}}
  */
-export function copyComponent(state: StateType) {
-    const {undo, redo, componentConfigs, selectedInfo} = state;
+export function copyComponent(state: StateType):StateType {
+    const {undo, redo, componentConfigs, selectedInfo,propsConfigSheet} = state;
     /**
      * 未选中组件不做任何操作
      */
@@ -108,14 +108,15 @@ export function copyComponent(state: StateType) {
         return state
     }
     const {selectedKey,parentPropName,parentKey} = selectedInfo;
-    undo.push({componentConfigs});
+    undo.push({componentConfigs,propsConfigSheet});
+    const handleState:HandleInfoType={componentConfigs,propsConfigSheet}
     redo.length = 0;
+    const newKey=uuid()
     return {
         ...state,
-        componentConfigs:produce(componentConfigs,oldConfigs=>{
-            const newKey=uuid()
-            update(oldConfigs,getLocation(parentKey!,parentPropName),childNodes=>[...childNodes,newKey])
-            copyConfig(oldConfigs, selectedKey,newKey);
+        ...produce<HandleInfoType>(handleState,oldState=>{
+            update(oldState.componentConfigs,getLocation(parentKey!,parentPropName),childNodes=>[...childNodes,newKey])
+            copyConfig(oldState,selectedKey,newKey);
         }),
         undo,
         redo,
@@ -154,8 +155,8 @@ export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload)
  * @param state
  * @returns {{propsSetting: *, componentConfigs: *, selectedInfo: *}}
  */
-export function deleteComponent(state: StateType) {
-    const {undo, redo, componentConfigs, selectedInfo, propsSetting} = state;
+export function deleteComponent(state: StateType):StateType {
+    const {undo, redo, componentConfigs, selectedInfo,propsConfigSheet} = state;
     /**
      * 未选中组件将不做任何操作
      */
@@ -163,22 +164,26 @@ export function deleteComponent(state: StateType) {
         return state
     }
     const {selectedKey, parentKey,parentPropName} = selectedInfo;
-    undo.push({componentConfigs, propsSetting, selectedInfo});
+    undo.push({componentConfigs, selectedInfo,propsConfigSheet});
+    const handleState:HandleInfoType={componentConfigs,propsConfigSheet}
+
     redo.length = 0;
     return {
         ...state,
-        componentConfigs:produce(componentConfigs,oldConfig=>{
+        ...produce(handleState,oldState=>{
             if(selectedKey==='root'){
-                return {}
+                oldState.componentConfigs={}
+                oldState.propsConfigSheet={}
             }else {
-                update(oldConfig,getLocation(parentKey,parentPropName),childNodes=>childNodes.filter((childKey:string)=>childKey!==selectedKey))
-                if(oldConfig[selectedKey].childNodes){
-                    deleteChildNodes(oldConfig,oldConfig[selectedKey].childNodes!)
+                update(oldState.componentConfigs,getLocation(parentKey,parentPropName),childNodes=>childNodes.filter((childKey:string)=>childKey!==selectedKey))
+                const childNodes=oldState.componentConfigs[selectedKey].childNodes
+                if(childNodes){
+                    deleteChildNodes(oldState,childNodes)
                 }
-                delete oldConfig[selectedKey]
+                delete oldState.componentConfigs[selectedKey]
+                delete oldState.propsConfigSheet[selectedKey]
             }
         }),
-        propsSetting: null,
         selectedInfo: null,
         undo,
         redo,
@@ -191,20 +196,22 @@ export function deleteComponent(state: StateType) {
  * @returns {{undo: *, componentConfigs, redo: *}}
  */
 
-export function clearChildNodes(state: StateType) {
-    const {componentConfigs, selectedInfo, undo, redo} = state;
+export function clearChildNodes(state: StateType):StateType {
+    const {componentConfigs, selectedInfo, undo, redo,propsConfigSheet} = state;
     if (!selectedInfo) {
         //todo
         return state
     }
     const {selectedKey,propName} = selectedInfo;
-    undo.push({componentConfigs});
+    undo.push({componentConfigs,propsConfigSheet});
+    const handleState:HandleInfoType={componentConfigs,propsConfigSheet}
+
     redo.length = 0;
     return {
         ...state,
-        componentConfigs:produce(componentConfigs,oldConfig=>{
-                deleteChildNodes(oldConfig,oldConfig[selectedKey].childNodes!)
-            update(oldConfig, getLocation(selectedKey,propName), () => []);
+        ...produce(handleState,oldState=>{
+            deleteChildNodes(oldState,oldState.componentConfigs[selectedKey].childNodes!)
+            update(oldState.componentConfigs, getLocation(selectedKey,propName), () => []);
         }),
         undo,
         redo,

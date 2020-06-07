@@ -10,9 +10,9 @@ import {
 import { getDragSource, getDropTarget } from './handleDragDrop';
 import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
-import { addPropsConfig, deletePropsConfig, submitProps } from './handleProps';
+import { addPropsConfig, deletePropsConfig, changeProps, resetProps } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
-import { changeStyles } from './handleStyles';
+import { changeStyles, resetStyles } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import {  Reducer } from 'redux';
 
@@ -46,8 +46,8 @@ export  const reducer:Reducer<StateType,BrickAction>=(prevState,action)=>{
             return  addPropsConfig(state,payload);
         case ACTION_TYPES.deletePropsConfig:
             return deletePropsConfig(state,payload);
-        case ACTION_TYPES.submitProps:
-            return submitProps(state,payload);
+        case ACTION_TYPES.changeProps:
+            return changeProps(state,payload);
         case ACTION_TYPES.selectComponent:
             return selectComponent(state,payload);
         case ACTION_TYPES.clearSelectedStatus:
@@ -58,6 +58,10 @@ export  const reducer:Reducer<StateType,BrickAction>=(prevState,action)=>{
             return undo(state);
         case ACTION_TYPES.redo:
             return redo(state);
+        case ACTION_TYPES.resetProps:
+            return resetProps(state);
+        case ACTION_TYPES.resetStyles:
+            return resetStyles(state);
         default:
             return  state
 

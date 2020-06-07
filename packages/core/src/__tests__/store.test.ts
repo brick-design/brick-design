@@ -14,9 +14,7 @@ describe('未初始化 config',()=>{
 describe('初始化 config', () => {
 
   test('初始化 LEGO_BRIDGE',()=>{
-    const actions={type:'a'}
     jest.resetModules()
-    expect(LEGO_BRIDGE.dispatch(actions)).toBe(actions)
     LegoProvider({config})
     expect(LEGO_BRIDGE.config).toBe(config)
     expect(LEGO_BRIDGE.store).not.toBeNull()

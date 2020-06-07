@@ -1,8 +1,9 @@
-import { generateVDOM, getNewDOMCollection } from '../utils';
-import { StateType } from '../types';
+import { DragVDOMAndPropsConfigType, generateVDOM, getNewDOMCollection, VDOMAndPropsConfigType } from '../utils';
+import {  StateType } from '../types';
 import { DragSourcePayload, DropTargetPayload } from '../actions';
 import produce from 'immer'
 import uuid from 'uuid';
+
 
 /**
  * 获取拖拽组件数据
@@ -12,19 +13,22 @@ import uuid from 'uuid';
  */
 export function getDragSource(state:StateType, payload:DragSourcePayload) {
     // eslint-disable-next-line prefer-const
-    let {componentConfigs,undo}=state
+    let {componentConfigs,undo,propsConfigSheet}=state
     // eslint-disable-next-line prefer-const
-    let { componentName,defaultProps,vDOMCollection,dragKey, parentKey, parentPropName} = payload;
+    let { componentName,defaultProps,vDOMCollection,propsConfigCollection,dragKey, parentKey, parentPropName} = payload;
     if(componentName){
         vDOMCollection=generateVDOM(componentName,defaultProps)
     }
     if(componentConfigs.root&&vDOMCollection){
-        undo.push({componentConfigs})
+        undo.push({componentConfigs,propsConfigSheet})
         dragKey=uuid()
+       const {newPropsConfigCollection,newVDOMCollection}=getNewDOMCollection({vDOMCollection,propsConfigCollection},dragKey)
         componentConfigs=produce(componentConfigs,oldConfigs=>{
             //为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
-            Object.assign(oldConfigs,getNewDOMCollection(vDOMCollection!,dragKey!))
-
+            Object.assign(oldConfigs,newVDOMCollection)
+        })
+        propsConfigSheet=produce(propsConfigSheet,oldPropsConfig=>{
+            Object.assign(oldPropsConfig,newPropsConfigCollection)
         })
     }
     return {
@@ -36,6 +40,7 @@ export function getDragSource(state:StateType, payload:DragSourcePayload) {
             parentPropName
         },
         componentConfigs,
+        propsConfigSheet,
         undo
     } as StateType;
 }

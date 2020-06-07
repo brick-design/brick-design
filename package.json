@@ -104,6 +104,7 @@
 			"!**/dist/**",
 			"!**/__tests__/**",
 			"!packages/docs/**/*.{ts,tsx}",
+			"!packages/bricks-web/**/*.{ts,tsx}",
 			"!**/typing.d.ts"
 		],
 		"testMatch": [

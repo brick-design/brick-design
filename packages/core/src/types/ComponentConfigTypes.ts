@@ -12,7 +12,7 @@ export interface PropsConfigType {
  */
 export interface PropInfoType {
   //属性展示的文字
-  label: string,
+  label?: string,
   //属性的类型
   type: PROPS_TYPES | PROPS_TYPES[],
   //属性的功能的描述信息

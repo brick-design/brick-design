@@ -1,4 +1,4 @@
-import { PropsConfigType } from './ComponentConfigTypes';
+import { PropInfoType, PropsConfigType } from './ComponentConfigTypes';
 import { Action } from 'redux';
 
 export type PropsNodeType= {
@@ -26,19 +26,14 @@ export interface SelectedInfoBaseType extends ParentNodeInfo {
 export type SelectedInfoType =Omit<SelectedInfoBaseType, 'key'>&{
     selectedKey: string,
     propName?: string,
-    style?:any
-}
-
-export interface PropsSettingType {
-    props: any,
-    propsConfig: PropsConfigType,
-    mergePropsConfig: PropsConfigType,
-    addPropsConfig: PropsConfigType,
+    props?:any,
+    propsConfig:PropsConfigType
 }
 
 export interface DragSourceType extends ParentNodeInfo{
     vDOMCollection?: ComponentConfigsType,
     dragKey: string,
+    propsConfigCollection?:PropsConfigSheetType
 }
 
 export interface DropTargetType {
@@ -53,8 +48,16 @@ export interface PlatformInfoType {
     isMobile: boolean,
     size: PlatformStyleType,
 }
+
+export interface PropsConfigSheetALL {[propName:string]:Partial<PropsConfigSheetItem>}
+
+export interface PropsConfigSheetItem extends Omit<PropInfoType, 'childPropsConfig'> {
+    childPropsConfig?: PropsConfigSheetALL | PropsConfigSheetALL[]
+}
+
+
 export interface PropsConfigSheetType {
-    [componentKey:string]:PropsConfigType
+    [componentKey:string]:PropsConfigSheetALL|string
 }
 
 export interface ComponentConfigsType{
@@ -69,12 +72,11 @@ export type UndoRedoType=Partial<Omit<StateType, 'undo'|'redo'>>
 export interface StateType {
     componentConfigs:ComponentConfigsType,
     selectedInfo: SelectedInfoType | null,
-    propsSetting: PropsSettingType | null,
     undo: UndoRedoType[],
     redo: UndoRedoType[],
     hoverKey: null | string,
     dragSource: DragSourceType | null,
     dropTarget: null | DropTargetType,
     platformInfo: PlatformInfoType,
-    // propsConfigSheet?:PropsConfigSheetType
+    propsConfigSheet:PropsConfigSheetType
 }

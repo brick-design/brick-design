@@ -18,6 +18,9 @@ const img: ComponentConfigTypes = {
       label: '规定图像的宽度',
       type: PROPS_TYPES.string,
     },
+    a:{
+      type:PROPS_TYPES.objectArray
+    }
   },
 };
 export default img;
