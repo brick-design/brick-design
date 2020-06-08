@@ -97,6 +97,7 @@
 		},
 		"collectCoverageFrom": [
 			"packages/**/*.{ts,tsx}",
+			"!packages/core/src/index.ts",
 			"!**/node_modules/**",
 			"!**/dist/**",
 			"!**/__tests__/**",

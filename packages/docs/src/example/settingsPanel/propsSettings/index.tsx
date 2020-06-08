@@ -16,7 +16,7 @@ import { PropInfoType, PROPS_TYPES, PropsSettingType, SelectedInfoType, submitPr
 const FormItem = Form.Item;
 
 interface PropsSettingsPropsType extends FormComponentProps {
-  propsSetting?: PropsSettingType,
+  propsSetting?: any,
   selectedInfo?: SelectedInfoType
 }
 
@@ -127,9 +127,8 @@ function PropsSettings(props: PropsSettingsPropsType) {
 
 export default Form.create<PropsSettingsPropsType>({
     mapPropsToFields(props) {
-      const selectedProps = get(props, 'propsSetting.props');
       const formatFields: any = {};
-      each(selectedProps, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
+      each(props.propsSetting, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
       return formatFields;
     },
   })(PropsSettings);

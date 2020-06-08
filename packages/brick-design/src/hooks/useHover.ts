@@ -1,25 +1,25 @@
-import { useSelector } from 'brickd-core';
+import { STATE_PROPS, useSelector } from 'brickd-core';
 
 type HoverType={
-hover:string|null
+hoverKey:string|null
 }
 
 function controlUpdate(prevState: HoverType, nextState: HoverType, key: string) {
-  const {hover:prevHover}=prevState
-  const {hover}=nextState
-  if(!prevHover&&hover){
-    return hover.includes(key)
+  const {hoverKey:prevHoverKey}=prevState
+  const {hoverKey}=nextState
+  if(!prevHoverKey&&hoverKey){
+    return hoverKey.includes(key)
   }
-  if(prevHover&&!hover){
-    return prevHover.includes(key)
+  if(prevHoverKey&&!hoverKey){
+    return prevHoverKey.includes(key)
   }
-  if(prevHover&&hover&&prevHover!==hover){
-      return prevHover.includes(key)||!prevHover.includes(key)&&hover.includes(key)
+  if(prevHoverKey&&hoverKey&&prevHoverKey!==hoverKey){
+      return prevHoverKey.includes(key)||!prevHoverKey.includes(key)&&hoverKey.includes(key)
   }
   return false
 }
 export function useHover(key:string) {
-  const {hover}=useSelector<HoverType>(['hover'],
+  const {hoverKey}=useSelector<HoverType,STATE_PROPS>(['hoverKey'],
     (prevState,nextState)=>controlUpdate(prevState,nextState,key))
-  return !!hover&&hover.includes(key)
+  return !!hoverKey&&hoverKey.includes(key)
 }

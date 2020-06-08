@@ -17,8 +17,13 @@ export function changeStyles(state:StateType, payload:stylePayload):StateType {
     redo.length = 0;
     return {
         ...state,
-        componentConfigs:produce(componentConfigs!,oldConfigs=>{
-            oldConfigs[selectedInfo.selectedKey].props.style=style
+        componentConfigs:produce(componentConfigs,oldConfigs=>{
+            const config=oldConfigs[selectedInfo.selectedKey]
+            if(config.props){
+                config.props.style=style
+            }else {
+                config.props={style}
+            }
         }),
         undo,
         redo,
@@ -34,10 +39,11 @@ export function resetStyles(state:StateType):StateType {
     return {
         ...state,
         componentConfigs:produce(componentConfigs,oldConfigs=>{
+            const config=oldConfigs[selectedKey]
             if(props){
-                oldConfigs[selectedKey].props.style=props.style
+                config.props.style=props.style
             }else {
-                delete oldConfigs[selectedKey].props.style
+                delete config.props.style
             }
         }),
         undo,

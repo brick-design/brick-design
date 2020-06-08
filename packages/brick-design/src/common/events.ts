@@ -15,11 +15,10 @@ export function handleSelectedStatus(
     specialProps: SelectedInfoBaseType
     , propName?: string) {
     event && event.stopPropagation()
-    const {domTreeKeys}=specialProps
     if (isSelected) {
         clearSelectedStatus()
     } else {
-        selectComponent({...specialProps,domTreeKeys, propName})
+        selectComponent({...specialProps, propName})
     }
 
 }

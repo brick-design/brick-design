@@ -1,8 +1,6 @@
 import { useContext, useLayoutEffect, useReducer, useRef } from 'react';
 import { shallowEqual } from '../utils';
-import get from 'lodash/get';
 import {LegoContext} from '../components/LegoContext';
-
 
 const handleState = (selector: string[], storeState: any) => selector.reduce((states: any, key: string) => {
     states[key] = storeState[key]
@@ -11,17 +9,15 @@ const handleState = (selector: string[], storeState: any) => selector.reduce((st
 
 type ControlUpdate<T> = (prevState: T, nextState: T) => boolean
 
-function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?: ControlUpdate<T>, stateDeep?: string):T {
+function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?: ControlUpdate<T>):T {
     const [, forceRender] = useReducer(s => s + 1, 0)
     const prevSelector = useRef<string[]>([])
     const prevStoreState = useRef()
     const prevSelectedState = useRef<any>({})
-    let storeState = store.getState()
-    if(stateDeep){
-        storeState=  get(storeState,stateDeep,storeState)
-    }
+    const storeState = store.getState()
+
     let selectedState: any
-    if (storeState !== prevStoreState.current || !shallowEqual(selector, prevSelector.current)) {
+    if (storeState !== prevStoreState.current) {
         selectedState = handleState(selector, storeState)
     } else {
         selectedState = prevSelectedState.current
@@ -35,10 +31,8 @@ function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?:
 
     useLayoutEffect(() => {
         function checkForUpdates() {
-            let storeState = store.getState()
-            if(stateDeep){
-                storeState= get(storeState,stateDeep,storeState)
-            }
+           const storeState = store.getState()
+
             const nextSelectedState = handleState(prevSelector.current, storeState)
 
             if (shallowEqual(nextSelectedState, prevSelectedState.current)||
@@ -56,16 +50,12 @@ function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?:
     return selectedState
 }
 
-export function useSelector<T>(selector: string[], controlUpdate?: ControlUpdate<T>, stateDeep?: string):T {
-    if (process.env.NODE_ENV !== 'production' && !selector) {
-        throw new Error(`You must pass a selector to useSelector`)
-    }
+export function useSelector<T,U extends string>(selector: U[], controlUpdate?: ControlUpdate<T>):T {
     const store = useContext(LegoContext)
-    return useSelectorWithStore(
+    return useSelectorWithStore<T>(
         selector,
         store!,
-        controlUpdate,
-        stateDeep
+        controlUpdate
     )
 }
 

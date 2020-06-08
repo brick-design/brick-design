@@ -4,7 +4,7 @@ import { createLegStore, LEGO_BRIDGE } from '../store';
 import { flattenDeepArray } from '../utils';
 import { ConfigType, StateType } from '../types';
 
-interface LegoProviderProps {
+export interface LegoProviderProps {
     children?:any,
     initState?:StateType,
     config?:ConfigType

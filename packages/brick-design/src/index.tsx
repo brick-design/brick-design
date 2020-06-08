@@ -1,5 +1,5 @@
 import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
-import { clearHovered, getDropTarget, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
+import { clearHovered,  LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
@@ -19,11 +19,6 @@ const onIframeLoad = (divContainer: any, designPage: any) => {
     <LegoProvider>
       {designPage}
     </LegoProvider>, divContainer.current);
-};
-
-const onDragLeave = (e: any) => {
-  e.stopPropagation();
-    getDropTarget({})
 };
 
 /**

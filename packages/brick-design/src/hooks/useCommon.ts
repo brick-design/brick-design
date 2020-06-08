@@ -1,13 +1,15 @@
-import { STATE_PROPS, useSelector } from 'brickd-core';
-import { HookState } from '../common/handleFuns';
+import { ComponentConfigsType, PropsConfigSheetType, STATE_PROPS, useSelector } from 'brickd-core';
 
-export const stateSelector:STATE_PROPS[]=['componentConfigs','propsConfigSheet']
+export type HookState = {
+    componentConfigs: ComponentConfigsType,
+    propsConfigSheet:PropsConfigSheetType
+}
 
 export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
-    return prevState.componentConfigs[key] === nextState.componentConfigs[key]
+    return prevState.componentConfigs[key] !== nextState.componentConfigs[key]
 }
 export function useCommon(key: string) {
-    const {componentConfigs,propsConfigSheet} = useSelector<HookState>(stateSelector,
+    const {componentConfigs,propsConfigSheet} = useSelector<HookState,STATE_PROPS>(['componentConfigs','propsConfigSheet'],
         (prevState, nextState) => controlUpdate(prevState, nextState, key))
     return {
         propsConfigSheet,

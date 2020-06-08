@@ -1,4 +1,4 @@
-import { SelectedInfoBaseType, SelectedInfoType, useSelector } from 'brickd-core';
+import { SelectedInfoBaseType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import { useEffect } from 'react';
 import { handleSelectedStatus } from '../common/events';
 
@@ -32,7 +32,7 @@ interface UseSelectType {
 
 export function useSelect(specialProps:SelectedInfoBaseType): UseSelectType {
   const {key}=specialProps
-  const { selectedInfo } = useSelector<SelectType>(['selectedInfo'],
+  const { selectedInfo } = useSelector<SelectType,STATE_PROPS>(['selectedInfo'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
   const {selectedKey,domTreeKeys:selectedDomKeys}=selectedInfo||{}
   const isSelected=!!selectedKey && selectedKey.includes(key)

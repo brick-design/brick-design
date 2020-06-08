@@ -23,7 +23,7 @@ import {
   undo,
   selectComponent,
   SelectComponentPayload,
-  clearSelectedStatus, stylePayload, changeStyles,
+  clearSelectedStatus, stylePayload, changeStyles, resetStyles, resetProps,
 } from '../../actions';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { BrickAction, PlatformInfoType } from '../../types';
@@ -70,6 +70,7 @@ describe('actions test', () => {
     });
     const ChangePropsPayload: ChangePropsPayload = { props: {} };
     expect(changeProps(ChangePropsPayload)).toEqual({ type: ACTION_TYPES.changeProps, payload: ChangePropsPayload });
+    expect(resetProps()).toEqual({type:ACTION_TYPES.resetProps})
     //redoUndo
     expect(redo()).toEqual({ type: ACTION_TYPES.redo });
     expect(undo()).toEqual({ type: ACTION_TYPES.undo });
@@ -83,5 +84,7 @@ describe('actions test', () => {
     //styles
     const changeStylePayload: stylePayload = { style: {} };
     expect(changeStyles(changeStylePayload)).toEqual({ type: ACTION_TYPES.changeStyles, payload: changeStylePayload });
+    expect(resetStyles()).toEqual({ type: ACTION_TYPES.resetStyles });
+
   });
 });

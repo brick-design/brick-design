@@ -1,31 +1,35 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { legoState } from '../../store';
+import { StateType } from 'brickd-core';
 
 describe('undo',()=>{
-  jest.resetModules()
-
+  const action={type:ACTION_TYPES.undo}
   test('undo.length=0',()=>{
-    const state=reducer(legoState,{type:ACTION_TYPES.undo})
+    const state=reducer(legoState,action)
     expect(state).toEqual(legoState)
   })
 
   test('undo.length!==0',()=>{
-    const state=reducer({...legoState,undo:[{}],redo:[]},{type:ACTION_TYPES.undo})
-    expect(state.redo.length).toBe(1)
+    const prevState:StateType={...legoState,undo:[{hoverKey:'1'}],redo:[]}
+    const state=reducer(prevState,action)
+    const expectState:StateType={...legoState,undo:[],redo:[{hoverKey:null}],hoverKey:'1'}
+    expect(state).toEqual(expectState)
   })
 })
 
 describe('redo',()=>{
-  jest.resetModules()
+  const action={type:ACTION_TYPES.redo}
   test('redo.length=0',()=>{
-    const state=reducer(legoState,{type:ACTION_TYPES.redo})
+    const state=reducer(legoState,action)
     expect(state).toEqual(legoState)
   })
 
   test('redo.length!==0',()=>{
-    const state=reducer({...legoState,redo:[{}],undo:[]},{type:ACTION_TYPES.redo})
-    expect(state.undo.length).toBe(1)
+    const prevState:StateType={...legoState,redo:[{hoverKey:'1'}],undo:[]}
+    const state=reducer(prevState,action)
+    const expectState:StateType={...legoState,redo:[],undo:[{hoverKey:null}],hoverKey:'1'}
+    expect(state).toEqual(expectState)
   })
 })
 

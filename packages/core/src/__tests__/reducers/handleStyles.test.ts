@@ -12,24 +12,40 @@ describe('changeStyle', () => {
 		})
 		expect(state).toBe(legoState)
 	})
-	test('selectedInfo!=null', () => {
+	test('props===undefined', () => {
 		const prevState: StateType = {
 			...legoState,
 			selectedInfo: {
 				selectedKey: 'root',
 				domTreeKeys: ['root'],
-				propName: 'children',
 				parentKey: '',
 				propsConfig:{}
 			},
 			componentConfigs: {
 				root: {
-					componentName: 'span',
-					props: {},
-					childNodes: {
-						children: [],
-						test: [],
-					},
+					componentName: 'img'
+				},
+			},
+		}
+		const state = reducer(prevState, {
+			...action,
+			payload: { style: {} },
+		})
+		expect(state.componentConfigs.root.props).toEqual({ style: {} })
+	})
+	test('props!==undefined', () => {
+		const prevState: StateType = {
+			...legoState,
+			selectedInfo: {
+				selectedKey: 'root',
+				domTreeKeys: ['root'],
+				parentKey: '',
+				propsConfig:{}
+			},
+			componentConfigs: {
+				root: {
+					componentName: 'img',
+					props:{}
 				},
 			},
 		}

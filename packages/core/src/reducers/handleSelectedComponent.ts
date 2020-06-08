@@ -19,16 +19,29 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
   if (selectedInfo) {
     const { selectedKey, propName: selectedPropName } = selectedInfo;
     if (selectedKey === key && selectedPropName == propName || handleRequiredHasChild(selectedInfo, componentConfigs)) return state;
-    if (selectedKey === key && selectedPropName !== propName) {
-      domTreeKeys.push(`${key}${propName}`);
-      return {
-        ...state,
-        selectedInfo: {
-          ...selectedInfo,
-          propName,
-          domTreeKeys,
-        },
-      };
+    if (selectedKey === key) {
+      if(propName&&selectedPropName !== propName){
+        domTreeKeys.push(`${key}${propName}`);
+        return {
+          ...state,
+          selectedInfo: {
+            ...selectedInfo,
+            propName,
+            domTreeKeys,
+          },
+        };
+      }else {
+        return {
+          ...state,
+          selectedInfo: {
+            ...selectedInfo,
+            parentKey,
+            parentPropName,
+          },
+
+        }
+      }
+
     }
   }
 

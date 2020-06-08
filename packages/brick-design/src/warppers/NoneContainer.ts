@@ -1,12 +1,7 @@
 import { createElement, forwardRef, memo, useMemo } from 'react';
 import get from 'lodash/get';
 import { getAddPropsConfig, LEGO_BRIDGE, produce } from 'brickd-core';
-import {
-  CommonPropsType,
-  handleEvents,
-  handlePropsClassName,
-  propAreEqual,
-} from '../common/handleFuns';
+import { CommonPropsType, handleEvents, handlePropsClassName, propAreEqual } from '../common/handleFuns';
 import { formatSpecialProps } from '../utils';
 import merge from 'lodash/merge';
 import { useCommon } from '../hooks/useCommon';
@@ -38,12 +33,11 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     getDropTargetInfo(e, undefined, key);
   };
 
-
   const { className, animateClass, ...restProps } = props || {};
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered,isHidden, className, animateClass, true),
+      className: handlePropsClassName(isSelected, isHovered,isHidden, className, animateClass),
       ...handleEvents(specialProps, isSelected),
       onDragEnter,
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {

@@ -19,10 +19,15 @@ afterAll(() => {
 
 describe('drag', () => {
   const action = { type: ACTION_TYPES.getDragSource };
-  it('当componentConfigs没有root节点', () => {
+  it('当componentConfigs没有root节点拖拽容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'a' };
     const state = reducer(legoState, {...action,payload});
     expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'a', childNodes: [] } } });
+  });
+  it('当componentConfigs没有root节点拖拽非容器组件', () => {
+    const payload: DragSourcePayload = { componentName: 'img' };
+    const state = reducer(legoState, {...action,payload});
+    expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'img' } } });
   });
   it('当componentConfigs有root节点', () => {
     const payload: DragSourcePayload = { componentName: 'span' };
@@ -33,6 +38,7 @@ describe('drag', () => {
     expect(state.dragSource?.dragKey).not.toBeUndefined();
     expect(state.undo).toEqual([{ componentConfigs, propsConfigSheet: {} }]);
   });
+
   it('拖拽设计面板中的组建', () => {
     const prevState: StateType = {
       ...legoState,
