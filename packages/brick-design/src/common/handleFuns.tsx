@@ -1,4 +1,4 @@
-import React, { AllHTMLAttributes, ComponentProps, ReactElement } from 'react';
+import React, { AllHTMLAttributes } from 'react';
 import styles from './style.less';
 import {
     ChildNodesType,
@@ -10,7 +10,7 @@ import {
     SelectedInfoBaseType,
     SelectedInfoType, StatePropsType,
 } from 'brickd-core';
-import { getDropTargetInfo, handleSelectedStatus, onDragStart, onMouseOver } from './events';
+import {  handleSelectedStatus, onDragStart, onMouseOver } from './events';
 import map from 'lodash/map';
 import each from 'lodash/each';
 import Container from '../warppers/Container';
@@ -21,11 +21,23 @@ import isEqual from 'lodash/isEqual';
  * 处理样式
  * @param isSelected
  * @param isHovered
+ * @param isHidden
  * @param className
  * @param animateClass
+ * @param isNoneContainer
  */
 export function handlePropsClassName(isSelected: boolean, isHovered: boolean, className: any, animateClass: string,isNoneContainer?:boolean) {
-    return `${isSelected ? styles['container-select-border'] : isHovered && styles[`${isNoneContainer?'none-':''}container-hover-border`]} ${className} ${animateClass}`;
+    let classNameCollection=''
+    if(isSelected){
+        classNameCollection+=styles['container-select-border']
+    }else if(isHovered&&isNoneContainer) {
+        classNameCollection+=styles[`none-container-hover-border`]
+    }else if(isHovered&&!isNoneContainer){
+        classNameCollection+=styles[`container-hover-border`]
+    }else {
+        classNameCollection+=` ${className} ${animateClass}`
+    }
+    return classNameCollection
 }
 
 /**
@@ -113,7 +125,7 @@ export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType,
  */
 export type HookState = {
     selectedInfo: SelectedInfoType,
-    hoverKey: string,
+    hoverKey: string|null,
     componentConfigs: ComponentConfigsType,
     propsConfigSheet:PropsConfigSheetType
 }
@@ -148,8 +160,8 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     }
     return {
         onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),
-        onMouseOver: (e: any) => onMouseOver(e, key),
-        onDragStart: (e: any) => onDragStart(e, key, parentKey!, parentPropName),
+        onMouseOver: (e: Event) => onMouseOver(e, key),
+        onDragStart: (e: Event) => onDragStart(e, key, parentKey!, parentPropName),
     };
 }
 
@@ -159,7 +171,6 @@ export interface CommonPropsType extends AllHTMLAttributes<any>{
     [propsName: string]: any
 
 }
-
 
 export const stateSelector:StatePropsType[]=['selectedInfo', 'hoverKey','componentConfigs','propsConfigSheet']
 

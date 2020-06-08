@@ -56,7 +56,7 @@ function Container(allProps: CommonPropsType, ref: any) {
     isSelected,
     componentConfigs,
     SelectedDomKeys,
-    propsConfigSheet
+    propsConfigSheet,
   } = useCommon(allProps);
   const [children, setChildren] = useState(childNodes);
 
@@ -100,7 +100,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, className, animateClass),
+      className: handlePropsClassName(isSelected, isHovered,className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
       onDragEnter,
       ...handleChildNodes(domTreeKeys, key, componentConfigs, children!),

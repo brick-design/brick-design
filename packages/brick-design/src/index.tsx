@@ -21,9 +21,9 @@ const onIframeLoad = (divContainer: any, designPage: any) => {
     </LegoProvider>, divContainer.current);
 };
 
-const onMouseLeave = (e: any) => {
+const onDragLeave = (e: any) => {
   e.stopPropagation();
-  getDropTarget({})
+    getDropTarget({})
 };
 
 /**
@@ -37,6 +37,7 @@ const stateSelector = ['componentConfigs'];
 
 
 export function BrickDesign(props: BrickDesignProps) {
+
   const { componentConfigs } = useSelector(stateSelector);
   const designPage: any = useMemo(() => {
     if (!componentConfigs.root) return null;
@@ -48,8 +49,10 @@ export function BrickDesign(props: BrickDesignProps) {
         parentKey: '',
       },
     };
-    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container {...props} /> :
-      <NoneContainer {...props}/>;
+    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container onMouseLeave={clearHovered}
+                                                                        // onDragLeave={onDragLeave}
+                                                                        {...props} /> :
+      <NoneContainer onMouseLeave={clearHovered} {...props}/>;
   }, [componentConfigs]);
 
   const divContainer = useRef(null);
@@ -74,7 +77,7 @@ export function BrickDesign(props: BrickDesignProps) {
   }, [divContainer.current, designPage]);
 
   const { onLoadEnd } = props;
-  return (<iframe onMouseLeave={clearHovered}
+  return (<iframe
                   id="dnd-iframe"
                   style={{ border: 0, width: '100%', height: '100%' }}
                   srcDoc={iframeSrcDoc}
