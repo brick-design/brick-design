@@ -18,8 +18,9 @@ beforeAll(()=>{
   LEGO_BRIDGE.config=config
 })
 describe('addPropsConfig', () => {
+  const action={ type: ACTION_TYPES.addPropsConfig }
   it('selectedInfo===null', () => {
-    expect(reducer(legoState, { type: ACTION_TYPES.addPropsConfig })).toEqual(legoState);
+    expect(reducer(legoState, action)).toEqual(legoState);
   });
 
   it('添加object属性配置', () => {
@@ -52,7 +53,7 @@ describe('addPropsConfig', () => {
       propType: PROPS_TYPES.number,
     };
 
-    const state = reducer(prevState, { type: ACTION_TYPES.addPropsConfig, payload });
+    const state = reducer(prevState, {...action, payload });
     const expectState: StateType = {
       ...prevState,
       undo: [{ selectedInfo, propsConfigSheet: {} }],
@@ -127,7 +128,7 @@ describe('addPropsConfig', () => {
       propType: PROPS_TYPES.object,
     };
 
-    const state = reducer(prevState, { type: ACTION_TYPES.addPropsConfig, payload });
+    const state = reducer(prevState, { ...action, payload });
     expect(state).toEqual(prevState);
   });
 
@@ -165,7 +166,7 @@ describe('addPropsConfig', () => {
       }]
     };
 
-    const state = reducer(prevState, { type: ACTION_TYPES.addPropsConfig, payload });
+    const state = reducer(prevState, { ...action, payload });
     const expectState: StateType = {
       ...prevState,
       undo: [{ selectedInfo, propsConfigSheet: {} }],
@@ -211,8 +212,9 @@ describe('addPropsConfig', () => {
 });
 
 describe('deletePropsConfig',()=>{
+  const action={ type: ACTION_TYPES.deletePropsConfig }
   it('selectedInfo===null', () => {
-    expect(reducer(legoState, { type: ACTION_TYPES.deletePropsConfig })).toEqual(legoState);
+    expect(reducer(legoState, action)).toEqual(legoState);
   });
 
   it('props有值，删除属性配置',()=>{
@@ -246,7 +248,7 @@ describe('deletePropsConfig',()=>{
       fatherFieldLocation:'a.childPropsConfig',
       field:'b'
     }
-    const state =reducer(prevState,{type:ACTION_TYPES.deletePropsConfig,payload})
+    const state =reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{selectedInfo,componentConfigs,propsConfigSheet}],
@@ -292,7 +294,7 @@ describe('deletePropsConfig',()=>{
       fatherFieldLocation:'a.childPropsConfig',
       field:'b'
     }
-    const state =reducer(prevState,{type:ACTION_TYPES.deletePropsConfig,payload})
+    const state =reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{selectedInfo,componentConfigs,propsConfigSheet}],
@@ -309,8 +311,9 @@ describe('deletePropsConfig',()=>{
 })
 
 describe('changeProps',()=>{
+  const action={ type: ACTION_TYPES.changeProps }
   it('selectedInfo===null', () => {
-    expect(reducer(legoState, { type: ACTION_TYPES.changeProps })).toEqual(legoState);
+    expect(reducer(legoState, action)).toEqual(legoState);
   });
   it('changeProps and style===undefined',()=>{
     const componentConfigs:ComponentConfigsType={
@@ -328,7 +331,7 @@ describe('changeProps',()=>{
       }
     }
     const payload:ChangePropsPayload={props:{b:2}}
-    const state=reducer(prevState,{type:ACTION_TYPES.changeProps,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{componentConfigs}],
@@ -355,7 +358,7 @@ describe('changeProps',()=>{
       }
     }
     const payload:ChangePropsPayload={props:{b:2}}
-    const state=reducer(prevState,{type:ACTION_TYPES.changeProps,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{componentConfigs}],
@@ -369,8 +372,9 @@ describe('changeProps',()=>{
 })
 
 describe('resetProps',()=>{
+  const action={ type: ACTION_TYPES.resetProps }
   it('selectedInfo===null', () => {
-    expect(reducer(legoState, { type: ACTION_TYPES.resetProps })).toEqual(legoState);
+    expect(reducer(legoState, action)).toEqual(legoState);
   });
   it('selectedInfo!==null and style===undefined', () => {
     const componentConfigs:ComponentConfigsType={
@@ -388,7 +392,7 @@ describe('resetProps',()=>{
         props:{b:2}
       }
     }
-    const state=reducer(prevState, { type: ACTION_TYPES.resetProps })
+    const state=reducer(prevState, action)
     const expectState:StateType={
       ...prevState,
       undo:[{componentConfigs}],
@@ -414,7 +418,7 @@ describe('resetProps',()=>{
         props:{b:2}
       }
     }
-    const state=reducer(prevState, { type: ACTION_TYPES.resetProps })
+    const state=reducer(prevState, action)
     const expectState:StateType={
       ...prevState,
       undo:[{componentConfigs}],

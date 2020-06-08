@@ -8,7 +8,7 @@ import {
     PROPS_TYPES, PropsConfigSheetType,
     PropsNodeType,
     SelectedInfoBaseType,
-    SelectedInfoType, StatePropsType,
+     STATE_PROPS,
 } from 'brickd-core';
 import {  handleSelectedStatus, onDragStart, onMouseOver } from './events';
 import map from 'lodash/map';
@@ -26,8 +26,11 @@ import isEqual from 'lodash/isEqual';
  * @param animateClass
  * @param isNoneContainer
  */
-export function handlePropsClassName(isSelected: boolean, isHovered: boolean, className: any, animateClass: string,isNoneContainer?:boolean) {
+export function handlePropsClassName(isSelected: boolean, isHovered: boolean,isHidden:boolean, className: any, animateClass: string,isNoneContainer?:boolean) {
     let classNameCollection=''
+    if(isHidden){
+        return styles['hidden-component']
+    }
     if(isSelected){
         classNameCollection+=styles['container-select-border']
     }else if(isHovered&&isNoneContainer) {
@@ -124,23 +127,10 @@ export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType,
  * @param key
  */
 export type HookState = {
-    selectedInfo: SelectedInfoType,
-    hoverKey: string|null,
     componentConfigs: ComponentConfigsType,
     propsConfigSheet:PropsConfigSheetType
 }
 
-
-export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
-    if (prevState.componentConfigs[key] === nextState.componentConfigs[key]) {
-        const {selectedKey: prevSelectedKey,propName:prevPropName} = prevState.selectedInfo || {}
-        const {selectedKey,propName} = nextState.selectedInfo || {}
-        return prevSelectedKey == key &&
-            (selectedKey !== key||selectedKey === key&&prevPropName!==propName) ||
-            prevSelectedKey !== key && selectedKey === key
-    }
-    return true
-}
 
 /**
  * 处理容器组件属性
@@ -169,7 +159,4 @@ export interface CommonPropsType extends AllHTMLAttributes<any>{
     [propsName: string]: any
 
 }
-
-export const stateSelector:StatePropsType[]=['selectedInfo', 'hoverKey','componentConfigs','propsConfigSheet']
-
 export function propAreEqual(prevProps:CommonPropsType, nextProps:CommonPropsType):boolean {return isEqual(prevProps.specialProps, nextProps.specialProps)}

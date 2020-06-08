@@ -1,6 +1,6 @@
 import { SelectedInfoBaseType, SelectedInfoType, useSelector } from 'brickd-core';
 import { useEffect } from 'react';
-import { handleSelectedStatus } from '../../dist';
+import { handleSelectedStatus } from '../common/events';
 
 interface SelectType {
   selectedInfo: SelectedInfoType

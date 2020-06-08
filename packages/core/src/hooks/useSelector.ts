@@ -1,7 +1,7 @@
 import { useContext, useLayoutEffect, useReducer, useRef } from 'react';
 import { shallowEqual } from '../utils';
 import get from 'lodash/get';
-import LegoContext from '../components/LegoContext';
+import {LegoContext} from '../components/LegoContext';
 
 
 const handleState = (selector: string[], storeState: any) => selector.reduce((states: any, key: string) => {
@@ -11,7 +11,7 @@ const handleState = (selector: string[], storeState: any) => selector.reduce((st
 
 type ControlUpdate<T> = (prevState: T, nextState: T) => boolean
 
-function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?: ControlUpdate<T>, stateDeep?: string) {
+function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?: ControlUpdate<T>, stateDeep?: string):T {
     const [, forceRender] = useReducer(s => s + 1, 0)
     const prevSelector = useRef<string[]>([])
     const prevStoreState = useRef()
@@ -53,10 +53,10 @@ function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?:
         return unsubscribe
     }, [store])
 
-    return selectedState as T
+    return selectedState
 }
 
-export function useSelector<T>(selector: string[], controlUpdate?: ControlUpdate<T>, stateDeep?: string) {
+export function useSelector<T>(selector: string[], controlUpdate?: ControlUpdate<T>, stateDeep?: string):T {
     if (process.env.NODE_ENV !== 'production' && !selector) {
         throw new Error(`You must pass a selector to useSelector`)
     }

@@ -1,4 +1,4 @@
-import { createElement, forwardRef, memo } from 'react';
+import { createElement, forwardRef, memo, useMemo } from 'react';
 import get from 'lodash/get';
 import { getAddPropsConfig, LEGO_BRIDGE, produce } from 'brickd-core';
 import {
@@ -13,21 +13,24 @@ import { useCommon } from '../hooks/useCommon';
 import { getDropTargetInfo } from '..';
 import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
+import { useDragDrop } from '../hooks/useDragDrop';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
   const {
     specialProps,
+    specialProps:{key},
     ...rest
   } = allProps;
   const {
-    props,
-    componentName,
-    propsConfig,
+    componentConfigs,
     propsConfigSheet,
-  } = useCommon(allProps);
-  const { key } = specialProps;
+  } = useCommon(key);
   const isHovered = useHover(key);
   const {isSelected}=useSelect(specialProps)
+  const {isHidden}=useDragDrop(key)
+  const {props, componentName} = componentConfigs[key]||{}
+  const {propsConfig} = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+
   if (!componentName) return null;
 
   const onDragEnter = (e: Event) => {
@@ -40,7 +43,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, className, animateClass, true),
+      className: handlePropsClassName(isSelected, isHovered,isHidden, className, animateClass, true),
       ...handleEvents(specialProps, isSelected),
       onDragEnter,
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {

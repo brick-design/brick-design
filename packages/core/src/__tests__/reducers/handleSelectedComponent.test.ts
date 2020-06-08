@@ -12,6 +12,7 @@ afterAll(()=>{
   LEGO_BRIDGE.config=undefined
 })
 describe('selectInfo',()=>{
+  const action={type:ACTION_TYPES.selectComponent}
   test('如果 selectedInfo===null ',()=>{
     const prevState:StateType={
       ...legoState,
@@ -32,7 +33,7 @@ describe('selectInfo',()=>{
       propName:'test'
     }
 
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       selectedInfo:{
@@ -75,7 +76,7 @@ describe('selectInfo',()=>{
       domTreeKeys:['root','roottest','1'],
       parentPropName:'test'
     }
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{selectedInfo}],
@@ -120,7 +121,7 @@ describe('selectInfo',()=>{
       domTreeKeys:['root'],
       propName:'children'
     }
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       undo:[{selectedInfo}],
@@ -154,7 +155,7 @@ describe('selectInfo',()=>{
       propName:'test'
     }
 
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     expect(state).toBe(prevState)
   })
   test('如果 selectedInfo.selectedKey===key 并且属性节点相同 ',()=>{
@@ -176,7 +177,7 @@ describe('selectInfo',()=>{
       propName:'children'
     }
 
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     expect(state).toBe(prevState)
   })
   test('如果 selectedInfo.selectedKey===key 并且属性节点不同',()=>{
@@ -207,7 +208,7 @@ describe('selectInfo',()=>{
       propName:'test'
     }
 
-    const state=reducer(prevState,{type:ACTION_TYPES.selectComponent,payload})
+    const state=reducer(prevState,{...action,payload})
     const expectState:StateType={
       ...prevState,
       selectedInfo:{
@@ -222,8 +223,9 @@ describe('selectInfo',()=>{
 })
 
 describe('清除选中',()=>{
+  const action={type:ACTION_TYPES.clearSelectedStatus}
   test('当没有选中组件时',()=>{
-    const state=reducer(legoState,{type:ACTION_TYPES.clearSelectedStatus})
+    const state=reducer(legoState,action)
     expect(state).toEqual(legoState)
   })
 
@@ -240,7 +242,7 @@ describe('清除选中',()=>{
           }
         }}
     }
-    const state=reducer(prevState,{type:ACTION_TYPES.clearSelectedStatus})
+    const state=reducer(prevState,action)
     expect(state).toEqual(prevState)
   })
 
@@ -253,7 +255,7 @@ describe('清除选中',()=>{
           props:{}
         }}
     }
-    const state=reducer(prevState,{type:ACTION_TYPES.clearSelectedStatus})
+    const state=reducer(prevState,action)
     expect(state.selectedInfo).toBeNull()
   })
 })

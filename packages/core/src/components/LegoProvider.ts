@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import LegoContext from './LegoContext';
+import {LegoContext} from './LegoContext';
 import { createLegStore, LEGO_BRIDGE } from '../store';
 import { flattenDeepArray } from '../utils';
 import { ConfigType, StateType } from '../types';

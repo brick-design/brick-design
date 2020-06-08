@@ -4,9 +4,10 @@ import { legoState } from '../../store'
 import { ComponentConfigsType, SelectedInfoType, StateType } from '../../types';
 
 describe('changeStyle', () => {
+	const action={type: ACTION_TYPES.changeStyles}
 	test('selectedInfo=null', () => {
 		const state = reducer(legoState, {
-			type: ACTION_TYPES.changeStyles,
+			...action,
 			payload: { style: {} },
 		})
 		expect(state).toBe(legoState)
@@ -33,15 +34,16 @@ describe('changeStyle', () => {
 			},
 		}
 		const state = reducer(prevState, {
-			type: ACTION_TYPES.changeStyles,
+			...action,
 			payload: { style: {} },
 		})
 		expect(state.componentConfigs.root.props).toEqual({ style: {} })
 	})
 })
 describe('resetStyle',()=>{
+	const action={type:ACTION_TYPES.resetStyles}
 	it('selectedInfo===null',()=>{
-		expect(reducer(legoState,{type:ACTION_TYPES.resetStyles})).toBe(legoState)
+		expect(reducer(legoState,action)).toBe(legoState)
 	})
 
 	it('重置样式 props===undefined',()=>{
@@ -61,7 +63,7 @@ describe('resetStyle',()=>{
 			componentConfigs
 
 		}
-		const state=reducer(prevState,{type:ACTION_TYPES.resetStyles})
+		const state=reducer(prevState,action)
 		const expectState:StateType={
 			...prevState,
 			undo:[{componentConfigs}],
@@ -92,7 +94,7 @@ describe('resetStyle',()=>{
 			componentConfigs
 
 		}
-		const state=reducer(prevState,{type:ACTION_TYPES.resetStyles})
+		const state=reducer(prevState,action)
 		const expectState:StateType={
 			...prevState,
 			undo:[{componentConfigs}],
