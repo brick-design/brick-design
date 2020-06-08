@@ -6,24 +6,13 @@ import get from 'lodash/get';
 
 export function useCommon(allProps: CommonPropsType) {
     const {specialProps, specialProps: {key}} = allProps
-    const {selectedInfo, hoverKey, componentConfigs,propsConfigSheet} = useSelector<HookState>(stateSelector,
+    const {componentConfigs,propsConfigSheet} = useSelector<HookState>(stateSelector,
         (prevState, nextState) => controlUpdate(prevState, nextState, key))
-
-    const {selectedKey,domTreeKeys:SelectedDomKeys} = selectedInfo || {};
-
-    const {isHovered, isSelected} = selectedStatus(key, hoverKey, selectedKey);
-
     /**
      * 当组件跨容器拖拽嵌套时,触发
      */
     const {props, childNodes, componentName} = componentConfigs[key]||{}
     const {mirrorModalField, propsConfig,nodePropsConfig,childNodesRule,isOnlyNode,isRequired} = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
-
-    useEffect(() => {
-        if (isSelected) {
-            handleSelectedStatus(null, false, specialProps);
-        }
-    }, []);
 
     useEffect(()=>{
         /**
@@ -51,9 +40,6 @@ export function useCommon(allProps: CommonPropsType) {
         componentName,
         mirrorModalField,
         propsConfig,
-        isHovered,
-        isSelected,
         componentConfigs,
-        SelectedDomKeys
     }
 }

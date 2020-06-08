@@ -49,7 +49,7 @@ const handleMenuClick = (e: any) => {
 };
 
 function renderMenu(domKey: string, isOnlyNode?: boolean, isClear?: boolean) {
-    let isRoot = domKey === 'root'
+    const isRoot = domKey === 'root'
     return (
         <Menu onClick={handleMenuClick}>
             {isClear && <Item key={1}>清除</Item>}
@@ -223,7 +223,7 @@ function SortItem(props: SortItemPropsType) {
             data-name={componentName}
             onDragEnter={(e: any) => {
                 //如果目标组件为非容器组件就重置目标容器信息
-                if (!childNodes) return getDropTargetInfo(e)
+                if (!childNodes) return getDropTargetInfo(e,undefined,key)
                 let propNameResult = propName
                 //如果当前目标是多属性节点容器，获取容器的最后一属性节点作为目标容器
                 if (!propNameResult && !isArray(childNodes)) {
@@ -234,7 +234,7 @@ function SortItem(props: SortItemPropsType) {
         >
             {renderHeader(isUnfold, props, isSelected, isHovered, setIsUnfold, propName || componentName, childNodes)}
 
-            {childNodes&&<Collapse
+            {!!childNodes&&<Collapse
                 activeKey={isUnfold ? ['1'] : []}
                 style={{marginLeft: 24}}
                 bordered={false}

@@ -15,6 +15,8 @@ import {
 } from '../common/handleFuns';
 import { useCommon } from '../hooks/useCommon';
 import { getDropTargetInfo } from '..';
+import { useHover } from '../hooks/useHover';
+import { useSelect } from '../hooks/useSelect';
 
 
 export interface DragDropTypes extends HookState {
@@ -52,18 +54,16 @@ function Container(allProps: CommonPropsType, ref: any) {
     componentName,
     mirrorModalField,
     propsConfig,
-    isHovered,
-    isSelected,
     componentConfigs,
-    SelectedDomKeys,
     propsConfigSheet,
   } = useCommon(allProps);
   const [children, setChildren] = useState(childNodes);
-
+  const isHovered=useHover(key)
+const {selectedDomKeys,isSelected}=useSelect(specialProps)
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
     const { dragKey,parentKey, } = dragSource;
-    if (dragKey && !domTreeKeys.includes(dragKey)&& !SelectedDomKeys) {
+    if (dragKey && !domTreeKeys.includes(dragKey)&& !selectedDomKeys) {
       let propName;
       if(parentKey!==key){
         if (Array.isArray(childNodes)) {
@@ -92,11 +92,11 @@ function Container(allProps: CommonPropsType, ref: any) {
   let modalProps: any = {};
   if (mirrorModalField) {
     const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'dnd-iframe');
-    const isVisible = isSelected || SelectedDomKeys && SelectedDomKeys.includes(key);
+    const isVisible = isSelected || selectedDomKeys && selectedDomKeys.includes(key);
     modalProps = { [displayPropName]: isVisible, ...mountedProps };
   }
 
-  const { className, animateClass, ...restProps } = props;
+  const { className, animateClass, ...restProps } = props||{};
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,

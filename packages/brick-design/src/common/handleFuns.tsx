@@ -130,16 +130,14 @@ export type HookState = {
     propsConfigSheet:PropsConfigSheetType
 }
 
-export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
 
+export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
     if (prevState.componentConfigs[key] === nextState.componentConfigs[key]) {
         const {selectedKey: prevSelectedKey,propName:prevPropName} = prevState.selectedInfo || {}
         const {selectedKey,propName} = nextState.selectedInfo || {}
         return prevSelectedKey == key &&
             (selectedKey !== key||selectedKey === key&&prevPropName!==propName) ||
-            prevSelectedKey !== key && selectedKey === key ||
-            prevState.hoverKey === key && nextState.hoverKey !== key ||
-            prevState.hoverKey !== key && nextState.hoverKey === key;
+            prevSelectedKey !== key && selectedKey === key
     }
     return true
 }
