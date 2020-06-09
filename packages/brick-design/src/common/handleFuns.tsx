@@ -40,16 +40,30 @@ export function handlePropsClassName(isSelected: boolean, isHovered: boolean, is
   return classNameCollection;
 }
 
+
+export type DragAddStatusType={
+  dragKey?:string,
+  isDragAdd?:boolean,
+  isDragAddChild?:boolean
+}
+
 /**
  * 渲染组件的子节点
  * @param childNodes
- * @param domTreeKeys
- * @param parentKey
+ * @param specialProps
  * @param componentConfigs
+ * @param dragAddStatus
  * @param parentPropName
  * @param isOnlyNode
+ * @param isRequired
  */
-function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType, parentPropName?: string, isOnlyNode?: boolean, isRequired?: boolean) {
+function renderNodes(childNodes: string[],specialProps:SelectedInfoBaseType, componentConfigs: ComponentConfigsType,dragAddStatus:DragAddStatusType, parentPropName?: string, isOnlyNode?: boolean, isRequired?: boolean) {
+  const {dragKey,isDragAdd,isDragAddChild}=dragAddStatus
+  // eslint-disable-next-line prefer-const
+  let {domTreeKeys,key:parentKey}=specialProps
+  if(parentPropName){
+    domTreeKeys= [...domTreeKeys, `${parentKey}${parentPropName}`]
+  }
   const resultChildNodes = map(childNodes, (key) => {
     const { componentName } = componentConfigs[key] || {};
     if (!componentName) return null;
@@ -62,8 +76,8 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
         parentPropName,
       },
     };
-    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container {...props} key={key}/> :
-      <NoneContainer {...props} key={key}/>;
+    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container {...props} isDragAddChild={isDragAddChild||dragKey===key&&isDragAdd}  key={key}/> :
+      <NoneContainer {...props} isDragAddChild={isDragAddChild} key={key}/>;
   });
 
   /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
@@ -74,21 +88,25 @@ function renderNodes(childNodes: string[], domTreeKeys: string[], parentKey: str
   return resultChildNodes;
 }
 
-export function handleChildNodes(domTreeKeys: string[], parentKey: string, componentConfigs: ComponentConfigsType, childNodes: ChildNodesType) {
+export function handleChildNodes(specialProps:SelectedInfoBaseType, componentConfigs: ComponentConfigsType, children: ChildNodesType,dragKey?:string,isDragAdd?:boolean,isDragAddChild?:boolean) {
+  const {key:parentKey}=specialProps
+  const dragAddStatus:DragAddStatusType={isDragAdd,dragKey,isDragAddChild}
   const { componentName } = componentConfigs[parentKey];
+  const { nodePropsConfig,isRequired,isOnlyNode } = LEGO_BRIDGE.config!.AllComponentConfigs[componentName];
+
   const nodeProps: any = {};
-  if (childNodes) {
-    if (Array.isArray(childNodes)) {
-      nodeProps.children = renderNodes(childNodes, domTreeKeys, parentKey, componentConfigs);
+  if (children) {
+    if (Array.isArray(children)) {
+      nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
     } else {
-      const { nodePropsConfig } = LEGO_BRIDGE.config!.AllComponentConfigs[componentName];
-      each(childNodes, (nodes: string[], propName: string) => {
+      each(children, (nodes: string[], propName: string) => {
+        if(nodes.length===0) return null
         const { isOnlyNode, isRequired } = nodePropsConfig![propName];
         nodeProps[propName] = renderNodes(
           nodes,
-          [...domTreeKeys, `${parentKey}${propName}`],
-          parentKey,
+          specialProps,
           componentConfigs,
+          dragAddStatus,
           propName,
           isOnlyNode,
           isRequired,
@@ -154,11 +172,12 @@ export function controlUpdate(prevState: HookState, nextState: HookState, key: s
 
 export interface CommonPropsType extends AllHTMLAttributes<any> {
   specialProps: SelectedInfoBaseType,
+  isDragAddChild?:boolean,
 
   [propsName: string]: any
 
 }
 
 export function propAreEqual(prevProps: CommonPropsType, nextProps: CommonPropsType): boolean {
-  return isEqual(prevProps.specialProps, nextProps.specialProps);
+  return isEqual(prevProps.specialProps, nextProps.specialProps)&&prevProps.isDragAddChild===nextProps.isDragAddChild;
 }

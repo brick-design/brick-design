@@ -31,6 +31,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       key,
       domTreeKeys,
     },
+    isDragAddChild,
     ...rest
   } = allProps;
 
@@ -39,16 +40,16 @@ function Container(allProps: CommonPropsType, ref: any) {
   const { props, childNodes, componentName } = componentConfigs[key] || {};
   useChildNode({ childNodes, componentName, specialProps });
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
+  const { dragKey, parentKey } = dragSource || {};
   const [children, setChildren] = useState(childNodes);
   const isHovered = useHover(key);
   const { selectedDomKeys, isSelected } = useSelect(specialProps);
   const { mirrorModalField, propsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    const { dragKey, parentKey } = dragSource;
-    if (dragKey && !domTreeKeys.includes(dragKey) && !selectedDomKeys) {
+    if (dragKey && !selectedDomKeys) {
       let propName;
-      if (parentKey !== key) {
+      if (parentKey !== key && !domTreeKeys.includes(dragKey)) {
         if (Array.isArray(childNodes)) {
           setChildren([...childNodes, dragKey]);
         } else {
@@ -63,7 +64,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   };
   const onDragLeave = (e: Event) => {
     e.stopPropagation();
-    const { selectedKey } = dropTarget||{};
+    const { selectedKey } = dropTarget || {};
     if (selectedKey === key) {
       // clearDropTarget();
     }
@@ -92,9 +93,11 @@ function Container(allProps: CommonPropsType, ref: any) {
       ...restProps,
       className: handlePropsClassName(isSelected, isHovered, isHidden, className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
-      onDragEnter,
-      onDragLeave,
-      ...handleChildNodes(domTreeKeys, key, componentConfigs, children!),
+      ...(isDragAddChild ?{}:{
+        onDragEnter,
+        onDragLeave,
+      }),
+      ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes!==children, isDragAddChild),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
         merge(oldPropsConfig, getAddPropsConfig(propsConfigSheet, key));
       })),

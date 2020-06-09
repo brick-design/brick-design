@@ -20,6 +20,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const {
     specialProps,
     specialProps: { key },
+    isDragAddChild,
     ...rest
   } = allProps;
   const { componentConfigs, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
@@ -46,7 +47,9 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
       ...restProps,
       className: handlePropsClassName(isSelected, isHovered, isHidden, className, animateClass),
       ...handleEvents(specialProps, isSelected),
-      onDragEnter,
+      ...(isDragAddChild ?{}:{
+        onDragEnter,
+      }),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
         merge(oldPropsConfig, getAddPropsConfig(propsConfigSheet, specialProps.key));
       })),
