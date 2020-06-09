@@ -5,9 +5,9 @@ import { PlatformInfoType, StateType } from '../types';
  * @param state
  * @param payload
  */
-export function changePlatform(state:StateType, payload:PlatformInfoType) {
-    return {
-        ...state,
-        platformInfo: payload
-    } as StateType;
+export function changePlatform(state: StateType, payload: PlatformInfoType) {
+  return {
+    ...state,
+    platformInfo: payload,
+  } as StateType;
 }

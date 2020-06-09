@@ -1,37 +1,37 @@
-import { createStore, Dispatch, Store } from 'redux';
+import { createStore, Store } from 'redux';
 import { reducer } from './reducers';
 import { BrickAction, ConfigType, StateType } from './types';
 
-type LegoBridge={
-    containers:string[]|null,
-    config?:ConfigType,
-    store:Store<StateType,BrickAction>|null,
-    errorCallback?:(msg:string)=>void,
-    warnCallback?:(msg:string)=>void
+type LegoBridge = {
+  containers: string[] | null,
+  config?: ConfigType,
+  store: Store<StateType, BrickAction> | null,
+  errorCallback?: (msg: string) => void,
+  warnCallback?: (msg: string) => void
 }
-export const LEGO_BRIDGE:LegoBridge={
-    containers: null,
-    store:null,
+export const LEGO_BRIDGE: LegoBridge = {
+  containers: null,
+  store: null,
 
 
-}
+};
 
-export const legoState:StateType={
-    componentConfigs: {}, // 所有组件信息
-    selectedInfo: null, // 选中组件的信息
-    propsConfigSheet: {},  // 属性设置暂存属性数据
-    undo: [],
-    redo: [],
-    hoverKey: null,
-    dragSource: null,
-    dropTarget: null,
-    platformInfo: { isMobile: false, size: ['100%', '100%'] },
-}
+export const legoState: StateType = {
+  componentConfigs: {}, // 所有组件信息
+  selectedInfo: null, // 选中组件的信息
+  propsConfigSheet: {},  // 属性设置暂存属性数据
+  undo: [],
+  redo: [],
+  hoverKey: null,
+  dragSource: null,
+  dropTarget: null,
+  platformInfo: { isMobile: false, size: ['100%', '100%'] },
+};
 
-export function createLegStore (initState:Partial<StateType>={}) {
-    if(LEGO_BRIDGE.store) return LEGO_BRIDGE.store
-    const  store= createStore(reducer,{...legoState,...initState})
-    LEGO_BRIDGE.store=store
-    return store
+export function createLegStore(initState: Partial<StateType> = {}) {
+  if (LEGO_BRIDGE.store) return LEGO_BRIDGE.store;
+  const store = createStore(reducer, { ...legoState, ...initState });
+  LEGO_BRIDGE.store = store;
+  return store;
 }
 

@@ -1,7 +1,7 @@
-import { isEmpty, merge, update } from 'lodash';
+import { merge, update } from 'lodash';
 import { getAddPropsConfig, getFieldInPropsLocation } from '../utils';
-import { PropsConfigType, StateType } from '../types';
-import produce, { original } from 'immer';
+import { StateType } from '../types';
+import produce from 'immer';
 import get from 'lodash/get';
 import { LEGO_BRIDGE } from '../store';
 import { AddPropsConfigPayload, ChangePropsPayload, DeletePropsConfigPayload } from '../actions';
@@ -82,9 +82,9 @@ export function deletePropsConfig(state: StateType, payload: DeletePropsConfigPa
   return {
     ...state,
     componentConfigs: produce(componentConfigs, oldConfig => {
-      const paths=[selectedKey,'props',...fieldInPropsLocation]
-      if (get(oldConfig,[...paths,field])) {
-        update(oldConfig,paths, prevProps => {
+      const paths = [selectedKey, 'props', ...fieldInPropsLocation];
+      if (get(oldConfig, [...paths, field])) {
+        update(oldConfig, paths, prevProps => {
           delete prevProps[field];
           return prevProps;
         });

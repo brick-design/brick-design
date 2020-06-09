@@ -1,9 +1,9 @@
-import {  NODE_PROPS_TYPES, PROPS_TYPES } from './ConfigTypes';
+import { NODE_PROPS_TYPES, PROPS_TYPES } from './ConfigTypes';
 
 /**
  * 组件属性的配置信息
  */
-export interface PropsConfigType{
+export interface PropsConfigType {
   [propName: string]: PropInfoType
 }
 
@@ -50,7 +50,7 @@ export interface PropInfoType {
   //因为每个属性在属性设置面板都是以一个formItem的形式可视化的展示的，
   // 所以你可以设置当前属性在属性设置面板中formItem的一些特性，可参考antd form.Item设置
   formItemProps?: any,
-  unDelete?:boolean
+  unDelete?: boolean
 }
 
 /**
@@ -73,8 +73,9 @@ export interface NodeProps {
   //节点属性类型为functionReactNode，时其参数信息
   params?: string[]
 }
+
 export interface NodePropsConfigType {
-  [propName: string]:NodeProps ,
+  [propName: string]: NodeProps,
 }
 
 /**
@@ -99,7 +100,7 @@ export interface MirrorModalFieldType {
  * 组件配置的数据结构
  */
 
-export interface ComponentConfigTypes extends Omit<NodeProps, 'type'|'tip'|'params'|'label'>{
+export interface ComponentConfigTypes extends Omit<NodeProps, 'type' | 'tip' | 'params' | 'label'> {
   //父组件约束，许多组件只能作为特定组件的子组件，这些组件需要设置，父组件约束放置放错，导致错误显示或者报错，
   //注意要明确约束到父组件的节点属性
   fatherNodesRule?: string[],

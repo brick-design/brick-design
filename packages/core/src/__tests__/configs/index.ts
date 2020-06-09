@@ -6,10 +6,10 @@ import * as AllComponentConfigs from './HTML';
  * 否则设计面板渲染的页面将是无样式的效果
  */
 const config: any = {
-  OriginalComponents:{},
+  OriginalComponents: {},
   AllComponentConfigs,
-  CONTAINER_CATEGORY:htmlContainers,
-  NON_CONTAINER_CATEGORY:htmlNonContainers,
+  CONTAINER_CATEGORY: htmlContainers,
+  NON_CONTAINER_CATEGORY: htmlNonContainers,
 };
 
 export default config;

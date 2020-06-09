@@ -1,8 +1,8 @@
 export default {
-  entry:'src/index.ts',
+  entry: 'src/index.ts',
   esm: {
     type: 'rollup',
     file: 'index',
-    importLibToEs: true
-  }
-}
+    importLibToEs: true,
+  },
+};

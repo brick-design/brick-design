@@ -14,11 +14,11 @@ import {
 import { AddPropsConfigPayload, ChangePropsPayload, DeletePropsConfigPayload } from '../../actions';
 import { merge } from 'lodash';
 
-beforeAll(()=>{
-  LEGO_BRIDGE.config=config
-})
+beforeAll(() => {
+  LEGO_BRIDGE.config = config;
+});
 describe('addPropsConfig', () => {
-  const action={ type: ACTION_TYPES.addPropsConfig }
+  const action = { type: ACTION_TYPES.addPropsConfig };
   it('selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
@@ -53,7 +53,7 @@ describe('addPropsConfig', () => {
       propType: PROPS_TYPES.number,
     };
 
-    const state = reducer(prevState, {...action, payload });
+    const state = reducer(prevState, { ...action, payload });
     const expectState: StateType = {
       ...prevState,
       undo: [{ selectedInfo, propsConfigSheet: {} }],
@@ -98,7 +98,7 @@ describe('addPropsConfig', () => {
   });
   it('添加object重复属性配置', () => {
     const propsConfigSheet: PropsConfigSheetType = {
-      root:{
+      root: {
         a: {
           label: 'a',
           type: PROPS_TYPES.object,
@@ -108,11 +108,11 @@ describe('addPropsConfig', () => {
             },
           },
         },
-      }
+      },
     };
     const selectedInfo: SelectedInfoType = {
       selectedKey: 'root',
-      propsConfig:{},
+      propsConfig: {},
       parentKey: '',
       domTreeKeys: [],
     };
@@ -158,12 +158,12 @@ describe('addPropsConfig', () => {
     };
     const payload: AddPropsConfigPayload = {
       fatherFieldLocation: 'a.childPropsConfig.b.childPropsConfig',
-      childPropsConfig:[{
+      childPropsConfig: [{
         c: {
           type: PROPS_TYPES.number,
           isAdd: true,
         },
-      }]
+      }],
     };
 
     const state = reducer(prevState, { ...action, payload });
@@ -211,222 +211,223 @@ describe('addPropsConfig', () => {
   });
 });
 
-describe('deletePropsConfig',()=>{
-  const action={ type: ACTION_TYPES.deletePropsConfig }
+describe('deletePropsConfig', () => {
+  const action = { type: ACTION_TYPES.deletePropsConfig };
   it('selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
 
-  it('props有值，删除属性配置',()=>{
-    const selectedInfo:SelectedInfoType={
-      selectedKey:'1',
-      domTreeKeys:['root','1'],
-      parentKey:'root',
-      propsConfig:{}
-    }
-    const componentConfigs:ComponentConfigsType={
-      root:{
-        componentName:'a',
-        childNodes:['1'],
+  it('props有值，删除属性配置', () => {
+    const selectedInfo: SelectedInfoType = {
+      selectedKey: '1',
+      domTreeKeys: ['root', '1'],
+      parentKey: 'root',
+      propsConfig: {},
+    };
+    const componentConfigs: ComponentConfigsType = {
+      root: {
+        componentName: 'a',
+        childNodes: ['1'],
       },
-      1:{componentName:'img',
-        props:{a:{b:"1"}}
-      }
-    }
-    const propsConfigSheet:PropsConfigSheetType={
-      root:{a:{childPropsConfig:{b:{type:PROPS_TYPES.string}}}},
-      1:'root'
-    }
-    const prevState:StateType={
+      1: {
+        componentName: 'img',
+        props: { a: { b: '1' } },
+      },
+    };
+    const propsConfigSheet: PropsConfigSheetType = {
+      root: { a: { childPropsConfig: { b: { type: PROPS_TYPES.string } } } },
+      1: 'root',
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
       propsConfigSheet,
-      selectedInfo
-    }
-    const payload:DeletePropsConfigPayload={
-      fatherFieldLocation:'a.childPropsConfig',
-      field:'b'
-    }
-    const state =reducer(prevState,{...action,payload})
-    const expectState:StateType={
+      selectedInfo,
+    };
+    const payload: DeletePropsConfigPayload = {
+      fatherFieldLocation: 'a.childPropsConfig',
+      field: 'b',
+    };
+    const state = reducer(prevState, { ...action, payload });
+    const expectState: StateType = {
       ...prevState,
-      undo:[{selectedInfo,componentConfigs,propsConfigSheet}],
-      componentConfigs:{
+      undo: [{ selectedInfo, componentConfigs, propsConfigSheet }],
+      componentConfigs: {
         ...componentConfigs,
-        1:{componentName:'img', props:{a:{}}}
+        1: { componentName: 'img', props: { a: {} } },
       },
-      propsConfigSheet:{
+      propsConfigSheet: {
         ...propsConfigSheet,
-        1:{a:{childPropsConfig:{}}}
+        1: { a: { childPropsConfig: {} } },
       },
-      selectedInfo:{
+      selectedInfo: {
         ...selectedInfo,
-        propsConfig:merge(config.AllComponentConfigs['img'].propsConfig,{a:{childPropsConfig:{}}})
-      }
-    }
-    expect(state).toEqual(expectState)
-  })
-  it('props没有值，删除属性配置',()=>{
-    const selectedInfo:SelectedInfoType={
-      selectedKey:'root',
-      domTreeKeys:[],
-      parentKey:'',
-      propsConfig:{}
-    }
-    const componentConfigs:ComponentConfigsType={
-      root:{
-        componentName:'img',
-        props:{a:{}}
-      }
-    }
-    const propsConfigSheet:PropsConfigSheetType={
-      root:{a:{childPropsConfig:{b:{type:PROPS_TYPES.string}}}}
-    }
-    const prevState:StateType={
+        propsConfig: merge(config.AllComponentConfigs['img'].propsConfig, { a: { childPropsConfig: {} } }),
+      },
+    };
+    expect(state).toEqual(expectState);
+  });
+  it('props没有值，删除属性配置', () => {
+    const selectedInfo: SelectedInfoType = {
+      selectedKey: 'root',
+      domTreeKeys: [],
+      parentKey: '',
+      propsConfig: {},
+    };
+    const componentConfigs: ComponentConfigsType = {
+      root: {
+        componentName: 'img',
+        props: { a: {} },
+      },
+    };
+    const propsConfigSheet: PropsConfigSheetType = {
+      root: { a: { childPropsConfig: { b: { type: PROPS_TYPES.string } } } },
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
       propsConfigSheet,
-      selectedInfo
-    }
-    const payload:DeletePropsConfigPayload={
-      fatherFieldLocation:'a.childPropsConfig',
-      field:'b'
-    }
-    const state =reducer(prevState,{...action,payload})
-    const expectState:StateType={
+      selectedInfo,
+    };
+    const payload: DeletePropsConfigPayload = {
+      fatherFieldLocation: 'a.childPropsConfig',
+      field: 'b',
+    };
+    const state = reducer(prevState, { ...action, payload });
+    const expectState: StateType = {
       ...prevState,
-      undo:[{selectedInfo,componentConfigs,propsConfigSheet}],
-      propsConfigSheet:{
-        root:{a:{childPropsConfig:{}}}
+      undo: [{ selectedInfo, componentConfigs, propsConfigSheet }],
+      propsConfigSheet: {
+        root: { a: { childPropsConfig: {} } },
       },
-      selectedInfo:{
+      selectedInfo: {
         ...selectedInfo,
-        propsConfig:merge(config.AllComponentConfigs['img'].propsConfig,{a:{childPropsConfig:{}}})
-      }
-    }
-    expect(state).toEqual(expectState)
-  })
-})
+        propsConfig: merge(config.AllComponentConfigs['img'].propsConfig, { a: { childPropsConfig: {} } }),
+      },
+    };
+    expect(state).toEqual(expectState);
+  });
+});
 
-describe('changeProps',()=>{
-  const action={ type: ACTION_TYPES.changeProps }
+describe('changeProps', () => {
+  const action = { type: ACTION_TYPES.changeProps };
   it('selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
-  it('changeProps and style===undefined',()=>{
-    const componentConfigs:ComponentConfigsType={
-      root:{componentName:'img',props:{a:1}}
-    }
-    const prevState:StateType={
+  it('changeProps and style===undefined', () => {
+    const componentConfigs: ComponentConfigsType = {
+      root: { componentName: 'img', props: { a: 1 } },
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
-      selectedInfo:{
-        selectedKey:'root',
-        domTreeKeys:['root'],
-        parentKey:'',
-        propsConfig:{}
-      }
-    }
-    const payload:ChangePropsPayload={props:{b:2}}
-    const state=reducer(prevState,{...action,payload})
-    const expectState:StateType={
+      selectedInfo: {
+        selectedKey: 'root',
+        domTreeKeys: ['root'],
+        parentKey: '',
+        propsConfig: {},
+      },
+    };
+    const payload: ChangePropsPayload = { props: { b: 2 } };
+    const state = reducer(prevState, { ...action, payload });
+    const expectState: StateType = {
       ...prevState,
-      undo:[{componentConfigs}],
-      componentConfigs:{
-        root:{componentName:'img',props:{b:2}}
-      }
-    }
+      undo: [{ componentConfigs }],
+      componentConfigs: {
+        root: { componentName: 'img', props: { b: 2 } },
+      },
+    };
 
-    expect(state).toEqual(expectState)
-  })
-  it('changeProps and style',()=>{
-    const componentConfigs:ComponentConfigsType={
-      root:{componentName:'img',props:{style:{a:1}}}
-    }
-    const prevState:StateType={
+    expect(state).toEqual(expectState);
+  });
+  it('changeProps and style', () => {
+    const componentConfigs: ComponentConfigsType = {
+      root: { componentName: 'img', props: { style: { a: 1 } } },
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
-      selectedInfo:{
-        selectedKey:'root',
-        domTreeKeys:['root'],
-        parentKey:'',
-        propsConfig:{}
-      }
-    }
-    const payload:ChangePropsPayload={props:{b:2}}
-    const state=reducer(prevState,{...action,payload})
-    const expectState:StateType={
+      selectedInfo: {
+        selectedKey: 'root',
+        domTreeKeys: ['root'],
+        parentKey: '',
+        propsConfig: {},
+      },
+    };
+    const payload: ChangePropsPayload = { props: { b: 2 } };
+    const state = reducer(prevState, { ...action, payload });
+    const expectState: StateType = {
       ...prevState,
-      undo:[{componentConfigs}],
-      componentConfigs:{
-        root:{componentName:'img',props:{b:2,style:{a:1}}}
-      }
-    }
+      undo: [{ componentConfigs }],
+      componentConfigs: {
+        root: { componentName: 'img', props: { b: 2, style: { a: 1 } } },
+      },
+    };
 
-    expect(state).toEqual(expectState)
-  })
-})
+    expect(state).toEqual(expectState);
+  });
+});
 
-describe('resetProps',()=>{
-  const action={ type: ACTION_TYPES.resetProps }
+describe('resetProps', () => {
+  const action = { type: ACTION_TYPES.resetProps };
   it('selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
   it('selectedInfo!==null and style===undefined', () => {
-    const componentConfigs:ComponentConfigsType={
-      root:{componentName:'img',props:{a:3}}
-    }
-    const prevState:StateType={
+    const componentConfigs: ComponentConfigsType = {
+      root: { componentName: 'img', props: { a: 3 } },
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
-      selectedInfo:{
-        selectedKey:'root',
-        domTreeKeys:[],
-        parentKey:'',
-        propsConfig:{},
-        props:{b:2}
-      }
-    }
-    const state=reducer(prevState, action)
-    const expectState:StateType={
+      selectedInfo: {
+        selectedKey: 'root',
+        domTreeKeys: [],
+        parentKey: '',
+        propsConfig: {},
+        props: { b: 2 },
+      },
+    };
+    const state = reducer(prevState, action);
+    const expectState: StateType = {
       ...prevState,
-      undo:[{componentConfigs}],
-      componentConfigs:{
-        root:{componentName:'img',props:{b:2}}
-      }
-    }
+      undo: [{ componentConfigs }],
+      componentConfigs: {
+        root: { componentName: 'img', props: { b: 2 } },
+      },
+    };
     expect(state).toEqual(expectState);
   });
   it('selectedInfo!==null and style!==undefined', () => {
-    const componentConfigs:ComponentConfigsType={
-      root:{componentName:'img',props:{a:1,style:{c:3}}}
-    }
-    const prevState:StateType={
+    const componentConfigs: ComponentConfigsType = {
+      root: { componentName: 'img', props: { a: 1, style: { c: 3 } } },
+    };
+    const prevState: StateType = {
       ...legoState,
-      undo:[],
+      undo: [],
       componentConfigs,
-      selectedInfo:{
-        selectedKey:'root',
-        domTreeKeys:[],
-        parentKey:'',
-        propsConfig:{},
-        props:{b:2}
-      }
-    }
-    const state=reducer(prevState, action)
-    const expectState:StateType={
+      selectedInfo: {
+        selectedKey: 'root',
+        domTreeKeys: [],
+        parentKey: '',
+        propsConfig: {},
+        props: { b: 2 },
+      },
+    };
+    const state = reducer(prevState, action);
+    const expectState: StateType = {
       ...prevState,
-      undo:[{componentConfigs}],
-      componentConfigs:{
-        root:{componentName:'img',props:{b:2,style:{c:3}}}
-      }
-    }
+      undo: [{ componentConfigs }],
+      componentConfigs: {
+        root: { componentName: 'img', props: { b: 2, style: { c: 3 } } },
+      },
+    };
     expect(state).toEqual(expectState);
   });
 
-})
+});

@@ -3,8 +3,13 @@ import {
   addPropsConfig,
   AddPropsConfigPayload,
   changePlatform,
+  changeProps,
+  ChangePropsPayload,
+  changeStyles,
   clearChildNodes,
+  clearDropTarget,
   clearHovered,
+  clearSelectedStatus,
   copyComponent,
   deleteComponent,
   deletePropsConfig,
@@ -18,20 +23,24 @@ import {
   overTarget,
   OverTargetPayload,
   redo,
-  changeProps,
-  ChangePropsPayload,
-  undo,
+  resetProps,
+  resetStyles,
   selectComponent,
   SelectComponentPayload,
-  clearSelectedStatus, stylePayload, changeStyles, resetStyles, resetProps,
+  stylePayload,
+  undo,
 } from '../../actions';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { BrickAction, PlatformInfoType } from '../../types';
 
 jest.mock('../../store', () =>
-  ({ LEGO_BRIDGE: { store: {
-        dispatch:(action:BrickAction)=>action
-      } } }));
+  ({
+    LEGO_BRIDGE: {
+      store: {
+        dispatch: (action: BrickAction) => action,
+      },
+    },
+  }));
 
 describe('actions test', () => {
   test('test actions', () => {
@@ -47,6 +56,8 @@ describe('actions test', () => {
     expect(getDragSource(dragPayload)).toEqual({ type: ACTION_TYPES.getDragSource, payload: dragPayload });
     const dropPayload: DropTargetPayload = { selectedKey: '', domTreeKeys: [] };
     expect(getDropTarget(dropPayload)).toEqual({ type: ACTION_TYPES.getDropTarget, payload: dropPayload });
+    expect(clearDropTarget()).toEqual({ type: ACTION_TYPES.clearDropTarget });
+
     //hover
     const hoverPayload: OverTargetPayload = { hoverKey: '' };
     expect(overTarget(hoverPayload)).toEqual({ type: ACTION_TYPES.overTarget, payload: hoverPayload });
@@ -70,7 +81,7 @@ describe('actions test', () => {
     });
     const ChangePropsPayload: ChangePropsPayload = { props: {} };
     expect(changeProps(ChangePropsPayload)).toEqual({ type: ACTION_TYPES.changeProps, payload: ChangePropsPayload });
-    expect(resetProps()).toEqual({type:ACTION_TYPES.resetProps})
+    expect(resetProps()).toEqual({ type: ACTION_TYPES.resetProps });
     //redoUndo
     expect(redo()).toEqual({ type: ACTION_TYPES.redo });
     expect(undo()).toEqual({ type: ACTION_TYPES.undo });

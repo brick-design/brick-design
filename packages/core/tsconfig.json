@@ -8,11 +8,15 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "strict": true,
-    "lib": ["dom", "esnext"],
-    "esModuleInterop": true,
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "esModuleInterop": true
   },
-
-  "include": ["./src"],
+  "include": [
+    "./src"
+  ],
   "exclude": [
     "node_modules",
     "build",

@@ -27,19 +27,19 @@ function controlUpdate(prevState: SelectType, nextState: SelectType, key: string
 
 interface UseSelectType {
   isSelected: boolean,
-  selectedDomKeys?:string[]
+  selectedDomKeys?: string[]
 }
 
-export function useSelect(specialProps:SelectedInfoBaseType): UseSelectType {
-  const {key}=specialProps
-  const { selectedInfo } = useSelector<SelectType,STATE_PROPS>(['selectedInfo'],
+export function useSelect(specialProps: SelectedInfoBaseType): UseSelectType {
+  const { key } = specialProps;
+  const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(['selectedInfo'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
-  const {selectedKey,domTreeKeys:selectedDomKeys}=selectedInfo||{}
-  const isSelected=!!selectedKey && selectedKey.includes(key)
+  const { selectedKey, domTreeKeys: selectedDomKeys } = selectedInfo || {};
+  const isSelected = !!selectedKey && selectedKey.includes(key);
   useEffect(() => {
     if (isSelected) {
       handleSelectedStatus(null, false, specialProps);
     }
   }, []);
-  return {selectedDomKeys,isSelected};
+  return { selectedDomKeys, isSelected };
 }

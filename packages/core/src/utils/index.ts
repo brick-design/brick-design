@@ -1,11 +1,11 @@
 import {
   ChildNodesType,
   ComponentConfigsType,
-  PropsConfigSheetType, PropsConfigType,
+  PropsConfigSheetALL,
+  PropsConfigSheetType,
   PropsNodeType,
   SelectedInfoType,
   VirtualDOMType,
-  PropsConfigSheetALL,
 } from '../types';
 import uuid from 'uuid';
 import each from 'lodash/each';
@@ -13,7 +13,6 @@ import get from 'lodash/get';
 // import flattenDeep from 'lodash/flattenDeep';
 // import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
-import { SelectComponentPayload } from '../actions';
 
 /**
  * 复制组件
@@ -113,7 +112,7 @@ export const getNewDOMCollection = (dragVDOMAndPropsConfig: DragVDOMAndPropsConf
       newKey = rootKey;
     }
     keyMap[key] = newKey;
-    newVDOMCollection[newKey]=vDom
+    newVDOMCollection[newKey] = vDom;
   });
 
   each(newVDOMCollection, (vDom) => {
@@ -129,14 +128,14 @@ export const getNewDOMCollection = (dragVDOMAndPropsConfig: DragVDOMAndPropsConf
     }
 
   });
-  each(propsConfigCollection,(v,k)=>{
-    if(typeof v==='string'){
-      newPropsConfigCollection[keyMap[k]]=keyMap[v]
-    }else {
-      newPropsConfigCollection[keyMap[k]]=v
+  each(propsConfigCollection, (v, k) => {
+    if (typeof v === 'string') {
+      newPropsConfigCollection[keyMap[k]] = keyMap[v];
+    } else {
+      newPropsConfigCollection[keyMap[k]] = v;
     }
-  })
-  return {newVDOMCollection,newPropsConfigCollection};
+  });
+  return { newVDOMCollection, newPropsConfigCollection };
 };
 
 
@@ -159,9 +158,9 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
 export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType) => {
   const { selectedKey, propName: selectedPropName } = selectedInfo;
   const { componentName, childNodes } = componentConfigs[selectedKey];
-  const { nodePropsConfig,isRequired } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  const { nodePropsConfig, isRequired } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
   return selectedPropName && nodePropsConfig![selectedPropName].isRequired &&
-    get(childNodes,selectedPropName).length === 0||isRequired&&childNodes!.length===0;
+    get(childNodes, selectedPropName).length === 0 || isRequired && childNodes!.length === 0;
 
 };
 
@@ -200,9 +199,9 @@ export function flattenDeepArray(data: any) {
 }
 
 export function shallowEqual(objA: any, objB: any) {
-    for(const k of Object.keys(objA)){
-     if(objA[k]!==objB[k]) return false
-    }
+  for (const k of Object.keys(objA)) {
+    if (objA[k] !== objB[k]) return false;
+  }
   return true;
 }
 

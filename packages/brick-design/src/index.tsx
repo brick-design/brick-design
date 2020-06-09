@@ -1,5 +1,5 @@
 import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
-import { clearHovered,  LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
+import { clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
@@ -45,7 +45,7 @@ export function BrickDesign(props: BrickDesignProps) {
       },
     };
     return LEGO_BRIDGE.containers!.includes(componentName) ? <Container onMouseLeave={clearHovered}
-                                                                        // onDragLeave={onDragLeave}
+        // onDragLeave={onDragLeave}
                                                                         {...props} /> :
       <NoneContainer onMouseLeave={clearHovered} {...props}/>;
   }, [componentConfigs]);
@@ -73,14 +73,14 @@ export function BrickDesign(props: BrickDesignProps) {
 
   const { onLoadEnd } = props;
   return (<iframe
-                  id="dnd-iframe"
-                  style={{ border: 0, width: '100%', height: '100%' }}
-                  srcDoc={iframeSrcDoc}
-                  onLoad={useCallback(() => {
-                    onIframeLoad(divContainer, designPage);
-                    onLoadEnd && onLoadEnd();
-                  }, [])}
-                  {...props}
+      id="dnd-iframe"
+      style={{ border: 0, width: '100%', height: '100%' }}
+      srcDoc={iframeSrcDoc}
+      onLoad={useCallback(() => {
+        onIframeLoad(divContainer, designPage);
+        onLoadEnd && onLoadEnd();
+      }, [])}
+      {...props}
     />
   );
 }

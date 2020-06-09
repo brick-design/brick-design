@@ -1,13 +1,13 @@
 export default {
-  entry:'src/index.tsx',
+  entry: 'src/index.tsx',
   esm: {
     type: 'rollup',
     file: 'index',
-    importLibToEs: true
+    importLibToEs: true,
   },
   lessInRollupMode: {},
   extractCSS: true,
   // cjs:'babel',
-  cssModules:true,
+  cssModules: true,
   // lessInBabelMode:true
-}
+};

@@ -2,17 +2,19 @@ import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'r
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { formatSpecialProps } from '../utils';
-import { getAddPropsConfig, LEGO_BRIDGE, produce } from 'brickd-core';
+import { clearDropTarget, getAddPropsConfig, LEGO_BRIDGE, produce, STATE_PROPS, useSelector } from 'brickd-core';
 
 import {
   CommonPropsType,
+  controlUpdate,
   handleChildNodes,
   handleEvents,
   handleModalTypeContainer,
   handlePropsClassName,
+  HookState,
   propAreEqual,
+  stateSelector,
 } from '../common/handleFuns';
-import { useCommon } from '../hooks/useCommon';
 import { getDropTargetInfo } from '..';
 import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
@@ -32,8 +34,9 @@ function Container(allProps: CommonPropsType, ref: any) {
     ...rest
   } = allProps;
 
-  const { componentConfigs, propsConfigSheet } = useCommon(key);
-    const { props, childNodes, componentName } = componentConfigs[key] || {};
+  const { componentConfigs, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
+    (prevState, nextState) => controlUpdate(prevState, nextState, key));
+  const { props, childNodes, componentName } = componentConfigs[key] || {};
   useChildNode({ childNodes, componentName, specialProps });
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
   const [children, setChildren] = useState(childNodes);
@@ -58,10 +61,14 @@ function Container(allProps: CommonPropsType, ref: any) {
       getDropTargetInfo(e, domTreeKeys, key, propName);
     }
   };
-  const onDragLeave=(e: Event)=>{
-    e.stopPropagation()
+  const onDragLeave = (e: Event) => {
+    e.stopPropagation();
+    const { selectedKey } = dropTarget||{};
+    if (selectedKey === key) {
+      // clearDropTarget();
+    }
+  };
 
-  }
   useEffect(() => {
     setChildren(childNodes);
   }, [childNodes]);

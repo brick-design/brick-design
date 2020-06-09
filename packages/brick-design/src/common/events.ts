@@ -10,16 +10,16 @@ import {
 
 
 export function handleSelectedStatus(
-    event: Event | null,
-    isSelected: boolean,
-    specialProps: SelectedInfoBaseType
-    , propName?: string) {
-    event && event.stopPropagation()
-    if (isSelected) {
-        clearSelectedStatus()
-    } else {
-        selectComponent({...specialProps, propName})
-    }
+  event: Event | null,
+  isSelected: boolean,
+  specialProps: SelectedInfoBaseType
+  , propName?: string) {
+  event && event.stopPropagation();
+  if (isSelected) {
+    clearSelectedStatus();
+  } else {
+    selectComponent({ ...specialProps, propName });
+  }
 
 }
 
@@ -30,10 +30,10 @@ export function handleSelectedStatus(
  * @param key
  */
 export function onMouseOver(event: Event, key: string) {
-    event.stopPropagation();
-    overTarget({
-        hoverKey: key,
-    })
+  event.stopPropagation();
+  overTarget({
+    hoverKey: key,
+  });
 }
 
 /**
@@ -43,14 +43,14 @@ export function onMouseOver(event: Event, key: string) {
  * @param selectedKey
  * @param propName
  */
-export function getDropTargetInfo(event: Event,domTreeKeys?:string[], selectedKey?: string, propName?: string) {
-    event.stopPropagation();
+export function getDropTargetInfo(event: Event, domTreeKeys?: string[], selectedKey?: string, propName?: string) {
+  event.stopPropagation();
 
-    getDropTarget({
-        propName,
-        selectedKey,
-        domTreeKeys
-    })
+  getDropTarget({
+    propName,
+    selectedKey,
+    domTreeKeys,
+  });
 
 }
 
@@ -63,12 +63,12 @@ export function getDropTargetInfo(event: Event,domTreeKeys?:string[], selectedKe
  * @param parentPropName
  */
 export function onDragStart(event: Event, dragKey: string, parentKey: string, parentPropName?: string) {
-    event.stopPropagation();
-    getDragSource({
-        dragKey,
-        parentKey,
-        parentPropName
-    })
+  event.stopPropagation();
+  getDragSource({
+    dragKey,
+    parentKey,
+    parentPropName,
+  });
 }
 
 /**
@@ -78,19 +78,19 @@ export function onDragStart(event: Event, dragKey: string, parentKey: string, pa
  * @param selectedKey
  */
 export function selectedStatus(key: string, hoverKey: string | null, selectedKey?: string) {
-    const isSelected = !!selectedKey && selectedKey.includes(key);
-    /** 是否hover到当前组件 */
-    const isHovered = !!hoverKey && hoverKey.includes(key);
-    return {isHovered, isSelected};
+  const isSelected = !!selectedKey && selectedKey.includes(key);
+  /** 是否hover到当前组件 */
+  const isHovered = !!hoverKey && hoverKey.includes(key);
+  return { isHovered, isSelected };
 }
 
 
 export function onDragover(e: any) {
-    e.preventDefault();
+  e.preventDefault();
 
 }
 
 export function onDrop(e: any) {
-    e.stopPropagation();
-    addComponent()
+  e.stopPropagation();
+  addComponent();
 }

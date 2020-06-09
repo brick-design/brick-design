@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import { merge } from 'lodash';
-import { PropsConfigType, StateType } from '../types';
+import { StateType } from '../types';
 import { SelectComponentPayload } from '../actions';
 import { LEGO_BRIDGE } from '../store';
 import { handleRequiredHasChild } from '../utils';
@@ -20,7 +20,7 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
     const { selectedKey, propName: selectedPropName } = selectedInfo;
     if (selectedKey === key && selectedPropName == propName || handleRequiredHasChild(selectedInfo, componentConfigs)) return state;
     if (selectedKey === key) {
-      if(propName&&selectedPropName !== propName){
+      if (propName && selectedPropName !== propName) {
         domTreeKeys.push(`${key}${propName}`);
         return {
           ...state,
@@ -30,7 +30,7 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
             domTreeKeys,
           },
         };
-      }else {
+      } else {
         return {
           ...state,
           selectedInfo: {
@@ -39,7 +39,7 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
             parentPropName,
           },
 
-        }
+        };
       }
 
     }

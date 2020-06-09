@@ -1,5 +1,6 @@
 import { CategoryType } from './CategoryTypes';
 import { ComponentConfigTypes } from './ComponentConfigTypes';
+
 /**
  * 属性类型定义
  */
@@ -15,17 +16,19 @@ export enum PROPS_TYPES {
   json = 'json',
   boolean = 'boolean'
 }
-export enum NODE_PROPS_TYPES{
+
+export enum NODE_PROPS_TYPES {
   reactNode = 'reactNode',
   functionReactNode = 'functionReactNode',
 }
 
-export type ALL_TYPE=PROPS_TYPES|NODE_PROPS_TYPES
+export type ALL_TYPE = PROPS_TYPES | NODE_PROPS_TYPES
+
 /**
  * 全局配置类型定义
  */
-interface OriginalComponentsType{
-  [componentName:string]:any
+interface OriginalComponentsType {
+  [componentName: string]: any
 }
 
 export interface ConfigType {

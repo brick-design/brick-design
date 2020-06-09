@@ -1,10 +1,10 @@
 import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from '../../../types';
 
 const p: ComponentConfigTypes = {
-  nodePropsConfig:{
-    children:{
-      type:NODE_PROPS_TYPES.reactNode,
-    }
+  nodePropsConfig: {
+    children: {
+      type: NODE_PROPS_TYPES.reactNode,
+    },
   },
   propsConfig: {
     children: {

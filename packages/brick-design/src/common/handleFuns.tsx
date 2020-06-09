@@ -5,7 +5,8 @@ import {
   ComponentConfigsType,
   LEGO_BRIDGE,
   MirrorModalFieldType,
-  PROPS_TYPES, PropsConfigSheetType,
+  PROPS_TYPES,
+  PropsConfigSheetType,
   PropsNodeType,
   SelectedInfoBaseType,
   STATE_PROPS,
@@ -139,6 +140,17 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
   };
 }
 
+export type HookState = {
+  componentConfigs: ComponentConfigsType,
+  propsConfigSheet: PropsConfigSheetType
+
+}
+
+export const stateSelector: STATE_PROPS[] = ['componentConfigs', 'propsConfigSheet'];
+
+export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
+  return prevState.componentConfigs[key] !== nextState.componentConfigs[key];
+}
 
 export interface CommonPropsType extends AllHTMLAttributes<any> {
   specialProps: SelectedInfoBaseType,

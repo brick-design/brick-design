@@ -23,7 +23,7 @@ afterAll(() => {
   LEGO_BRIDGE.containers = null;
 });
 describe('addComponent', () => {
-  const action:BrickAction={ type: ACTION_TYPES.addComponent }
+  const action: BrickAction = { type: ACTION_TYPES.addComponent };
   test('dragSource===null', () => {
     const state = reducer(legoState, action);
     expect(state).toBe(legoState);
@@ -162,7 +162,7 @@ describe('addComponent', () => {
       ).toThrow('div:只允许放入div.children组件或者属性中');
     });
     it('errorCallback', function() {
-        LEGO_BRIDGE.errorCallback = jest.fn();
+      LEGO_BRIDGE.errorCallback = jest.fn();
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
@@ -176,9 +176,9 @@ describe('addComponent', () => {
         dragSource: { dragKey: '1', parentKey: '' },
         dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: [] },
       };
-      reducer(prevState, action)
+      reducer(prevState, action);
       expect(LEGO_BRIDGE.errorCallback).toBeCalled();
-      LEGO_BRIDGE.errorCallback=undefined
+      LEGO_BRIDGE.errorCallback = undefined;
     });
   });
 
@@ -201,7 +201,7 @@ describe('addComponent', () => {
         reducer(prevState, action),
       ).toThrow('test:只允许拖拽a组件');
     });
-    test('没有属性节点配置的子组件约束限制',()=>{
+    test('没有属性节点配置的子组件约束限制', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
@@ -219,7 +219,7 @@ describe('addComponent', () => {
         reducer(prevState, action),
       ).toThrow('h:只允许拖拽img组件');
 
-    })
+    });
     test('errorCallback', () => {
       LEGO_BRIDGE.errorCallback = jest.fn();
 
@@ -236,9 +236,9 @@ describe('addComponent', () => {
         dragSource: { dragKey: '1', parentKey: '' },
         dropTarget: { selectedKey: 'root', propName: 'test', domTreeKeys: [] },
       };
-      reducer(prevState,action ),
+      reducer(prevState, action),
         expect(LEGO_BRIDGE.errorCallback).toBeCalled();
-      LEGO_BRIDGE.errorCallback=undefined
+      LEGO_BRIDGE.errorCallback = undefined;
     });
   });
   test('正常添加新组建', () => {
@@ -298,7 +298,7 @@ describe('addComponent', () => {
 });
 
 describe('copyComponent', () => {
-  const action={ type: ACTION_TYPES.copyComponent }
+  const action = { type: ACTION_TYPES.copyComponent };
   it('if selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
@@ -314,12 +314,13 @@ describe('copyComponent', () => {
     const componentConfigs: ComponentConfigsType = {
       root: { componentName: 'a', childNodes: ['1'] },
       1: { componentName: 'a', childNodes: ['2'] },
-      2: { componentName: 'span', childNodes: {
+      2: {
+        componentName: 'span', childNodes: {
           children: ['3'],
           test: [],
-        }
+        },
       },
-      3:{componentName:'p',}
+      3: { componentName: 'p' },
     };
     const propsConfigSheet: PropsConfigSheetType = {
       1: {},
@@ -340,7 +341,7 @@ describe('copyComponent', () => {
 });
 
 describe('onLayoutSortChange', () => {
-  const action={ type: ACTION_TYPES.onLayoutSortChange,}
+  const action = { type: ACTION_TYPES.onLayoutSortChange };
   it('容器内部排序', () => {
     const componentConfigs: ComponentConfigsType = {
       root: { componentName: 'a', childNodes: ['1', '2', '3'] },
@@ -375,7 +376,7 @@ describe('onLayoutSortChange', () => {
       parentKey: 'root',
       dragInfo: { parentKey: '1', parentPropName: 'children', key: '2' },
     };
-    const state = reducer(prevState, {...action, payload });
+    const state = reducer(prevState, { ...action, payload });
     const expectComponentConfigs = {
       root: {
         componentName: 'a', childNodes: ['2', '1'],
@@ -390,7 +391,7 @@ describe('onLayoutSortChange', () => {
 });
 
 describe('deleteComponent', () => {
-  const action={ type: ACTION_TYPES.deleteComponent }
+  const action = { type: ACTION_TYPES.deleteComponent };
   it('if selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
@@ -507,7 +508,7 @@ describe('deleteComponent', () => {
   });
 });
 describe('clearChildNodes', () => {
-  const action={ type: ACTION_TYPES.clearChildNodes }
+  const action = { type: ACTION_TYPES.clearChildNodes };
   it('if selectedInfo===null', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
