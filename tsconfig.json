@@ -14,5 +14,6 @@
       "bricks-native/*": ["packages/bricks-native/src/*"]
     }
   },
+  "include": ["./typings.d.ts"],
   "exclude": ["**/node_modules/**"]
 }

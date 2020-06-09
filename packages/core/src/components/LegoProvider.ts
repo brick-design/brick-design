@@ -6,7 +6,7 @@ import { ConfigType, StateType } from '../types';
 
 export interface LegoProviderProps {
   children?: any,
-  initState?: StateType,
+  initState?: Partial<StateType>,
   config?: ConfigType
 }
 

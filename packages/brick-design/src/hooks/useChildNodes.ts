@@ -9,7 +9,7 @@ export interface UseChildNodeType {
   componentName: string
 }
 
-export function useChildNode({ specialProps, childNodes, componentName }: UseChildNodeType) {
+export function useChildNodes({ specialProps, childNodes, componentName }: UseChildNodeType) {
   const { nodePropsConfig, isRequired } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
   useEffect(() => {
     if (!childNodes) return;

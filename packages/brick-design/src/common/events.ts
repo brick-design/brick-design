@@ -43,7 +43,7 @@ export function onMouseOver(event: Event, key: string) {
  * @param selectedKey
  * @param propName
  */
-export function getDropTargetInfo(event: Event, domTreeKeys?: string[], selectedKey?: string, propName?: string) {
+export function getDropTargetInfo(event: Event, domTreeKeys: string[], selectedKey: string, propName?: string) {
   event.stopPropagation();
 
   getDropTarget({

@@ -93,7 +93,8 @@
 		"moduleNameMapper": {
 			"^brickd-core$": "core/src",
 			"^brickd$": "brick-design/src",
-			"^bricks-web$": "bricks-web/src"
+			"^bricks-web$": "bricks-web/src",
+			"\\.less$":"identity-obj-proxy"
 		},
 		"collectCoverageFrom": [
 			"packages/**/*.{ts,tsx}",

@@ -1,5 +1,5 @@
 import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
-import { clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
+import { clearDropTarget, clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
@@ -45,7 +45,6 @@ export function BrickDesign(props: BrickDesignProps) {
       },
     };
     return LEGO_BRIDGE.containers!.includes(componentName) ? <Container onMouseLeave={clearHovered}
-        // onDragLeave={onDragLeave}
                                                                         {...props} /> :
       <NoneContainer onMouseLeave={clearHovered} {...props}/>;
   }, [componentConfigs]);

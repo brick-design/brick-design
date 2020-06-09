@@ -19,7 +19,7 @@ import { getDropTargetInfo } from '..';
 import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
-import { useChildNode } from '../hooks/useChildNode';
+import { useChildNodes } from '../hooks/useChildNodes';
 
 /**
  * 所有的容器组件名称
@@ -38,18 +38,19 @@ function Container(allProps: CommonPropsType, ref: any) {
   const { componentConfigs, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
   const { props, childNodes, componentName } = componentConfigs[key] || {};
-  useChildNode({ childNodes, componentName, specialProps });
+  useChildNodes({ childNodes, componentName, specialProps });
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
-  const { dragKey, parentKey } = dragSource || {};
+  const { dragKey,parentKey} = dragSource || {};
   const [children, setChildren] = useState(childNodes);
   const isHovered = useHover(key);
   const { selectedDomKeys, isSelected } = useSelect(specialProps);
   const { mirrorModalField, propsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    if (dragKey && !selectedDomKeys) {
+    if (!selectedDomKeys) {
       let propName;
-      if (parentKey !== key && !domTreeKeys.includes(dragKey)) {
+      //判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
+      if (parentKey!==key&&dragKey!==key&&!domTreeKeys.includes(dragKey)) {
         if (Array.isArray(childNodes)) {
           setChildren([...childNodes, dragKey]);
         } else {
