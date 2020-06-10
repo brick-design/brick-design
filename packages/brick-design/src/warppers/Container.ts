@@ -7,7 +7,7 @@ import {
   clearDropTarget,
   getAddPropsConfig,
   LEGO_BRIDGE,
-  produce,
+  produce, PropsNodeType,
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';
@@ -62,9 +62,9 @@ function Container(allProps: CommonPropsType, ref: any) {
           if (Array.isArray(childNodes)) {
             setChildren([...childNodes, dragKey]);
           } else {
-            setChildren(produce(childNodes, oldChild => {
+            setChildren(produce((childNodes as PropsNodeType), oldChild => {
               propName = Object.keys(oldChild!)[0];
-              oldChild![propName] = [...oldChild![propName], dragKey];
+              oldChild![propName] = [...oldChild[propName]!, dragKey];
             }));
           }
         }else {

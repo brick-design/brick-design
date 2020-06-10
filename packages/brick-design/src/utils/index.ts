@@ -25,8 +25,7 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
           if (funcTemplate) {
             nextProps[k] = () => eval(funcTemplate);
           } else {
-            nextProps[k] = () => {
-            };
+            nextProps[k] = () => void 0;
           }
         }
       } else if (isObject(v) && !isEmpty(propsConfig[k].childPropsConfig) && isEqual(keys(v), keys(propsConfig[k].childPropsConfig))) {

@@ -16,7 +16,7 @@ export function useChildNodes({ specialProps, childNodes, componentName }: UseCh
     if (!Array.isArray(childNodes)) {
       for (const prop of Object.keys(nodePropsConfig!)) {
         const { isRequired } = nodePropsConfig![prop];
-        if (isRequired && childNodes[prop].length === 0) {
+        if (isRequired && childNodes[prop]!.length === 0) {
           handleSelectedStatus(null, false, specialProps, prop);
           break;
         }

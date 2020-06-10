@@ -23,9 +23,9 @@ import isEqual from 'lodash/isEqual';
  * @param isSelected
  * @param isHovered
  * @param isHidden
+ * @param isDragTarget
  * @param className
  * @param animateClass
- * @param isNoneContainer
  */
 export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string) {
   let classNameCollection = `${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} `;
@@ -98,8 +98,8 @@ export function handleChildNodes(specialProps:SelectedInfoBaseType, componentCon
     if (Array.isArray(children)) {
       nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
     } else {
-      each(children, (nodes: string[], propName: string) => {
-        if(nodes.length===0) return null
+      each(children, (nodes, propName: string) => {
+        if(!nodes) return null
         const { isOnlyNode, isRequired } = nodePropsConfig![propName];
         nodeProps[propName] = renderNodes(
           nodes,

@@ -43,7 +43,7 @@ function useSelectorWithStore<T>(selector: string[], store: any, controlUpdate?:
       prevSelectedState.current = nextSelectedState;
       forceRender();
     }
-
+    checkForUpdates();
     const unsubscribe = store.subscribe(checkForUpdates);
     return unsubscribe;
   }, [store]);

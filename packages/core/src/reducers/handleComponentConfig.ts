@@ -27,13 +27,19 @@ export function addComponent(state: StateType): StateType {
   if (!dragSource) return state;
   const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
 
-  if (componentConfigs.root && !selectedKey&&vDOMCollection) return { ...state, ...(undo.pop()), dragSource: null };
+  if (componentConfigs.root && !selectedKey){
+    if(vDOMCollection){
+      return { ...state, ...(undo.pop()), dragSource: null };
+    }else {
+      return {...state,dragSource:null}
+    }
+  }
 
   /**
    * 当拖拽的父key与drop目标key一致说明未移动
    * 当拖拽的key包含在drop目标的domTreeKeys,说明拖拽组件是目标组件的父组件或者是自身
    */
-  if (parentKey && parentKey === selectedKey || domTreeKeys && domTreeKeys.includes(dragKey!)) return state;
+  if (parentKey && parentKey === selectedKey || domTreeKeys && domTreeKeys.includes(dragKey!)) return {...state,dragSource:null};
 
   if (!componentConfigs.root) {
     undo.push({ componentConfigs });
