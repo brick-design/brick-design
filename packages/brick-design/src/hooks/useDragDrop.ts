@@ -15,7 +15,7 @@ function dragDropUpdate(prevState: DragDropTypes, nextState: DragDropTypes, key:
       return true
     }
 
-    if(dragKey==key){
+    if(prevDragKey===dragKey&&dragKey==key&&parentKey){
       if(!prevDomTreeKeys&&domTreeKeys){
        return  domTreeKeys.includes(parentKey)
       }
@@ -26,10 +26,9 @@ function dragDropUpdate(prevState: DragDropTypes, nextState: DragDropTypes, key:
       if(prevDomTreeKeys&&domTreeKeys){
         return prevDomTreeKeys.includes(parentKey)&&!domTreeKeys.includes(parentKey)||!prevDomTreeKeys.includes(parentKey)&&domTreeKeys.includes(parentKey)
       }
-
     }
   //drag相关 分立不合并
-    return prevDragKey === key && dragKey !== key || prevDragKey !== key && dragKey === key;
+    return prevDragKey&&!dragKey||!prevDragKey&&!!dragKey|| prevDragKey === key && dragKey !== key || prevDragKey !== key && dragKey === key;
 
 }
 

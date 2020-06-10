@@ -13,6 +13,7 @@ import get from 'lodash/get';
 // import flattenDeep from 'lodash/flattenDeep';
 // import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
+import produce, { original } from 'immer';
 
 /**
  * 复制组件
@@ -36,7 +37,7 @@ export const copyConfig = (handleInfo: HandleInfoType, selectedKey: string, newK
   } else if (childNodes) {
     const newChildNodes: PropsNodeType = {};
     each((childNodes as PropsNodeType), (nodes, propName) => {
-      newChildNodes[propName] = copyChildNodes(handleInfo, nodes);
+      newChildNodes[propName] = copyChildNodes(handleInfo, nodes!);
     });
     vDom.childNodes = newChildNodes;
   }
@@ -53,11 +54,20 @@ function copyChildNodes(handleInfo: HandleInfoType, childNodes: string[]) {
 }
 
 
-export function deleteChildNodes(handleInfo: HandleInfoType, childNodes: ChildNodesType) {
+export function deleteChildNodes(handleInfo: HandleInfoType, childNodes: ChildNodesType,propName?:string) {
   if (Array.isArray(childNodes)) {
     deleteArrChild(handleInfo, childNodes);
-  } else {
-    each(childNodes, (propChildNodes) => deleteArrChild(handleInfo, propChildNodes));
+  } else{
+    each(childNodes, (propChildNodes,key) => {
+      if(propName){
+        if(key==propName){
+          deleteArrChild(handleInfo, propChildNodes!)
+        }
+      }else {
+        deleteArrChild(handleInfo, propChildNodes!)
+      }
+
+    });
   }
 
 }
@@ -122,7 +132,7 @@ export const getNewDOMCollection = (dragVDOMAndPropsConfig: DragVDOMAndPropsConf
     } else if (childNodes) {
       const newChildNodes: PropsNodeType = {};
       each(childNodes, (nodes, propName) => {
-        newChildNodes[propName] = nodes.map((key) => keyMap[key]);
+      newChildNodes[propName] = nodes!.map((key) => keyMap[key]);
       });
       vDom.childNodes = newChildNodes;
     }
@@ -160,7 +170,7 @@ export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, component
   const { componentName, childNodes } = componentConfigs[selectedKey];
   const { nodePropsConfig, isRequired } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
   return selectedPropName && nodePropsConfig![selectedPropName].isRequired &&
-    get(childNodes, selectedPropName).length === 0 || isRequired && childNodes!.length === 0;
+    !get(childNodes, selectedPropName) || isRequired && !childNodes;
 
 };
 
@@ -171,18 +181,18 @@ export const generateVDOM = (componentName: string, defaultProps?: any) => {
     componentName: componentName,
     props: defaultProps,
   };
-  if (LEGO_BRIDGE.containers!.includes(componentName)) {
-    const { nodePropsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
-    vDOM.childNodes = [];
-    // 是否为多属性节点
-    if (nodePropsConfig) {
-      const childNodes: PropsNodeType = {};
-      each(nodePropsConfig, (nodePropConfig, propName) => {
-        childNodes[propName] = [];
-      });
-      vDOM.childNodes = childNodes;
-    }
-  }
+  // if (LEGO_BRIDGE.containers!.includes(componentName)) {
+  //   const { nodePropsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  //   vDOM.childNodes = [];
+  //   // 是否为多属性节点
+  //   if (nodePropsConfig) {
+  //     const childNodes: PropsNodeType = {};
+  //     each(nodePropsConfig, (nodePropConfig, propName) => {
+  //       childNodes[propName] = [];
+  //     });
+  //     vDOM.childNodes = childNodes;
+  //   }
+  // }
   return { root: vDOM };
 };
 
@@ -211,4 +221,17 @@ export function getAddPropsConfig(propsConfigSheet: PropsConfigSheetType, select
     return getAddPropsConfig(propsConfigSheet, addPropsConfig);
   }
   return addPropsConfig || {};
+}
+
+export function deleteChildNodesKey(childNodes:ChildNodesType,deleteKey:string,parentPropName?:string) {
+  if(Array.isArray(childNodes)){
+    const resultChildNodes= childNodes.filter((nodeKey: string) => nodeKey !== deleteKey)
+    return resultChildNodes.length===0?undefined:resultChildNodes
+  }else {
+    const resultChildNodes= childNodes[parentPropName!]!.filter((nodeKey: string) => nodeKey !== deleteKey)
+    childNodes[parentPropName!]=resultChildNodes
+    resultChildNodes.length===0&&(delete childNodes[parentPropName!])
+    if(Object.keys(childNodes).length===0) return  undefined
+    return childNodes
+  }
 }

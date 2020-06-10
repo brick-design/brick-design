@@ -32,10 +32,10 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const { propsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
 
   if (!componentName) return null;
+  const {dragKey}=dragSource||{}
 
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    const {dragKey}=dragSource||{}
     if(dragKey!==key){
       clearDropTarget();
     }
@@ -45,7 +45,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden, className, animateClass),
+      className: handlePropsClassName(isSelected, isHovered, isHidden,dragKey===key,className, animateClass),
       ...handleEvents(specialProps, isSelected),
       ...(isDragAddChild ?{}:{
         onDragEnter,

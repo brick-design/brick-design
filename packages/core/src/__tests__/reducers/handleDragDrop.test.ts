@@ -1,10 +1,10 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
-import { DragSourcePayload, DropTargetPayload } from '../../actions';
+import { DragSourcePayload } from '../../actions';
 import { LEGO_BRIDGE, legoState } from '../../store';
 import config from '../configs';
 import { flattenDeepArray } from '../../utils';
-import { ComponentConfigsType, StateType } from '../../types';
+import { ComponentConfigsType, DropTargetType, StateType } from '../../types';
 
 beforeAll(() => {
   LEGO_BRIDGE.config = config;
@@ -22,7 +22,7 @@ describe('drag', () => {
   it('当componentConfigs没有root节点拖拽容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'a' };
     const state = reducer(legoState, { ...action, payload });
-    expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'a', childNodes: [] } } });
+    expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'a' } } });
   });
   it('当componentConfigs没有root节点拖拽非容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'img' };
@@ -31,7 +31,7 @@ describe('drag', () => {
   });
   it('当componentConfigs有root节点', () => {
     const payload: DragSourcePayload = { componentName: 'span' };
-    const componentConfigs: ComponentConfigsType = { root: { componentName: 'a', childNodes: [] } };
+    const componentConfigs: ComponentConfigsType = { root: { componentName: 'a' } };
     const prevState: StateType = { ...legoState, componentConfigs };
 
     const state = reducer(prevState, { ...action, payload });
@@ -43,8 +43,8 @@ describe('drag', () => {
     const prevState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'a', props: {}, childNodes: ['1'] },
-        1: { componentName: 'a', props: {}, childNodes: [] },
+        root: { componentName: 'a', childNodes: ['1'] },
+        1: { componentName: 'a', },
       },
     };
     const payload: DragSourcePayload = { dragKey: '1', parentKey: 'root' };
@@ -56,7 +56,7 @@ describe('drag', () => {
     const prevState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'a', childNodes: [] },
+        root: { componentName: 'a' },
       },
     };
     const payload: DragSourcePayload = {
@@ -83,7 +83,7 @@ describe('drag', () => {
 });
 
 describe('getDropTarget', () => {
-  const payload: DropTargetPayload = { selectedKey: '1' };
+  const payload: DropTargetType = { selectedKey: '1',domTreeKeys:[] };
   const action = { type: ACTION_TYPES.getDropTarget, payload };
   // it('如果拖拽组件(非容器)与drop组件是同一个', () => {
   //   const prevState: StateType = {
@@ -115,7 +115,7 @@ describe('getDropTarget', () => {
   // });
 
   it('当drop组件为容器组件', () => {
-    const payload: DropTargetPayload = { selectedKey: '1', domTreeKeys: ['root'] };
+    const payload: DropTargetType = { selectedKey: '1', domTreeKeys: ['root'] };
     const nextState = reducer(legoState, { ...action, payload });
     expect(nextState).toEqual({ ...legoState, dropTarget: payload, hoverKey: '1' });
   });

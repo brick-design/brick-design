@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "father build"
+    "build": "father-build"
   },
   "dependencies": {
     "antd": "3.26.16",
@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "@types/sortablejs": "^1.10.4",
-    "father": "^2.29.3"
+    "father-build": "^1.18.0"
   }
 }

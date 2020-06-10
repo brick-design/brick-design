@@ -1,5 +1,5 @@
 import { StateType } from '../types';
-import { copyConfig, deleteChildNodes, getLocation, HandleInfoType } from '../utils';
+import { copyConfig, deleteChildNodes, deleteChildNodesKey, getLocation, HandleInfoType } from '../utils';
 import get from 'lodash/get';
 import update from 'lodash/update';
 import { produce } from 'immer';
@@ -25,8 +25,9 @@ export function addComponent(state: StateType): StateType {
    */
   const { selectedKey, propName, domTreeKeys } = selectedInfo || dropTarget || {};
   if (!dragSource) return state;
-  if (componentConfigs.root && !selectedKey) return { ...state, ...(undo.pop()), dragSource: null } as StateType;
   const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
+
+  if (componentConfigs.root && !selectedKey&&vDOMCollection) return { ...state, ...(undo.pop()), dragSource: null };
 
   /**
    * 当拖拽的父key与drop目标key一致说明未移动
@@ -39,20 +40,20 @@ export function addComponent(state: StateType): StateType {
     redo.length = 0;
     return {
       ...state,
-      componentConfigs: vDOMCollection,
+      componentConfigs: vDOMCollection!,
       dragSource: null,
       undo,
       redo,
-    } as StateType;
+    };
   }
 
   /**
    * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
    */
-  const dragComponentName = get(componentConfigs[dragKey], 'componentName');
+  const dragComponentName = get(componentConfigs[dragKey!], 'componentName');
   const dropComponentName = get(componentConfigs[selectedKey!], 'componentName');
   const { fatherNodesRule } = get(LEGO_BRIDGE.config!.AllComponentConfigs, dragComponentName);
-  const { nodePropsConfig, childNodesRule, isOnlyNode } = get(LEGO_BRIDGE.config!.AllComponentConfigs, dropComponentName);
+  const { nodePropsConfig, childNodesRule } = get(LEGO_BRIDGE.config!.AllComponentConfigs, dropComponentName);
 
   /**
    * 子组件约束限制，减少不必要的组件错误嵌套
@@ -90,11 +91,11 @@ export function addComponent(state: StateType): StateType {
     componentConfigs: produce(componentConfigs, oldConfigs => {
       //添加新组件到指定容器中
       update(oldConfigs, getLocation(selectedKey!, propName), childNodes => {
-        return [...childNodes, dragKey];
+        return childNodes?[...childNodes, dragKey]:[dragKey];
       });
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用
       if (parentKey) {
-        update(oldConfigs, getLocation(parentKey, parentPropName), childNodes => childNodes.filter((nodeKey: string) => nodeKey !== dragKey));
+        update(oldConfigs, getLocation(parentKey), childNodes => deleteChildNodesKey(childNodes,dragKey!,parentPropName));
       }
     }),
     dragSource: null,
@@ -150,9 +151,7 @@ export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload)
       update(oldConfigs, getLocation(parentKey, parentPropName), () => sortKeys);
       if (dragInfo) {
         const { key, parentKey, parentPropName } = dragInfo;
-        update(oldConfigs, getLocation(parentKey, parentPropName), (childNodes) => {
-          return childNodes.filter((nodeKey: string) => nodeKey !== key);
-        });
+        update(oldConfigs, getLocation(parentKey), (childNodes) => deleteChildNodesKey(childNodes,key,parentPropName));
       }
     }),
     undo,
@@ -185,7 +184,7 @@ export function deleteComponent(state: StateType): StateType {
         oldState.componentConfigs = {};
         oldState.propsConfigSheet = {};
       } else {
-        update(oldState.componentConfigs, getLocation(parentKey, parentPropName), childNodes => childNodes.filter((childKey: string) => childKey !== selectedKey));
+        update(oldState.componentConfigs, getLocation(parentKey), childNodes => deleteChildNodesKey(childNodes,selectedKey,parentPropName));
         const childNodes = oldState.componentConfigs[selectedKey].childNodes;
         if (childNodes) {
           deleteChildNodes(oldState, childNodes);
@@ -220,10 +219,21 @@ export function clearChildNodes(state: StateType): StateType {
   return {
     ...state,
     ...produce(handleState, oldState => {
-      deleteChildNodes(oldState, oldState.componentConfigs[selectedKey].childNodes!);
-      update(oldState.componentConfigs, getLocation(selectedKey, propName), () => []);
+      const childNodes=get(oldState.componentConfigs,getLocation(selectedKey))
+      if(childNodes){
+        deleteChildNodes(oldState, childNodes,propName);
+        update(oldState.componentConfigs, getLocation(selectedKey), (childNodes) => {
+          if(Array.isArray(childNodes)||!propName){
+            return undefined
+          }else {
+            delete childNodes[propName]
+            return Object.keys(childNodes).length===0?undefined:childNodes
+          }
+        });
+      }
     }),
     undo,
     redo,
   };
 }
+

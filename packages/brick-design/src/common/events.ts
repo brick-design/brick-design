@@ -64,11 +64,14 @@ export function getDropTargetInfo(event: Event, domTreeKeys: string[], selectedK
  */
 export function onDragStart(event: Event, dragKey: string, parentKey: string, parentPropName?: string) {
   event.stopPropagation();
-  getDragSource({
-    dragKey,
-    parentKey,
-    parentPropName,
-  });
+  setTimeout(()=>{
+    getDragSource({
+      dragKey,
+      parentKey,
+      parentPropName,
+    });
+  },0)
+
 }
 
 /**

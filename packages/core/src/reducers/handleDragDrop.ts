@@ -11,7 +11,7 @@ import uuid from 'uuid';
  * @param payload
  * @returns {{dragSource: *}}
  */
-export function getDragSource(state: StateType, payload: DragSourcePayload) {
+export function getDragSource(state: StateType, payload: DragSourcePayload):StateType {
   // eslint-disable-next-line prefer-const
   let { componentConfigs, undo, propsConfigSheet } = state;
   // eslint-disable-next-line prefer-const
@@ -45,7 +45,7 @@ export function getDragSource(state: StateType, payload: DragSourcePayload) {
     componentConfigs,
     propsConfigSheet,
     undo,
-  } as StateType;
+  };
 }
 
 /**

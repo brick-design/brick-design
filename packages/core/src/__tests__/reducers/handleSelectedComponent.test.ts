@@ -22,7 +22,6 @@ describe('selectInfo', () => {
           componentName: 'span',
           childNodes: {
             children: ['1'],
-            test: [],
           },
         },
       },
@@ -64,7 +63,6 @@ describe('selectInfo', () => {
         root: {
           componentName: 'span',
           childNodes: {
-            children: [],
             test: ['1'],
           },
         },
@@ -109,7 +107,6 @@ describe('selectInfo', () => {
         root: {
           componentName: 'span',
           childNodes: {
-            children: [],
             test: ['1'],
           },
         },
@@ -150,11 +147,7 @@ describe('selectInfo', () => {
       componentConfigs: {
         root: {
           componentName: 'span',
-          props: {},
-          childNodes: {
-            children: [],
-            test: [],
-          },
+
         },
       },
     };
@@ -186,7 +179,6 @@ describe('selectInfo', () => {
           componentName: 'span',
           childNodes: {
             children: ['1'],
-            test: [],
           },
         },
       },
@@ -223,7 +215,6 @@ describe('selectInfo', () => {
           componentName: 'span',
           childNodes: {
             children: ['1'],
-            test: [],
           },
         },
       },
@@ -269,10 +260,7 @@ describe('清除选中', () => {
       componentConfigs: {
         root: {
           componentName: 'span',
-          childNodes: {
-            children: [],
-            test: [],
-          },
+
         },
       },
     };
@@ -286,7 +274,6 @@ describe('清除选中', () => {
       componentConfigs: {
         root: {
           componentName: 'h',
-          childNodes: [],
         },
       },
     };
@@ -300,7 +287,6 @@ describe('清除选中', () => {
       componentConfigs: {
         root: {
           componentName: 'img',
-          props: {},
         },
       },
     };

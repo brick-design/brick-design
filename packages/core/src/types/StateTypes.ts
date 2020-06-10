@@ -2,7 +2,7 @@ import { PropInfoType, PropsConfigType } from './ComponentConfigTypes';
 import { Action } from 'redux';
 
 export type PropsNodeType = {
-  [propName: string]: string[]
+  [propName: string]: string[]|undefined
 }
 
 export type ChildNodesType = string[] | PropsNodeType
@@ -31,9 +31,9 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
   propsConfig: PropsConfigType
 }
 
-export interface DragSourceType extends ParentNodeInfo {
+export interface DragSourceType extends Partial<ParentNodeInfo> {
   vDOMCollection?: ComponentConfigsType,
-  dragKey: string,
+  dragKey?: string,
   propsConfigCollection?: PropsConfigSheetType
 }
 

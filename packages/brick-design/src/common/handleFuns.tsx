@@ -27,8 +27,8 @@ import isEqual from 'lodash/isEqual';
  * @param animateClass
  * @param isNoneContainer
  */
-export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean, className: any, animateClass: string) {
-  let classNameCollection = `${className} ${animateClass} `;
+export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string) {
+  let classNameCollection = `${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} `;
   if (isHidden) {
     return styles['hidden-component'];
   }
@@ -88,14 +88,13 @@ function renderNodes(childNodes: string[],specialProps:SelectedInfoBaseType, com
   return resultChildNodes;
 }
 
-export function handleChildNodes(specialProps:SelectedInfoBaseType, componentConfigs: ComponentConfigsType, children: ChildNodesType,dragKey?:string,isDragAdd?:boolean,isDragAddChild?:boolean) {
+export function handleChildNodes(specialProps:SelectedInfoBaseType, componentConfigs: ComponentConfigsType, children?: ChildNodesType,dragKey?:string,isDragAdd?:boolean,isDragAddChild?:boolean) {
+  const nodeProps: any = {};
+  if(!children) return nodeProps
   const {key:parentKey}=specialProps
   const dragAddStatus:DragAddStatusType={isDragAdd,dragKey,isDragAddChild}
   const { componentName } = componentConfigs[parentKey];
   const { nodePropsConfig,isRequired,isOnlyNode } = LEGO_BRIDGE.config!.AllComponentConfigs[componentName];
-
-  const nodeProps: any = {};
-  if (children) {
     if (Array.isArray(children)) {
       nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
     } else {
@@ -113,7 +112,6 @@ export function handleChildNodes(specialProps:SelectedInfoBaseType, componentCon
         );
       });
     }
-  }
 
   return nodeProps;
 }

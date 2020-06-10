@@ -2,7 +2,15 @@ import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'r
 import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { formatSpecialProps } from '../utils';
-import { clearDropTarget, getAddPropsConfig, LEGO_BRIDGE, produce, STATE_PROPS, useSelector } from 'brickd-core';
+import {
+  ChildNodesType,
+  clearDropTarget,
+  getAddPropsConfig,
+  LEGO_BRIDGE,
+  produce,
+  STATE_PROPS,
+  useSelector,
+} from 'brickd-core';
 
 import {
   CommonPropsType,
@@ -41,33 +49,41 @@ function Container(allProps: CommonPropsType, ref: any) {
   useChildNodes({ childNodes, componentName, specialProps });
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
   const { dragKey,parentKey} = dragSource || {};
-  const [children, setChildren] = useState(childNodes);
+  const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
   const isHovered = useHover(key);
   const { selectedDomKeys, isSelected } = useSelect(specialProps);
-  const { mirrorModalField, propsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+  const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    if (!selectedDomKeys) {
       let propName;
       //判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
-      if (parentKey!==key&&dragKey!==key&&!domTreeKeys.includes(dragKey)) {
-        if (Array.isArray(childNodes)) {
-          setChildren([...childNodes, dragKey]);
-        } else {
-          setChildren(produce(childNodes, oldChild => {
-            propName = Object.keys(oldChild!)[0];
-            oldChild![propName] = [...oldChild![propName], dragKey];
-          }));
+      if (parentKey!==key&&dragKey&&dragKey!==key&&!domTreeKeys.includes(dragKey)) {
+        if(childNodes){
+          if (Array.isArray(childNodes)) {
+            setChildren([...childNodes, dragKey]);
+          } else {
+            setChildren(produce(childNodes, oldChild => {
+              propName = Object.keys(oldChild!)[0];
+              oldChild![propName] = [...oldChild![propName], dragKey];
+            }));
+          }
+        }else {
+          if(!nodePropsConfig){
+            setChildren([dragKey])
+          }else {
+            const keys=Object.keys(nodePropsConfig)
+            propName=keys[0]
+            setChildren({[propName]:[dragKey]})
+          }
         }
       }
       getDropTargetInfo(e, domTreeKeys, key, propName);
-    }
   };
   const onDragLeave = (e: Event) => {
     e.stopPropagation();
     const { selectedKey } = dropTarget || {};
     if (selectedKey === key) {
-      // clearDropTarget();
+      clearDropTarget();
     }
   };
 
@@ -92,7 +108,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   return (
     createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden, className, animateClass),
+      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key, className, animateClass),
       ...handleEvents(specialProps, isSelected, childNodes),
       ...(isDragAddChild ?{}:{
         onDragEnter,

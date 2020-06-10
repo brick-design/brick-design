@@ -66,6 +66,8 @@
 		"prettier": "^2.0.5",
 		"pretty-quick": "^2.0.1",
 		"ts-jest": "^26.1.0",
+		"dumi": "^1.0.25",
+		"father-build": "^1.18.0",
 		"typescript": "^3.9.3"
 	},
 	"engines": {
@@ -73,8 +75,6 @@
 	},
 	"dependencies": {
 		"antd": "3.26.16",
-		"dumi": "^1.0.25",
-		"father": "^2.29.3",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1"
 	},
@@ -94,7 +94,7 @@
 			"^brickd-core$": "core/src",
 			"^brickd$": "brick-design/src",
 			"^bricks-web$": "bricks-web/src",
-			"\\.less$":"identity-obj-proxy"
+			"\\.less$": "identity-obj-proxy"
 		},
 		"collectCoverageFrom": [
 			"packages/**/*.{ts,tsx}",
