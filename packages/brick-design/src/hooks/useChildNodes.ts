@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { ChildNodesType, LEGO_BRIDGE, SelectedInfoBaseType } from 'brickd-core';
+import { ChildNodesType, getComponentConfig, SelectedInfoBaseType } from 'brickd-core';
 import { handleSelectedStatus } from '..';
-import get from 'lodash/get';
 
 export interface UseChildNodeType {
   specialProps: SelectedInfoBaseType,
@@ -10,7 +9,7 @@ export interface UseChildNodeType {
 }
 
 export function useChildNodes({ specialProps, childNodes, componentName }: UseChildNodeType) {
-  const { nodePropsConfig, isRequired } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+  const { nodePropsConfig, isRequired } = useMemo(() => getComponentConfig(componentName), []);
   useEffect(() => {
     if (!childNodes) return;
     if (!Array.isArray(childNodes)) {

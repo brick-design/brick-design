@@ -3,7 +3,8 @@ import styles from './style.less';
 import {
   ChildNodesType,
   ComponentConfigsType,
-  LEGO_BRIDGE,
+  getComponentConfig,
+  isContainer,
   MirrorModalFieldType,
   PROPS_TYPES,
   PropsConfigSheetType,
@@ -76,7 +77,7 @@ function renderNodes(childNodes: string[],specialProps:SelectedInfoBaseType, com
         parentPropName,
       },
     };
-    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container {...props} isDragAddChild={isDragAddChild||dragKey===key&&isDragAdd}  key={key}/> :
+    return isContainer(componentName) ? <Container {...props} isDragAddChild={isDragAddChild||dragKey===key&&isDragAdd}  key={key}/> :
       <NoneContainer {...props} isDragAddChild={isDragAddChild} key={key}/>;
   });
 
@@ -94,7 +95,7 @@ export function handleChildNodes(specialProps:SelectedInfoBaseType, componentCon
   const {key:parentKey}=specialProps
   const dragAddStatus:DragAddStatusType={isDragAdd,dragKey,isDragAddChild}
   const { componentName } = componentConfigs[parentKey];
-  const { nodePropsConfig,isRequired,isOnlyNode } = LEGO_BRIDGE.config!.AllComponentConfigs[componentName];
+  const { nodePropsConfig,isRequired,isOnlyNode } = getComponentConfig(componentName);
     if (Array.isArray(children)) {
       nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
     } else {

@@ -1,5 +1,5 @@
 import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
-import { clearDropTarget, clearHovered, LEGO_BRIDGE, LegoProvider, useSelector } from 'brickd-core';
+import { clearHovered, isContainer, LegoProvider, ROOT, useSelector } from 'brickd-core';
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
@@ -15,10 +15,11 @@ const onIframeLoad = (divContainer: any, designPage: any) => {
   iframeDocument.head.remove();
   iframeDocument.documentElement.insertBefore(head, iframeDocument.body);
   divContainer.current = iframe.contentDocument.getElementById('dnd-container');
-  ReactDOM.render(
+  ReactDOM.render(<>
     <LegoProvider>
       {designPage}
-    </LegoProvider>, divContainer.current);
+    </LegoProvider>
+    </>, divContainer.current);
 };
 
 /**
@@ -35,16 +36,16 @@ export function BrickDesign(props: BrickDesignProps) {
 
   const { componentConfigs } = useSelector(stateSelector);
   const designPage: any = useMemo(() => {
-    if (!componentConfigs.root) return null;
-    const { root: { componentName } } = componentConfigs;
+    if (!componentConfigs[ROOT]) return null;
+    const { [ROOT]: { componentName } } = componentConfigs;
     const props = {
       specialProps: {
-        domTreeKeys: ['root'],
-        key: 'root',
+        domTreeKeys: [ROOT],
+        key: ROOT,
         parentKey: '',
       },
     };
-    return LEGO_BRIDGE.containers!.includes(componentName) ? <Container onMouseLeave={clearHovered}
+    return isContainer(componentName) ? <Container onMouseLeave={clearHovered}
                                                                         {...props} /> :
       <NoneContainer onMouseLeave={clearHovered} {...props}/>;
   }, [componentConfigs]);
@@ -65,9 +66,11 @@ export function BrickDesign(props: BrickDesignProps) {
   useEffect(() => {
     if (divContainer.current)
       ReactDOM.render(
+        <>
         <LegoProvider>
           {designPage}
-        </LegoProvider>, divContainer.current);
+        </LegoProvider>
+          </>, divContainer.current);
   }, [divContainer.current, designPage]);
 
   const { onLoadEnd } = props;

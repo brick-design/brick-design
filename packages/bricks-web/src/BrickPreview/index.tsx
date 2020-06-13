@@ -118,15 +118,14 @@ function renderContent(categoryInfo: ComponentInfoType | null, categoryName: str
 
 
 interface FoldPanelPropsType {
-  isContainer?:boolean,
   isShow?: boolean,
-  className?:string
+  className?:string,
+  componentsCategory:CategoryType
 
 }
 
 function BrickPreview(props: FoldPanelPropsType) {
-  const { isContainer, isShow=true,className } = props;
-  const componentsCategory=isContainer?LEGO_BRIDGE.config!.CONTAINER_CATEGORY:LEGO_BRIDGE.config!.NON_CONTAINER_CATEGORY
+  const { componentsCategory, isShow=true,className } = props;
   const searchValues=flattenDeepArray(componentsCategory)
   const { selectedInfo } = useSelector(['selectedInfo']);
   const  { childNodesRule }=selectedInfo||{};

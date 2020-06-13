@@ -22,12 +22,11 @@
 		"bootstrap": "lerna bootstrap",
 		"build": "lerna run build --stream",
 		"test": "jest --coverage",
-		"precommit:lint": "lint-staged",
+		"precommit": "lint-staged",
 		"watch": "lerna run --parallel --stream watch",
 		"precommit:format": "pretty-quick --staged",
 		"start": "lerna run --parallel --stream start",
-		"prettify:source": "prettier 'packages/*/src/**/*.ts*'",
-		"check-types": "tsc --noEmit"
+		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.7.5",

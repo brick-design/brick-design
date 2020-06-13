@@ -31,10 +31,11 @@ interface OriginalComponentsType {
   [componentName: string]: any
 }
 
+export type AllComponentConfigsType={ [componentName: string]: ComponentConfigTypes }
+
 export interface ConfigType {
   OriginalComponents: OriginalComponentsType, //所有的React原始组件
-  CONTAINER_CATEGORY: CategoryType,  //容器组件分类
-  NON_CONTAINER_CATEGORY: CategoryType, //非容器组件分类
   //所有的组件配置汇总
-  AllComponentConfigs: { [componentName: string]: ComponentConfigTypes },
+  AllComponentConfigs: AllComponentConfigsType,
+  containers:string[]
 }

@@ -10,9 +10,8 @@ import isArray from 'lodash/isArray';
 import each from 'lodash/each';
 import { deletePropsConfig, PropInfoType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 import { FormComponentProps } from 'antd/es/form';
-import SwitchMultiTypes from '../SwitchMultiTypes'
+import SwitchMultiTypes from '../SwitchMultiTypes';
 import { confirmModal, TYPES_TO_COMPONENT } from '../../index';
-
 
 
 interface ObjectComponentPropsType extends FormComponentProps {

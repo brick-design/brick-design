@@ -10,28 +10,27 @@ import {
   UndoRedoType,
 } from '../../types';
 import config from '../configs';
-import { flattenDeepArray } from '../../utils';
+import {  ROOT } from '../../utils';
 import { LayoutSortPayload } from '../../actions';
 
 jest.resetModules();
 beforeAll(() => {
   LEGO_BRIDGE.config = config;
-  LEGO_BRIDGE.containers = flattenDeepArray(config.CONTAINER_CATEGORY);
+  console.warn=jest.fn()
 });
 afterAll(() => {
   LEGO_BRIDGE.config = undefined;
-  LEGO_BRIDGE.containers = null;
 });
 describe('addComponent', () => {
   const action: BrickAction = { type: ACTION_TYPES.addComponent };
-  test('dragSource===null', () => {
+  test('dragSource===null没有拖拽组件时', () => {
     const state = reducer(legoState, action);
     expect(state).toBe(legoState);
   });
-  test('dropTarget===null或者selectedInfo===null', () => {
+  test('dropTarget===null&&selectedInfo===null 既没有drop目标也没有选中组件时', () => {
     const undo: UndoRedoType[] = [{
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
         },
       },
@@ -40,7 +39,7 @@ describe('addComponent', () => {
       ...legoState,
       undo,
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
         },
         1: { componentName: 'a' },
@@ -51,49 +50,54 @@ describe('addComponent', () => {
     const state = reducer(prevState, action);
     const expectState = {
       ...prevState, componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
         },
       }, dragSource: null,
     };
     expect(state).toEqual(expectState);
   });
-  test('parentKey===selectedKey', () => {
+  test('parentKey===selectedKey拖拽的组件是drop目标的子组件', () => {
     const prevState: StateType = {
       ...legoState,
+      componentConfigs:{
+        [ROOT]:{componentName:'div'}
+      },
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
-      dragSource: { parentKey: 'root', dragKey: '1' },
+      dragSource: { parentKey: ROOT, dragKey: '1' },
     };
     const state = reducer(prevState, action);
-    expect(state).toBe(prevState);
+    expect(state).toEqual({...prevState,dragSource:null,dropTarget:null});
   });
-  test('domTreeKeys.includes(dragKey!)', () => {
+  test('domTreeKeys.includes(dragKey) 拖拽组件是drop目标的父组件', () => {
     const prevState: StateType = {
       ...legoState,
+      componentConfigs:{[ROOT]:{componentName:'h'}},
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root', '1'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT, '1'],
         parentKey: '',
         propsConfig: {},
       },
       dragSource: { parentKey: '2', dragKey: '1' },
     };
     const state = reducer(prevState, action);
-    expect(state).toBe(prevState);
+    expect(state).toEqual({...prevState,dragSource:null,dropTarget:null});
   });
-  test('componentConfigs.root is undefined', () => {
+  test('componentConfigs.0===undefined 没有根节点时', () => {
     const vDOMCollection: ComponentConfigsType = {
-      root: { componentName: 'a' },
+      [ROOT]: { componentName: 'a' },
     };
     const prevState: StateType = {
       ...legoState,
+      undo:[],
       dragSource: {
-        dragKey: 'root',
+        dragKey: ROOT,
         vDOMCollection,
         parentKey: '',
       },
@@ -107,12 +111,31 @@ describe('addComponent', () => {
     };
     expect(state).toEqual(expectState);
   });
+  test('componentConfigs.0 有根节点但没有drop目标时', () => {
+
+    const prevState: StateType = {
+      ...legoState,
+      componentConfigs: {
+        [ROOT]:{componentName:'div'}
+      },
+      dragSource: {
+        dragKey: ROOT,
+        parentKey:"w"
+      },
+    };
+    const state = reducer(prevState, action);
+    const expectState: StateType = {
+      ...prevState,
+      dragSource: null,
+    };
+    expect(state).toEqual(expectState);
+  });
   describe('父组件约束限制', () => {
     it('当选中的组件没有属性节点时', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'a',
           },
           '1': {
@@ -120,17 +143,15 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
       };
-      expect(() =>
-        reducer(prevState, action),
-      ).toThrow('div:只允许放入div.children组件或者属性中');
+      expect(reducer(prevState, action)).toEqual({...prevState,dropTarget:null,dragSource:null});
     });
     it('当选中的组件有属性节点时', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'p',
           },
           '1': {
@@ -138,17 +159,15 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, propName: 'children', domTreeKeys: [] },
       };
-      expect(() =>
-        reducer(prevState, action),
-      ).toThrow('div:只允许放入div.children组件或者属性中');
+      expect(reducer(prevState, action)).toEqual({...prevState,dropTarget:null,dragSource:null});
     });
     it('当选中的组件有属性节点时', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'p',
           },
           '1': {
@@ -156,18 +175,17 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, propName: 'children', domTreeKeys: [] },
       };
-      expect(() =>
-        reducer(prevState, action),
-      ).toThrow('div:只允许放入div.children组件或者属性中');
+      expect(reducer(prevState, action)
+      ).toEqual({...prevState,dropTarget:null,dragSource:null});
     });
-    it('errorCallback', function() {
-      LEGO_BRIDGE.errorCallback = jest.fn();
+    it('errorCallback错误回调函数', function() {
+      LEGO_BRIDGE.warn = jest.fn();
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'p',
           },
           '1': {
@@ -175,11 +193,11 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, propName: 'children', domTreeKeys: [] },
       };
       reducer(prevState, action);
-      expect(LEGO_BRIDGE.errorCallback).toBeCalled();
-      LEGO_BRIDGE.errorCallback = undefined;
+      expect(LEGO_BRIDGE.warn).toBeCalled();
+      LEGO_BRIDGE.warn = undefined;
     });
   });
 
@@ -188,7 +206,7 @@ describe('addComponent', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'span',
           },
           '1': {
@@ -196,17 +214,15 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', propName: 'test', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, propName: 'test', domTreeKeys: [] },
       };
-      expect(() =>
-        reducer(prevState, action),
-      ).toThrow('test:只允许拖拽a组件');
+      expect(reducer(prevState, action)).toEqual({...prevState,dropTarget:null,dragSource:null});
     });
     test('没有属性节点配置的子组件约束限制', () => {
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'h',
           },
           '1': {
@@ -214,20 +230,18 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
       };
-      expect(() =>
-        reducer(prevState, action),
-      ).toThrow('h:只允许拖拽img组件');
+      expect(reducer(prevState, action)).toEqual({...prevState,dropTarget:null,dragSource:null});
 
     });
-    test('errorCallback', () => {
-      LEGO_BRIDGE.errorCallback = jest.fn();
+    test('warn', () => {
+      LEGO_BRIDGE.warn = jest.fn();
 
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
-          root: {
+          [ROOT]: {
             componentName: 'span',
           },
           '1': {
@@ -235,33 +249,32 @@ describe('addComponent', () => {
           },
         },
         dragSource: { dragKey: '1', parentKey: '' },
-        dropTarget: { selectedKey: 'root', propName: 'test', domTreeKeys: [] },
+        dropTarget: { selectedKey: ROOT, propName: 'test', domTreeKeys: [] },
       };
-      reducer(prevState, action),
-        expect(LEGO_BRIDGE.errorCallback).toBeCalled();
-      LEGO_BRIDGE.errorCallback = undefined;
+      reducer(prevState, action);
+        expect(LEGO_BRIDGE.warn).toBeCalled();
+      LEGO_BRIDGE.warn = undefined;
     });
   });
-  test('正常添加新组建', () => {
+  test('正常添加新组件', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'div' },
+      [ROOT]: { componentName: 'div' },
       1: { componentName: 'span' },
     };
     const prevState: StateType = {
       ...legoState,
       undo: [],
       componentConfigs,
-      dropTarget: { selectedKey: 'root', propName: 'children', domTreeKeys: ['root'] },
+      dropTarget: { selectedKey: ROOT, propName: 'children', domTreeKeys: [ROOT] },
       dragSource: { dragKey: '1', parentKey: '' },
     };
     const state = reducer(prevState, action);
     const expectState: StateType = {
-      ...legoState,
+      ...prevState,
       componentConfigs: {
-        root: { componentName: 'div', childNodes: { children: ['1'] } },
+        [ROOT]: { componentName: 'div', childNodes: { children: ['1'] } },
         1: { componentName: 'span'},
       },
-      undo: [{ componentConfigs }],
       dragSource: null,
       dropTarget: null,
     };
@@ -270,7 +283,7 @@ describe('addComponent', () => {
 
   test('跨容器拖拽设计面板中的组件', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'div', childNodes: { children: ['1'] } },
+      [ROOT]: { componentName: 'div', childNodes: { children: ['1'] } },
       1: { componentName: 'a', childNodes: ['2'] },
       2: { componentName: 'img' },
     };
@@ -279,11 +292,11 @@ describe('addComponent', () => {
       undo: [],
       componentConfigs,
       dragSource: { dragKey: '2', parentKey: '1' },
-      dropTarget: { selectedKey: 'root', domTreeKeys: ['root'], propName: 'children' },
+      dropTarget: { selectedKey: ROOT, domTreeKeys: [ROOT], propName: 'children' },
     };
     const state = reducer(prevState, action);
     const expectComponentConfigs: ComponentConfigsType = {
-      root: { componentName: 'div', childNodes: { children: ['1', '2'] } },
+      [ROOT]: { componentName: 'div', childNodes: { children: ['1', '2'] } },
       1: { componentName: 'a', },
       2: { componentName: 'img' },
     };
@@ -300,25 +313,24 @@ describe('addComponent', () => {
 
 describe('copyComponent', () => {
   const action = { type: ACTION_TYPES.copyComponent };
-  it('if selectedInfo===null', () => {
+  it('没有选中组件时', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
-  it('if selectedInfo.selectedKey===root', () => {
+  it('选中组价为根节点时', () => {
     const state: StateType = {
       ...legoState,
-      selectedInfo: { selectedKey: 'root', domTreeKeys: [], parentKey: '', propsConfig: {} },
+      selectedInfo: { selectedKey: ROOT, domTreeKeys: [], parentKey: '', propsConfig: {} },
     };
     expect(reducer(state, action)).toEqual(state);
   });
 
   it('复制选中组件', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a', childNodes: ['1'] },
+      [ROOT]: { componentName: 'a', childNodes: ['1'] },
       1: { componentName: 'a', childNodes: ['2'] },
       2: {
         componentName: 'span', childNodes: {
           children: ['3'],
-
         },
       },
       3: { componentName: 'p' },
@@ -331,13 +343,30 @@ describe('copyComponent', () => {
       undo: [],
       componentConfigs,
       propsConfigSheet,
-      selectedInfo: { selectedKey: '1', parentKey: 'root', domTreeKeys: ['root', '1'], propsConfig: {} },
+      selectedInfo: { selectedKey: '1', parentKey: ROOT, domTreeKeys: [ROOT, '1'], propsConfig: {} },
     };
     const state = reducer(prevState, action);
-    expect(state.undo).toEqual([{ componentConfigs, propsConfigSheet }]);
-    const childNodes = state.componentConfigs.root.childNodes as string[];
-    expect(childNodes?.length).toBe(2);
-    expect(state.propsConfigSheet[childNodes[1]]).toBe('1');
+    const expectState:StateType={
+      ...prevState,
+      undo:[{componentConfigs,propsConfigSheet}],
+      componentConfigs:{
+        ...componentConfigs,
+        [ROOT]:{componentName: 'a', childNodes: ['1','4']},
+        4:{ componentName: 'a', childNodes: ['5'] },
+        5:{
+          componentName: 'span', childNodes: {
+            children: ['6'],
+          },
+        },
+        6:{ componentName: 'p' },
+      },
+      propsConfigSheet:{
+        1: {},
+        4:{}
+      }
+    }
+    expect(state).toEqual(expectState);
+
   });
 });
 
@@ -345,7 +374,7 @@ describe('onLayoutSortChange', () => {
   const action = { type: ACTION_TYPES.onLayoutSortChange };
   it('容器内部排序', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a', childNodes: ['1', '2', '3'] },
+      [ROOT]: { componentName: 'a', childNodes: ['1', '2', '3'] },
     };
     const prevState: StateType = {
       ...legoState,
@@ -353,15 +382,15 @@ describe('onLayoutSortChange', () => {
       componentConfigs,
 
     };
-    const payload: LayoutSortPayload = { sortKeys: ['2', '1', '3'], parentKey: 'root' };
+    const payload: LayoutSortPayload = { sortKeys: ['2', '1', '3'], parentKey: ROOT };
     const state = reducer(prevState, { ...action, payload });
-    expect(state.componentConfigs.root.childNodes).toEqual(payload.sortKeys);
+    expect(state.componentConfigs[ROOT].childNodes).toEqual(payload.sortKeys);
     expect(state.undo).toEqual([{ componentConfigs }]);
 
   });
   it('跨容器排序', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: {
+      [ROOT]: {
         componentName: 'a', childNodes: ['1'],
       },
       1: { componentName: 'div', childNodes: { children: ['2'] } },
@@ -374,12 +403,12 @@ describe('onLayoutSortChange', () => {
     };
     const payload: LayoutSortPayload = {
       sortKeys: ['2', '1'],
-      parentKey: 'root',
+      parentKey: ROOT,
       dragInfo: { parentKey: '1', parentPropName: 'children', key: '2' },
     };
     const state = reducer(prevState, { ...action, payload });
     const expectComponentConfigs = {
-      root: {
+      [ROOT]: {
         componentName: 'a', childNodes: ['2', '1'],
       },
       1: { componentName: 'div'},
@@ -393,19 +422,19 @@ describe('onLayoutSortChange', () => {
 
 describe('deleteComponent', () => {
   const action = { type: ACTION_TYPES.deleteComponent };
-  it('if selectedInfo===null', () => {
+  it('没有选中组件时', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
 
   it('删除根节点', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'img' },
+      [ROOT]: { componentName: 'img' },
     };
-    const propsConfigSheet = { 'root': {} };
+    const propsConfigSheet = { ROOT: {} };
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
+      selectedKey: ROOT,
       parentKey: '',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
       propsConfig: {},
     };
     const prevState: StateType = {
@@ -429,7 +458,7 @@ describe('deleteComponent', () => {
 
   it('删除非根节点并且拥有属性节点', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a', childNodes: ['1', '2'] },
+      [ROOT]: { componentName: 'a', childNodes: ['1', '2'] },
       1: { componentName: 'div', childNodes: { children: ['3'] } },
       2: { componentName: 'img' },
       3: { componentName: 'span', childNodes: { children: ['4'], test: ['5'] } },
@@ -440,13 +469,13 @@ describe('deleteComponent', () => {
     const propsConfigSheet: PropsConfigSheetType = {
       1: {},
       2: {},
-      4: '2',
+      4: {},
       6: {},
     };
     const selectedInfo: SelectedInfoType = {
       selectedKey: '1',
-      parentKey: 'root',
-      domTreeKeys: ['root', '1'],
+      parentKey: ROOT,
+      domTreeKeys: [ROOT, '1'],
       propsConfig: {},
     };
 
@@ -462,7 +491,7 @@ describe('deleteComponent', () => {
     const expectState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'a', childNodes: ['2'] },
+        [ROOT]: { componentName: 'a', childNodes: ['2'] },
         2: { componentName: 'img' },
       },
       undo: [{ componentConfigs, selectedInfo, propsConfigSheet }],
@@ -474,7 +503,7 @@ describe('deleteComponent', () => {
 
   it('删除非根节点并且没有属性节点', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'span', childNodes:{children: ['1', '2']} },
+      [ROOT]: { componentName: 'span', childNodes:{children: ['1', '2']} },
       1: { componentName: 'div' },
       2: { componentName: 'img' },
 
@@ -482,9 +511,9 @@ describe('deleteComponent', () => {
     const propsConfigSheet: PropsConfigSheetType = { 2: {} };
     const selectedInfo: SelectedInfoType = {
       selectedKey: '2',
-      parentKey: 'root',
+      parentKey: ROOT,
       parentPropName:'children',
-      domTreeKeys: ['root', '2'],
+      domTreeKeys: [ROOT, '2'],
       propsConfig: {},
     };
 
@@ -499,7 +528,7 @@ describe('deleteComponent', () => {
     const expectState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'span', childNodes: {children:['1']} },
+        [ROOT]: { componentName: 'span', childNodes: {children:['1']} },
         1: { componentName: 'div', },
       },
       propsConfigSheet: {},
@@ -511,13 +540,13 @@ describe('deleteComponent', () => {
 });
 describe('clearChildNodes', () => {
   const action = { type: ACTION_TYPES.clearChildNodes };
-  it('if selectedInfo===null', () => {
+  it('没有选中组件时', () => {
     expect(reducer(legoState, action)).toEqual(legoState);
   });
 
   it('清除指定属性的所有子节点', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'span', childNodes: { children: ['1'], test: ['2'] } },
+      [ROOT]: { componentName: 'span', childNodes: { children: ['1'], test: ['2'] } },
       1: { componentName: 'div', childNodes: { children: ['3'] } },
       2: { componentName: 'img' },
       3: { componentName: 'span', childNodes: { children: ['4'], test: ['5'] } },
@@ -529,7 +558,7 @@ describe('clearChildNodes', () => {
     const propsConfigSheet: PropsConfigSheetType = {
       1: {},
       2: {},
-      4: '2',
+      4: {},
       6: {},
     };
     const prevState: StateType = {
@@ -537,9 +566,9 @@ describe('clearChildNodes', () => {
       undo: [],
       componentConfigs,
       selectedInfo: {
-        selectedKey: 'root',
+        selectedKey: ROOT,
         propName: 'children',
-        domTreeKeys: ['root'],
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
@@ -551,7 +580,7 @@ describe('clearChildNodes', () => {
       ...prevState,
       undo: [{ componentConfigs, propsConfigSheet }],
       componentConfigs: {
-        root: { componentName: 'span', childNodes: { test: ['2'] } },
+        [ROOT]: { componentName: 'span', childNodes: { test: ['2'] } },
         2: { componentName: 'img' },
       },
       propsConfigSheet: {2: {}},
@@ -560,7 +589,7 @@ describe('clearChildNodes', () => {
   });
   it('清除指定组件的所有子节点', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'span', childNodes: { children: ['1'], test: ['2'] } },
+      [ROOT]: { componentName: 'span', childNodes: { children: ['1'], test: ['2'] } },
       1: { componentName: 'div', childNodes: { children: ['3'] } },
       2: { componentName: 'img' },
       3: { componentName: 'span', childNodes: { children: ['4'], test: ['5'] } },
@@ -572,7 +601,7 @@ describe('clearChildNodes', () => {
     const propsConfigSheet: PropsConfigSheetType = {
       1: {},
       2: {},
-      4: '2',
+      4: {},
       6: {},
     };
     const prevState: StateType = {
@@ -580,8 +609,8 @@ describe('clearChildNodes', () => {
       undo: [],
       componentConfigs,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
@@ -593,7 +622,7 @@ describe('clearChildNodes', () => {
       ...prevState,
       undo: [{ componentConfigs, propsConfigSheet }],
       componentConfigs: {
-        root: { componentName: 'span' },
+        [ROOT]: { componentName: 'span' },
       },
       propsConfigSheet: {},
     };
@@ -601,21 +630,19 @@ describe('clearChildNodes', () => {
   });
   it('组件没有子节点触发清除', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a' },
-
+      [ROOT]: { componentName: 'a' },
     };
 
     const propsConfigSheet: PropsConfigSheetType = {
-      root: {},
-
+      [ROOT]: {},
     };
     const prevState: StateType = {
       ...legoState,
       undo: [],
       componentConfigs,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
@@ -623,21 +650,18 @@ describe('clearChildNodes', () => {
     };
 
     const state = reducer(prevState, action);
-    const expectState: StateType = {
-      ...prevState,
-      undo: [{ componentConfigs, propsConfigSheet }]
-    };
-    expect(state).toEqual(expectState);
+
+    expect(state).toEqual(prevState);
   });
   it('组件多属性节点属性节点完全清空', () => {
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'span',childNodes:{children:['1']} },
+      [ROOT]: { componentName: 'span',childNodes:{children:['1']} },
       1:{componentName:'p'}
 
     };
 
     const propsConfigSheet: PropsConfigSheetType = {
-      root: {},
+      [ROOT]: {},
 
     };
     const prevState: StateType = {
@@ -645,8 +669,8 @@ describe('clearChildNodes', () => {
       undo: [],
       componentConfigs,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         propName:'children',
         parentKey: '',
         propsConfig: {},
@@ -659,7 +683,7 @@ describe('clearChildNodes', () => {
       ...prevState,
       undo: [{ componentConfigs, propsConfigSheet }],
       componentConfigs:{
-        root:{componentName:'span'}
+        [ROOT]:{componentName:'span'}
       }
     };
     expect(state).toEqual(expectState);

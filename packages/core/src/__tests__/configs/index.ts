@@ -1,4 +1,3 @@
-import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import * as AllComponentConfigs from './HTML';
 
 /**
@@ -8,8 +7,7 @@ import * as AllComponentConfigs from './HTML';
 const config: any = {
   OriginalComponents: {},
   AllComponentConfigs,
-  CONTAINER_CATEGORY: htmlContainers,
-  NON_CONTAINER_CATEGORY: htmlNonContainers,
+  containers: ['div','a','p','span','h'],
 };
 
 export default config;

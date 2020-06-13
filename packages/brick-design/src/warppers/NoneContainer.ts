@@ -1,6 +1,6 @@
 import { createElement, forwardRef, memo, useMemo } from 'react';
 import get from 'lodash/get';
-import { clearDropTarget, getAddPropsConfig, LEGO_BRIDGE, produce, STATE_PROPS, useSelector } from 'brickd-core';
+import { clearDropTarget, getComponentConfig, LEGO_BRIDGE, produce, STATE_PROPS, useSelector } from 'brickd-core';
 import {
   CommonPropsType,
   controlUpdate,
@@ -19,7 +19,7 @@ import { useDragDrop } from '../hooks/useDragDrop';
 function NoneContainer(allProps: CommonPropsType, ref: any) {
   const {
     specialProps,
-    specialProps: { key },
+    specialProps: { key,domTreeKeys },
     isDragAddChild,
     ...rest
   } = allProps;
@@ -29,14 +29,14 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const { isSelected } = useSelect(specialProps);
   const {dragSource, isHidden } = useDragDrop(key);
   const { props, componentName } = componentConfigs[key] || {};
-  const { propsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+  const { propsConfig } = useMemo(() => getComponentConfig(componentName), []);
 
   if (!componentName) return null;
   const {dragKey}=dragSource||{}
 
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
-    if(dragKey!==key){
+    if(dragKey&&domTreeKeys.includes(dragKey)){
       clearDropTarget();
     }
   };
@@ -51,7 +51,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
         onDragEnter,
       }),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
-        merge(oldPropsConfig, getAddPropsConfig(propsConfigSheet, specialProps.key));
+        merge(oldPropsConfig, propsConfigSheet[specialProps.key]);
       })),
       draggable: true,
       /**

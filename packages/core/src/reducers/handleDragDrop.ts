@@ -1,8 +1,7 @@
-import { generateVDOM, getNewDOMCollection } from '../utils';
+import { generateNewKey, getNewKey, ROOT } from '../utils';
 import { DropTargetType, StateType } from '../types';
 import { DragSourcePayload } from '../actions';
 import produce from 'immer';
-import uuid from 'uuid';
 
 
 /**
@@ -11,27 +10,44 @@ import uuid from 'uuid';
  * @param payload
  * @returns {{dragSource: *}}
  */
-export function getDragSource(state: StateType, payload: DragSourcePayload):StateType {
+export function getDragSource(state: StateType, payload: DragSourcePayload): StateType {
   // eslint-disable-next-line prefer-const
   let { componentConfigs, undo, propsConfigSheet } = state;
   // eslint-disable-next-line prefer-const
   let { componentName, defaultProps, vDOMCollection, propsConfigCollection, dragKey, parentKey, parentPropName } = payload;
+  /**
+   * componentName有值说明为新添加的组件，为其生成vDom
+   */
   if (componentName) {
-    vDOMCollection = generateVDOM(componentName, defaultProps);
+    vDOMCollection = {
+      [ROOT]: {
+        componentName: componentName,
+        props: defaultProps,
+      },
+    };
   }
-  if (componentConfigs.root && vDOMCollection) {
+
+  /**
+   * 如果componentConfigs有根节点并且vDOMCollection有值，就将vDOMCollection中的
+   * vDom合并到componentConfigs，为实时拖拽预览做准备
+   */
+  if (componentConfigs[ROOT] && vDOMCollection) {
     undo.push({ componentConfigs, propsConfigSheet });
-    dragKey = uuid();
-    const { newPropsConfigCollection, newVDOMCollection } = getNewDOMCollection({
+    const newKey=getNewKey(componentConfigs)
+    dragKey = `${newKey}`;
+    const { newPropsConfigCollection, newVDOMCollection } = generateNewKey({
       vDOMCollection,
       propsConfigCollection,
-    }, dragKey);
+    }, newKey);
     componentConfigs = produce(componentConfigs, oldConfigs => {
       //为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
       Object.assign(oldConfigs, newVDOMCollection);
     });
     propsConfigSheet = produce(propsConfigSheet, oldPropsConfig => {
-      Object.assign(oldPropsConfig, newPropsConfigCollection);
+      if(newPropsConfigCollection){
+        Object.assign(oldPropsConfig, newPropsConfigCollection);
+
+      }
     });
   }
   return {

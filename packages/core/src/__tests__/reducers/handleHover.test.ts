@@ -3,6 +3,7 @@ import ACTION_TYPES from '../../actions/actionTypes';
 import { OverTargetPayload } from '../../actions';
 import { legoState } from '../../store';
 import { StateType } from '../../types';
+import { ROOT } from '../../utils';
 
 describe('hover 状态', () => {
   const payload: OverTargetPayload = { hoverKey: '1' };
@@ -18,6 +19,6 @@ describe('hover 状态', () => {
   });
 });
 test('清除hover状态', () => {
-  const state = reducer({ ...legoState, hoverKey: 'root' }, { type: ACTION_TYPES.clearHovered });
+  const state = reducer({ ...legoState, hoverKey: ROOT }, { type: ACTION_TYPES.clearHovered });
   expect(state.hoverKey).toBeNull();
 });

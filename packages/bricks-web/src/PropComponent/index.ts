@@ -1,4 +1,5 @@
-import {  Modal  } from 'antd';
+import { Modal } from 'antd';
+
 export { default as ObjectComponent }  from './ObjectComponent/ObjectComponent';
 export { default as ObjectArrayComponent }  from './ObjectArrayComponent/ObjectArrayComponent';
 export { default as SortComponent }  from './ObjectArrayComponent/SortComponent';

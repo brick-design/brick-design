@@ -1,9 +1,8 @@
 import { merge, update } from 'lodash';
-import { getAddPropsConfig, getFieldInPropsLocation } from '../utils';
-import { StateType } from '../types';
-import produce from 'immer';
+import { getComponentConfig, getFieldInPropsLocation, restObject, warn } from '../utils';
+import { PropsConfigSheetALL, StateType } from '../types';
+import produce, { original } from 'immer';
 import get from 'lodash/get';
-import { LEGO_BRIDGE } from '../store';
 import { AddPropsConfigPayload, ChangePropsPayload, DeletePropsConfigPayload } from '../actions';
 
 /**
@@ -13,30 +12,44 @@ import { AddPropsConfigPayload, ChangePropsPayload, DeletePropsConfigPayload } f
  * @returns {{propsSetting: *}}
  */
 export function addPropsConfig(state: StateType, payload: AddPropsConfigPayload): StateType {
-  const { selectedInfo, undo, redo, propsConfigSheet } = state;
+  const { selectedInfo, undo, redo, propsConfigSheet,componentConfigs } = state;
   if (!selectedInfo) return state;
   const { newPropField, fatherFieldLocation, childPropsConfig, propType } = payload;
-  const { propsConfig, selectedKey } = selectedInfo;
+  const { selectedKey } = selectedInfo;
   let isAdd = true;
-  const addPropsConfig = getAddPropsConfig(propsConfigSheet, selectedKey);
-  const newAddPropsConfig = produce(addPropsConfig, oldAddPropsConfig => {
-    update(oldAddPropsConfig, fatherFieldLocation, (propsContent: any) => {
-      // 对象数组 添加一个对象时的逻辑
-      if (!newPropField) return childPropsConfig;
-      if (!propsContent) propsContent = {};
-      if (propsContent[newPropField]) {
-        isAdd = false;
-        //todo
-      } else {
-        propsContent[newPropField] = {
-          type: propType,
-          isAdd,
-        };
+  let addPropsConfig:PropsConfigSheetALL = propsConfigSheet[selectedKey]||{};
+
+    addPropsConfig = produce(addPropsConfig, oldAddPropsConfig => {
+      const msg=`${newPropField}:This property already exists`
+      const newPropFieldConfig={
+        type: propType,
+        isAdd,
       }
-      return propsContent;
+      if(fatherFieldLocation) {
+        update(oldAddPropsConfig, fatherFieldLocation, (propsContent: any) => {
+          // 对象数组 添加一个对象时的逻辑
+          if (!newPropField) return childPropsConfig;
+          if (!propsContent) propsContent = {};
+          if (propsContent[newPropField]) {
+            isAdd = false;
+            warn(msg)
+          } else {
+            propsContent[newPropField] = newPropFieldConfig;
+          }
+          return propsContent;
+        });
+      }else if (oldAddPropsConfig[newPropField!]) {
+        isAdd=false
+        warn(msg);
+      } else {
+        oldAddPropsConfig[newPropField!] = newPropFieldConfig;
+      }
+
     });
-  });
+
   if (!isAdd) return state;
+  const {propsConfig}=getComponentConfig(componentConfigs[selectedKey].componentName)
+
   undo.push({ selectedInfo, propsConfigSheet });
   redo.length = 0;
   return {
@@ -44,11 +57,11 @@ export function addPropsConfig(state: StateType, payload: AddPropsConfigPayload)
     selectedInfo: {
       ...selectedInfo,
       propsConfig: produce(propsConfig, oldPropsConfig => {
-        merge(oldPropsConfig, newAddPropsConfig);
+        merge(oldPropsConfig, addPropsConfig);
       }),
     },
     propsConfigSheet: produce(propsConfigSheet, oldPropsConfigSheet => {
-      oldPropsConfigSheet[selectedKey] = newAddPropsConfig;
+      oldPropsConfigSheet[selectedKey] = addPropsConfig;
     }),
     undo,
     redo,
@@ -68,25 +81,29 @@ export function deletePropsConfig(state: StateType, payload: DeletePropsConfigPa
   const { selectedKey } = selectedInfo;
 
   const fieldInPropsLocation = getFieldInPropsLocation(fatherFieldLocation);
-  const addPropsConfig = getAddPropsConfig(propsConfigSheet, selectedKey);
+  const addPropsConfig =propsConfigSheet[selectedKey];
   const newAddPropsConfig = produce(addPropsConfig, oldAddPropsConfig => {
-    update(oldAddPropsConfig, fatherFieldLocation, prevPropsConfig => {
-      delete prevPropsConfig[field];
-      return prevPropsConfig;
-    });
+    if(fatherFieldLocation){
+      update(oldAddPropsConfig, fatherFieldLocation, prevPropsConfig => {
+        return restObject(prevPropsConfig,field);
+      });
+    }else {
+      return restObject(oldAddPropsConfig,field)
+    }
 
   });
-  const { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentConfigs[selectedKey].componentName);
+  const { propsConfig } = getComponentConfig(componentConfigs[selectedKey].componentName);
   undo.push({ selectedInfo, propsConfigSheet, componentConfigs });
   redo.length = 0;
   return {
     ...state,
     componentConfigs: produce(componentConfigs, oldConfig => {
-      const paths = [selectedKey, 'props', ...fieldInPropsLocation];
-      if (get(oldConfig, [...paths, field])) {
+      const fieldPath=fieldInPropsLocation[0]!==''?fieldInPropsLocation:[]
+      const paths = [selectedKey, 'props',...fieldPath];
+      if (get(oldConfig, [...paths, field])!==undefined) {
         update(oldConfig, paths, prevProps => {
-          delete prevProps[field];
-          return prevProps;
+          return restObject(prevProps,field);
+
         });
       }
     }),

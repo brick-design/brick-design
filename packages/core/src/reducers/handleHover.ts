@@ -6,11 +6,11 @@ import { OverTargetPayload } from '../actions';
  * @param state
  * @returns {{hoverKey: null}}
  */
-export function clearHovered(state: StateType) {
+export function clearHovered(state: StateType):StateType {
   return {
     ...state,
     hoverKey: null,
-  } as StateType;
+  };
 }
 
 /**
@@ -18,7 +18,7 @@ export function clearHovered(state: StateType) {
  * @param state
  * @param payload
  */
-export function overTarget(state: StateType, payload: OverTargetPayload) {
+export function overTarget(state: StateType, payload: OverTargetPayload):StateType {
   const { hoverKey } = payload;
   const { hoverKey: prevHoverKey } = state;
   if (hoverKey === prevHoverKey) return state;

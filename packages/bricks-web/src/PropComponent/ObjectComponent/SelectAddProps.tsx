@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input, Select, Tooltip } from 'antd';
 import map from 'lodash/map';
 import { TYPES_TO_COMPONENT } from '../../index';
-import { addPropsConfig } from 'brickd-core';
+import { addPropsConfig, PROPS_TYPES } from 'brickd-core';
 
 const { Option } = Select;
 
@@ -13,11 +13,11 @@ interface SelectAddPropsType {
 
 function SelectAddProps(props: SelectAddPropsType) {
   const [newPropField, setNewPropField] = useState('');
-  const [propType, setPropType] = useState('string');
+  const [propType, setPropType] = useState(PROPS_TYPES.string);
 
   function addParam() {
     const {  fatherFieldLocation } = props;
-    if (/^[0-9a-zA-Z\$_][0-9a-zA-Z\d_]*$/.test(newPropField)) {
+    if (/^[0-9a-zA-Z$_][0-9a-zA-Z\d_]*$/.test(newPropField)) {
       addPropsConfig({
         newPropField,
         propType,

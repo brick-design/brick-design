@@ -1,8 +1,9 @@
 import React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
-import { LegoProvider, StateType,LEGO_BRIDGE } from 'brickd-core';
+import { renderHook } from '@testing-library/react-hooks';
+import { LEGO_BRIDGE, LegoProvider, ROOT, StateType } from 'brickd-core';
 import { useChildNodes, UseChildNodeType } from '../../hooks/useChildNodes';
 import config from '../configs';
+
 afterEach(()=>{
   LEGO_BRIDGE.config=undefined;
     LEGO_BRIDGE.store=null
@@ -11,7 +12,7 @@ describe('useChildNodes',()=>{
 
   it('childNodes===undefined',()=>{
     const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
+      specialProps:{key:ROOT,parentKey:'',domTreeKeys:[ROOT]},
       componentName:'span'
     }
     renderHook(()=>useChildNodes(mockData),{
@@ -24,13 +25,13 @@ describe('useChildNodes',()=>{
 
   it('childNodes is array and isRequired',()=>{
     const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
+      specialProps:{key:ROOT,parentKey:'',domTreeKeys:[ROOT]},
       componentName:'h',
       childNodes:[]
     }
 
     const initState:Partial<StateType>={
-      componentConfigs:{root:{
+      componentConfigs:{[ROOT]:{
         componentName:'h'
         }}
     }
@@ -45,7 +46,7 @@ describe('useChildNodes',()=>{
 
   it('childNodes is object and isRequired',()=>{
     const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
+      specialProps:{key:ROOT,parentKey:'',domTreeKeys:[ROOT]},
       componentName:'span',
       childNodes:{
         children:[],
@@ -54,7 +55,7 @@ describe('useChildNodes',()=>{
     }
     const initState:Partial<StateType>={
       componentConfigs:{
-        root:{
+        [ROOT]:{
           componentName:'span'
         }
       }
@@ -70,7 +71,7 @@ describe('useChildNodes',()=>{
 
   it('childNodes is array',()=>{
     const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
+      specialProps:{key:ROOT,parentKey:'',domTreeKeys:[ROOT]},
       componentName:'a',
       childNodes:['1']
     }
@@ -84,7 +85,7 @@ describe('useChildNodes',()=>{
   })
   it('childNodes is object',()=>{
     const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
+      specialProps:{key:ROOT,parentKey:'',domTreeKeys:[ROOT]},
       componentName:'span',
       childNodes:{
         children:['1'],

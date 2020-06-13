@@ -4,6 +4,7 @@ import { flattenDeepArray } from './utils';
 import styles from './index.less';
 import { BrickPreview } from 'bricks-web';
 import { LEGO_BRIDGE } from 'brickd-core';
+import { CONTAINER_CATEGORY, NON_CONTAINER_CATEGORY } from '../example/configs';
 
 const { TabPane } = Tabs;
 
@@ -16,7 +17,7 @@ function AllComponents() {
                tab={'container'} key="container">
         <BrickPreview
           isShow={activeKey === 'container'}
-          isContainer
+          componentsCategory={CONTAINER_CATEGORY}
           className={styles['preview-container']}
 
         />
@@ -24,6 +25,7 @@ function AllComponents() {
       <TabPane forceRender className={styles['tabs-panel']}
                tab={'nonContainer'} key="nonContainer">
         <BrickPreview isShow={activeKey === 'nonContainer'}
+                      componentsCategory={NON_CONTAINER_CATEGORY}
                       className={styles['preview-container']}
 
 

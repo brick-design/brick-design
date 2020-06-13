@@ -1,19 +1,21 @@
+import React from 'react'
 import {
+  CategoryType,
   ChildNodesType,
-  ComponentConfigsType,
-  PropsConfigSheetALL,
+  ComponentConfigsType, ComponentConfigTypes,
   PropsConfigSheetType,
   PropsNodeType,
   SelectedInfoType,
-  VirtualDOMType,
 } from '../types';
-import uuid from 'uuid';
 import each from 'lodash/each';
 import get from 'lodash/get';
-// import flattenDeep from 'lodash/flattenDeep';
-// import map from 'lodash/map';
 import { LEGO_BRIDGE } from '../store';
-import produce, { original } from 'immer';
+import ReactDOM from 'react-dom';
+
+/**
+ * 根节点key
+ */
+export const ROOT='0'
 
 /**
  * 复制组件
@@ -26,28 +28,36 @@ export interface HandleInfoType {
   propsConfigSheet: PropsConfigSheetType
 }
 
-export const copyConfig = (handleInfo: HandleInfoType, selectedKey: string, newKey: string) => {
-
-  handleInfo.componentConfigs[newKey] = { ...handleInfo.componentConfigs[selectedKey] };
-  handleInfo.propsConfigSheet[newKey] = selectedKey;
-  const vDom = handleInfo.componentConfigs[newKey];
-  const childNodes = vDom.childNodes;
-  if (Array.isArray(childNodes)) {
-    vDom.childNodes = copyChildNodes(handleInfo, childNodes);
-  } else if (childNodes) {
-    const newChildNodes: PropsNodeType = {};
-    each((childNodes as PropsNodeType), (nodes, propName) => {
-      newChildNodes[propName] = copyChildNodes(handleInfo, nodes!);
-    });
-    vDom.childNodes = newChildNodes;
+export const copyConfig = (handleInfo: HandleInfoType, selectedKey: string, newKey: number) => {
+  const { componentConfigs, propsConfigSheet } = handleInfo
+  if (propsConfigSheet[selectedKey]) {
+    propsConfigSheet[newKey] = propsConfigSheet[selectedKey];
   }
-};
+  const vDom = componentConfigs[selectedKey];
+  const childNodes = vDom.childNodes
+  if (!childNodes) {
+    componentConfigs[newKey] = vDom
+  } else {
+    const newVDom = { ...vDom }
+    componentConfigs[newKey] = newVDom
+    if (Array.isArray(childNodes)) {
+      newVDom.childNodes = copyChildNodes(handleInfo, childNodes);
+    }else {
+      const newChildNodes: PropsNodeType = {};
+      each(childNodes, (nodes, propName) => {
+        newChildNodes[propName] = copyChildNodes(handleInfo, nodes!);
+      });
+      newVDom.childNodes = newChildNodes;
+    }
+  }
+}
 
 function copyChildNodes(handleInfo: HandleInfoType, childNodes: string[]) {
-  const newChildKeys = [];
+  const {componentConfigs}=handleInfo
+  const newChildKeys:string[] = [];
   for (const oldKey of childNodes) {
-    const newChildKey = uuid();
-    newChildKeys.push(newChildKey);
+    const newChildKey = getNewKey(componentConfigs);
+    newChildKeys.push(`${newChildKey}`);
     copyConfig(handleInfo, oldKey, newChildKey);
   }
   return newChildKeys;
@@ -60,7 +70,7 @@ export function deleteChildNodes(handleInfo: HandleInfoType, childNodes: ChildNo
   } else{
     each(childNodes, (propChildNodes,key) => {
       if(propName){
-        if(key==propName){
+        if(key===propName){
           deleteArrChild(handleInfo, propChildNodes!)
         }
       }else {
@@ -99,37 +109,37 @@ export interface VDOMAndPropsConfigType {
 
 }
 
-export interface DragVDOMAndPropsConfigType {
+export interface DragVDomAndPropsConfigType {
   vDOMCollection: ComponentConfigsType,
   propsConfigCollection?: PropsConfigSheetType
 }
 
 /**
- *  生成新的Key
- * 防止模板出现重复key
- * @param vDOMAndPropsConfig
+ * 生成新的Key
  * @param dragVDOMAndPropsConfig
  * @param rootKey
  */
-export const getNewDOMCollection = (dragVDOMAndPropsConfig: DragVDOMAndPropsConfigType, rootKey: string) => {
+export const generateNewKey = (dragVDOMAndPropsConfig: DragVDomAndPropsConfigType, rootKey: number) => {
   const { vDOMCollection, propsConfigCollection } = dragVDOMAndPropsConfig;
   const keyMap: { [key: string]: string } = {};
   const newVDOMCollection: ComponentConfigsType = {};
-  const newPropsConfigCollection: PropsConfigSheetType = {};
+  let newPropsConfigCollection: PropsConfigSheetType|undefined;
+  let newKey = rootKey;
   each(vDOMCollection, (vDom, key) => {
-    let newKey = uuid();
-    if (key === 'root') {
+    ++newKey
+    if (key === ROOT) {
       newKey = rootKey;
     }
-    keyMap[key] = newKey;
+    keyMap[key] = `${newKey}`;
     newVDOMCollection[newKey] = vDom;
   });
 
   each(newVDOMCollection, (vDom) => {
     const childNodes = vDom.childNodes;
+    if(!childNodes) return
     if (Array.isArray(childNodes)) {
       vDom.childNodes = childNodes.map((key) => keyMap[key]);
-    } else if (childNodes) {
+    } else{
       const newChildNodes: PropsNodeType = {};
       each(childNodes, (nodes, propName) => {
       newChildNodes[propName] = nodes!.map((key) => keyMap[key]);
@@ -138,13 +148,13 @@ export const getNewDOMCollection = (dragVDOMAndPropsConfig: DragVDOMAndPropsConf
     }
 
   });
-  each(propsConfigCollection, (v, k) => {
-    if (typeof v === 'string') {
-      newPropsConfigCollection[keyMap[k]] = keyMap[v];
-    } else {
-      newPropsConfigCollection[keyMap[k]] = v;
-    }
-  });
+  if(propsConfigCollection){
+    newPropsConfigCollection={}
+    each(propsConfigCollection, (v, k) => {
+      newPropsConfigCollection![keyMap[k]] = v;
+    });
+  }
+
   return { newVDOMCollection, newPropsConfigCollection };
 };
 
@@ -168,45 +178,11 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
 export const handleRequiredHasChild = (selectedInfo: SelectedInfoType, componentConfigs: ComponentConfigsType) => {
   const { selectedKey, propName: selectedPropName } = selectedInfo;
   const { componentName, childNodes } = componentConfigs[selectedKey];
-  const { nodePropsConfig, isRequired } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  const { nodePropsConfig, isRequired } = getComponentConfig(componentName);
   return selectedPropName && nodePropsConfig![selectedPropName].isRequired &&
     !get(childNodes, selectedPropName) || isRequired && !childNodes;
 
 };
-
-
-export const generateVDOM = (componentName: string, defaultProps?: any) => {
-
-  const vDOM: VirtualDOMType = {
-    componentName: componentName,
-    props: defaultProps,
-  };
-  // if (LEGO_BRIDGE.containers!.includes(componentName)) {
-  //   const { nodePropsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
-  //   vDOM.childNodes = [];
-  //   // 是否为多属性节点
-  //   if (nodePropsConfig) {
-  //     const childNodes: PropsNodeType = {};
-  //     each(nodePropsConfig, (nodePropConfig, propName) => {
-  //       childNodes[propName] = [];
-  //     });
-  //     vDOM.childNodes = childNodes;
-  //   }
-  // }
-  return { root: vDOM };
-};
-
-/**
- * 用于获取组件名字数组
- * @param data
- * @returns {Array}
- */
-export function flattenDeepArray(data: any) {
-  return Object.keys(data).map((v) => {
-    if (data[v] && data[v].components) return Object.keys(data[v].components).map((subK) => subK);
-    return v;
-  }).flat(Infinity) as string[];
-}
 
 export function shallowEqual(objA: any, objB: any) {
   for (const k of Object.keys(objA)) {
@@ -215,23 +191,74 @@ export function shallowEqual(objA: any, objB: any) {
   return true;
 }
 
-export function getAddPropsConfig(propsConfigSheet: PropsConfigSheetType, selectedKey: string): PropsConfigSheetALL {
-  const addPropsConfig = propsConfigSheet[selectedKey];
-  if (typeof addPropsConfig === 'string') {
-    return getAddPropsConfig(propsConfigSheet, addPropsConfig);
-  }
-  return addPropsConfig || {};
-}
+
 
 export function deleteChildNodesKey(childNodes:ChildNodesType,deleteKey:string,parentPropName?:string) {
   if(Array.isArray(childNodes)){
     const resultChildNodes= childNodes.filter((nodeKey: string) => nodeKey !== deleteKey)
-    return resultChildNodes.length===0?undefined:resultChildNodes
+    return restObject(resultChildNodes)
   }else {
     const resultChildNodes= childNodes[parentPropName!]!.filter((nodeKey: string) => nodeKey !== deleteKey)
-    childNodes[parentPropName!]=resultChildNodes
-    resultChildNodes.length===0&&(delete childNodes[parentPropName!])
-    if(Object.keys(childNodes).length===0) return  undefined
-    return childNodes
+    if(resultChildNodes.length===0){
+      delete childNodes[parentPropName!]
+    }else{
+      childNodes[parentPropName!]=resultChildNodes
+    }
+    return restObject(childNodes)
   }
 }
+
+export function getComponentConfig(componentName:string):ComponentConfigTypes{
+  const allComponentConfigs=get(LEGO_BRIDGE,['config','AllComponentConfigs'])
+  if(!allComponentConfigs){
+    error('Component configuration information set not found！! !')
+  }
+  const componentConfig=allComponentConfigs[componentName]
+  if(!componentConfig){
+    warn(`${componentName} configuration information not found！! !`)
+  }
+  return componentConfig
+}
+
+export function isContainer(componentName:string) {
+  const containers=get(LEGO_BRIDGE,['config','containers'])
+  if(!containers){
+    error(`Please configure the container category of the components`)
+  }else {
+   return  containers.includes(componentName)
+  }
+}
+
+export function getComponent(componentName:string) {
+
+}
+export function error(msg:string) {
+    console.error(msg)
+    throw new Error(msg)
+}
+
+export function warn(msg:string){
+  if(LEGO_BRIDGE.warn){
+    LEGO_BRIDGE.warn(msg)
+  }else{
+    console.warn((msg))
+  }
+  return true
+}
+
+export function getNewKey(componentConfigs:ComponentConfigsType) {
+  const lastKey=Object.keys(componentConfigs).pop()
+  return Number(lastKey)+1
+}
+
+export function restObject(obj:any,field?:string) {
+  if(field){
+    delete obj[field]
+  }
+  if(Object.keys(obj).length===0) return undefined
+  return obj
+
+}
+
+
+

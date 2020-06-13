@@ -1,8 +1,12 @@
 import { DragSourceType, DropTargetType, STATE_PROPS, useSelector } from 'brickd-core';
 
 export interface DragDropTypes {
-  dragSource: DragSourceType,
-  dropTarget: DropTargetType
+  dragSource: DragSourceType|null,
+  dropTarget: DropTargetType|null
+}
+
+export interface DragDropStateType extends DragDropTypes{
+  isHidden: boolean,
 }
 
 function dragDropUpdate(prevState: DragDropTypes, nextState: DragDropTypes, key: string) {
@@ -32,12 +36,12 @@ function dragDropUpdate(prevState: DragDropTypes, nextState: DragDropTypes, key:
 
 }
 
-export function useDragDrop(key: string) {
+export function useDragDrop(key: string):DragDropStateType {
   const { dragSource, dropTarget } = useSelector<DragDropTypes, STATE_PROPS>(['dragSource', 'dropTarget'],
     (prevState, nextState) => dragDropUpdate(prevState, nextState, key));
   const {  selectedKey,domTreeKeys } = dropTarget || {};
   const { parentKey, dragKey } = dragSource || {};
-  const isHidden = dragKey === key&&!!parentKey&& !!selectedKey && parentKey !== selectedKey&&!domTreeKeys.includes(parentKey);
+  const isHidden = dragKey === key&&!!parentKey&& !!domTreeKeys && parentKey !== selectedKey&&!domTreeKeys.includes(parentKey);
 
   return { dragSource, dropTarget, isHidden};
 }

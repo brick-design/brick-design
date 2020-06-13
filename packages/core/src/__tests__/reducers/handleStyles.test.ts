@@ -2,6 +2,7 @@ import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { legoState } from '../../store';
 import { ComponentConfigsType, SelectedInfoType, StateType } from '../../types';
+import { ROOT } from '../../utils';
 
 describe('changeStyle', () => {
   const action = { type: ACTION_TYPES.changeStyles };
@@ -16,13 +17,13 @@ describe('changeStyle', () => {
     const prevState: StateType = {
       ...legoState,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
         },
       },
@@ -31,21 +32,21 @@ describe('changeStyle', () => {
       ...action,
       payload: { style: {} },
     });
-    expect(state.componentConfigs.root.props).toEqual({ style: {} });
+    expect(state.componentConfigs[ROOT].props).toEqual({ style: {} });
   });
   test('props!==undefined', () => {
     const prevState: StateType = {
       ...legoState,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         parentKey: '',
         propsConfig: {},
       },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
-          props: {},
+          props:{}
         },
       },
     };
@@ -53,7 +54,7 @@ describe('changeStyle', () => {
       ...action,
       payload: { style: {} },
     });
-    expect(state.componentConfigs.root.props).toEqual({ style: {} });
+    expect(state.componentConfigs[ROOT].props).toEqual({ style: {} });
   });
 });
 describe('resetStyle', () => {
@@ -61,16 +62,15 @@ describe('resetStyle', () => {
   it('selectedInfo===null', () => {
     expect(reducer(legoState, action)).toBe(legoState);
   });
-
   it('重置样式 props===undefined', () => {
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
+      selectedKey: ROOT,
       propsConfig: {},
       domTreeKeys: [],
       parentKey: '',
     };
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a', props: { style: { a: 1 } } },
+      [ROOT]: { componentName: 'a', props: { style: { a: 1 } } },
     };
     const prevState: StateType = {
       ...legoState,
@@ -84,9 +84,8 @@ describe('resetStyle', () => {
       ...prevState,
       undo: [{ componentConfigs }],
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'a',
-          props: {},
         },
       },
     };
@@ -94,14 +93,14 @@ describe('resetStyle', () => {
   });
   it('重置样式 prop!==undefined', () => {
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
+      selectedKey: ROOT,
       propsConfig: {},
       domTreeKeys: [],
-      props: {},
+      props:{style:{}},
       parentKey: '',
     };
     const componentConfigs: ComponentConfigsType = {
-      root: { componentName: 'a', props: { style: { a: 1 } } },
+      [ROOT]: { componentName: 'a', props: { style: { a: 1 } } },
     };
     const prevState: StateType = {
       ...legoState,
@@ -115,9 +114,9 @@ describe('resetStyle', () => {
       ...prevState,
       undo: [{ componentConfigs }],
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'a',
-          props: {},
+          props:{style:{}}
         },
       },
     };

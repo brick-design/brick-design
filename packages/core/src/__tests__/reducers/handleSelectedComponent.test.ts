@@ -4,6 +4,7 @@ import { LEGO_BRIDGE, legoState } from '../../store';
 import { SelectedInfoType, StateType } from '../../types';
 import config from '../configs';
 import { SelectComponentPayload } from '../../actions';
+import { ROOT } from '../../utils';
 
 jest.resetModules();
 beforeAll(() => {
@@ -18,7 +19,7 @@ describe('selectInfo', () => {
     const prevState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
           childNodes: {
             children: ['1'],
@@ -27,9 +28,9 @@ describe('selectInfo', () => {
       },
     };
     const payload: SelectComponentPayload = {
-      key: 'root',
+      key: ROOT,
       parentKey: '',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
       propName: 'test',
     };
 
@@ -37,10 +38,10 @@ describe('selectInfo', () => {
     const expectState: StateType = {
       ...prevState,
       selectedInfo: {
-        selectedKey: 'root',
+        selectedKey: ROOT,
         propsConfig: config.AllComponentConfigs['span'].propsConfig,
         propName: 'test',
-        domTreeKeys: ['root', 'roottest'],
+        domTreeKeys: [ROOT, '0test'],
         parentKey: '',
       },
 
@@ -49,8 +50,8 @@ describe('selectInfo', () => {
   });
   test('选中没有属性节点的组件组件', () => {
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
-      domTreeKeys: ['root', 'roottest'],
+      selectedKey: ROOT,
+      domTreeKeys: [ROOT, '0test'],
       parentKey: '',
       propsConfig: {},
     };
@@ -60,7 +61,7 @@ describe('selectInfo', () => {
       selectedInfo,
       dropTarget: { selectedKey: '', domTreeKeys: [] },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
           childNodes: {
             test: ['1'],
@@ -71,8 +72,8 @@ describe('selectInfo', () => {
     };
     const payload: SelectComponentPayload = {
       key: '1',
-      parentKey: 'root',
-      domTreeKeys: ['root', 'roottest', '1'],
+      parentKey: ROOT,
+      domTreeKeys: [ROOT, '0test', '1'],
       parentPropName: 'test',
     };
     const state = reducer(prevState, { ...action, payload });
@@ -82,8 +83,8 @@ describe('selectInfo', () => {
       dropTarget: null,
       selectedInfo: {
         selectedKey: '1',
-        parentKey: 'root',
-        domTreeKeys: ['root', 'roottest', '1'],
+        parentKey: ROOT,
+        domTreeKeys: [ROOT, '0test', '1'],
         parentPropName: 'test',
         propsConfig: config!.AllComponentConfigs['img'].propsConfig,
       },
@@ -94,8 +95,8 @@ describe('selectInfo', () => {
   test('选中有属性节点的组件', () => {
     const selectedInfo: SelectedInfoType = {
       selectedKey: '1',
-      domTreeKeys: ['root', '1'],
-      parentKey: 'root',
+      domTreeKeys: [ROOT, '1'],
+      parentKey: ROOT,
       propsConfig: {},
     };
     const prevState: StateType = {
@@ -104,7 +105,7 @@ describe('selectInfo', () => {
       selectedInfo,
       dropTarget: { selectedKey: '', domTreeKeys: [] },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
           childNodes: {
             test: ['1'],
@@ -114,9 +115,9 @@ describe('selectInfo', () => {
       },
     };
     const payload: SelectComponentPayload = {
-      key: 'root',
+      key: ROOT,
       parentKey: '',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
       propName: 'children',
     };
     const state = reducer(prevState, { ...action, payload });
@@ -125,8 +126,8 @@ describe('selectInfo', () => {
       undo: [{ selectedInfo }],
       dropTarget: null,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root', 'rootchildren'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT, '0children'],
         propName: 'children',
         parentKey: '',
         propsConfig: LEGO_BRIDGE.config!.AllComponentConfigs['span'].propsConfig,
@@ -138,23 +139,23 @@ describe('selectInfo', () => {
     const prevState: StateType = {
       ...legoState,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         propName: 'children',
         parentKey: '',
         propsConfig: {},
       },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
 
         },
       },
     };
     const payload: SelectComponentPayload = {
-      key: 'root',
+      key: ROOT,
       parentKey: '',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
       propName: 'test',
     };
 
@@ -164,8 +165,8 @@ describe('selectInfo', () => {
   test('如果 selectedInfo.selectedKey===key selectedInfo.propName!==undefined ' +
     'propName===undefined 说明为选中组件跨组件拖拽嵌套', () => {
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
-      domTreeKeys: ['root', 'rootchildren'],
+      selectedKey: ROOT,
+      domTreeKeys: [ROOT, '0children'],
       propName: 'children',
       parentKey: '',
       propsConfig: {},
@@ -175,7 +176,7 @@ describe('selectInfo', () => {
       ...legoState,
       selectedInfo,
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
           childNodes: {
             children: ['1'],
@@ -184,9 +185,9 @@ describe('selectInfo', () => {
       },
     };
     const payload: SelectComponentPayload = {
-      key: 'root',
+      key: ROOT,
       parentKey: 'testKey',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
     };
 
     const state = reducer(prevState, { ...action, payload });
@@ -201,8 +202,8 @@ describe('selectInfo', () => {
   });
   test('如果 selectedInfo.selectedKey===key 并且属性节点不同', () => {
     const selectedInfo: SelectedInfoType = {
-      selectedKey: 'root',
-      domTreeKeys: ['root', 'rootchildren'],
+      selectedKey: ROOT,
+      domTreeKeys: [ROOT, '0children'],
       propName: 'children',
       parentKey: '',
       propsConfig: {},
@@ -211,7 +212,7 @@ describe('selectInfo', () => {
       ...legoState,
       selectedInfo,
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
           childNodes: {
             children: ['1'],
@@ -220,9 +221,9 @@ describe('selectInfo', () => {
       },
     };
     const payload: SelectComponentPayload = {
-      key: 'root',
+      key: ROOT,
       parentKey: '',
-      domTreeKeys: ['root'],
+      domTreeKeys: [ROOT],
       propName: 'test',
     };
 
@@ -232,7 +233,7 @@ describe('selectInfo', () => {
       selectedInfo: {
         ...selectedInfo,
         propName: 'test',
-        domTreeKeys: ['root', 'roottest'],
+        domTreeKeys: [ROOT, '0test'],
       },
 
     };
@@ -251,14 +252,14 @@ describe('清除选中', () => {
     const prevState: StateType = {
       ...legoState,
       selectedInfo: {
-        selectedKey: 'root',
-        domTreeKeys: ['root'],
+        selectedKey: ROOT,
+        domTreeKeys: [ROOT],
         propName: 'children',
         parentKey: '',
         propsConfig: {},
       },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'span',
 
         },
@@ -270,9 +271,9 @@ describe('清除选中', () => {
   test('当选中组件的children为必填非空组件时', () => {
     const prevState: StateType = {
       ...legoState,
-      selectedInfo: { selectedKey: 'root', domTreeKeys: ['root'], parentKey: '', propsConfig: {} },
+      selectedInfo: { selectedKey: ROOT, domTreeKeys: [ROOT], parentKey: '', propsConfig: {} },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'h',
         },
       },
@@ -283,9 +284,9 @@ describe('清除选中', () => {
   test('正常清除', () => {
     const prevState: StateType = {
       ...legoState,
-      selectedInfo: { selectedKey: 'root', domTreeKeys: ['root'], parentKey: '', propsConfig: {} },
+      selectedInfo: { selectedKey: ROOT, domTreeKeys: [ROOT], parentKey: '', propsConfig: {} },
       componentConfigs: {
-        root: {
+        [ROOT]: {
           componentName: 'img',
         },
       },

@@ -17,7 +17,6 @@ describe('初始化 config', () => {
     LegoProvider({ config });
     expect(LEGO_BRIDGE.config).toBe(config);
     expect(LEGO_BRIDGE.store).not.toBeNull();
-    expect(LEGO_BRIDGE.containers).toEqual(expect.arrayContaining(['div']));
   });
   test('测试 store 为单例', () => {
     expect(createLegStore()).toBe(LEGO_BRIDGE.store);

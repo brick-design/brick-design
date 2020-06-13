@@ -3,17 +3,15 @@ import ACTION_TYPES from '../../actions/actionTypes';
 import { DragSourcePayload } from '../../actions';
 import { LEGO_BRIDGE, legoState } from '../../store';
 import config from '../configs';
-import { flattenDeepArray } from '../../utils';
+import {  ROOT } from '../../utils';
 import { ComponentConfigsType, DropTargetType, StateType } from '../../types';
 
 beforeAll(() => {
   LEGO_BRIDGE.config = config;
-  LEGO_BRIDGE.containers = flattenDeepArray(config.CONTAINER_CATEGORY);
 });
 
 afterAll(() => {
   LEGO_BRIDGE.config = undefined;
-  LEGO_BRIDGE.containers = null;
 });
 
 
@@ -22,16 +20,16 @@ describe('drag', () => {
   it('当componentConfigs没有root节点拖拽容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'a' };
     const state = reducer(legoState, { ...action, payload });
-    expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'a' } } });
+    expect(state.dragSource).toEqual({ vDOMCollection: { [ROOT]: { componentName: 'a' } } });
   });
   it('当componentConfigs没有root节点拖拽非容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'img' };
     const state = reducer(legoState, { ...action, payload });
-    expect(state.dragSource).toEqual({ vDOMCollection: { root: { componentName: 'img' } } });
+    expect(state.dragSource).toEqual({ vDOMCollection: { [ROOT]: { componentName: 'img' } } });
   });
   it('当componentConfigs有root节点', () => {
     const payload: DragSourcePayload = { componentName: 'span' };
-    const componentConfigs: ComponentConfigsType = { root: { componentName: 'a' } };
+    const componentConfigs: ComponentConfigsType = { [ROOT]: { componentName: 'a' } };
     const prevState: StateType = { ...legoState, componentConfigs };
 
     const state = reducer(prevState, { ...action, payload });
@@ -43,34 +41,34 @@ describe('drag', () => {
     const prevState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'a', childNodes: ['1'] },
+        [ROOT]: { componentName: 'a', childNodes: ['1'] },
         1: { componentName: 'a', },
       },
     };
-    const payload: DragSourcePayload = { dragKey: '1', parentKey: 'root' };
+    const payload: DragSourcePayload = { dragKey: '1', parentKey: ROOT };
     const nextState = reducer(prevState, { ...action, payload });
     expect(nextState.dragSource?.dragKey).toBe('1');
 
   });
-  it('拖拽添加模板配置信息', () => {
+  it('拖拽添加模板配置信息带有属性配置表', () => {
     const prevState: StateType = {
       ...legoState,
       componentConfigs: {
-        root: { componentName: 'a' },
+        [ROOT]: { componentName: 'a' },
       },
     };
     const payload: DragSourcePayload = {
       vDOMCollection: {
-        root: { componentName: 'a', childNodes: ['1'] },
+        [ROOT]: { componentName: 'a', childNodes: ['1'] },
         1: { componentName: 'span', childNodes: { children: ['2'], test: ['3'] } },
         2: { componentName: 'img' },
         3: { componentName: 'a', childNodes: ['4'] },
         4: { componentName: 'img' },
       }, propsConfigCollection: {
-        'root': {},
+        [ROOT]: {},
         2: {},
         3: {},
-        4: '2',
+        4: {},
       },
     };
     const state = reducer(prevState, { ...action, payload });
@@ -79,6 +77,41 @@ describe('drag', () => {
       expect.arrayContaining(Object.keys(state.propsConfigSheet)),
     );
 
+  });
+  it('拖拽添加模板配置信息不带属性配置表', () => {
+    const componentConfigs={
+      [ROOT]: { componentName: 'a' },
+    }
+    const prevState: StateType = {
+      ...legoState,
+      componentConfigs,
+      undo:[],
+    };
+    const vDOMCollection= {
+      [ROOT]: { componentName: 'a', childNodes: ['1'] },
+      1: { componentName: 'span', childNodes: { children: ['2'], test: ['3'] } },
+      2: { componentName: 'img' },
+      3: { componentName: 'a', childNodes: ['4'] },
+      4: { componentName: 'img' },
+    }
+    const payload: DragSourcePayload = {
+      vDOMCollection
+    };
+    const state = reducer(prevState, { ...action, payload });
+    const expectState:StateType={
+      ...prevState,
+      undo:[{componentConfigs,propsConfigSheet:{}}],
+      componentConfigs:{
+        [ROOT]: { componentName: 'a'},
+        1: { componentName: 'a', childNodes: ['2'] },
+        2: { componentName: 'span', childNodes: { children: ['3'], test: ['4'] } },
+        3: { componentName: 'img' },
+        4: { componentName: 'a', childNodes: ['5'] },
+        5: { componentName: 'img' }
+      },
+      dragSource:{vDOMCollection,dragKey:'1'}
+    }
+    expect(state).toEqual(expectState);
   });
 });
 
@@ -115,7 +148,7 @@ describe('getDropTarget', () => {
   // });
 
   it('当drop组件为容器组件', () => {
-    const payload: DropTargetType = { selectedKey: '1', domTreeKeys: ['root'] };
+    const payload: DropTargetType = { selectedKey: '1', domTreeKeys: [ROOT] };
     const nextState = reducer(legoState, { ...action, payload });
     expect(nextState).toEqual({ ...legoState, dropTarget: payload, hoverKey: '1' });
   });
@@ -126,8 +159,8 @@ describe('clearDropTarget', () => {
   it('清除DropTarget', () => {
     const prevState: StateType = {
       ...legoState,
-      dropTarget: { selectedKey: 'root', domTreeKeys: [] },
-      hoverKey: 'root',
+      dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
+      hoverKey: ROOT,
     };
     const state = reducer(prevState, action);
     expect(state).toEqual(legoState);

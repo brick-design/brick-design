@@ -23,7 +23,9 @@
     "rc-animate": "^2.10.2",
     "re-resizable": "^6.1.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "sortablejs": "^1.10.2"
+
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",

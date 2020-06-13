@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react';
 import SortTree from './SortTree';
 import styles from './index.less';
-import { clearHovered, ComponentConfigsType, useSelector } from 'brickd-core';
+import { clearHovered, ComponentConfigsType, ROOT, STATE_PROPS, useSelector } from 'brickd-core';
 import { onDragover, onDrop } from 'brickd';
 
 interface BrickTreeProps {
   className?:string
 }
 export function BrickTree(props:BrickTreeProps) {
-  const {componentConfigs}=useSelector<{componentConfigs:ComponentConfigsType}>(['componentConfigs'],(prevState,nextState)=>{
-    const {componentConfigs:{root:prevRoot}}=prevState
-    const {componentConfigs:{root}}=nextState
+  const {componentConfigs}=useSelector<{componentConfigs:ComponentConfigsType},STATE_PROPS>(['componentConfigs'],
+    (prevState,nextState)=>{
+    const {componentConfigs:{[ROOT]:prevRoot}}=prevState
+    const {componentConfigs:{[ROOT]:root}}=nextState
     return !!(!prevRoot && root);
 
   })
@@ -19,17 +20,17 @@ export function BrickTree(props:BrickTreeProps) {
     clearHovered()
   }, []);
 
-  if(!componentConfigs.root) return null
+  if(!componentConfigs[ROOT]) return null
   const {className}=props
   return (
     <div
         onDrop={onDrop}
-         onDragOver={onDragover}
+        onDragOver={onDragover}
         onMouseLeave={onMouseLeave}
          className={`${styles['sort-container']} ${className}`}>
         <SortTree disabled
-                  childNodes={['root']}
-                  specialProps={{key:'root',domTreeKeys:[],parentKey:''}}
+                  childNodes={[ROOT]}
+                  specialProps={{key:ROOT,domTreeKeys:[],parentKey:''}}
                   componentName={''}
         />
     </div>

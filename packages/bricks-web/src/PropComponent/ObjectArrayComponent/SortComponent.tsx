@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../index.less';
 import each from 'lodash/each';
-import map from 'lodash/map'
+import map from 'lodash/map';
 import { PaneType } from './ObjectArrayComponent';
 import Sortable from '../../components/ReactSortable';
 

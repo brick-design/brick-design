@@ -31,6 +31,7 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
   propsConfig: PropsConfigType
 }
 
+
 export interface DragSourceType extends Partial<ParentNodeInfo> {
   vDOMCollection?: ComponentConfigsType,
   dragKey?: string,
@@ -55,12 +56,14 @@ export interface PropsConfigSheetALL {
 }
 
 export interface PropsConfigSheetItem extends Omit<PropInfoType, 'childPropsConfig'> {
-  childPropsConfig?: PropsConfigSheetALL | PropsConfigSheetALL[]
+  childPropsConfig?: PropsConfigSheetALL | PropsConfigSheetALL[],
+
 }
 
 
 export interface PropsConfigSheetType {
-  [componentKey: string]: PropsConfigSheetALL | string
+  [componentKey: string]: PropsConfigSheetALL,
+
 }
 
 export interface ComponentConfigsType {

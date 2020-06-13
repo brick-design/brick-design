@@ -1,11 +1,19 @@
 import { StateType } from '../types';
-import { copyConfig, deleteChildNodes, deleteChildNodesKey, getLocation, HandleInfoType } from '../utils';
+import {
+  copyConfig,
+  deleteChildNodes,
+  deleteChildNodesKey,
+  getComponentConfig,
+  getLocation,
+  getNewKey,
+  HandleInfoType, restObject,
+  ROOT,
+  warn,
+} from '../utils';
 import get from 'lodash/get';
 import update from 'lodash/update';
 import { produce } from 'immer';
-import uuid from 'uuid';
 import { LayoutSortPayload } from '../actions';
-import { LEGO_BRIDGE } from '../store';
 
 /**
  * 往画板或者容器组件添加组件
@@ -23,12 +31,35 @@ export function addComponent(state: StateType): StateType {
   /**
    * 如果没有拖拽的组件不做添加动作, 如果没有
    */
-  const { selectedKey, propName, domTreeKeys } = selectedInfo || dropTarget || {};
   if (!dragSource) return state;
   const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
+  /**
+   * 如果没有root根节点，新添加的组件添加到root
+   */
+  if (!componentConfigs[ROOT]) {
+    undo.push({ componentConfigs });
+    redo.length = 0;
+    return {
+      ...state,
+      componentConfigs: vDOMCollection!,
+      dragSource: null,
+      dropTarget:null,
+      undo,
+      redo,
+    };
+  }
+  const { selectedKey, propName, domTreeKeys } = selectedInfo || dropTarget||{};
 
-  if (componentConfigs.root && !selectedKey){
-    if(vDOMCollection){
+  /**
+   * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
+   * 添加之前的页面配置
+   */
+  if (!selectedKey){
+    /**
+     * 如果有parentKey说明是拖拽的是新添加的组件，
+     * 返回原先的state状态
+     */
+    if(!parentKey){
       return { ...state, ...(undo.pop()), dragSource: null };
     }else {
       return {...state,dragSource:null}
@@ -39,58 +70,37 @@ export function addComponent(state: StateType): StateType {
    * 当拖拽的父key与drop目标key一致说明未移动
    * 当拖拽的key包含在drop目标的domTreeKeys,说明拖拽组件是目标组件的父组件或者是自身
    */
-  if (parentKey && parentKey === selectedKey || domTreeKeys && domTreeKeys.includes(dragKey!)) return {...state,dragSource:null};
-
-  if (!componentConfigs.root) {
-    undo.push({ componentConfigs });
-    redo.length = 0;
-    return {
-      ...state,
-      componentConfigs: vDOMCollection!,
-      dragSource: null,
-      undo,
-      redo,
-    };
+  if (parentKey === selectedKey || domTreeKeys!.includes(dragKey!)){
+    return {...state,dragSource:null,dropTarget:null};
   }
+
+
 
   /**
    * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
    */
-  const dragComponentName = get(componentConfigs[dragKey!], 'componentName');
-  const dropComponentName = get(componentConfigs[selectedKey!], 'componentName');
-  const { fatherNodesRule } = get(LEGO_BRIDGE.config!.AllComponentConfigs, dragComponentName);
-  const { nodePropsConfig, childNodesRule } = get(LEGO_BRIDGE.config!.AllComponentConfigs, dropComponentName);
+  const dragComponentName=componentConfigs[dragKey!].componentName
+  const dropComponentName=componentConfigs[selectedKey!].componentName
+  const { fatherNodesRule } = getComponentConfig(dragComponentName);
+  const { nodePropsConfig, childNodesRule } = getComponentConfig(dropComponentName);
 
   /**
    * 子组件约束限制，减少不必要的组件错误嵌套
    */
   const childRules = propName ? nodePropsConfig![propName].childNodesRule : childNodesRule;
-  if (childRules) {
-    if (!childRules.includes(dragComponentName)) {
-      const msg = `${propName || dropComponentName}:只允许拖拽${childRules.toString()}组件`;
-      if (LEGO_BRIDGE.errorCallback) {
-        LEGO_BRIDGE.errorCallback(msg);
-        return state;
-      } else {
-        throw new Error(msg);
-
-      }
-    }
+  if (childRules&&!childRules.includes(dragComponentName)) {
+      warn(`${propName || dropComponentName}:only allow drag and drop to add${childRules.toString()}`)
+      return {...state,dropTarget:null,dragSource:null}
   }
   /**
    * 父组件约束限制，减少不必要的组件错误嵌套
    */
   if (fatherNodesRule && !fatherNodesRule.includes(propName ? `${dropComponentName}.${propName}` : `${dropComponentName}`)) {
-    const msg = `${dragComponentName}:只允许放入${fatherNodesRule.toString()}组件或者属性中`;
-    if (LEGO_BRIDGE.errorCallback) {
-      LEGO_BRIDGE.errorCallback(msg);
-      return state;
-    } else {
-      throw new Error(msg);
-    }
+    warn(`${dragComponentName}:Only allowed as a child node or attribute node of${fatherNodesRule.toString()}`)
+    return {...state,dropTarget:null,dragSource:null}
   }
 
-  undo.push({ componentConfigs });
+  parentKey&&undo.push({ componentConfigs });
   redo.length = 0;
   return {
     ...state,
@@ -121,18 +131,23 @@ export function copyComponent(state: StateType): StateType {
   /**
    * 未选中组件不做任何操作
    */
-  if (!selectedInfo || selectedInfo.selectedKey === 'root') {
+  if (!selectedInfo) {
+    warn('Please select the node you want to copy')
     return state;
   }
+  if(selectedInfo.selectedKey === ROOT){
+    warn('Prohibit copying root node')
+    return state
+  }
   const { selectedKey, parentPropName, parentKey } = selectedInfo;
-  undo.push({ componentConfigs, propsConfigSheet });
   const handleState: HandleInfoType = { componentConfigs, propsConfigSheet };
+  undo.push({ componentConfigs, propsConfigSheet });
   redo.length = 0;
-  const newKey = uuid();
+  const newKey = getNewKey(componentConfigs);
   return {
     ...state,
-    ...produce<HandleInfoType>(handleState, oldState => {
-      update(oldState.componentConfigs, getLocation(parentKey!, parentPropName), childNodes => [...childNodes, newKey]);
+    ...produce(handleState, oldState => {
+      update(oldState.componentConfigs, getLocation(parentKey!, parentPropName), childNodes => [...childNodes, `${newKey}`]);
       copyConfig(oldState, selectedKey, newKey);
     }),
     undo,
@@ -146,7 +161,7 @@ export function copyComponent(state: StateType): StateType {
  * @param payload
  * @returns {{componentConfigs: *}}
  */
-export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload) {
+export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload):StateType {
   const { sortKeys, parentKey, parentPropName, dragInfo } = payload;
   const { undo, redo, componentConfigs } = state;
   undo.push({ componentConfigs });
@@ -155,6 +170,9 @@ export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload)
     ...state,
     componentConfigs: produce(componentConfigs, oldConfigs => {
       update(oldConfigs, getLocation(parentKey, parentPropName), () => sortKeys);
+      /**
+       * dragInfo有值说明为跨组件排序，需要删除拖拽组件原先父组件中的引用
+       */
       if (dragInfo) {
         const { key, parentKey, parentPropName } = dragInfo;
         update(oldConfigs, getLocation(parentKey), (childNodes) => deleteChildNodesKey(childNodes,key,parentPropName));
@@ -162,7 +180,7 @@ export function onLayoutSortChange(state: StateType, payload: LayoutSortPayload)
     }),
     undo,
     redo,
-  } as StateType;
+  }
 }
 
 /**
@@ -176,6 +194,7 @@ export function deleteComponent(state: StateType): StateType {
    * 未选中组件将不做任何操作
    */
   if (!selectedInfo) {
+    warn('Please select the components you want to delete')
     return state;
   }
   const { selectedKey, parentKey, parentPropName } = selectedInfo;
@@ -186,12 +205,19 @@ export function deleteComponent(state: StateType): StateType {
   return {
     ...state,
     ...produce(handleState, oldState => {
-      if (selectedKey === 'root') {
+      /**
+       * 如果选中的是根节点说明要删除整个页面
+       */
+      if (selectedKey === ROOT) {
         oldState.componentConfigs = {};
         oldState.propsConfigSheet = {};
       } else {
+        // 删除选中组件在其父组件中的引用
         update(oldState.componentConfigs, getLocation(parentKey), childNodes => deleteChildNodesKey(childNodes,selectedKey,parentPropName));
         const childNodes = oldState.componentConfigs[selectedKey].childNodes;
+        /**
+         * 如果childNodes有值，就遍历childNodes删除其中的子节点
+         */
         if (childNodes) {
           deleteChildNodes(oldState, childNodes);
         }
@@ -214,10 +240,12 @@ export function deleteComponent(state: StateType): StateType {
 export function clearChildNodes(state: StateType): StateType {
   const { componentConfigs, selectedInfo, undo, redo, propsConfigSheet } = state;
   if (!selectedInfo) {
-    //todo
+    warn('Please select the component or property you want to clear the child nodes')
     return state;
   }
   const { selectedKey, propName } = selectedInfo;
+  const childNodes=get(componentConfigs,getLocation(selectedKey))
+  if(!childNodes) return  state
   undo.push({ componentConfigs, propsConfigSheet });
   const handleState: HandleInfoType = { componentConfigs, propsConfigSheet };
 
@@ -225,18 +253,17 @@ export function clearChildNodes(state: StateType): StateType {
   return {
     ...state,
     ...produce(handleState, oldState => {
-      const childNodes=get(oldState.componentConfigs,getLocation(selectedKey))
-      if(childNodes){
         deleteChildNodes(oldState, childNodes,propName);
         update(oldState.componentConfigs, getLocation(selectedKey), (childNodes) => {
-          if(Array.isArray(childNodes)||!propName){
+          /**
+           * 如果 没有propName说明要清除组件的所有子节点
+           */
+          if(!propName){
             return undefined
           }else {
-            delete childNodes[propName]
-            return Object.keys(childNodes).length===0?undefined:childNodes
+            return restObject(childNodes,propName)
           }
         });
-      }
     }),
     undo,
     redo,

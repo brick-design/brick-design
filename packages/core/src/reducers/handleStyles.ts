@@ -1,6 +1,7 @@
 import { StateType } from '../types';
 import produce from 'immer';
 import { stylePayload } from '../actions';
+import { restObject } from '../utils';
 
 /**
  * 样式改变时调用
@@ -39,15 +40,13 @@ export function resetStyles(state: StateType): StateType {
     ...state,
     componentConfigs: produce(componentConfigs, oldConfigs => {
       const config = oldConfigs[selectedKey];
-      if (props) {
+      if (props&&props.style) {
         config.props.style = props.style;
       } else {
-        delete config.props.style;
+        config.props=restObject(config.props,'style')
       }
     }),
     undo,
     redo,
   };
-
-
 }

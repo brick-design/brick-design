@@ -15,7 +15,6 @@ import {
   deletePropsConfig,
   DeletePropsConfigPayload,
   DragSourcePayload,
-  DropTargetPayload,
   getDragSource,
   getDropTarget,
   LayoutSortPayload,
@@ -31,16 +30,11 @@ import {
   undo,
 } from '../../actions';
 import ACTION_TYPES from '../../actions/actionTypes';
-import { BrickAction, PlatformInfoType } from '../../types';
+import { BrickAction, DropTargetType, PlatformInfoType } from '../../types';
 
-jest.mock('../../store', () =>
-  ({
-    LEGO_BRIDGE: {
-      store: {
-        dispatch: (action: BrickAction) => action,
-      },
-    },
-  }));
+jest.mock('../../store',()=>({
+  createActions:(action:BrickAction)=>action
+}))
 
 describe('actions test', () => {
   test('test actions', () => {
@@ -54,7 +48,7 @@ describe('actions test', () => {
     //dragDrop
     const dragPayload: DragSourcePayload = { dragKey: '', parentKey: '' };
     expect(getDragSource(dragPayload)).toEqual({ type: ACTION_TYPES.getDragSource, payload: dragPayload });
-    const dropPayload: DropTargetPayload = { selectedKey: '', domTreeKeys: [] };
+    const dropPayload: DropTargetType = { selectedKey: '', domTreeKeys: [] };
     expect(getDropTarget(dropPayload)).toEqual({ type: ACTION_TYPES.getDropTarget, payload: dropPayload });
     expect(clearDropTarget()).toEqual({ type: ACTION_TYPES.clearDropTarget });
 

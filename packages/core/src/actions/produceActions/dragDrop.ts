@@ -1,17 +1,17 @@
 import ACTION_TYPES from '../actionTypes';
 import { DragSourceType, DropTargetType } from '../../types';
-import { LEGO_BRIDGE } from '../../store';
+import { createActions } from '../../store';
 
 export type DragSourcePayload = Partial<DragSourceType> & { componentName?: string, defaultProps?: any }
-export const getDragSource = (payload: DragSourcePayload) => LEGO_BRIDGE.store!.dispatch({
+export const getDragSource = (payload: DragSourcePayload) => createActions({
   type: ACTION_TYPES.getDragSource,
   payload,
 });
-export const getDropTarget = (payload: DropTargetType) => LEGO_BRIDGE.store!.dispatch({
+export const getDropTarget = (payload: DropTargetType) => createActions({
   type: ACTION_TYPES.getDropTarget,
   payload,
 });
 
-export const clearDropTarget = () => LEGO_BRIDGE.store!.dispatch({
+export const clearDropTarget = () => createActions({
   type: ACTION_TYPES.clearDropTarget,
 });

@@ -1,103 +1,104 @@
 import React from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { LegoProvider, StateType,LEGO_BRIDGE } from 'brickd-core';
-import { useChildNodes, UseChildNodeType } from '../../hooks/useChildNodes';
+import { addComponent, getDropTarget, LEGO_BRIDGE, LegoProvider, ROOT } from 'brickd-core';
 import config from '../configs';
+import { DragDropStateType, DragDropTypes, useDragDrop } from '../../hooks/useDragDrop';
+
 afterEach(()=>{
   LEGO_BRIDGE.config=undefined;
   LEGO_BRIDGE.store=null
 })
-describe('useChildNodes',()=>{
+describe('useDragDrop',()=>{
 
-  it('childNodes===undefined',()=>{
-    const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
-      componentName:'span'
-    }
-    renderHook(()=>useChildNodes(mockData),{
+  it('当没有拖拽组件时',()=>{
+
+  const {result}= renderHook(()=>useDragDrop(ROOT),{
       // eslint-disable-next-line react/display-name
       wrapper:props=><LegoProvider {...props} config={config}/>
     })
-
-    // expect(result.current)
+    const expectState:DragDropStateType={
+      dragSource:null,
+      dropTarget:null,
+      isHidden:false
+    }
+    expect(result.current).toEqual(expectState)
   })
 
-  it('childNodes is array and isRequired',()=>{
-    const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
-      componentName:'h',
-      childNodes:[]
-    }
-
-    const initState:Partial<StateType>={
-      componentConfigs:{root:{
-          componentName:'h'
-        }}
-    }
-
-    renderHook(()=>useChildNodes(mockData),{
-      // eslint-disable-next-line react/display-name
-      wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
-    })
-
-    // expect(result.current)
-  })
-
-  it('childNodes is object and isRequired',()=>{
-    const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
-      componentName:'span',
-      childNodes:{
-        children:[],
-        test:[]
+  describe('拖拽组件不是当前组件时,即dragKey!==key 触发addComponent添加组件action',()=>{
+    it('当拖拽组件drop的目标是其父组件时',()=>{
+      const initState:DragDropTypes={
+        dragSource:{dragKey:'1',parentKey:ROOT},
+        dropTarget:{selectedKey:ROOT,domTreeKeys:[]},
       }
-    }
-    const initState:Partial<StateType>={
-      componentConfigs:{
-        root:{
-          componentName:'span'
-        }
+
+      const {result}=renderHook(()=>useDragDrop('2'),{
+        // eslint-disable-next-line react/display-name
+        wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
+      })
+
+      act(()=>{
+        addComponent()
+      })
+      expect(result.current).toEqual({dragSource:null,dropTarget:null,isHidden:false})
+    })
+
+    it('当拖拽组件drop的目标不是其父组件时',()=>{
+      const initState:DragDropTypes={
+        dragSource:{dragKey:'1',parentKey:ROOT},
+        dropTarget:{selectedKey:'2',domTreeKeys:[],},
       }
-    }
 
-    renderHook(()=>useChildNodes(mockData),{
-      // eslint-disable-next-line react/display-name
-      wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
+      const {result}=renderHook(()=>useDragDrop('3'),{
+        // eslint-disable-next-line react/display-name
+        wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
+      })
+      act(()=>{
+        addComponent()
+      })
+      expect(result.current).toEqual({dragSource:null,dropTarget:null,isHidden:false})
     })
-
-    // expect(result.current)
   })
-
-  it('childNodes is array',()=>{
-    const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
-      componentName:'a',
-      childNodes:['1']
-    }
-
-    renderHook(()=>useChildNodes(mockData),{
-      // eslint-disable-next-line react/display-name
-      wrapper:props=><LegoProvider {...props} config={config}/>
-    })
-
-    // expect(result.current)
-  })
-  it('childNodes is object',()=>{
-    const mockData:UseChildNodeType={
-      specialProps:{key:'root',parentKey:'',domTreeKeys:['root']},
-      componentName:'span',
-      childNodes:{
-        children:['1'],
-        test:[]
+  describe('拖拽组件为当前组件时,即dragKey===key',()=>{
+    it('当拖拽组件drop的目标是其父组件时',()=>{
+      const initState:DragDropTypes={
+        dragSource:{dragKey:'1',parentKey:ROOT},
+        dropTarget:{selectedKey:ROOT,domTreeKeys:[]},
       }
-    }
-
-    renderHook(()=>useChildNodes(mockData),{
-      // eslint-disable-next-line react/display-name
-      wrapper:props=><LegoProvider {...props} config={config}/>
+      const {result}=renderHook(()=>useDragDrop('1'),{
+        // eslint-disable-next-line react/display-name
+        wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
+      })
+      act(()=>{addComponent()})
+      expect(result.current).toEqual({dragSource:null,dropTarget:null,isHidden:false})
     })
+    it('当拖拽组件drop的目标不是其父组件时',()=>{
+      const initState:DragDropTypes={
+        dragSource:{dragKey:'1',parentKey:'2'},
+        dropTarget:{selectedKey:'2',domTreeKeys:[ROOT,'2'],},
+      }
+      const {result}=renderHook(()=>useDragDrop('1'),{
+        // eslint-disable-next-line react/display-name
+        wrapper:props=><LegoProvider {...props} initState={initState} config={config}/>
+      })
 
-    // expect(result.current)
+      /**
+       * drop目标是父组件时
+       */
+      expect(result.current).toEqual({...initState,isHidden:false})
+      /**
+       * 更改drop目标为其他组件不是drag组件的父组件 并且domTreeKeys不包含parentKey
+       */
+      const dropTarget2={selectedKey:'3',domTreeKeys:[ROOT,'3']}
+      act(()=>{getDropTarget(dropTarget2)})
+      expect(result.current).toEqual({...initState,dropTarget:dropTarget2,isHidden:true})
+      /**
+       * 更改drop目标为其他组件不是drag组件的父组件 但是domTreeKeys包含parentKey
+       */
+      const dropTarget1={selectedKey:'4',domTreeKeys:[ROOT,'2','4']}
+      act(()=>{getDropTarget(dropTarget1)})
+      expect(result.current).toEqual({...initState,dropTarget:dropTarget1,isHidden:false})
+
+
+    })
   })
-
 })

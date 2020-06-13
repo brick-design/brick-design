@@ -3,7 +3,7 @@ import { merge } from 'lodash';
 import { StateType } from '../types';
 import { SelectComponentPayload } from '../actions';
 import { LEGO_BRIDGE } from '../store';
-import { handleRequiredHasChild } from '../utils';
+import { getComponentConfig, handleRequiredHasChild } from '../utils';
 import produce from 'immer';
 
 /**
@@ -47,7 +47,7 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
 
   propName && domTreeKeys.push(`${key}${propName}`);
   const { props, componentName } = componentConfigs[key];
-  const { propsConfig } = get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName);
+  const { propsConfig } = getComponentConfig(componentName);
   undo.push({ selectedInfo });
   redo.length = 0;
   return {

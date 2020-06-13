@@ -1,15 +1,16 @@
-import {PROPS_TYPES} from 'brickd-core'
-import {Switch,InputNumber} from 'antd'
+import { PROPS_TYPES } from 'brickd-core';
+import { InputNumber, Switch } from 'antd';
 import {
-  ObjectComponent,
-  ObjectArrayComponent,
-  StringComponent,
-  FunctionComponent,
-  NumberArray,
-  StringArray,
   EnumComponent,
+  FunctionComponent,
   JsonTextArea,
+  NumberArray,
+  ObjectArrayComponent,
+  ObjectComponent,
+  StringArray,
+  StringComponent,
 } from './PropComponent';
+
 export * from './BrickTree'
 export {default as BrickPreview} from './BrickPreview'
 export * from './PropComponent'

@@ -5,9 +5,10 @@ import { formatSpecialProps } from '../utils';
 import {
   ChildNodesType,
   clearDropTarget,
-  getAddPropsConfig,
+  getComponentConfig,
   LEGO_BRIDGE,
-  produce, PropsNodeType,
+  produce,
+  PropsNodeType,
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';
@@ -52,7 +53,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
   const isHovered = useHover(key);
   const { selectedDomKeys, isSelected } = useSelect(specialProps);
-  const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => get(LEGO_BRIDGE.config!.AllComponentConfigs, componentName), []);
+  const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => getComponentConfig(componentName), []);
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
       let propName;
@@ -116,7 +117,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       }),
       ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes!==children, isDragAddChild),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
-        merge(oldPropsConfig, getAddPropsConfig(propsConfigSheet, key));
+        merge(oldPropsConfig, propsConfigSheet[key]);
       })),
       draggable: true,
       /**

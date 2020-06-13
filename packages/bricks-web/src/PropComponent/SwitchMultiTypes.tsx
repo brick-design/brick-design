@@ -13,7 +13,7 @@ import get from 'lodash/get';
 import keys from 'lodash/keys';
 import { FormComponentProps } from 'antd/lib/form';
 import { PROPS_TYPES, PropsConfigType } from 'brickd-core';
-import {TYPES_TO_COMPONENT} from '../index'
+import { TYPES_TO_COMPONENT } from '../index';
 
 const FormItem = Form.Item;
 
