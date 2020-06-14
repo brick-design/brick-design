@@ -11,9 +11,10 @@ import {
 import ReactDOM from 'react-dom';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
-import { iframeSrcDoc } from './utils';
+import { getIframe, iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
-
+import {ActionSheet} from './components/ActionSheet';
+import {Guidelines} from './components/Guidelines';
 export * from './common/events';
 
 const onIframeLoad = (divContainer: any, designPage: any) => {
@@ -25,14 +26,14 @@ const onIframeLoad = (divContainer: any, designPage: any) => {
   componentMount(designPage,divContainer)
 };
 
-const getIframe=():any=>{
-  return  document.getElementById('dnd-iframe');
-}
+
 
 const componentMount=(designPage:any,divContainer:any)=>{
   ReactDOM.render(
     <LegoProvider>
       {designPage}
+      <ActionSheet/>
+      <Guidelines/>
     </LegoProvider>
   , divContainer.current);
 }

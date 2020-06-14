@@ -54,3 +54,7 @@ export const iframeSrcDoc = `<!DOCTYPE html>
 </body>
 </html>
 `;
+
+export const getIframe=():any=>{
+  return  document.getElementById('dnd-iframe');
+}

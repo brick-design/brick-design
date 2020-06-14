@@ -1,5 +1,5 @@
 import {
-  addComponent,
+  addComponent, clearHovered,
   clearSelectedStatus,
   getDragSource,
   getDropTarget,
@@ -29,11 +29,16 @@ export function handleSelectedStatus(
  * @param event
  * @param key
  */
-export function onMouseOver(event: Event, key: string) {
+export function onMouseOver(event: Event, key: string,isSelected:boolean) {
   event.stopPropagation();
-  overTarget({
-    hoverKey: key,
-  });
+  if(isSelected){
+    clearHovered()
+  }else {
+    overTarget({
+      hoverKey: key,
+    });
+  }
+
 }
 
 /**

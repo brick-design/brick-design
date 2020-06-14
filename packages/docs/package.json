@@ -11,9 +11,9 @@
   "dependencies": {
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
-    "brickd": "1.0.0-alpha.2",
-    "brickd-core": "1.0.0-alpha.1",
-    "bricks-web": "1.0.0-alpha.2",
+    "brickd": "1.0.0-alpha.3",
+    "brickd-core": "1.0.0-alpha.3",
+    "bricks-web": "1.0.0-alpha.3",
     "classnames": "^2.2.6",
     "dumi": "^1.0.25",
     "highlight.js": "^9.17.1",

@@ -10,7 +10,7 @@ import styles from './index.less';
 import { filterProps } from '../../utils';
 import {SwitchMultiTypes} from 'bricks-web';
 import { FormComponentProps } from 'antd/lib/form';
-import { PropInfoType, PROPS_TYPES, PropsSettingType, SelectedInfoType, submitProps } from 'brickd-core';
+import { changeProps, PropInfoType, PROPS_TYPES, SelectedInfoType } from 'brickd-core';
 
 
 const FormItem = Form.Item;
@@ -91,7 +91,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
   const submitPropsInfo = useCallback((e: any) => {
     e.preventDefault();
     validateFields((err, values) => {
-      submitProps({
+      changeProps({
         props: filterProps(values)
       })
 

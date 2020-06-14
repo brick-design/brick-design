@@ -1,30 +1,40 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './index.less';
 import configs from './configs';
-import { STATE_PROPS, useSelector } from 'brickd-core';
+import { SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
+import { getIframe } from '../../utils';
+import { hoverClassTarget, selectClassTarget } from '../../common/constants';
 
-type selectState={
-  hoverKey:string|null
+type SelectState={
+  selectedInfo:SelectedInfoType|null
+}
+
+const controlUpdate=(prevState:SelectState,nextState:SelectState)=>{
+  const {selectedKey}=nextState.selectedInfo||{}
+  const {selectedKey:prevSelectedKey}=prevState.selectedInfo||{}
+  return prevSelectedKey!==selectedKey
 }
 export function ActionSheet() {
   const actionsRef=useRef<any>()
- const {hoverKey}=useSelector<selectState,STATE_PROPS>(['hoverKey'])
-  if(!hoverKey) return null
-  const iframe:any=document.getElementById('dnd-iframe')
-  if(iframe) {
- const node= iframe.documentElement.getElementsByClassName('hover-outline')
-   const {x,y,height,width,left,right,top,bottom}=node.getBoundingClientRect()
-    actionsRef.current.style={
-      top,
-      left
+ const {selectedInfo}=useSelector<SelectState,STATE_PROPS>(['selectedInfo'],controlUpdate)
+  useEffect(()=>{
+    const {contentDocument}=getIframe()
+    if(contentDocument&&actionsRef.current){
+      const node= contentDocument.getElementsByClassName(selectClassTarget)[0]
+      if(node){
+        const {left,top}=node.getBoundingClientRect()
+        actionsRef.current.style.top=`${top}px`
+        actionsRef.current.style.left=`${left}px`
+      }
     }
+  },[selectedInfo])
 
-  }
-    return (<div className={styles['container']}  ref={actionsRef}>
+    return (<div  className={selectedInfo?styles['container']:styles['guide-hidden']}  ref={actionsRef}>
         {configs.map((config,index)=>{
           const {icon,action}=config
-          return <div key={index}/>
+          return (<div className={styles['action-btn']} onClick={action} key={index}>
+            {icon}
+          </div>)
         })}
-      </div>
-      )
+      </div>)
 }

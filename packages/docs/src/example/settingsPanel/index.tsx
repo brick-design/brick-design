@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { Tabs } from 'antd/lib/index';
 import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
-import { ComponentConfigsType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
+import {  SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import { BrickTree } from 'bricks-web';
 import styles from '../index.less'
 
 const { TabPane } = Tabs;
 type SettingPanelType={
-  componentConfigs:ComponentConfigsType,
   selectedInfo:SelectedInfoType
 }
 function SettingPanel() {
-const {componentConfigs,selectedInfo}=useSelector<SettingPanelType,STATE_PROPS>(['componentConfigs', 'selectedInfo'])
+const {selectedInfo}=useSelector<SettingPanelType,STATE_PROPS>(['selectedInfo'])
   const [activeKey, setActiveKey] = useState('1');
-const {props:selectProps}=selectedInfo?componentConfigs[selectedInfo.selectedKey]:{}
+const {props:selectProps}=selectedInfo||{}
   return (
     <Tabs
       onChange={(activeKey: any) => setActiveKey(activeKey)}

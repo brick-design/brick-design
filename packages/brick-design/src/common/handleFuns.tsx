@@ -18,6 +18,7 @@ import each from 'lodash/each';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import isEqual from 'lodash/isEqual';
+import { hoverClassTarget, selectClassTarget } from './constants';
 
 /**
  * 处理样式
@@ -34,9 +35,9 @@ export function handlePropsClassName(isSelected: boolean, isHovered: boolean, is
     return styles['hidden-component'];
   }
   if (isSelected) {
-    classNameCollection += `${styles['container-select-outline']}`;
+    classNameCollection += `${styles['container-select-outline']} ${selectClassTarget}`;
   } else if (isHovered) {
-    classNameCollection += `${styles['hover-outline']}`;
+    classNameCollection += `${styles['hover-outline']} ${hoverClassTarget}`;
   }
   return classNameCollection;
 }
@@ -152,7 +153,7 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
   }
   return {
     onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),
-    onMouseOver: (e: Event) => onMouseOver(e, key),
+    onMouseOver: (e: Event) => onMouseOver(e, key,isSelected),
     onDragStart: (e: Event) => onDragStart(e, key, parentKey!, parentPropName),
   };
 }
