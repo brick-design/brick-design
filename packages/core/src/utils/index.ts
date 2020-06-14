@@ -10,7 +10,6 @@ import {
 import each from 'lodash/each';
 import get from 'lodash/get';
 import { LEGO_BRIDGE } from '../store';
-import ReactDOM from 'react-dom';
 
 /**
  * 根节点key

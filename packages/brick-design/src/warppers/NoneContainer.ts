@@ -1,6 +1,6 @@
 import { createElement, forwardRef, memo, useMemo } from 'react';
 import get from 'lodash/get';
-import { clearDropTarget, getComponentConfig, LEGO_BRIDGE, produce, STATE_PROPS, useSelector } from 'brickd-core';
+import { clearDropTarget, getComponentConfig, LEGO_BRIDGE, produce, ROOT, STATE_PROPS, useSelector } from 'brickd-core';
 import {
   CommonPropsType,
   controlUpdate,
@@ -23,16 +23,17 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     isDragAddChild,
     ...rest
   } = allProps;
-  const { componentConfigs, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
+  const { componentConfigs:PageDom, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
   const isHovered = useHover(key);
   const { isSelected } = useSelect(specialProps);
   const {dragSource, isHidden } = useDragDrop(key);
-  const { props, componentName } = componentConfigs[key] || {};
+  const {dragKey,vDOMCollection}=dragSource||{}
+  const componentConfigs=PageDom[ROOT]?PageDom:vDOMCollection||{}
+  const { props, componentName } = componentConfigs[key]|| {};
   const { propsConfig } = useMemo(() => getComponentConfig(componentName), []);
 
   if (!componentName) return null;
-  const {dragKey}=dragSource||{}
 
   const onDragEnter = (e: Event) => {
     e.stopPropagation();

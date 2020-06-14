@@ -18,6 +18,7 @@ export function getDragSource(state: StateType, payload: DragSourcePayload): Sta
   /**
    * componentName有值说明为新添加的组件，为其生成vDom
    */
+  dragKey=dragKey||ROOT
   if (componentName) {
     vDOMCollection = {
       [ROOT]: {

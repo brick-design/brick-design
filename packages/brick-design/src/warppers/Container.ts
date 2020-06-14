@@ -8,7 +8,7 @@ import {
   getComponentConfig,
   LEGO_BRIDGE,
   produce,
-  PropsNodeType,
+  PropsNodeType, ROOT,
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';
@@ -44,12 +44,15 @@ function Container(allProps: CommonPropsType, ref: any) {
     ...rest
   } = allProps;
 
-  const { componentConfigs, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
+  const { componentConfigs:PageDom, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
-  const { props, childNodes, componentName } = componentConfigs[key] || {};
-  useChildNodes({ childNodes, componentName, specialProps });
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
-  const { dragKey,parentKey} = dragSource || {};
+  const { dragKey,parentKey,vDOMCollection} = dragSource || {};
+  const componentConfigs=PageDom[ROOT]?PageDom:vDOMCollection||{}
+
+  const { props, childNodes, componentName } = componentConfigs[key] ||{};
+
+  useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
   const isHovered = useHover(key);
   const { selectedDomKeys, isSelected } = useSelect(specialProps);

@@ -51,8 +51,6 @@ export function usePrevious<T>(value: any) {
 export const iframeSrcDoc = `<!DOCTYPE html>
 <html lang="en">
 <body>
-<div style="height: 100%" id="dnd-container">
-</div>
 </body>
 </html>
 `;
