@@ -100,7 +100,7 @@ function renderHeader(isUnfold: boolean,
             className={styles['header-container']}
         >
             <div onClick={() => handleSelectedStatus(null, isSelected, specialProps, propName)}
-                 onMouseOver={(e: any) => onMouseOver(e, isNodePropsRoot||propName?`${key}${propName}`:key)}
+                 onMouseOver={(e: any) => onMouseOver(e, isNodePropsRoot||propName?`${key}${propName}`:key,isSelected)}
                  style={{display: 'flex', flex: 1, alignItems: 'center', color}}>
                 <Icon
                     className={isUnfold ? styles.rotate90 : ''}

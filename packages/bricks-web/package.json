@@ -1,6 +1,6 @@
 {
   "name": "bricks-web",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.5",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^1.0.0-alpha.3",
-    "brickd-core": "^1.0.0-alpha.3",
+    "brickd": "^1.0.0-alpha.5",
+    "brickd-core": "^1.0.0-alpha.5",
     "lodash": "^4.17.15",
     "react-color": "^2.18.0",
     "sortablejs": "^1.10.2"

@@ -10,10 +10,9 @@
     "baseUrl": "./",
     "strict": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@@/*": ["src/.umi/*"]
+      "@/*": ["src/*"]
     },
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules", "dist", "typings"]
+  "exclude": ["node_modules", "dist", "typings","__tests__"]
 }
