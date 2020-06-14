@@ -20,12 +20,12 @@ describe('drag', () => {
   it('当componentConfigs没有root节点拖拽容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'a' };
     const state = reducer(legoState, { ...action, payload });
-    expect(state.dragSource).toEqual({ vDOMCollection: { [ROOT]: { componentName: 'a' } } });
+    expect(state.dragSource).toEqual({ dragKey:ROOT,vDOMCollection: { [ROOT]: { componentName: 'a' } } });
   });
   it('当componentConfigs没有root节点拖拽非容器组件', () => {
     const payload: DragSourcePayload = { componentName: 'img' };
     const state = reducer(legoState, { ...action, payload });
-    expect(state.dragSource).toEqual({ vDOMCollection: { [ROOT]: { componentName: 'img' } } });
+    expect(state.dragSource).toEqual({ dragKey:ROOT,vDOMCollection: { [ROOT]: { componentName: 'img' } } });
   });
   it('当componentConfigs有root节点', () => {
     const payload: DragSourcePayload = { componentName: 'span' };
