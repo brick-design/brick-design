@@ -19,11 +19,9 @@
 - :dvd:**组件库替换**：通过简单的配置可以对接任何React组件库
 
 ## SNAPSHOT
-![mobile](packages/docs/src/images/brickd1.gif)
-
-![PC](packages/docs/src/images/brickd2.gif)
-
-![Code](packages/docs/src/images/brickd3.gif)
+![brickd1](https://user-images.githubusercontent.com/15995127/85188005-7e4de100-b2d6-11ea-9441-2bd5570b14a9.gif)
+![brickd2](https://user-images.githubusercontent.com/15995127/85187856-86595100-b2d5-11ea-883e-e45313797fb3.gif)
+![brickd3](https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif)
 
 ###  📦 Install
 ```sh
