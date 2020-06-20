@@ -13,7 +13,7 @@ import { selectClassTarget } from '../../common/constants';
 import { Item } from './Item';
 import styles from './index.less';
 import map from 'lodash/map';
-import { ActionSheet } from '../ActionSheet';
+import {ActionSheet}  from '../ActionSheet';
 import get from 'lodash/get';
 import { formatUnit } from '../../utils';
 
@@ -29,7 +29,8 @@ const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
   const { selectedInfo, componentConfigs, hoverKey } = nextState;
   return prevState.selectedInfo !== selectedInfo ||
     selectedInfo && (prevState.componentConfigs !== componentConfigs ||
-      prevState.hoverKey !== hoverKey
+      prevState.hoverKey===null&&hoverKey!==null||
+      prevState.hoverKey!==null&&hoverKey===null
     );
 
 };
@@ -55,7 +56,7 @@ export function Resize() {
   const widthRef = useRef<any>();
   const heightRef = useRef<any>();
   const baseboardRef = useRef<any>();
-  const selectNode=useRef<any>()
+  const selectNode=useRef<any>();
   const [isOut, setIsOut] = useState<boolean>(true);
 
 
@@ -166,9 +167,9 @@ export function Resize() {
   const setSelectedBorder = () => {
     if(selectNode.current){
       const { left, top, width, height } = selectNode.current.getBoundingClientRect();
-      if (top < 20 && isOut) {
+      if (top <= 20 && isOut) {
         setIsOut(false);
-      } else if (!isOut) {
+      } else if (top > 20&&!isOut) {
         setIsOut(true);
       }
       resizeRef.current.style.width = `${width}px`;
@@ -222,7 +223,7 @@ export function Resize() {
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        {/*{ActionSheet({ isOut, hasChildNodes, isRoot: selectedKey === ROOT })}*/}
+        {!hoverKey&&<ActionSheet isOut={isOut} hasChildNodes={hasChildNodes} isRoot={selectedKey === ROOT}   />}
         {map(Direction, (direction) => <Item onResizeStart={onResizeStart} direction={direction} key={direction}/>)}
         <div className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']} ref={widthRef}
              onDoubleClick={updateSize}
