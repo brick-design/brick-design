@@ -228,9 +228,6 @@ export function isContainer(componentName:string) {
   }
 }
 
-export function getComponent(componentName:string) {
-
-}
 export function error(msg:string) {
     console.error(msg)
     throw new Error(msg)

@@ -1,7 +1,8 @@
 import { StateType } from '../types';
 import produce from 'immer';
-import { stylePayload } from '../actions';
+import { ResizePayload, stylePayload, undo } from '../actions';
 import { restObject } from '../utils';
+import update from 'lodash/update';
 
 /**
  * 样式改变时调用
@@ -49,4 +50,25 @@ export function resetStyles(state: StateType): StateType {
     undo,
     redo,
   };
+}
+
+export function resizeChange(state:StateType,payload:ResizePayload) {
+  const {componentConfigs,undo,redo,selectedInfo}=state
+  if(!selectedInfo) return  state
+  const {selectedKey}=selectedInfo
+  const {width,height}=payload
+  undo.push({componentConfigs})
+  redo.length=0
+  return{
+    ...state,
+    componentConfigs:produce(componentConfigs,oldConfigs=>{
+      if(width){
+        update(oldConfigs[selectedKey],'props.style.width',()=>width)
+      }
+      if(height){
+        update(oldConfigs[selectedKey],'props.style.height',()=>height)
+        
+      }
+    })
+  }
 }

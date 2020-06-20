@@ -16,6 +16,7 @@ export default {
   addPropsConfig: `addPropsConfig`,
   deletePropsConfig: `deletePropsConfig`,
   changeStyles: `changeStyles`,
+  resizeChange:'resizeChange',
   changeProps: `changeProps`,
   overTarget: `overTarget`,
   clearHovered: `clearHovered`,

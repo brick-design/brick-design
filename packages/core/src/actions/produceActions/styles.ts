@@ -7,3 +7,9 @@ export const changeStyles = (payload: stylePayload) => createActions({
   payload,
 });
 export const resetStyles = () => createActions({ type: ACTION_TYPES.resetStyles });
+
+export type ResizePayload={
+  width?:string,
+  height?:string
+}
+export const resizeChange=(payload:ResizePayload)=>createActions({type:ACTION_TYPES.resizeChange,payload})

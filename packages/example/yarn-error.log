@@ -1,0 +1,203 @@
+Arguments: 
+  /usr/local/Cellar/node/14.0.0/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/anye/Desktop/lego/node_modules/.bin:/Users/anye/Library/Android/sdk/tools:/Users/anye/Library/Android/sdk/tools/bin:/Users/anye/Library/Android/sdk/platform-tools:/Users/anye/Library/Android/sdk/emulator
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  14.0.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  SyntaxError: /Users/anye/Desktop/lego/packages/example/package.json: Unexpected token } in JSON at position 3054
+      at JSON.parse (<anonymous>)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "@lego-editor/example",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+      "@babel/core": "7.9.0",
+      "@svgr/webpack": "4.3.3",
+      "@testing-library/jest-dom": "^4.2.4",
+      "@testing-library/react": "^9.3.2",
+      "@testing-library/user-event": "^7.1.2",
+      "@types/classnames": "^2.2.9",
+      "@types/highlight.js": "^9.12.3",
+      "@types/jest": "^24.0.0",
+      "@types/lodash": "^4.14.149",
+      "@types/node": "^12.0.0",
+      "@types/react": "^16.9.0",
+      "@types/react-color": "^3.0.1",
+      "@types/react-dom": "^16.9.0",
+      "@types/react-redux": "^7.1.7",
+      "@types/sortablejs": "^1.10.2",
+      "@types/uuid": "^3.4.7",
+      "@typescript-eslint/eslint-plugin": "^2.10.0",
+      "@typescript-eslint/parser": "^2.10.0",
+      "animate.css": "^3.7.2",
+      "antd": "3.26.16",
+      "babel-eslint": "10.1.0",
+      "babel-jest": "^24.9.0",
+      "babel-loader": "8.1.0",
+      "babel-plugin-named-asset-import": "^0.3.6",
+      "babel-preset-react-app": "^9.1.2",
+      "camelcase": "^5.3.1",
+      "case-sensitive-paths-webpack-plugin": "2.3.0",
+      "classnames": "^2.2.6",
+      "css-loader": "3.4.2",
+      "dotenv": "8.2.0",
+      "dotenv-expand": "5.1.0",
+      "eslint": "^6.6.0",
+      "eslint-config-react-app": "^5.2.1",
+      "eslint-loader": "3.0.3",
+      "eslint-plugin-flowtype": "4.6.0",
+      "eslint-plugin-import": "2.20.1",
+      "eslint-plugin-jsx-a11y": "6.2.3",
+      "eslint-plugin-react": "7.19.0",
+      "eslint-plugin-react-hooks": "^1.6.1",
+      "file-loader": "4.3.0",
+      "fs-extra": "^8.1.0",
+      "gh-pages": "^2.2.0",
+      "highlight.js": "^9.17.1",
+      "html-webpack-plugin": "4.0.0-beta.11",
+      "html2canvas": "^1.0.0-rc.5",
+      "identity-obj-proxy": "3.0.0",
+      "immer": "^6.0.3",
+      "jest": "24.9.0",
+      "jest-environment-jsdom-fourteen": "1.0.1",
+      "jest-resolve": "24.9.0",
+      "jest-watch-typeahead": "0.4.2",
+      "less": "3.9.0",
+      "less-loader": "4.1.0",
+      "lodash": "^4.17.15",
+      "mini-css-extract-plugin": "0.9.0",
+      "node-sass": "^4.14.1",
+      "optimize-css-assets-webpack-plugin": "5.0.3",
+      "pnp-webpack-plugin": "1.6.4",
+      "postcss-flexbugs-fixes": "4.1.0",
+      "postcss-loader": "3.0.0",
+      "postcss-normalize": "8.0.1",
+      "postcss-preset-env": "6.7.0",
+      "postcss-safe-parser": "4.0.1",
+      "prop-types": "^15.7.2",
+      "rc-animate": "^2.10.2",
+      "re-resizable": "^6.1.1",
+      "react": "^16.13.1",
+      "react-app-polyfill": "^1.0.6",
+      "react-color": "^2.18.0",
+      "react-dev-utils": "^10.2.1",
+      "react-dom": "^16.13.1",
+      "react-redux": "^7.2.0",
+      "react-scripts": "3.4.1",
+      "react-sortablejs": "^2.0.11",
+      "redux": "^4.0.5",
+      "resolve": "1.15.0",
+      "redux-bridge": "^1.0.5",
+      "resolve-url-loader": "3.1.1",
+      "sass-loader": "8.0.2",
+      "semver": "6.3.0",
+      "style-loader": "0.23.1",
+      "terser-webpack-plugin": "2.3.5",
+      "ts-pnp": "1.1.6",
+      "typescript": "~3.7.2",
+      "url-loader": "2.3.0",
+      "uuid": "^3.4.0",
+      "webpack": "4.42.0",
+      "webpack-dev-server": "3.10.3",
+      "webpack-manifest-plugin": "2.2.0",
+      "workbox-webpack-plugin": "4.3.1",
+  
+    },
+    "scripts": {
+      "start": "node scripts/start.js",
+      "build": "node scripts/build.js",
+      "test": "node scripts/test.js"
+    },
+    "eslintConfig": {
+      "extends": "react-app"
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "jest": {
+      "roots": [
+        "<rootDir>/src"
+      ],
+      "collectCoverageFrom": [
+        "src/**/*.{js,jsx,ts,tsx}",
+        "!src/**/*.d.ts"
+      ],
+      "setupFiles": [
+        "react-app-polyfill/jsdom"
+      ],
+      "setupFilesAfterEnv": [
+        "<rootDir>/src/setupTests.ts"
+      ],
+      "testMatch": [
+        "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+        "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+      ],
+      "testEnvironment": "jest-environment-jsdom-fourteen",
+      "transform": {
+        "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+        "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+        "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      },
+      "transformIgnorePatterns": [
+        "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+        "^.+\\.module\\.(css|less|sass|scss)$"
+      ],
+      "modulePaths": [],
+      "moduleNameMapper": {
+        "^react-native$": "react-native-web",
+        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      },
+      "moduleFileExtensions": [
+        "web.js",
+        "js",
+        "web.ts",
+        "ts",
+        "web.tsx",
+        "tsx",
+        "json",
+        "web.jsx",
+        "jsx",
+        "node"
+      ],
+      "watchPlugins": [
+        "jest-watch-typeahead/filename",
+        "jest-watch-typeahead/testname"
+      ]
+    },
+    "babel": {
+      "presets": [
+        "react-app"
+      ]
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

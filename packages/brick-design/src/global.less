@@ -1,0 +1,23 @@
+@selectColor:#EE6723;
+@hoverColor:#388bfe;
+@dropColor:red;
+@transparent:#00000000;
+@translucent:rgba(0,0,0,.1);
+@dropColor:rgba(256,0,0,.2);
+.animate{
+  transition: all 150ms;
+}
+.distances-tip{
+  position: absolute;
+  display: block;
+  font-size: 12px;
+  color: #FFF;
+  line-height: 12px;
+  padding: 3px;
+  border-radius: 2px;
+  z-index: 1;
+  background-color: @selectColor;
+  .animate();
+}
+
+

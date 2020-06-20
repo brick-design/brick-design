@@ -1,10 +1,11 @@
 import React, { useEffect,useRef } from 'react';
 import styles from './index.less'
-import { STATE_PROPS, useSelector } from 'brickd-core';
+import { DropTargetType, STATE_PROPS, useSelector } from 'brickd-core';
 import { getIframe } from '../../utils';
 import { hoverClassTarget } from '../../common/constants';
 type SelectState={
-  hoverKey:string|null
+  hoverKey:string|null,
+  dropTarget:DropTargetType|null
 }
 
 const controlUpdate=(prevState:SelectState,nextState:SelectState)=>{
@@ -15,14 +16,19 @@ export function Guidelines() {
   const bottomRef=useRef<any>()
   const leftRef=useRef<any>()
   const rightRef=useRef<any>()
+  const hoverNodeRef=useRef<any>()
 
-  const {hoverKey}=useSelector<SelectState,STATE_PROPS>(['hoverKey'],controlUpdate)
+  const {hoverKey,dropTarget}=useSelector<SelectState,STATE_PROPS>(['hoverKey','dropTarget'],controlUpdate)
   useEffect(()=>{
-    const {contentDocument}=getIframe()
+    const contentDocument=getIframe()!.contentDocument!
     if(contentDocument&&topRef.current&&hoverKey){
       const node= contentDocument.getElementsByClassName(hoverClassTarget)[0]
       if(node){
-        const {left,top,bottom,right}=node.getBoundingClientRect()
+        const {left,top,bottom,right,width,height}=node.getBoundingClientRect()
+        hoverNodeRef.current.style.left=`${left}px`
+        hoverNodeRef.current.style.top=`${top}px`
+        hoverNodeRef.current.style.width=`${width}px`
+        hoverNodeRef.current.style.height=`${height}px`
         topRef.current.style.top=`${top}px`
         leftRef.current.style.left=`${left}px`
         rightRef.current.style.left=`${right-1}px`
@@ -30,11 +36,14 @@ export function Guidelines() {
       }
     }
   },[hoverKey])
-
+  const guidH=hoverKey?styles['guide-h']:styles['guide-hidden']
+  const guidV=hoverKey?styles['guide-v']:styles['guide-hidden']
+  const hoverNode=hoverKey?dropTarget?styles['drop-node']:styles['hover-node']:styles['guide-hidden']
   return(<>
-    <div ref={leftRef} className={hoverKey?styles['guide-v']:styles['guide-hidden']}/>
-    <div ref={rightRef} className={hoverKey?styles['guide-v']:styles['guide-hidden']}/>
-    <div ref={topRef} className={hoverKey?styles['guide-h']:styles['guide-hidden']}/>
-    <div ref={bottomRef} className={hoverKey?styles['guide-h']:styles['guide-hidden']}/>
+    <div ref={hoverNodeRef} className={hoverNode}/>
+    <div ref={leftRef} className={guidV}/>
+    <div ref={rightRef} className={guidV}/>
+    <div ref={topRef} className={guidH}/>
+    <div ref={bottomRef} className={guidH}/>
     </>)
 }

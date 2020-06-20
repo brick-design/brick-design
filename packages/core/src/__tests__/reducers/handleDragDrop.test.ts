@@ -150,7 +150,7 @@ describe('getDropTarget', () => {
   it('当drop组件为容器组件', () => {
     const payload: DropTargetType = { selectedKey: '1', domTreeKeys: [ROOT] };
     const nextState = reducer(legoState, { ...action, payload });
-    expect(nextState).toEqual({ ...legoState, dropTarget: payload, hoverKey: '1' });
+    expect(nextState).toEqual({ ...legoState, dropTarget: payload });
   });
 });
 
@@ -160,7 +160,6 @@ describe('clearDropTarget', () => {
     const prevState: StateType = {
       ...legoState,
       dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
-      hoverKey: ROOT,
     };
     const state = reducer(prevState, action);
     expect(state).toEqual(legoState);

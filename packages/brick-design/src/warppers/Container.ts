@@ -1,7 +1,7 @@
 import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'react';
 import get from 'lodash/get';
 import merge from 'lodash/merge';
-import { formatSpecialProps } from '../utils';
+import { formatSpecialProps, getComponent } from '../utils';
 import {
   ChildNodesType,
   clearDropTarget,
@@ -48,6 +48,8 @@ function Container(allProps: CommonPropsType, ref: any) {
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
   const { dragSource, dropTarget, isHidden } = useDragDrop(key);
   const { dragKey,parentKey,vDOMCollection} = dragSource || {};
+  const { selectedKey } = dropTarget || {};
+
   const componentConfigs=PageDom[ROOT]?PageDom:vDOMCollection||{}
 
   const { props, childNodes, componentName } = componentConfigs[key] ||{};
@@ -83,19 +85,12 @@ function Container(allProps: CommonPropsType, ref: any) {
       }
       getDropTargetInfo(e, domTreeKeys, key, propName);
   };
-  const onDragLeave = (e: Event) => {
-    e.stopPropagation();
-    const { selectedKey } = dropTarget || {};
-    if (selectedKey === key) {
-      clearDropTarget();
-    }
-  };
 
   useEffect(() => {
     setChildren(childNodes);
   }, [childNodes]);
 
-  if ((!dropTarget || dropTarget.selectedKey !== key) && children !== childNodes) {
+  if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
     setChildren(childNodes);
   }
 
@@ -110,13 +105,13 @@ function Container(allProps: CommonPropsType, ref: any) {
 
   const { className, animateClass, ...restProps } = props || {};
   return (
-    createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
+    createElement(getComponent(componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key, className, animateClass),
-      ...handleEvents(specialProps, isSelected, childNodes),
+      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key, className, animateClass,selectedKey===key),
       ...(isDragAddChild ?{}:{
         onDragEnter,
-        onDragLeave,
+        // onDragLeave,
+        ...handleEvents(specialProps, isSelected, childNodes),
       }),
       ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes!==children, isDragAddChild),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
@@ -126,7 +121,6 @@ function Container(allProps: CommonPropsType, ref: any) {
       /**
        * 设置组件id方便抓取图片
        */
-      id: isSelected ? 'select-img' : undefined,
       ref,
       ...rest,
       ...modalProps,

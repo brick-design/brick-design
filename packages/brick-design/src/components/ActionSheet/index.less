@@ -1,20 +1,17 @@
+@import "../../global";
 .container{
   position: absolute;
-  z-index: 10000;
+  z-index: 1;
   display: flex;
-  top: 0;
+  left: 0;
   flex-direction: row;
+  background-color:@selectColor ;
 }
-
 .action-btn{
+  height:20px;
   width: 20px;
-  height: 20px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  border-radius:10px ;
-  background-color: rgba(0,0,0,0.3);
+  pointer-events: auto;
 }
-.guide-hidden{
-  display: none;
-}
+

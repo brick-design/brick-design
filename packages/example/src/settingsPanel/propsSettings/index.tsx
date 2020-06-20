@@ -10,13 +10,12 @@ import styles from './index.less';
 import { filterProps } from '../../utils';
 import {SwitchMultiTypes} from 'bricks-web';
 import { FormComponentProps } from 'antd/lib/form';
-import { changeProps, PropInfoType, PROPS_TYPES, SelectedInfoType } from 'brickd-core';
+import { changeProps, PropInfoType, PROPS_TYPES, PropsConfigSheetType, SelectedInfoType } from 'brickd-core';
 
 
 const FormItem = Form.Item;
 
 interface PropsSettingsPropsType extends FormComponentProps {
-  propsSetting?: any,
   selectedInfo?: SelectedInfoType
 }
 
@@ -26,9 +25,8 @@ function PropsSettings(props: PropsSettingsPropsType) {
     form: { getFieldDecorator, validateFields, resetFields, setFieldsValue },
     form,
     selectedInfo,
-    propsSetting,
   } = props;
-  const { props: initProps, mergePropsConfig } = propsSetting||{};
+  const { props: initProps, propsConfig } = selectedInfo||{};
 
   /**
    * 渲染form items
@@ -105,7 +103,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
   }, [initProps]);
   return (
     <>
-      {!isEmpty(mergePropsConfig) && (
+      {!isEmpty(propsConfig) && (
         <div className={styles['btn-wrap']}>
           <Button style={{ fontSize: 12 }} onClick={resetProps}>
             重置
@@ -117,7 +115,7 @@ function PropsSettings(props: PropsSettingsPropsType) {
       )}
       <div className={styles['main-container']} style={{ position: 'relative' }}>
         <Form className={styles['form-container']} layout="vertical">
-          {!isEmpty(mergePropsConfig) && map({ ...mergePropsConfig, ...DEFAULT_PROPS }, renderFormItem)}
+          {!isEmpty(propsConfig) && map({ ...propsConfig, ...DEFAULT_PROPS }, renderFormItem)}
         </Form>
       </div>
     </>
@@ -127,8 +125,10 @@ function PropsSettings(props: PropsSettingsPropsType) {
 
 export default Form.create<PropsSettingsPropsType>({
     mapPropsToFields(props) {
+      const {selectedInfo}=props
+      const {props:initProps}=selectedInfo||{}
       const formatFields: any = {};
-      each(props.propsSetting, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
+      each(initProps, (v, field) => (formatFields[field] = Form.createFormField({ value: v })));
       return formatFields;
     },
   })(PropsSettings);

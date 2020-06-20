@@ -1,7 +1,7 @@
 import each from 'lodash/each';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
-import { PROPS_TYPES } from 'brickd-core';
+import { LEGO_BRIDGE, PROPS_TYPES } from 'brickd-core';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
@@ -50,11 +50,32 @@ export function usePrevious<T>(value: any) {
 
 export const iframeSrcDoc = `<!DOCTYPE html>
 <html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
 <body>
 </body>
 </html>
 `;
 
-export const getIframe=():any=>{
-  return  document.getElementById('dnd-iframe');
+export const isEqualKey=(key:string,selectKey?:string|null)=>{
+  if(!selectKey) return false
+  return selectKey.includes(key)&&parseInt(selectKey)===parseInt(key)
+
+}
+export const getIframe=():HTMLIFrameElement|null=>{
+  const  iframe=document.getElementById('dnd-iframe')
+  if(iframe ) return iframe as HTMLIFrameElement
+  return null;
+}
+
+export const getComponent=(componentName:string)=>get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName)
+
+export function formatUnit(target:string|null) {
+  if(target){
+    const result= target.match(/\d+/)
+    if(result){
+      return Number.parseInt(result[0])
+    }
+  }
+
+  return null
 }

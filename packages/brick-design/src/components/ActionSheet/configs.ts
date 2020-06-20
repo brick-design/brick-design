@@ -5,16 +5,22 @@ interface ActionSheetConfig{
   action:()=>{}
 }
 
-const configs:ActionSheetConfig[]= [{
-icon:'delete',
+export const ACTIONS={
+  delete:'delete',
+  copy:'copy',
+  clear:'clear'
+}
+const configs:ActionSheetConfig[]= [
+  {
+icon:ACTIONS.delete,
   action:deleteComponent
 },
   {
-    icon:'copy',
+    icon:ACTIONS.copy,
     action:copyComponent
   },
   {
-    icon:'clear',
+    icon:ACTIONS.clear,
     action:clearChildNodes
   }
 ]

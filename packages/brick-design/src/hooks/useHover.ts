@@ -1,4 +1,5 @@
 import { STATE_PROPS, useSelector } from 'brickd-core';
+import { formatUnit, isEqualKey } from '../utils';
 
 type HoverType = {
   hoverKey: string | null
@@ -8,13 +9,13 @@ function controlUpdate(prevState: HoverType, nextState: HoverType, key: string) 
   const { hoverKey: prevHoverKey } = prevState;
   const { hoverKey } = nextState;
   if (!prevHoverKey && hoverKey) {
-    return hoverKey.includes(key);
+    return isEqualKey(key,hoverKey);
   }
   if (prevHoverKey && !hoverKey) {
-    return prevHoverKey.includes(key);
+    return isEqualKey(key,prevHoverKey);
   }
   if (prevHoverKey && hoverKey && prevHoverKey !== hoverKey) {
-    return prevHoverKey.includes(key) || !prevHoverKey.includes(key) && hoverKey.includes(key);
+    return isEqualKey(key,prevHoverKey) || !isEqualKey(key,prevHoverKey) && isEqualKey(key,hoverKey);
   }
   return false;
 }
@@ -22,5 +23,5 @@ function controlUpdate(prevState: HoverType, nextState: HoverType, key: string) 
 export function useHover(key: string) {
   const { hoverKey } = useSelector<HoverType, STATE_PROPS>(['hoverKey'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
-  return !!hoverKey && hoverKey.includes(key);
+  return isEqualKey(key,hoverKey);
 }

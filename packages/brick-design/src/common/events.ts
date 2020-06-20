@@ -7,6 +7,7 @@ import {
   selectComponent,
   SelectedInfoBaseType,
 } from 'brickd-core';
+import { isEqualKey } from '../utils';
 
 
 export function handleSelectedStatus(
@@ -14,7 +15,8 @@ export function handleSelectedStatus(
   isSelected: boolean,
   specialProps: SelectedInfoBaseType
   , propName?: string) {
-  event && event.stopPropagation();
+
+  event&& event.stopPropagation&&event.stopPropagation();
   if (isSelected) {
     clearSelectedStatus();
   } else {
@@ -30,7 +32,7 @@ export function handleSelectedStatus(
  * @param key
  */
 export function onMouseOver(event: Event, key: string,isSelected:boolean) {
-  event.stopPropagation();
+  event&&event.stopPropagation&&event.stopPropagation();
   if(isSelected){
     clearHovered()
   }else {
@@ -49,7 +51,7 @@ export function onMouseOver(event: Event, key: string,isSelected:boolean) {
  * @param propName
  */
 export function getDropTargetInfo(event: Event, domTreeKeys: string[], selectedKey: string, propName?: string) {
-  event.stopPropagation();
+  event&&event.stopPropagation&&event.stopPropagation();
 
   getDropTarget({
     propName,
@@ -68,7 +70,7 @@ export function getDropTargetInfo(event: Event, domTreeKeys: string[], selectedK
  * @param parentPropName
  */
 export function onDragStart(event: Event, dragKey: string, parentKey: string, parentPropName?: string) {
-  event.stopPropagation();
+  event&&event.stopPropagation&&event.stopPropagation();
   setTimeout(()=>{
     getDragSource({
       dragKey,
@@ -86,9 +88,9 @@ export function onDragStart(event: Event, dragKey: string, parentKey: string, pa
  * @param selectedKey
  */
 export function selectedStatus(key: string, hoverKey: string | null, selectedKey?: string) {
-  const isSelected = !!selectedKey && selectedKey.includes(key);
+  const isSelected = isEqualKey(key,selectedKey);
   /** 是否hover到当前组件 */
-  const isHovered = !!hoverKey && hoverKey.includes(key);
+  const isHovered = isEqualKey(key,hoverKey);
   return { isHovered, isSelected };
 }
 

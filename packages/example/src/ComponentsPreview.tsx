@@ -4,7 +4,7 @@ import { flattenDeepArray } from './utils';
 import styles from './index.less';
 import { BrickPreview } from 'bricks-web';
 import { LEGO_BRIDGE } from 'brickd-core';
-import { CONTAINER_CATEGORY, NON_CONTAINER_CATEGORY } from '../example/configs';
+import { CONTAINER_CATEGORY, NON_CONTAINER_CATEGORY } from './/configs';
 
 const { TabPane } = Tabs;
 

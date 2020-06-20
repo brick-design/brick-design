@@ -11,6 +11,7 @@ import 'brickd/dist/index.css';
 import { LegoProvider} from 'brickd-core';
 import DesignPanel from './DesignPanel';
 import config from './configs';
+import initData from './initData';
 
 const COMMON_ENABLE = {
     top: false,
@@ -38,7 +39,7 @@ const RIGHT_ENABLE = {
 export default function App() {
 
     return (
-      <LegoProvider config={config}>
+      <LegoProvider initState={{componentConfigs:initData}} config={config}>
         <div className={styles['wrapper']}>
             <ToolBar/>
             <div className={styles['content']}>

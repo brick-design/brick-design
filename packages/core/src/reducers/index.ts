@@ -12,7 +12,7 @@ import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import { addPropsConfig, changeProps, deletePropsConfig, resetProps } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
-import { changeStyles, resetStyles } from './handleStyles';
+import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import { Reducer } from 'redux';
 
@@ -63,6 +63,8 @@ export const reducer: Reducer<StateType, BrickAction> = (prevState, action) => {
       return resetStyles(state);
     case ACTION_TYPES.clearDropTarget:
       return clearDropTarget(state);
+    case ACTION_TYPES.resizeChange:
+      return resizeChange(state,payload)
     default:
       return state;
 

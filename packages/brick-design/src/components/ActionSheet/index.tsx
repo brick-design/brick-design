@@ -1,38 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import styles from './index.less';
-import configs from './configs';
-import { SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
-import { getIframe } from '../../utils';
-import { hoverClassTarget, selectClassTarget } from '../../common/constants';
+import configs, { ACTIONS } from './configs';
 
-type SelectState={
-  selectedInfo:SelectedInfoType|null
+interface ActionSheetProps {
+  isOut:boolean,
+  hasChildNodes:boolean,
+  isRoot:boolean
 }
+export function ActionSheet(props:ActionSheetProps) {
+  const {isOut,isRoot,hasChildNodes}=props
 
-const controlUpdate=(prevState:SelectState,nextState:SelectState)=>{
-  const {selectedKey}=nextState.selectedInfo||{}
-  const {selectedKey:prevSelectedKey}=prevState.selectedInfo||{}
-  return prevSelectedKey!==selectedKey
-}
-export function ActionSheet() {
-  const actionsRef=useRef<any>()
- const {selectedInfo}=useSelector<SelectState,STATE_PROPS>(['selectedInfo'],controlUpdate)
-  useEffect(()=>{
-    const {contentDocument}=getIframe()
-    if(contentDocument&&actionsRef.current){
-      const node= contentDocument.getElementsByClassName(selectClassTarget)[0]
-      if(node){
-        const {left,top}=node.getBoundingClientRect()
-        actionsRef.current.style.top=`${top}px`
-        actionsRef.current.style.left=`${left}px`
-      }
-    }
-  },[selectedInfo])
-
-    return (<div  className={selectedInfo?styles['container']:styles['guide-hidden']}  ref={actionsRef}>
+    return (<div  className={styles['container']} style={{top:isOut?-20:0}}>
         {configs.map((config,index)=>{
           const {icon,action}=config
-          return (<div className={styles['action-btn']} onClick={action} key={index}>
+          if(isRoot&&icon!==ACTIONS.delete) return null
+          if(!hasChildNodes&&icon===ACTIONS.clear) return null
+          return (<div className={styles['action-btn']} onClick={action} key={icon}>
             {icon}
           </div>)
         })}

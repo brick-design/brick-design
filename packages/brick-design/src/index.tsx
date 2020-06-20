@@ -15,11 +15,13 @@ import { getIframe, iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
 import {ActionSheet} from './components/ActionSheet';
 import {Guidelines} from './components/Guidelines';
+import {Distances} from './components/Distances';
+import {Resize} from './components/Resize';
 export * from './common/events';
 
 const onIframeLoad = (divContainer: any, designPage: any) => {
   const head = document.head.cloneNode(true);
-  const {contentDocument}=getIframe()
+  const contentDocument=getIframe()!.contentDocument!
   contentDocument.head.remove();
   contentDocument.documentElement.insertBefore(head, contentDocument.body);
   divContainer.current = contentDocument.body;
@@ -32,8 +34,9 @@ const componentMount=(designPage:any,divContainer:any)=>{
   ReactDOM.render(
     <LegoProvider>
       {designPage}
-      <ActionSheet/>
       <Guidelines/>
+      <Distances/>
+      <Resize/>
     </LegoProvider>
   , divContainer.current);
 }
@@ -90,7 +93,7 @@ export function BrickDesign(props: BrickDesignProps) {
   const divContainer = useRef(null);
 
   useEffect(() => {
-    const {contentWindow} = getIframe();
+    const contentWindow = getIframe()!.contentWindow!;
     contentWindow.addEventListener('dragover', onDragover);
     contentWindow.addEventListener('drop', onDrop);
     return () => {
@@ -101,7 +104,7 @@ export function BrickDesign(props: BrickDesignProps) {
 
   useEffect(()=>{
     if(componentConfigs[ROOT]) return
-    const {contentWindow} = getIframe()
+    const contentWindow = getIframe()!.contentWindow!
     const dragEnter=()=>onDragEnter(dragSource,divContainer)
     const dragLeave=()=>onDragLeave(divContainer)
     contentWindow.addEventListener('dragenter', dragEnter);

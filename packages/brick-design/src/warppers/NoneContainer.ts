@@ -10,7 +10,7 @@ import {
   propAreEqual,
   stateSelector,
 } from '../common/handleFuns';
-import { formatSpecialProps } from '../utils';
+import { formatSpecialProps, getComponent } from '../utils';
 import merge from 'lodash/merge';
 import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
@@ -44,12 +44,12 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 
   const { className, animateClass, ...restProps } = props || {};
   return (
-    createElement(get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName), {
+    createElement(getComponent(componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden,dragKey===key,className, animateClass),
-      ...handleEvents(specialProps, isSelected),
+      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key,className, animateClass),
       ...(isDragAddChild ?{}:{
         onDragEnter,
+        ...handleEvents(specialProps, isSelected),
       }),
       ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
         merge(oldPropsConfig, propsConfigSheet[specialProps.key]);
@@ -58,7 +58,6 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
       /**
        * 设置组件id方便抓取图片
        */
-      id: isSelected ? 'select-img' : undefined,
       ref,
       ...rest,
     })

@@ -29,15 +29,15 @@ import { hoverClassTarget, selectClassTarget } from './constants';
  * @param className
  * @param animateClass
  */
-export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string) {
+export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string,isDropTarget?:boolean) {
   let classNameCollection = `${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} `;
   if (isHidden) {
     return styles['hidden-component'];
   }
   if (isSelected) {
-    classNameCollection += `${styles['container-select-outline']} ${selectClassTarget}`;
+    classNameCollection += selectClassTarget;
   } else if (isHovered) {
-    classNameCollection += `${styles['hover-outline']} ${hoverClassTarget}`;
+    classNameCollection += hoverClassTarget;
   }
   return classNameCollection;
 }
@@ -79,7 +79,7 @@ function renderNodes(childNodes: string[],specialProps:SelectedInfoBaseType, com
       },
     };
     return isContainer(componentName) ? <Container {...props} isDragAddChild={isDragAddChild||dragKey===key&&isDragAdd}  key={key}/> :
-      <NoneContainer {...props} isDragAddChild={isDragAddChild} key={key}/>;
+      <NoneContainer {...props} isDragAddChild={isDragAddChild||dragKey===key&&isDragAdd} key={key}/>;
   });
 
   /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
