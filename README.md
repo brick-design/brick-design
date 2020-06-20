@@ -19,11 +19,11 @@
 - :dvd:**组件库替换**：通过简单的配置可以对接任何React组件库
 
 ## SNAPSHOT
-![mobile](packages/docs/mobile.png)
+![mobile](packages/docs/src/images/brickd1.gif)
 
-![PC](packages/docs/pc.png)
+![PC](packages/docs/src/images/brickd2.gif)
 
-![Code](packages/docs/Code.png)
+![Code](packages/docs/src/images/brickd3.gif)
 
 ###  📦 Install
 ```sh
