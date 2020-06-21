@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from '../../../../../core';
 import { TreeSelect as AntTreeSelect } from 'antd';
 
 const TreeSelect: ComponentConfigTypes = {

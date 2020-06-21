@@ -1,5 +1,5 @@
 import SwitchPlatform from './component/SwitchPlatform';
-import { clearChildNodes, copyComponent, deleteComponent, PlatformStyleType, redo, undo } from 'brickd-core';
+import { clearChildNodes, copyComponent, deleteComponent, PlatformStyleType, redo, undo } from '../../../core';
 
 export interface PlatformMenusType {
   [platformName: string]: PlatformStyleType

@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigTypes, PROPS_TYPES } from '../../../../../core';
 
 const img: ComponentConfigTypes = {
   propsConfig: {

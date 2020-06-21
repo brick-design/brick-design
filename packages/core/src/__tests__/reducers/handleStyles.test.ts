@@ -123,3 +123,43 @@ describe('resetStyle', () => {
     expect(state).toEqual(expectState);
   });
 });
+
+describe('resizeChange',()=>{
+  const action = { type: ACTION_TYPES.resizeChange };
+  it('selectedInfo===null', () => {
+    expect(reducer(legoState, action)).toBe(legoState);
+  });
+  it('更改组件宽高有宽和高',()=>{
+    const componentConfigs:ComponentConfigsType={[ROOT]:{componentName:'div'}}
+
+      const prevState: StateType = {
+      ...legoState,
+      undo: [],
+        componentConfigs,
+      selectedInfo:{selectedKey:ROOT,domTreeKeys:[],parentKey:'',propsConfig:{}},
+    };
+    const state = reducer(prevState, {...action,payload:{width:12,height:13}});
+    const expectState:StateType={
+      ...prevState,
+      undo:[{componentConfigs}],
+      componentConfigs:{[ROOT]:{componentName:'div',props:{style:{width:12,height:13}}}}
+    }
+    expect(state).toEqual(expectState);
+
+  })
+  it('更改组件宽高没有宽和高',()=>{
+    const componentConfigs:ComponentConfigsType={[ROOT]:{componentName:'div'}}
+
+    const prevState: StateType = {
+      ...legoState,
+      undo: [],
+      componentConfigs,
+      selectedInfo:{selectedKey:ROOT,domTreeKeys:[],parentKey:'',propsConfig:{}},
+    };
+    const state = reducer(prevState, {...action,payload:{}});
+
+    expect(state).toEqual(state);
+
+  })
+
+})

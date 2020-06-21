@@ -150,8 +150,23 @@ describe('getDropTarget', () => {
   it('当drop组件为容器组件', () => {
     const payload: DropTargetType = { selectedKey: '1', domTreeKeys: [ROOT] };
     const nextState = reducer(legoState, { ...action, payload });
-    expect(nextState).toEqual({ ...legoState, dropTarget: payload });
+    expect(nextState).toEqual({ ...legoState, dropTarget: payload,hoverKey:'1' });
   });
+  it('当selectedInfo!=null 获取dropTarget', () => {
+    const payload: DropTargetType = { selectedKey: ROOT, domTreeKeys: [ROOT] };
+    const prevState:StateType={
+      ...legoState,
+      selectedInfo:{selectedKey:ROOT,domTreeKeys:[],propsConfig:{},parentKey:''},
+    }
+    const nextState = reducer(prevState, { ...action, payload });
+    const expectState:StateType={
+      ...prevState,
+      dropTarget:{selectedKey:ROOT,domTreeKeys:[ROOT]},
+      hoverKey:ROOT
+    }
+    expect(nextState).toEqual(expectState);
+  });
+
 });
 
 describe('clearDropTarget', () => {
@@ -162,6 +177,22 @@ describe('clearDropTarget', () => {
       dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
     };
     const state = reducer(prevState, action);
+    expect(state).toEqual(legoState);
+  });
+});
+
+describe('clearDragSource', () => {
+  const action = { type: ACTION_TYPES.clearDragSource };
+  it('dragSource!==null清除dragSource', () => {
+    const prevState: StateType = {
+      ...legoState,
+      dragSource: { dragKey: ROOT, parentKey:'' },
+    };
+    const state = reducer(prevState, action);
+    expect(state).toEqual(legoState);
+  });
+  it('dragSource===null清除dragSource', () => {
+    const state = reducer(legoState, action);
     expect(state).toEqual(legoState);
   });
 });

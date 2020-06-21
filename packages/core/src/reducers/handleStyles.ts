@@ -57,8 +57,11 @@ export function resizeChange(state:StateType,payload:ResizePayload) {
   if(!selectedInfo) return  state
   const {selectedKey}=selectedInfo
   const {width,height}=payload
-  undo.push({componentConfigs})
-  redo.length=0
+  if(width||height){
+    undo.push({componentConfigs})
+    redo.length=0
+  }
+
   return{
     ...state,
     componentConfigs:produce(componentConfigs,oldConfigs=>{
@@ -67,7 +70,6 @@ export function resizeChange(state:StateType,payload:ResizePayload) {
       }
       if(height){
         update(oldConfigs[selectedKey],'props.style.height',()=>height)
-        
       }
     })
   }

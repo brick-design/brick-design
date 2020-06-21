@@ -9,7 +9,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "father-build"
+    "build": "node_modules/.bin/father-build"
   },
   "files": [
     "dist"

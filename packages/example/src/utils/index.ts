@@ -8,7 +8,7 @@ import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
-import { CategoryType, PROPS_TYPES } from 'brickd-core';
+import { CategoryType, PROPS_TYPES } from '../../../core';
 
 
 

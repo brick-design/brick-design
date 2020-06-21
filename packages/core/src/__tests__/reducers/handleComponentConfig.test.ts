@@ -181,7 +181,7 @@ describe('addComponent', () => {
       ).toEqual({...prevState,dropTarget:null,dragSource:null});
     });
     it('errorCallback错误回调函数', function() {
-      LEGO_BRIDGE.warn = jest.fn();
+      LEGO_BRIDGE.config!.warn = jest.fn();
       const prevState: StateType = {
         ...legoState,
         componentConfigs: {
@@ -196,8 +196,8 @@ describe('addComponent', () => {
         dropTarget: { selectedKey: ROOT, propName: 'children', domTreeKeys: [] },
       };
       reducer(prevState, action);
-      expect(LEGO_BRIDGE.warn).toBeCalled();
-      LEGO_BRIDGE.warn = undefined;
+      expect(LEGO_BRIDGE.config!.warn).toBeCalled();
+      LEGO_BRIDGE.config!.warn = undefined;
     });
   });
 
@@ -236,7 +236,7 @@ describe('addComponent', () => {
 
     });
     test('warn', () => {
-      LEGO_BRIDGE.warn = jest.fn();
+      LEGO_BRIDGE.config!.warn = jest.fn();
 
       const prevState: StateType = {
         ...legoState,
@@ -252,8 +252,8 @@ describe('addComponent', () => {
         dropTarget: { selectedKey: ROOT, propName: 'test', domTreeKeys: [] },
       };
       reducer(prevState, action);
-        expect(LEGO_BRIDGE.warn).toBeCalled();
-      LEGO_BRIDGE.warn = undefined;
+        expect(LEGO_BRIDGE.config!.warn).toBeCalled();
+      LEGO_BRIDGE.config!.warn = undefined;
     });
   });
   test('正常添加新组件', () => {

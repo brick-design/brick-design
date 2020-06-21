@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs } from 'antd/lib/index';
 import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
-import { ComponentConfigsType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
+import { ComponentConfigsType, SelectedInfoType, STATE_PROPS, useSelector } from '../../../core';
 import { BrickTree } from 'bricks-web';
 import styles from '../index.less'
 import get  from 'lodash/get';

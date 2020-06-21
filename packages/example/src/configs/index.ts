@@ -2,7 +2,7 @@ import { htmlContainers, htmlNonContainers } from './htmlCategory';
 import { reactContainers, reactNonContainers } from './reactCategory';
 import * as Ants from 'antd/es';
 import AllComponentConfigs from './componentConfigs';
-import { CategoryType, ConfigType } from 'brickd-core';
+import { CategoryType, ConfigType } from '../../../core';
 import { flattenDeepArray } from '../utils';
 import { message } from 'antd';
 

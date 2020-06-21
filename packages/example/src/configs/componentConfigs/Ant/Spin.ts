@@ -1,4 +1,4 @@
-import { PROPS_TYPES } from 'brickd-core';
+import { PROPS_TYPES } from '../../../../../core';
 
 export default {
   propsConfig: {

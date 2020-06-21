@@ -6,7 +6,7 @@ import {
   changeProps,
   ChangePropsPayload,
   changeStyles,
-  clearChildNodes,
+  clearChildNodes, clearDragSource,
   clearDropTarget,
   clearHovered,
   clearSelectedStatus,
@@ -23,7 +23,7 @@ import {
   OverTargetPayload,
   redo,
   resetProps,
-  resetStyles,
+  resetStyles, resizeChange, ResizePayload,
   selectComponent,
   SelectComponentPayload,
   stylePayload,
@@ -51,6 +51,7 @@ describe('actions test', () => {
     const dropPayload: DropTargetType = { selectedKey: '', domTreeKeys: [] };
     expect(getDropTarget(dropPayload)).toEqual({ type: ACTION_TYPES.getDropTarget, payload: dropPayload });
     expect(clearDropTarget()).toEqual({ type: ACTION_TYPES.clearDropTarget });
+    expect(clearDragSource()).toEqual({ type: ACTION_TYPES.clearDragSource });
 
     //hover
     const hoverPayload: OverTargetPayload = { hoverKey: '' };
@@ -90,6 +91,8 @@ describe('actions test', () => {
     const changeStylePayload: stylePayload = { style: {} };
     expect(changeStyles(changeStylePayload)).toEqual({ type: ACTION_TYPES.changeStyles, payload: changeStylePayload });
     expect(resetStyles()).toEqual({ type: ACTION_TYPES.resetStyles });
+    const resizePayload:ResizePayload={}
+    expect(resizeChange(resizePayload)).toEqual({ type: ACTION_TYPES.resizeChange,payload:resizePayload });
 
   });
 });
