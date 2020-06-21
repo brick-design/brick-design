@@ -4,6 +4,7 @@ import * as Ants from 'antd/es';
 import AllComponentConfigs from './componentConfigs';
 import { CategoryType, ConfigType } from 'brickd-core';
 import { flattenDeepArray } from '../utils';
+import { message } from 'antd';
 
 /**
  * 容器组件分类
@@ -22,7 +23,8 @@ export const NON_CONTAINER_CATEGORY = { ...reactNonContainers, ...htmlNonContain
 const config: ConfigType = {
   OriginalComponents:Ants,
   AllComponentConfigs,
-  containers:flattenDeepArray(CONTAINER_CATEGORY)
+  containers:flattenDeepArray(CONTAINER_CATEGORY),
+  warn:(msg:string)=>{message.warning(msg)}
 };
 
 export default config;

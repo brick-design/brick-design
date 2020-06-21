@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { getIframe } from '../../utils';
 import { hoverClassTarget, selectClassTarget } from '../../common/constants';
-import { SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
+import { DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import styles from './index.less';
 import each from 'lodash/each';
 
 interface DistancesState {
   hoverKey: string | null,
-  selectedInfo: SelectedInfoType | null
+  selectedInfo: SelectedInfoType | null,
+  dragSource:DragSourceType|null
 }
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
@@ -158,11 +159,11 @@ export function Distances() {
   const leftRef = useRef<any>();
   const rightRef = useRef<any>();
 
-  const { hoverKey, selectedInfo } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo']);
+  const { hoverKey, selectedInfo,dragSource } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo','dragSource']);
 
 
   useEffect(() => {
-    if (hoverKey && selectedInfo) {
+    if (hoverKey && selectedInfo&&!dragSource) {
       const contentDocument = getIframe()!.contentDocument!;
       const hoverNode = contentDocument.getElementsByClassName(hoverClassTarget)[0];
       const selectNode = contentDocument.getElementsByClassName(selectClassTarget)[0];
@@ -227,7 +228,7 @@ export function Distances() {
       bottomRef.current.style.display = 'none';
 
     }
-  }, [hoverKey, selectedInfo, selectedNodeRef, leftRef, rightRef, topRef, bottomRef]);
+  }, [hoverKey, selectedInfo,dragSource, selectedNodeRef, leftRef, rightRef, topRef, bottomRef]);
   return (<>
     <div ref={topRef} className={styles['distances-v']}/>
     <div ref={bottomRef} className={styles['distances-v']}/>

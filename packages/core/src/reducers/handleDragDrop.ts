@@ -75,12 +75,20 @@ export function getDropTarget(state: StateType, payload: DropTargetType): StateT
    * 如果location为undefined说明当前组件不是容器组件
    * 清除dropTarget信息
    */
-  const { selectedInfo } = state;
-  if (selectedInfo) return state;
-  const { selectedKey } = payload;
+  const { selectedInfo,dropTarget } = state;
+  const { selectedKey,domTreeKeys } = payload;
+  let dropTargetResult=payload
+  if (selectedInfo)  {
+    const {selectedKey,propName}=selectedInfo
+    if(domTreeKeys.includes(selectedKey)&&!dropTarget){
+      dropTargetResult={selectedKey,propName,domTreeKeys}
+    }else {
+      return state
+    }
+  }
   return {
     ...state,
-    dropTarget: payload,
+    dropTarget:dropTargetResult,
     hoverKey: selectedKey,
   };
 }
@@ -91,4 +99,10 @@ export function clearDropTarget(state: StateType): StateType {
     dropTarget: null,
     hoverKey: null,
   };
+}
+
+export function clearDragSource(state:StateType) {
+  const {dragSource}=state
+  if(dragSource)return{...state,dragSource:null}
+  return state
 }

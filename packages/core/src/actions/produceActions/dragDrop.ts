@@ -15,3 +15,7 @@ export const getDropTarget = (payload: DropTargetType) => createActions({
 export const clearDropTarget = () => createActions({
   type: ACTION_TYPES.clearDropTarget,
 });
+
+export const clearDragSource=()=>createActions({
+  type:ACTION_TYPES.clearDragSource
+})

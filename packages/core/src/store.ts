@@ -4,8 +4,7 @@ import { BrickAction, ConfigType, StateType } from './types';
 
 export type LegoBridgeType = {
   config?: ConfigType,
-  store: Store<StateType, BrickAction> | null,
-  warn?: (msg: string) => void
+  store: Store<StateType, BrickAction> | null
 }
 export const LEGO_BRIDGE: LegoBridgeType = {
   store: null,

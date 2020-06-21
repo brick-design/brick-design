@@ -2,6 +2,7 @@ import React, { AllHTMLAttributes } from 'react';
 import styles from './style.less';
 import {
   ChildNodesType,
+  clearDragSource,
   ComponentConfigsType,
   getComponentConfig,
   isContainer,
@@ -97,23 +98,23 @@ export function handleChildNodes(specialProps:SelectedInfoBaseType, componentCon
   const dragAddStatus:DragAddStatusType={isDragAdd,dragKey,isDragAddChild}
   const { componentName } = componentConfigs[parentKey];
   const { nodePropsConfig,isRequired,isOnlyNode } = getComponentConfig(componentName);
-    if (Array.isArray(children)) {
-      nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
-    } else {
-      each(children, (nodes, propName: string) => {
-        if(!nodes) return null
-        const { isOnlyNode, isRequired } = nodePropsConfig![propName];
-        nodeProps[propName] = renderNodes(
-          nodes,
-          specialProps,
-          componentConfigs,
-          dragAddStatus,
-          propName,
-          isOnlyNode,
-          isRequired,
-        );
-      });
-    }
+  if (Array.isArray(children)) {
+    nodeProps.children = renderNodes(children, specialProps, componentConfigs,dragAddStatus,undefined,isOnlyNode,isRequired);
+  } else {
+    each(children, (nodes, propName: string) => {
+      if(!nodes) return null
+      const { isOnlyNode, isRequired } = nodePropsConfig![propName];
+      nodeProps[propName] = renderNodes(
+        nodes,
+        specialProps,
+        componentConfigs,
+        dragAddStatus,
+        propName,
+        isOnlyNode,
+        isRequired,
+      );
+    });
+  }
 
   return nodeProps;
 }
@@ -155,6 +156,7 @@ export function handleEvents(specialProps: SelectedInfoBaseType, isSelected: boo
     onClick: (e: Event) => handleSelectedStatus(e, isSelected, specialProps, propName),
     onMouseOver: (e: Event) => onMouseOver(e, key,isSelected),
     onDragStart: (e: Event) => onDragStart(e, key, parentKey!, parentPropName),
+    onDragEnd:()=>clearDragSource()
   };
 }
 

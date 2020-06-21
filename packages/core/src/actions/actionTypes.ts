@@ -28,4 +28,5 @@ export default {
   resetProps: 'resetProps',
   resetStyles: 'resetStyles',
   clearDropTarget: 'clearDropTarget',
+  clearDragSource:'clearDragSource'
 };

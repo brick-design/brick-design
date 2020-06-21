@@ -1,15 +1,17 @@
 import React, { useEffect,useRef } from 'react';
 import styles from './index.less'
-import { DropTargetType, STATE_PROPS, useSelector } from 'brickd-core';
+import { DragSourceType, DropTargetType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import { getIframe } from '../../utils';
 import { hoverClassTarget } from '../../common/constants';
 type SelectState={
   hoverKey:string|null,
-  dropTarget:DropTargetType|null
+  dropTarget:DropTargetType|null,
+  selectedInfo:SelectedInfoType|null,
+  dragSource:DragSourceType|null
 }
 
 const controlUpdate=(prevState:SelectState,nextState:SelectState)=>{
-  return prevState.hoverKey!==nextState.hoverKey
+  return true
 }
 export function Guidelines() {
   const topRef=useRef<any>()
@@ -18,8 +20,9 @@ export function Guidelines() {
   const rightRef=useRef<any>()
   const hoverNodeRef=useRef<any>()
 
-  const {hoverKey,dropTarget}=useSelector<SelectState,STATE_PROPS>(['hoverKey','dropTarget'],controlUpdate)
+  const {hoverKey,dropTarget,dragSource,selectedInfo}=useSelector<SelectState,STATE_PROPS>(['hoverKey','dropTarget','dragSource','selectedInfo'],controlUpdate)
   useEffect(()=>{
+    if(selectedInfo&&dragSource) return
     const contentDocument=getIframe()!.contentDocument!
     if(contentDocument&&topRef.current&&hoverKey){
       const node= contentDocument.getElementsByClassName(hoverClassTarget)[0]
@@ -35,10 +38,11 @@ export function Guidelines() {
         bottomRef.current.style.top=`${bottom-1}px`
       }
     }
-  },[hoverKey])
-  const guidH=hoverKey?styles['guide-h']:styles['guide-hidden']
-  const guidV=hoverKey?styles['guide-v']:styles['guide-hidden']
-  const hoverNode=hoverKey?dropTarget?styles['drop-node']:styles['hover-node']:styles['guide-hidden']
+  },[hoverKey,dragSource,selectedInfo])
+  const guidControl=hoverKey&&(!selectedInfo||selectedInfo&&!dragSource)
+  const guidH=guidControl?styles['guide-h']:styles['guide-hidden']
+  const guidV=guidControl?styles['guide-v']:styles['guide-hidden']
+  const hoverNode=guidControl?dropTarget?styles['drop-node']:styles['hover-node']:styles['guide-hidden']
   return(<>
     <div ref={hoverNodeRef} className={hoverNode}/>
     <div ref={leftRef} className={guidV}/>

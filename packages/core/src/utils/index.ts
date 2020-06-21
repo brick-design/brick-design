@@ -1,6 +1,4 @@
-import React from 'react'
 import {
-  CategoryType,
   ChildNodesType,
   ComponentConfigsType, ComponentConfigTypes,
   PropsConfigSheetType,
@@ -234,8 +232,9 @@ export function error(msg:string) {
 }
 
 export function warn(msg:string){
-  if(LEGO_BRIDGE.warn){
-    LEGO_BRIDGE.warn(msg)
+  const warn=get(LEGO_BRIDGE,['config','warn'])
+  if(warn){
+    warn(msg)
   }else{
     console.warn((msg))
   }
@@ -256,5 +255,32 @@ export function restObject(obj:any,field?:string) {
 
 }
 
+
+export function handleRules(componentConfigs:ComponentConfigsType,dragKey:string,selectedKey:string,propName?:string,isForbid?:boolean) {
+  /**
+   * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
+   */
+  const dragComponentName=componentConfigs[dragKey!].componentName
+  const dropComponentName=componentConfigs[selectedKey!].componentName
+  const { fatherNodesRule } = getComponentConfig(dragComponentName);
+  const { nodePropsConfig, childNodesRule } = getComponentConfig(dropComponentName);
+
+  /**
+   * 子组件约束限制，减少不必要的组件错误嵌套
+   */
+  const childRules = propName ? nodePropsConfig![propName].childNodesRule : childNodesRule;
+  if (childRules&&!childRules.includes(dragComponentName)) {
+    !isForbid&&warn(`${propName || dropComponentName}:only allow drag and drop to add${childRules.toString()}`)
+    return true
+  }
+  /**
+   * 父组件约束限制，减少不必要的组件错误嵌套
+   */
+  if (fatherNodesRule && !fatherNodesRule.includes(propName ? `${dropComponentName}.${propName}` : `${dropComponentName}`)) {
+    !isForbid&&warn(`${dragComponentName}:Only allowed as a child node or attribute node of${fatherNodesRule.toString()}`)
+    return true
+  }
+  return false
+}
 
 

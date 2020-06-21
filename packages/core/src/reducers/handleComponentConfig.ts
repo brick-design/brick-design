@@ -6,7 +6,7 @@ import {
   getComponentConfig,
   getLocation,
   getNewKey,
-  HandleInfoType, restObject,
+  HandleInfoType, handleRules, restObject,
   ROOT,
   warn,
 } from '../utils';
@@ -24,7 +24,6 @@ export function addComponent(state: StateType): StateType {
   const {
     undo, redo,
     componentConfigs,
-    selectedInfo,
     dragSource,
     dropTarget,
   } = state;
@@ -48,7 +47,7 @@ export function addComponent(state: StateType): StateType {
       redo,
     };
   }
-  const { selectedKey, propName, domTreeKeys } = selectedInfo || dropTarget||{};
+  const { selectedKey, propName, domTreeKeys } = dropTarget||{};
 
   /**
    * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
@@ -70,35 +69,12 @@ export function addComponent(state: StateType): StateType {
    * 当拖拽的父key与drop目标key一致说明未移动
    * 当拖拽的key包含在drop目标的domTreeKeys,说明拖拽组件是目标组件的父组件或者是自身
    */
-  if (parentKey === selectedKey || domTreeKeys!.includes(dragKey!)){
+  if (parentKey === selectedKey ||
+    domTreeKeys!.includes(dragKey!)||
+    handleRules(componentConfigs,dragKey!,selectedKey,propName)){
     return {...state,dragSource:null,dropTarget:null};
   }
 
-
-
-  /**
-   * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
-   */
-  const dragComponentName=componentConfigs[dragKey!].componentName
-  const dropComponentName=componentConfigs[selectedKey!].componentName
-  const { fatherNodesRule } = getComponentConfig(dragComponentName);
-  const { nodePropsConfig, childNodesRule } = getComponentConfig(dropComponentName);
-
-  /**
-   * 子组件约束限制，减少不必要的组件错误嵌套
-   */
-  const childRules = propName ? nodePropsConfig![propName].childNodesRule : childNodesRule;
-  if (childRules&&!childRules.includes(dragComponentName)) {
-      warn(`${propName || dropComponentName}:only allow drag and drop to add${childRules.toString()}`)
-      return {...state,dropTarget:null,dragSource:null}
-  }
-  /**
-   * 父组件约束限制，减少不必要的组件错误嵌套
-   */
-  if (fatherNodesRule && !fatherNodesRule.includes(propName ? `${dropComponentName}.${propName}` : `${dropComponentName}`)) {
-    warn(`${dragComponentName}:Only allowed as a child node or attribute node of${fatherNodesRule.toString()}`)
-    return {...state,dropTarget:null,dragSource:null}
-  }
 
   parentKey&&undo.push({ componentConfigs });
   redo.length = 0;

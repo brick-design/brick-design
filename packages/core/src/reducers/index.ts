@@ -7,7 +7,7 @@ import {
   deleteComponent,
   onLayoutSortChange,
 } from './handleComponentConfig';
-import { clearDropTarget, getDragSource, getDropTarget } from './handleDragDrop';
+import { clearDropTarget, getDragSource, getDropTarget, clearDragSource } from './handleDragDrop';
 import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import { addPropsConfig, changeProps, deletePropsConfig, resetProps } from './handleProps';
@@ -64,7 +64,9 @@ export const reducer: Reducer<StateType, BrickAction> = (prevState, action) => {
     case ACTION_TYPES.clearDropTarget:
       return clearDropTarget(state);
     case ACTION_TYPES.resizeChange:
-      return resizeChange(state,payload)
+      return resizeChange(state,payload);
+    case ACTION_TYPES.clearDragSource:
+      return clearDragSource(state)
     default:
       return state;
 

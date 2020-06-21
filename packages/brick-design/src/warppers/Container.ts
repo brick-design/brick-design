@@ -5,7 +5,7 @@ import { formatSpecialProps, getComponent } from '../utils';
 import {
   ChildNodesType,
   clearDropTarget,
-  getComponentConfig,
+  getComponentConfig, handleRules,
   LEGO_BRIDGE,
   produce,
   PropsNodeType, ROOT,
@@ -63,14 +63,20 @@ function Container(allProps: CommonPropsType, ref: any) {
     e.stopPropagation();
       let propName;
       //判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
-      if (parentKey!==key&&dragKey&&dragKey!==key&&!domTreeKeys.includes(dragKey)) {
+      if (parentKey!==key&&
+        dragKey&&
+        dragKey!==key&&
+        !domTreeKeys.includes(dragKey)&&
+        (!selectedDomKeys||!selectedDomKeys.includes(dragKey))) {
         if(childNodes){
-          if (Array.isArray(childNodes)) {
+          if (Array.isArray(childNodes)&&!handleRules(componentConfigs,dragKey,key,undefined,true)) {
             setChildren([...childNodes, dragKey]);
           } else {
             setChildren(produce((childNodes as PropsNodeType), oldChild => {
               propName = Object.keys(oldChild!)[0];
-              oldChild![propName] = [...oldChild[propName]!, dragKey];
+              if( !handleRules(componentConfigs,dragKey,key,propName,true)){
+                oldChild![propName] = [...oldChild[propName]!, dragKey];
+              }
             }));
           }
         }else {
@@ -84,6 +90,12 @@ function Container(allProps: CommonPropsType, ref: any) {
         }
       }
       getDropTargetInfo(e, domTreeKeys, key, propName);
+  };
+  const onDragLeave = (e: Event) => {
+    e.stopPropagation();
+    if (isSelected) {
+      clearDropTarget();
+    }
   };
 
   useEffect(() => {
@@ -110,7 +122,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key, className, animateClass,selectedKey===key),
       ...(isDragAddChild ?{}:{
         onDragEnter,
-        // onDragLeave,
+        onDragLeave,
         ...handleEvents(specialProps, isSelected, childNodes),
       }),
       ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes!==children, isDragAddChild),

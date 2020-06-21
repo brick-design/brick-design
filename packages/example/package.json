@@ -24,7 +24,6 @@
     "css-loader": "3.4.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
-
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
     "gh-pages": "^2.2.0",
