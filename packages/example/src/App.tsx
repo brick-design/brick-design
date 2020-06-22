@@ -8,7 +8,7 @@ import 'antd/dist/antd.css';
 import 'animate.css/animate.min.css';
 import 'bricks-web/dist/index.css';
 import 'brickd/dist/index.css';
-import { LegoProvider} from '../../core';
+import { LegoProvider} from 'brickd-core';
 import DesignPanel from './DesignPanel';
 import config from './configs';
 import initData from './initData';

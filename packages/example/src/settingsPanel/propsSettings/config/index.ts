@@ -1,6 +1,6 @@
 import Animate from '../Animate';
 import {TYPES_TO_COMPONENT as COMPONENT} from 'bricks-web'
-import { PROPS_TYPES } from '../../../../../core';
+import { PROPS_TYPES } from 'brickd-core';
 
 /**
  * 默认属性

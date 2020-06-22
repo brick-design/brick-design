@@ -10,7 +10,7 @@ import styles from './index.less';
 import { filterProps } from '../../utils';
 import {SwitchMultiTypes} from 'bricks-web';
 import { FormComponentProps } from 'antd/lib/form';
-import { changeProps, PropInfoType, PROPS_TYPES, PropsConfigSheetType, SelectedInfoType } from '../../../../core';
+import { changeProps, PropInfoType, PROPS_TYPES, PropsConfigSheetType, SelectedInfoType } from 'brickd-core';
 
 
 const FormItem = Form.Item;

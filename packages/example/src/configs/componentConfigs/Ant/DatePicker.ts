@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, NODE_PROPS_TYPES, NodePropsConfigType, PROPS_TYPES, PropsConfigType } from '../../../../../core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, NodePropsConfigType, PROPS_TYPES, PropsConfigType } from 'brickd-core';
 
 const commonNodePropsConfig: NodePropsConfigType = {
   dateRender: {

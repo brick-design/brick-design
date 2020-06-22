@@ -9,7 +9,7 @@ import isString from 'lodash/isString';
 import menus, { CONTEXT_MENU, ENABLED } from './config';
 import styles from './style.less';
 
-import { redo, undo, useSelector } from '../../../core';
+import { redo, undo, useSelector } from 'brickd-core';
 import ContextMenu from './component/ContextMenu';
 
 const REST_STYLE = 'resetStyle';

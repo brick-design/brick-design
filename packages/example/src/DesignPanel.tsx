@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './index.less';
 import { BrickDesign } from 'brickd';
-import { useSelector } from '../../core';
+import { useSelector } from 'brickd-core';
 export default function DesignPanel(){
   const {platformInfo}=useSelector(['platformInfo'])
   const {size} = platformInfo;

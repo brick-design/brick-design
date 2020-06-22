@@ -10,13 +10,13 @@ interface ActionSheetProps {
 export function ActionSheet(props:ActionSheetProps) {
   const {isOut,isRoot,hasChildNodes}=props
 
-    return (<div  className={styles['container']} style={{top:isOut?-20:0}}>
+    return (<div  className={styles['container']} style={{top:isOut?-13:0}}>
         {configs.map((config,index)=>{
-          const {icon,action}=config
+          const {icon,action,type}=config
           if(isRoot&&icon!==ACTIONS.delete) return null
-          if(!hasChildNodes&&icon===ACTIONS.clear) return null
-          return (<div className={styles['action-btn']} onClick={action} key={icon}>
-            {icon}
+          if(!hasChildNodes&&type===ACTIONS.clear) return null
+          return (<div className={styles['action-btn']} onClick={action} key={type}>
+            <img src={icon} className={styles['action-icon']}/>
           </div>)
         })}
       </div>)

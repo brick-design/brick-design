@@ -3,7 +3,7 @@ import { Dropdown, Icon, Menu } from 'antd';
 import styles from '../style.less';
 import map from 'lodash/map';
 import { PlatformMenusType } from '../config';
-import { changePlatform, PlatformInfoType } from '../../../../core';
+import { changePlatform, PlatformInfoType } from 'brickd-core';
 
 interface SwitchPlatformPropsType {
   platformInfo?: PlatformInfoType,

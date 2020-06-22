@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from '../../../../../core';
+import { ComponentConfigTypes, NODE_PROPS_TYPES, PROPS_TYPES } from 'brickd-core';
 
 const Dropdown: ComponentConfigTypes = {
   nodePropsConfig: {

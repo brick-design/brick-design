@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import { flattenDeepArray } from './utils';
 import styles from './index.less';
 import { BrickPreview } from 'bricks-web';
-import { LEGO_BRIDGE } from '../../core';
+import { LEGO_BRIDGE } from 'brickd-core';
 import { CONTAINER_CATEGORY, NON_CONTAINER_CATEGORY } from './/configs';
 
 const { TabPane } = Tabs;

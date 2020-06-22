@@ -1,4 +1,4 @@
-import { CategoryType } from '../../../core';
+import { CategoryType } from 'brickd-core';
 
 export const reactContainers: CategoryType = {
   'Layout': {

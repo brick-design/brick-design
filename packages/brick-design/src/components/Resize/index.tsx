@@ -167,9 +167,9 @@ export function Resize() {
   const setSelectedBorder = () => {
     if(selectNode.current){
       const { left, top, width, height } = selectNode.current.getBoundingClientRect();
-      if (top <= 20 && isOut) {
+      if (top <= 14&& isOut) {
         setIsOut(false);
-      } else if (top > 20&&!isOut) {
+      } else if (top > 14&&!isOut) {
         setIsOut(true);
       }
       resizeRef.current.style.width = `${width}px`;

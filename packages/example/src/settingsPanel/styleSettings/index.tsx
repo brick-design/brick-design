@@ -7,7 +7,7 @@ import cssConfig from './styleConfigs';
 import styleSheet from './index.less';
 import { CSS_TYPE_TO_COMPONENT } from './config';
 import { FormComponentProps } from 'antd/lib/form';
-import { changeStyles } from '../../../../core';
+import { changeStyles } from 'brickd-core';
 
 const FormItem = Form.Item;
 const { Panel } = Collapse;

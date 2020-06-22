@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from '../../../../../core';
+import { ComponentConfigTypes, PROPS_TYPES,NODE_PROPS_TYPES } from 'brickd-core';
 
 const Radio: ComponentConfigTypes = {
   propsConfig: {
