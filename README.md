@@ -3,31 +3,21 @@
 [![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
 [![npm version](https://img.shields.io/npm/v/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
-[![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/brickd/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
-
-## 特性
-
-- :fire:**任意拖拽嵌套**：通过组件预览面板拖拽组件，到设计面板实现任意嵌套，或者拖拽到DomTree中指定容器节点，DomTree与设计面板中的组件也可随意拖拽嵌套
-- :computer:**实时预览**：设计面板中会实时展示组件的属性效果和样式效果，并且与真实页面无异，所见即所得
-- :christmas_tree:**DomTree展示**：页面组件dom树的展示并实现组件dom实时追踪
-- :gift:**可视化属性配置**：结合React 特性和JS语法定制了可视化的组件属性配置，实现复杂数据结构的可视化配置
-- :fireworks:**可视化样式配置**：通过样式配置面板修改样式，实时在页面中显示样式效果
-- :video_camera:**模板功能**：可以选中局部或者整个页面做为可复用的模板，提高页面配置效率减少重复工作
-- :lock:**组件约束**：根据组件特性，可以配置组件的父组件约束与子组件约束，解决组件间的错误嵌套和报错
-- :eyeglasses:**预览与代码生成**：可随时预览页面的真实效果，和页面的jsx代码与样式代码
-- :four_leaf_clover:**多平台支持** ：支持PC与移动端多型号设配切换展示
-- :dvd:**组件库替换**：通过简单的配置可以对接任何React组件库
+[![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
 ## SNAPSHOT
 ![brickd1](https://user-images.githubusercontent.com/15995127/85188005-7e4de100-b2d6-11ea-9441-2bd5570b14a9.gif)
 ![brickd2](https://user-images.githubusercontent.com/15995127/85187856-86595100-b2d5-11ea-883e-e45313797fb3.gif)
 ![brickd3](https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif)
 
+## 描述
+基于React组件之间原始约束设计，还原真实开发中组件编码过程，所见即所得。当前版本还在开发中，新功能持续更新.....欢迎关注！
+
+
 ###  📦 Install
 ```sh
 yarn add brickd brickd-core bricks-web
 ```
-
 ```bash
 npm install brickd brickd-core bricks-web
 ```
