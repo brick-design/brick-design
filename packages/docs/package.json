@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "name": "docs",
+  "scripts": {
+    "start": "dumi dev"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "typings": "dist/index.d.ts",
+  "dependencies": {
+    "animate.css": "^3.7.2",
+    "antd": "3.26.16",
+    "brickd": "^1.0.0-alpha.7",
+    "brickd-core": "^1.0.0-alpha.7",
+    "bricks-web": "^1.0.0-alpha.7",
+    "classnames": "^2.2.6",
+    "dumi": "^1.0.25",
+    "highlight.js": "^9.17.1",
+    "html2canvas": "^1.0.0-rc.5",
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2",
+    "rc-animate": "^2.10.2",
+    "re-resizable": "^6.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "sortablejs": "^1.10.2"
+
+  },
+  "devDependencies": {
+    "@types/classnames": "^2.2.10",
+    "eslint": "^7.0.0",
+    "typescript": "^3.8.3"
+  },
+  "repository": "https://github.com/anye931123/react-visual-editor"
+}

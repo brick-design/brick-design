@@ -6,3 +6,6 @@
 .umi
 .umi-production
 .idea
+packages/*/dist
+.jest-cache
+coverage

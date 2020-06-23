@@ -1,18 +1,19 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "jsx": "react",
-    "esModuleInterop": true,
-    "sourceMap": true,
     "baseUrl": ".",
-    "strict": true,
-    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["src/*"]
-    },
-    "allowSyntheticDefaultImports": true
-  }
+      "brickd": ["packages/brick-design/src/index"],
+      "brickd/*": ["packages/brick-design/src/*"],
+      "brickd-core": ["packages/core/src/index"],
+      "brickd-core/*": ["packages/core/src/*"],
+      "bricks-web": ["packages/bricks-web/src/index"],
+      "bricks-web/*": ["packages/bricks-web/src/*"],
+      "bricks-native": ["packages/bricks-native/src/index"],
+      "bricks-native/*": ["packages/bricks-native/src/*"]
+    }
+  },
+  "include": ["./typings.d.ts"],
+  "exclude": ["**/node_modules/**"]
 }

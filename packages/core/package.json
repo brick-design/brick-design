@@ -1,0 +1,32 @@
+{
+  "name": "brickd-core",
+  "version": "1.0.0-alpha.7",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node_modules/.bin/father-build"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "immer": "^6.0.5",
+    "lodash": "^4.17.15",
+    "redux": "^4.0.5",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/uuid": "^3.4.7",
+    "father-build": "^1.18.0",
+    "@types/react": "^16.9.35"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  }
+}

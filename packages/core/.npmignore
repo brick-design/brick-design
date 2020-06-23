@@ -1,0 +1,5 @@
+src
+tsconfig.json
+typings.d.ts
+node_modules
+.fatherrc.js

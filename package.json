@@ -1,52 +1,164 @@
 {
-  "name": "react-visual-editor",
-  "version": "0.0.1",
-  "description": "react可视化编辑工具",
-  "authors": {
-    "name": "anye",
-    "email": "1278998669@qq.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/anye931123/react-visual-editor"
-  },
-  "homepage": "https://anye931123.github.io/react-visual-editor",
-  "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
-  },
-  "dependencies": {
-    "animate.css": "^3.7.2",
-    "bizcharts": "^3.5.8",
-    "classnames": "^2.2.6",
-    "dva": "^2.4.1",
-    "highlight.js": "^9.17.1",
-    "html2canvas": "^1.0.0-rc.5",
-    "lodash": "^4.17.15",
-    "prop-types": "^15.7.2",
-    "rc-animate": "^2.10.2",
-    "re-resizable": "^6.1.1",
-    "react": ">=16.8.0",
-    "react-color": "^2.18.0",
-    "react-dom": ">=16.8.0",
-    "sortablejs": "^1.10.2",
-    "umi-plugin-react": "^1.15.2",
-    "uuid": "^3.4.0"
-  },
-  "devDependencies": {
-    "@types/classnames": "^2.2.9",
-    "@types/highlight.js": "^9.12.3",
-    "@types/lodash": "^4.14.149",
-    "@types/react-color": "^3.0.1",
-    "@types/react-dom": "^16.9.5",
-    "@types/sortablejs": "^1.10.2",
-    "@types/uuid": "^3.4.7",
-    "gh-pages": "^2.2.0",
-    "umi": "^2.13.3",
-    "umi-plugin-block-dev": "^3.0.3",
-    "umi-types": "^0.5.12"
-  },
-  "license": "MIT"
+	"name": "root",
+	"private": true,
+	"author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/anye931123/react-visual-editor.git"
+	},
+	"keywords": [
+		"react",
+		"drag-and-drop",
+		"web-design",
+		"typescript",
+		"page-editor",
+		"web-builder",
+		"site-generator",
+		"site-builder",
+		"html-builder",
+		"nocode",
+		"lowcode",
+		"web-editor"
+	],
+	"scripts": {
+		"clean": "lerna clean --yes",
+		"bootstrap": "lerna bootstrap",
+		"build": "lerna run build --stream",
+		"test": "jest --coverage",
+		"precommit": "lint-staged",
+		"watch": "lerna run --parallel --stream watch",
+		"precommit:format": "pretty-quick --staged",
+		"start": "lerna run --parallel --stream start",
+		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.7.5",
+		"@babel/core": "^7.7.5",
+		"@babel/plugin-proposal-class-properties": "^7.7.4",
+		"@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+		"@babel/preset-env": "^7.7.5",
+		"@babel/preset-typescript": "^7.10.1",
+		"@commitlint/cli": "^8.2.0",
+		"@commitlint/config-conventional": "^8.2.0",
+		"@testing-library/jest-dom": "^5.9.0",
+		"@testing-library/react": "^10.2.1",
+		"@testing-library/react-hooks": "^3.3.0",
+		"@testing-library/user-event": "^11.2.1",
+		"@types/classnames": "^2.2.10",
+		"@types/jest": "^25.2.3",
+		"@types/lodash": "^4.14.149",
+		"@types/react": "^16.9.35",
+		"@types/sortablejs": "^1.10.4",
+		"@types/uuid": "^3.4.7",
+		"@typescript-eslint/eslint-plugin": "^2.8.0",
+		"@typescript-eslint/parser": "^2.8.0",
+		"babel-jest": "^26.0.1",
+		"dumi": "^1.0.25",
+		"eslint": "^6.7.0",
+		"eslint-config-prettier": "^6.7.0",
+		"eslint-config-react-app": "^5.0.2",
+		"eslint-plugin-prettier": "^3.1.1",
+		"eslint-plugin-react": "^7.16.0",
+		"eslint-plugin-react-hooks": "^2.3.0",
+		"father-build": "^1.18.0",
+		"husky": "^4.2.5",
+		"jest": "^26.0.1",
+		"jest-environment-jsdom-fourteen": "^1.0.1",
+		"jest-resolve": "^26.0.1",
+		"jest-watch-typeahead": "^0.6.0",
+		"jest-svg-transformer": "^1.0.0",
+		"lerna": "^3.20.2",
+		"lint-staged": "^10.2.11",
+		"prettier": "^2.0.5",
+		"pretty-quick": "^2.0.1",
+		"ts-jest": "^26.1.0",
+		"typescript": "^3.9.3"
+	},
+	"engines": {
+		"node": ">= 10.0"
+	},
+	"dependencies": {
+		"antd": "3.26.16",
+		"react": "^16.13.1",
+		"react-dom": "^16.13.1"
+	},
+	"jest": {
+		"clearMocks": true,
+		"cacheDirectory": ".jest-cache",
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx"
+		],
+		"modulePaths": [
+			"<rootDir>/packages/"
+		],
+		"moduleNameMapper": {
+			"^brickd-core$": "core/src",
+			"^brickd$": "brick-design/src",
+			"^bricks-web$": "bricks-web/src",
+			"\\.less$": "identity-obj-proxy"
+		},
+		"collectCoverageFrom": [
+			"packages/**/*.{ts,tsx}",
+			"!packages/core/src/index.ts",
+			"!**/node_modules/**",
+			"!**/dist/**",
+			"!**/__tests__/**",
+			"!packages/docs/**",
+			"!packages/bricks-web/**",
+			"!packages/example/**",
+			"!**/typing.d.ts"
+		],
+		"testMatch": [
+			"<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+			"<rootDir>/packages/brick-design/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+			"<rootDir>/packages/bricks-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
+		],
+		"transform": {
+			"^.+\\.(ts|tsx)$": "ts-jest",
+			"^.+\\.svg$": "jest-svg-transformer"
+		},
+		"globals": {
+			"ts-jest": {
+				"tsConfig": "tsconfig.jest.json",
+				"diagnostics": {
+					"pathRegex": "/.(spec|test).ts$/"
+				}
+			}
+		}
+	},
+	"lint-staged": {
+		"*.{ts,tsx}": [
+			"eslint --fix",
+			"prettier"
+		]
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "all",
+		"useTabs": true,
+		"overrides": [
+			{
+				"files": "*.md",
+				"options": {
+					"useTabs": false
+				}
+			},
+			{
+				"files": "*.json",
+				"options": {
+					"useTabs": false,
+					"tabWidth": 2
+				}
+			}
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	}
 }
