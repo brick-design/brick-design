@@ -6,7 +6,6 @@ import {
   ChildNodesType,
   clearDropTarget,
   getComponentConfig, handleRules,
-  LEGO_BRIDGE,
   produce,
   PropsNodeType, ROOT,
   STATE_PROPS,
@@ -57,8 +56,9 @@ function Container(allProps: CommonPropsType, ref: any) {
   useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
   const isHovered = useHover(key);
-  const { selectedDomKeys, isSelected } = useSelect(specialProps);
   const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => getComponentConfig(componentName), []);
+  const { selectedDomKeys, isSelected } = useSelect(specialProps,!!mirrorModalField);
+
   const onDragEnter = (e: Event) => {
     e.stopPropagation();
       let propName;
@@ -110,7 +110,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 
   let modalProps: any = {};
   if (mirrorModalField) {
-    const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField, 'dnd-iframe');
+    const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField);
     const isVisible = isSelected || selectedDomKeys && selectedDomKeys.includes(key);
     modalProps = { [displayPropName]: isVisible, ...mountedProps };
   }

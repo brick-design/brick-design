@@ -223,7 +223,7 @@ export function Resize() {
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        {!hoverKey&&<ActionSheet isOut={isOut} hasChildNodes={hasChildNodes} isRoot={selectedKey === ROOT}   />}
+        <ActionSheet isOut={isOut} hasChildNodes={hasChildNodes} isRoot={selectedKey === ROOT}   />
         {map(Direction, (direction) => <Item onResizeStart={onResizeStart} direction={direction} key={direction}/>)}
         <div className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']} ref={widthRef}
              onDoubleClick={updateSize}

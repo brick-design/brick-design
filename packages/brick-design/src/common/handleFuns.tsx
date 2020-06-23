@@ -20,6 +20,7 @@ import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import isEqual from 'lodash/isEqual';
 import { hoverClassTarget, selectClassTarget } from './constants';
+import { getIframe } from '../utils';
 
 /**
  * 处理样式
@@ -29,6 +30,7 @@ import { hoverClassTarget, selectClassTarget } from './constants';
  * @param isDragTarget
  * @param className
  * @param animateClass
+ * @param isDropTarget
  */
 export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string,isDropTarget?:boolean) {
   let classNameCollection = `${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} `;
@@ -124,12 +126,12 @@ export function handleChildNodes(specialProps:SelectedInfoBaseType, componentCon
  * @param mirrorModalField
  * @param iframeId
  */
-export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType, iframeId: string) {
+export function handleModalTypeContainer(mirrorModalField: MirrorModalFieldType) {
   const mountedProps: any = {};
   const { displayPropName, mounted } = mirrorModalField;
   if (mounted) {
     const { propName, type } = mounted;
-    const iframe: any = document.getElementById(iframeId);
+    const iframe: any = getIframe();
     const mountedNode = iframe.contentDocument.body;
     mountedProps[propName] = type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
   }
