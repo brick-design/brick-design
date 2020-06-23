@@ -43,8 +43,10 @@ And import style manually:
 import 'bricks-web/dist/index.css';
 import 'brickd/dist/index.css';
 ```
-## [example](https://github.com/brick-design/brick-design-demo)
 
+### 技术交流
+
+ <img src="./packages/docs/QQ.jpeg" width="300" />
 
 ## LICENSE
 
