@@ -68,9 +68,9 @@
     "webpack-dev-server": "3.10.3",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1",
-    "brickd": "^1.0.0-alpha.6",
-    "brickd-core": "^1.0.0-alpha.6",
-    "bricks-web": "^1.0.0-alpha.6"
+    "brickd": "^1.0.0-alpha.7",
+    "brickd-core": "^1.0.0-alpha.7",
+    "bricks-web": "^1.0.0-alpha.7"
   },
   "scripts": {
     "start": "node scripts/start.js",

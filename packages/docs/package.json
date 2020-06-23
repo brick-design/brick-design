@@ -10,9 +10,9 @@
   "dependencies": {
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
-    "brickd": "^1.0.0-alpha.6",
-    "brickd-core": "^1.0.0-alpha.6",
-    "bricks-web": "^1.0.0-alpha.6",
+    "brickd": "^1.0.0-alpha.7",
+    "brickd-core": "^1.0.0-alpha.7",
+    "bricks-web": "^1.0.0-alpha.7",
     "classnames": "^2.2.6",
     "dumi": "^1.0.25",
     "highlight.js": "^9.17.1",
