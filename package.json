@@ -8,14 +8,17 @@
 	},
 	"keywords": [
 		"react",
-		"reactjs",
-		"drag",
-		"drop",
-		"draggable",
-		"droppable",
 		"drag-and-drop",
 		"web-design",
-		"typescript"
+		"typescript",
+		"page-editor",
+		"web-builder",
+		"site-generator",
+		"site-builder",
+		"html-builder",
+		"nocode",
+		"lowcode",
+		"web-editor"
 	],
 	"scripts": {
 		"clean": "lerna clean --yes",
@@ -63,12 +66,13 @@
 		"jest-environment-jsdom-fourteen": "^1.0.1",
 		"jest-resolve": "^26.0.1",
 		"jest-watch-typeahead": "^0.6.0",
+		"jest-svg-transformer": "^1.0.0",
 		"lerna": "^3.20.2",
+		"lint-staged": "^10.2.11",
 		"prettier": "^2.0.5",
 		"pretty-quick": "^2.0.1",
 		"ts-jest": "^26.1.0",
-		"typescript": "^3.9.3",
-		"lint-staged": "^10.2.11"
+		"typescript": "^3.9.3"
 	},
 	"engines": {
 		"node": ">= 10.0"
@@ -113,7 +117,8 @@
 			"<rootDir>/packages/bricks-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
 		],
 		"transform": {
-			"^.+\\.(ts|tsx)$": "ts-jest"
+			"^.+\\.(ts|tsx)$": "ts-jest",
+			"^.+\\.svg$": "jest-svg-transformer"
 		},
 		"globals": {
 			"ts-jest": {
