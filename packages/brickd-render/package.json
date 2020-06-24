@@ -1,5 +1,5 @@
 {
-  "name": "brickd-core",
+  "name": "brickd-render",
   "version": "1.0.0-alpha.7",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
@@ -15,9 +15,9 @@
     "dist"
   ],
   "dependencies": {
-    "immer": "^6.0.5",
     "lodash": "^4.17.15",
-    "redux": "^4.0.5"
+    "brickd-core": "^1.0.0-alpha.7"
+
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",

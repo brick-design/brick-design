@@ -16,8 +16,8 @@ import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import { Reducer } from 'redux';
 
-
-export const reducer: Reducer<StateType, BrickAction> = (prevState, action) => {
+export type ReducerType=Reducer<StateType, BrickAction>
+export const reducer: ReducerType = (prevState, action) => {
   const state = prevState as StateType;
   const { type, payload } = action;
   switch (type) {

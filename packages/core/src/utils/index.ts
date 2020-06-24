@@ -1,13 +1,15 @@
 import {
+  BrickAction,
   ChildNodesType,
   ComponentConfigsType, ComponentConfigTypes,
   PropsConfigSheetType,
   PropsNodeType,
-  SelectedInfoType,
+  SelectedInfoType, StateType,
 } from '../types';
 import each from 'lodash/each';
 import get from 'lodash/get';
 import { LEGO_BRIDGE } from '../store';
+import { ReducerType } from '../reducers';
 
 /**
  * 根节点key
@@ -283,4 +285,14 @@ export function handleRules(componentConfigs:ComponentConfigsType,dragKey:string
   return false
 }
 
+export function combineReducers(brickReducer:ReducerType,customReducer?:ReducerType):ReducerType {
+  return (state:StateType|undefined,action:BrickAction):StateType=>{
+    const newState= brickReducer(state,action)
+    if(customReducer){
+      return customReducer(newState,action)
+    }else {
+      return newState
+    }
+  }
+}
 

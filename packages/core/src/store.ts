@@ -1,6 +1,7 @@
 import { createStore, Store } from 'redux';
-import { reducer } from './reducers';
+import { reducer, ReducerType } from './reducers';
 import { BrickAction, ConfigType, StateType } from './types';
+import { combineReducers } from './utils';
 
 export type LegoBridgeType = {
   config?: ConfigType,
@@ -24,9 +25,9 @@ export const legoState: StateType = {
 export function createActions(action:BrickAction) {
 return LEGO_BRIDGE.store!.dispatch(action)
 }
-export function createLegStore(initState: Partial<StateType> = {}) {
+export function createLegStore(initState: Partial<StateType> = {},customReducer?:ReducerType) {
   if (LEGO_BRIDGE.store) return LEGO_BRIDGE.store;
-  const store = createStore(reducer, { ...legoState, ...initState });
+  const store = createStore(combineReducers(reducer,customReducer), { ...legoState, ...initState });
   LEGO_BRIDGE.store = store;
   return store;
 }

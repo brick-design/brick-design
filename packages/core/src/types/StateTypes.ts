@@ -16,7 +16,8 @@ export interface VirtualDOMType {
   componentName: string,
   props?: any,
   addPropsConfig?: string,
-  childNodes?: ChildNodesType
+  childNodes?: ChildNodesType,
+  [custom:string]:any
 }
 
 export interface SelectedInfoBaseType extends ParentNodeInfo {
