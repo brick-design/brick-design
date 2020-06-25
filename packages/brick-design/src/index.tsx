@@ -19,24 +19,24 @@ import {Distances} from './components/Distances';
 import {Resize} from './components/Resize';
 export * from './common/events';
 
-const onIframeLoad = (divContainer: any, designPage: any) => {
+const onIframeLoad = (divContainer: any, designPage: any,iframe:HTMLIFrameElement) => {
   const head = document.head.cloneNode(true);
-  const contentDocument=getIframe()!.contentDocument!
+  const contentDocument=iframe.contentDocument!
   contentDocument.head.remove();
   contentDocument.documentElement.insertBefore(head, contentDocument.body);
-  divContainer.current = contentDocument.body;
-  componentMount(designPage,divContainer)
+  divContainer.current = contentDocument.getElementById('dnd-container');
+  componentMount(designPage,divContainer,iframe)
 };
 
 
 
-const componentMount=(designPage:any,divContainer:any)=>{
+const componentMount=(designPage:any,divContainer:any,iframe?:HTMLIFrameElement)=>{
   ReactDOM.render(
     <LegoProvider>
       {designPage}
-      <Guidelines/>
-      <Distances/>
-      <Resize/>
+      <Guidelines />
+      <Distances />
+      <Resize />
     </LegoProvider>
   , divContainer.current);
 }
@@ -85,6 +85,7 @@ return !componentConfigs[ROOT]||componentConfigs[ROOT]!==prevComponentConfigs[RO
 export function BrickDesign(props: BrickDesignProps) {
 
   const { componentConfigs,dragSource } = useSelector<BrickdHookState,STATE_PROPS>(stateSelector,controlUpdate);
+  const iframeRef=useRef<HTMLIFrameElement>()
   const designPage: any = useMemo(() => {
     if (!componentConfigs[ROOT]) return null;
     return renderComponent(componentConfigs)
@@ -93,7 +94,8 @@ export function BrickDesign(props: BrickDesignProps) {
   const divContainer = useRef(null);
 
   useEffect(() => {
-    const contentWindow = getIframe()!.contentWindow!;
+    iframeRef.current=getIframe()
+    const contentWindow = iframeRef.current.contentWindow!;
     contentWindow.addEventListener('dragover', onDragover);
     contentWindow.addEventListener('drop', onDrop);
     return () => {
@@ -113,7 +115,7 @@ export function BrickDesign(props: BrickDesignProps) {
       contentWindow.removeEventListener('dragenter', dragEnter)
       contentWindow.removeEventListener('dragleave', dragLeave)
     }
-  },[componentConfigs,dragSource,divContainer])
+  },[componentConfigs,dragSource,divContainer,iframeRef])
 
   useEffect(() => {
     if (divContainer.current){
@@ -127,9 +129,9 @@ export function BrickDesign(props: BrickDesignProps) {
       style={{ border: 0, width: '100%', height: '100%' }}
       srcDoc={iframeSrcDoc}
       onLoad={useCallback(() => {
-        onIframeLoad(divContainer, designPage);
+        onIframeLoad(divContainer, designPage,iframeRef.current!);
         onLoadEnd && onLoadEnd();
-      }, [])}
+      }, [iframeRef.current])}
       {...props}
     />
   );

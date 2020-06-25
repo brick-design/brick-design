@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { getIframe } from '../../utils';
-import { hoverClassTarget, selectClassTarget } from '../../common/constants';
+import React, { useMemo, useRef } from 'react';
+import { generateCSS, getIframe, getSelectedNode } from '../../utils';
 import { DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import styles from './index.less';
 import each from 'lodash/each';
@@ -8,7 +7,7 @@ import each from 'lodash/each';
 interface DistancesState {
   hoverKey: string | null,
   selectedInfo: SelectedInfoType | null,
-  dragSource:DragSourceType|null
+  dragSource: DragSourceType | null
 }
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
@@ -28,6 +27,8 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
   topDistance = selectTop - top;
   bottomDistance = selectBottom - bottom;
   //select组件左右边框在hover组件内部
+  let leftSubtract = false;
+  let rightSubtract=false
   if (width > selectWidth) {
     if (leftDistance == 0) {
       rightGuide = selectRight;
@@ -44,9 +45,12 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
       rightDistance = left - selectRight;
       rightGuide = selectRight;
     } else if (rightDistance > 0 && rightDistance < selectWidth) {  //select组件左侧出hover组件
+      leftSubtract=true;
+      rightSubtract=true
       leftGuide = left;
       rightGuide = right;
     } else if (rightDistance > 0 && rightDistance > selectWidth) {
+      rightSubtract=true
       rightDistance = 0;
       leftDistance = selectLeft - right;
       leftGuide = right;
@@ -80,9 +84,10 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
       rightDistance = 0;
       leftDistance = 0;
     }
-
   }
 
+  const topSubtract = false;
+  const bottomSubtract=false
   if (height > selectHeight) {
     if (topDistance === 0) {
       bottomGuide = selectBottom;
@@ -148,87 +153,67 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
     bottomGuide,
     bottomDistance,
   }, (v, k) => result[k] = Math.round(Math.abs(v)));
-  return result;
+  return { ...result, topSubtract, leftSubtract,rightSubtract,bottomSubtract };
 
 }
 
+
 export function Distances() {
-  const selectedNodeRef = useRef<ClientRect | null>();
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
   const rightRef = useRef<any>();
+  const iframe=getIframe()
 
-  const { hoverKey, selectedInfo,dragSource } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo','dragSource']);
+  const { hoverKey, selectedInfo, dragSource } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo', 'dragSource']);
+  const { selectedKey } = selectedInfo || {};
+  const hoverNode = getSelectedNode(hoverKey, iframe);
+  const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [selectedKey, iframe]);
 
-
-  useEffect(() => {
-    if (hoverKey && selectedInfo&&!dragSource) {
-      const contentDocument = getIframe()!.contentDocument!;
-      const hoverNode = contentDocument.getElementsByClassName(hoverClassTarget)[0];
-      const selectNode = contentDocument.getElementsByClassName(selectClassTarget)[0];
-
-      if (hoverNode && selectNode) {
-        const selectRect = selectNode.getBoundingClientRect();
-        const { left, top, width, height } = selectRect;
-        const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance } = handleDistances(selectRect, hoverNode.getBoundingClientRect());
-
-        if (leftDistance !== 0) {
-          leftRef.current.style.width = `${leftDistance}px`;
-          leftRef.current.style.left = `${leftGuide}px`;
-          leftRef.current.style.top = `${top + height / 2}px`;
-          leftRef.current.dataset.ditance = `${leftDistance}px`;
-          leftRef.current.style.display = 'flex';
-        } else {
-          leftRef.current.style.display = 'none';
-
-        }
-
-        if (rightDistance !== 0) {
-          rightRef.current.style.width = `${rightDistance}px`;
-          rightRef.current.style.left = `${rightGuide}px`;
-          rightRef.current.style.top = `${top + height / 2}px`;
-          rightRef.current.dataset.ditance = `${rightDistance}px`;
-          rightRef.current.style.display = 'flex';
-        } else {
-          rightRef.current.style.display = 'none';
-
-        }
-
-
-        if (topDistance !== 0) {
-          topRef.current.style.height = `${topDistance}px`;
-          topRef.current.style.left = `${left + width / 2}px`;
-          topRef.current.style.top = `${topGuide}px`;
-          topRef.current.dataset.ditance = `${topDistance}px`;
-          topRef.current.style.display = 'flex';
-        } else {
-          topRef.current.style.display = 'none';
-
-        }
-
-
-        if (bottomDistance !== 0) {
-          bottomRef.current.style.height = `${bottomDistance}px`;
-          bottomRef.current.style.left = `${left + width / 2}px`;
-          bottomRef.current.style.top = `${bottomGuide}px`;
-          bottomRef.current.dataset.ditance = `${bottomDistance}px`;
-          bottomRef.current.style.display = 'flex';
-        } else {
-          bottomRef.current.style.display = 'none';
-
-        }
-
-
-      }
+  if (!dragSource && hoverNode && selectNode) {
+    const selectRect = selectNode.getBoundingClientRect();
+    const { left, top, width, height } = selectRect;
+    const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance, topSubtract, leftSubtract,rightSubtract,bottomSubtract } = handleDistances(selectRect, hoverNode.getBoundingClientRect());
+    if (leftDistance !== 0) {
+      leftRef.current.style.cssText = generateCSS(leftGuide, top + height / 2, leftDistance, undefined, iframe, leftSubtract);
+      leftRef.current.dataset.distance = `${leftDistance}px`;
     } else {
       leftRef.current.style.display = 'none';
-      rightRef.current.style.display = 'none';
-      topRef.current.style.display = 'none';
-      bottomRef.current.style.display = 'none';
 
     }
-  }, [hoverKey, selectedInfo,dragSource, selectedNodeRef, leftRef, rightRef, topRef, bottomRef]);
+
+    if (rightDistance !== 0) {
+      rightRef.current.style.cssText = generateCSS(rightGuide, top + height / 2, rightDistance, undefined, iframe, rightSubtract);
+      rightRef.current.dataset.distance = `${rightDistance}px`;
+    } else {
+      rightRef.current.style.display = 'none';
+
+    }
+
+
+    if (topDistance !== 0) {
+      topRef.current.style.cssText = generateCSS(left + width / 2, topGuide, undefined, topDistance,iframe,topSubtract);
+      topRef.current.dataset.distance = `${topDistance}px`;
+    } else {
+      topRef.current.style.display = 'none';
+
+    }
+
+
+    if (bottomDistance !== 0) {
+      bottomRef.current.style.cssText = generateCSS(left + width / 2, bottomGuide, undefined, bottomDistance,iframe,bottomSubtract);
+      bottomRef.current.dataset.distance = `${bottomDistance}px`;
+    } else {
+      bottomRef.current.style.display = 'none';
+    }
+  } else if (leftRef.current) {
+    leftRef.current.style.display = 'none';
+    rightRef.current.style.display = 'none';
+    topRef.current.style.display = 'none';
+    bottomRef.current.style.display = 'none';
+  }
+
+
   return (<>
     <div ref={topRef} className={styles['distances-v']}/>
     <div ref={bottomRef} className={styles['distances-v']}/>

@@ -24,7 +24,6 @@ import {
   stateSelector,
 } from '../common/handleFuns';
 import { getDropTargetInfo } from '..';
-import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
@@ -55,7 +54,6 @@ function Container(allProps: CommonPropsType, ref: any) {
 
   useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
-  const isHovered = useHover(key);
   const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => getComponentConfig(componentName), []);
   const { selectedDomKeys, isSelected } = useSelect(specialProps,!!mirrorModalField);
 
@@ -119,7 +117,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   return (
     createElement(getComponent(componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key, className, animateClass,selectedKey===key),
+      className: handlePropsClassName(key,isHidden&&!isDragAddChild,dragKey===key, className, animateClass,selectedKey===key),
       ...(isDragAddChild ?{}:{
         onDragEnter,
         onDragLeave,

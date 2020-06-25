@@ -19,30 +19,21 @@ import each from 'lodash/each';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import isEqual from 'lodash/isEqual';
-import { hoverClassTarget, selectClassTarget } from './constants';
+import { selectClassTarget } from './constants';
 import { getIframe } from '../utils';
 
 /**
  * 处理样式
- * @param isSelected
- * @param isHovered
+ * @param key
  * @param isHidden
  * @param isDragTarget
  * @param className
  * @param animateClass
  * @param isDropTarget
  */
-export function handlePropsClassName(isSelected: boolean, isHovered: boolean, isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string,isDropTarget?:boolean) {
-  let classNameCollection = `${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} `;
-  if (isHidden) {
-    return styles['hidden-component'];
-  }
-  if (isSelected) {
-    classNameCollection += selectClassTarget;
-  } else if (isHovered) {
-    classNameCollection += hoverClassTarget;
-  }
-  return classNameCollection;
+export function handlePropsClassName( key:string,isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string,isDropTarget?:boolean) {
+  return  `${selectClassTarget+key} ${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} ${isHidden&&styles['hidden-component']}`;
+
 }
 
 

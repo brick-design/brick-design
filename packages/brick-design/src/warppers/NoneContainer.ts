@@ -12,7 +12,6 @@ import {
 } from '../common/handleFuns';
 import { formatSpecialProps, getComponent } from '../utils';
 import merge from 'lodash/merge';
-import { useHover } from '../hooks/useHover';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 
@@ -25,7 +24,6 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   } = allProps;
   const { componentConfigs:PageDom, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key));
-  const isHovered = useHover(key);
   const { isSelected } = useSelect(specialProps);
   const {dragSource, isHidden } = useDragDrop(key);
   const {dragKey,vDOMCollection}=dragSource||{}
@@ -46,7 +44,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   return (
     createElement(getComponent(componentName), {
       ...restProps,
-      className: handlePropsClassName(isSelected, isHovered, isHidden&&!isDragAddChild,dragKey===key,className, animateClass),
+      className: handlePropsClassName(key, isHidden&&!isDragAddChild,dragKey===key,className, animateClass),
       ...(isDragAddChild ?{}:{
         onDragEnter,
         ...handleEvents(specialProps, isSelected),

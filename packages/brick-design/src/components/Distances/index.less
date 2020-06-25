@@ -2,14 +2,13 @@
 .distances-common{
   position: absolute;
   z-index: 30000;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   .animate();
 
 }
-
 
 
 .distances-v{
@@ -19,7 +18,7 @@
   background-color: @selectColor;
   &:before{
     .distances-tip();
-    content: attr(data-ditance);
+    content: attr(data-distance);
     pointer-events: none;
     left: 5px;
   }
@@ -34,7 +33,7 @@
 
   &:before{
     .distances-tip();
-    content: attr(data-ditance);
+    content: attr(data-distance);
     pointer-events: none;
     top: -20px;
   }
