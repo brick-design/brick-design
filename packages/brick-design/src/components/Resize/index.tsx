@@ -57,7 +57,7 @@ type OriginSizeType = {
 export function Resize() {
   const iframe=getIframe()
   const { selectedInfo, hoverKey, componentConfigs } = useSelector<ResizeState, STATE_PROPS>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate);
-  const { selectedKey,domTreeKeys } = selectedInfo||{};
+  const { selectedKey,domTreeKeys,propName } = selectedInfo||{};
   const resizeRef = useRef<any>();
   const originSizeRef = useRef<OriginSizeType>();
   const sizeResultRef = useRef<ResizePayload>({});
@@ -243,7 +243,7 @@ export function Resize() {
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        <ActionSheet  isOut={isOut} hasChildNodes={!!childNodes} isRoot={selectedKey === ROOT}/>
+        <ActionSheet  isOut={isOut} hasChildNodes={propName?!!get(childNodes,propName):!!childNodes} isRoot={selectedKey === ROOT}/>
         {map(Direction, (direction) => <Item onResizeStart={onResizeStart} direction={direction} key={direction}/>)}
         <div className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']} ref={widthRef}
              onDoubleClick={updateSize}
