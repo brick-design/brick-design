@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { generateCSS, getIframe, getSelectedNode } from '../../utils';
+import { generateCSS, getElementPosition, getIframe, getSelectedNode, getElementInfo } from '../../utils';
 import { DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import styles from './index.less';
 import each from 'lodash/each';
@@ -27,8 +27,7 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
   topDistance = selectTop - top;
   bottomDistance = selectBottom - bottom;
   //select组件左右边框在hover组件内部
-  let leftSubtract = false;
-  let rightSubtract=false
+
   if (width > selectWidth) {
     if (leftDistance == 0) {
       rightGuide = selectRight;
@@ -45,12 +44,9 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
       rightDistance = left - selectRight;
       rightGuide = selectRight;
     } else if (rightDistance > 0 && rightDistance < selectWidth) {  //select组件左侧出hover组件
-      leftSubtract=true;
-      rightSubtract=true
       leftGuide = left;
       rightGuide = right;
     } else if (rightDistance > 0 && rightDistance > selectWidth) {
-      rightSubtract=true
       rightDistance = 0;
       leftDistance = selectLeft - right;
       leftGuide = right;
@@ -86,8 +82,6 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
     }
   }
 
-  const topSubtract = false;
-  const bottomSubtract=false
   if (height > selectHeight) {
     if (topDistance === 0) {
       bottomGuide = selectBottom;
@@ -153,7 +147,7 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
     bottomGuide,
     bottomDistance,
   }, (v, k) => result[k] = Math.round(Math.abs(v)));
-  return { ...result, topSubtract, leftSubtract,rightSubtract,bottomSubtract };
+  return result;
 
 }
 
@@ -171,11 +165,12 @@ export function Distances() {
   const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [selectedKey, iframe]);
 
   if (!dragSource && hoverNode && selectNode) {
-    const selectRect = selectNode.getBoundingClientRect();
-    const { left, top, width, height } = selectRect;
-    const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance, topSubtract, leftSubtract,rightSubtract,bottomSubtract } = handleDistances(selectRect, hoverNode.getBoundingClientRect());
+    const selectRect:ClientRect=getElementInfo(selectNode);
+    const {  width, height,top,left }=selectRect
+    const hoverRect: ClientRect=getElementInfo(hoverNode)
+    const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance } = handleDistances(selectRect,hoverRect);
     if (leftDistance !== 0) {
-      leftRef.current.style.cssText = generateCSS(leftGuide, top + height / 2, leftDistance, undefined, iframe, leftSubtract);
+      leftRef.current.style.cssText = generateCSS(leftGuide, top + height / 2, leftDistance);
       leftRef.current.dataset.distance = `${leftDistance}px`;
     } else {
       leftRef.current.style.display = 'none';
@@ -183,7 +178,7 @@ export function Distances() {
     }
 
     if (rightDistance !== 0) {
-      rightRef.current.style.cssText = generateCSS(rightGuide, top + height / 2, rightDistance, undefined, iframe, rightSubtract);
+      rightRef.current.style.cssText = generateCSS(rightGuide, top + height / 2, rightDistance);
       rightRef.current.dataset.distance = `${rightDistance}px`;
     } else {
       rightRef.current.style.display = 'none';
@@ -192,7 +187,7 @@ export function Distances() {
 
 
     if (topDistance !== 0) {
-      topRef.current.style.cssText = generateCSS(left + width / 2, topGuide, undefined, topDistance,iframe,topSubtract);
+      topRef.current.style.cssText = generateCSS(left + width / 2, topGuide, undefined, topDistance);
       topRef.current.dataset.distance = `${topDistance}px`;
     } else {
       topRef.current.style.display = 'none';
@@ -201,7 +196,7 @@ export function Distances() {
 
 
     if (bottomDistance !== 0) {
-      bottomRef.current.style.cssText = generateCSS(left + width / 2, bottomGuide, undefined, bottomDistance,iframe,bottomSubtract);
+      bottomRef.current.style.cssText = generateCSS(left + width / 2, bottomGuide, undefined, bottomDistance);
       bottomRef.current.dataset.distance = `${bottomDistance}px`;
     } else {
       bottomRef.current.style.display = 'none';

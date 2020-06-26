@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './index.less';
 import { DragSourceType, DropTargetType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
-import { generateCSS, getIframe, getSelectedNode } from '../../utils';
+import { generateCSS, getElementInfo, getIframe, getSelectedNode } from '../../utils';
 
 type SelectState = {
   hoverKey: string | null,
@@ -26,19 +26,17 @@ export function Guidelines() {
   const guidControl = hoverKey && (!selectedInfo || selectedInfo && !dragSource);
   const node = getSelectedNode(hoverKey!, iframe);
   if (guidControl && node) {
-    const { left, top, bottom, right, width, height } = node.getBoundingClientRect();
-    const { contentWindow,contentDocument } = iframe!;
-    const {scrollX,scrollY}=contentWindow!
-    const leftResult=left+scrollX
-    const topResult=top+scrollY
-    hoverNodeRef.current.style.cssText = generateCSS(leftResult, topResult, width, height);
-    topRef.current.style.top = `${top + scrollY}px`;
+    const { left, top, bottom, right, width, height } = getElementInfo(node);
+    const { contentDocument } = iframe!;
+
+    hoverNodeRef.current.style.cssText = generateCSS(left, top, width, height);
+    topRef.current.style.top = `${top}px`;
     topRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
-    leftRef.current.style.left = `${left + scrollX}px`;
+    leftRef.current.style.left = `${left }px`;
     leftRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
-    rightRef.current.style.left = `${right - 1 + scrollX}px`;
+    rightRef.current.style.left = `${right - 1 }px`;
     rightRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
-    bottomRef.current.style.top = `${bottom - 1 + scrollY}px`;
+    bottomRef.current.style.top = `${bottom - 1 }px`;
     bottomRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
 
   }

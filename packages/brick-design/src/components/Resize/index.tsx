@@ -8,7 +8,7 @@ import {
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';
-import { generateCSS, getIframe, getSelectedNode } from '../../utils';
+import { generateCSS, getElementInfo, getIframe, getSelectedNode } from '../../utils';
 import { selectClassTarget } from '../../common/constants';
 import { Item } from './Item';
 import styles from './index.less';
@@ -165,8 +165,8 @@ export function Resize() {
 
   const setSelectedBorder = () => {
     if (selectNodeRef.current) {
-      const { left, top, width, height } = selectNodeRef.current.getBoundingClientRect()
-      resizeRef.current.style.cssText = generateCSS(left, top, width, height,iframe);
+      const { left, top, width, height } = getElementInfo(selectNodeRef.current)
+      resizeRef.current.style.cssText = generateCSS(left, top, width, height);
     }
   }
   const onResizeStart = useCallback(function(event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {

@@ -58,54 +58,63 @@ export const iframeSrcDoc = `<!DOCTYPE html>
 </html>
 `;
 
-export const isEqualKey=(key:string,selectKey?:string|null)=>{
-  if(!selectKey) return false
-  return selectKey.includes(key)&&parseInt(selectKey)===parseInt(key)
+export const isEqualKey = (key: string, selectKey?: string | null) => {
+  if (!selectKey) return false;
+  return selectKey.includes(key) && parseInt(selectKey) === parseInt(key);
 
-}
+};
 
-export const getIframe=():HTMLIFrameElement=>{
-  return document.getElementById('dnd-iframe') as HTMLIFrameElement
-}
+export const getIframe = (): HTMLIFrameElement => {
+  return document.getElementById('dnd-iframe') as HTMLIFrameElement;
+};
 
-export const getComponent=(componentName:string)=>get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName)
+export const getComponent = (componentName: string) => get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName);
 
-export function formatUnit(target:string|null) {
-  if(target){
-    const result= target.match(/\d+/)
-    if(result){
-      return Number.parseInt(result[0])
+export function formatUnit(target: string | null) {
+  if (target) {
+    const result = target.match(/\d+/);
+    if (result) {
+      return Number.parseInt(result[0]);
     }
   }
 
-  return null
+  return null;
 }
 
-export const getSelectedNode = (key?:string|null,iframe?:HTMLIFrameElement): HTMLElement|undefined => {
-  if(iframe&&key){
-    const {contentDocument}=iframe
-    return contentDocument!.getElementsByClassName(selectClassTarget+parseInt(key))[0] as HTMLElement;
+export const getSelectedNode = (key?: string | null, iframe?: HTMLIFrameElement): HTMLElement | undefined => {
+  if (iframe && key) {
+    const { contentDocument } = iframe;
+    return contentDocument!.getElementsByClassName(selectClassTarget + parseInt(key))[0] as HTMLElement;
   }
 
 };
 
-export function generateCSS(left:number,top:number,width?:number,height?:number,iframe?:HTMLIFrameElement,isSubtract?:boolean) {
-  if(iframe){
-    const {contentWindow}=iframe
-    if(isSubtract){
-      left=left-contentWindow!.scrollX
-      top=top-contentWindow!.scrollY
-    }else {
-      left=contentWindow!.scrollX+left
-      top=contentWindow!.scrollY+top
-    }
-  }
+export function generateCSS(left: number, top: number, width?: number, height?: number) {
 
   return `
-    ${width?`width:${width}px;`:''}
-    ${height?`height:${height}px;`:''}
+    ${width ? `width:${width}px;` : ''}
+    ${height ? `height:${height}px;` : ''}
     display:flex;
     left:${left}px;
     top:${top}px;
-  `
+  `;
+}
+
+export function getElementPosition(element:any) {
+  let left = 0;
+  let top = 0;
+  while (element !== null)  {
+    left += element.offsetLeft;
+    top += element.offsetTop;
+    element = element.offsetParent;
+  }
+  return {left,  top};
+}
+
+
+export function getElementInfo(element:any) {
+  const {left,top }=getElementPosition(element)
+  const {width,height}=element.getBoundingClientRect()
+  return {width,height,left,top,bottom:top+height,right:left+width}
+
 }
