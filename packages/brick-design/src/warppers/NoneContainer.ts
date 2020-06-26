@@ -1,6 +1,5 @@
 import { createElement, forwardRef, memo, useMemo } from 'react';
-import get from 'lodash/get';
-import { clearDropTarget, getComponentConfig, LEGO_BRIDGE, produce, ROOT, STATE_PROPS, useSelector } from 'brickd-core';
+import { clearDropTarget, getComponentConfig, produce, ROOT, STATE_PROPS, useSelector } from 'brickd-core';
 import {
   CommonPropsType,
   controlUpdate,

@@ -1,13 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import styles from './index.less';
-import { DragSourceType, DropTargetType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
-import { generateCSS, getElementInfo, getIframe, getSelectedNode } from '../../utils';
+import {
+  ComponentConfigsType,
+  DragSourceType,
+  DropTargetType,
+  SelectedInfoType,
+  STATE_PROPS,
+  useSelector,
+} from 'brickd-core';
+import { generateCSS, getElementInfo, getIframe, getIsModalChild, getSelectedNode, setPosition } from '../../utils';
 
 type SelectState = {
   hoverKey: string | null,
   dropTarget: DropTargetType | null,
   selectedInfo: SelectedInfoType | null,
-  dragSource: DragSourceType | null
+  dragSource: DragSourceType | null,
+  componentConfigs: ComponentConfigsType
+
 }
 
 const controlUpdate = (prevState: SelectState, nextState: SelectState) => {
@@ -22,7 +31,9 @@ export function Guidelines() {
   const hoverNodeRef = useRef<any>();
 
   const iframe=getIframe()
-  const { hoverKey, dropTarget, dragSource, selectedInfo } = useSelector<SelectState, STATE_PROPS>(['hoverKey', 'dropTarget', 'dragSource', 'selectedInfo'], controlUpdate);
+  const { hoverKey, dropTarget, dragSource, selectedInfo,componentConfigs } = useSelector<SelectState, STATE_PROPS>(['hoverKey', 'dropTarget', 'dragSource', 'selectedInfo','componentConfigs'], controlUpdate);
+  const {domTreeKeys}=selectedInfo||{}
+  const isModal=getIsModalChild(componentConfigs,domTreeKeys)
   const guidControl = hoverKey && (!selectedInfo || selectedInfo && !dragSource);
   const node = getSelectedNode(hoverKey!, iframe);
   if (guidControl && node) {
@@ -38,6 +49,7 @@ export function Guidelines() {
     rightRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
     bottomRef.current.style.top = `${bottom - 1 }px`;
     bottomRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
+    setPosition([hoverNodeRef.current,leftRef.current,rightRef.current,topRef.current,bottomRef.current],isModal)
 
   }
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];

@@ -1,5 +1,6 @@
 import {
-  addComponent, clearHovered,
+  addComponent,
+  clearHovered,
   clearSelectedStatus,
   getDragSource,
   getDropTarget,

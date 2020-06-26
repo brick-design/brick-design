@@ -1,7 +1,7 @@
 import each from 'lodash/each';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
-import { LEGO_BRIDGE, PROPS_TYPES } from 'brickd-core';
+import { ComponentConfigsType, getComponentConfig, LEGO_BRIDGE, PROPS_TYPES } from 'brickd-core';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import keys from 'lodash/keys';
@@ -116,5 +116,25 @@ export function getElementInfo(element:any) {
   const {left,top }=getElementPosition(element)
   const {width,height}=element.getBoundingClientRect()
   return {width,height,left,top,bottom:top+height,right:left+width}
+
+}
+
+export function getIsModalChild(componentConfigs:ComponentConfigsType,domTreeKeys?:string[]) {
+  if(domTreeKeys){
+    for (const key of domTreeKeys){
+      const {mirrorModalField}=getComponentConfig(get(componentConfigs,[key,'componentName']))||{}
+      if(mirrorModalField) return true
+    }
+  }
+  return false
+}
+
+export function setPosition(nodes:any[],isModal?:boolean) {
+  if(isModal){
+    each(nodes,(node)=>node.style.position='fixed')
+  }else {
+    each(nodes,(node)=>node.style.position='absolute')
+
+  }
 
 }

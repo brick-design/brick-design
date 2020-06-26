@@ -1,7 +1,8 @@
 import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   clearHovered,
-  ComponentConfigsType, DragSourceType,
+  ComponentConfigsType,
+  DragSourceType,
   isContainer,
   LegoProvider,
   ROOT,
@@ -13,10 +14,10 @@ import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
-import {ActionSheet} from './components/ActionSheet';
-import {Guidelines} from './components/Guidelines';
-import {Distances} from './components/Distances';
-import {Resize} from './components/Resize';
+import { Guidelines } from './components/Guidelines';
+import { Distances } from './components/Distances';
+import { Resize } from './components/Resize';
+
 export * from './common/events';
 
 const onIframeLoad = (divContainer: any, designPage: any,iframe:HTMLIFrameElement) => {
@@ -25,12 +26,12 @@ const onIframeLoad = (divContainer: any, designPage: any,iframe:HTMLIFrameElemen
   contentDocument.head.remove();
   contentDocument.documentElement.insertBefore(head, contentDocument.body);
   divContainer.current = contentDocument.getElementById('dnd-container');
-  componentMount(designPage,divContainer,iframe)
+  componentMount(designPage,divContainer)
 };
 
 
 
-const componentMount=(designPage:any,divContainer:any,iframe?:HTMLIFrameElement)=>{
+const componentMount=(designPage:any,divContainer:any)=>{
   ReactDOM.render(
     <LegoProvider>
       {designPage}

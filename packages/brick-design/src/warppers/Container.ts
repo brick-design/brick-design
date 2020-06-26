@@ -1,13 +1,14 @@
 import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'react';
-import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { formatSpecialProps, getComponent } from '../utils';
 import {
   ChildNodesType,
   clearDropTarget,
-  getComponentConfig, handleRules,
+  getComponentConfig,
+  handleRules,
   produce,
-  PropsNodeType, ROOT,
+  PropsNodeType,
+  ROOT,
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';

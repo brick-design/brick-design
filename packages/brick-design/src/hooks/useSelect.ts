@@ -1,7 +1,7 @@
 import { SelectedInfoBaseType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import { useEffect } from 'react';
 import { handleSelectedStatus } from '../common/events';
-import { formatUnit, isEqualKey } from '../utils';
+import { isEqualKey } from '../utils';
 
 interface SelectType {
   selectedInfo: SelectedInfoType
@@ -21,7 +21,7 @@ function controlUpdate(prevState: SelectType, nextState: SelectType, key: string
   }
   if (prevSelectedKey && !selectedKey) {
     if(isModal){
-      if(prevSelectedKey.includes(key)){
+      if(prevDomTreeKeys.includes(key)){
         return true
       }
     }

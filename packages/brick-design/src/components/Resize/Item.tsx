@@ -1,6 +1,7 @@
-import React from 'react'
-import styles from './index.less'
+import React from 'react';
+import styles from './index.less';
 import { Direction } from './index';
+
 interface ItemProps {
   onResizeStart:(e: React.MouseEvent<HTMLSpanElement>,direction:Direction)=>void,
   direction:Direction

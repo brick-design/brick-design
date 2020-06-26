@@ -8,14 +8,20 @@ import {
   STATE_PROPS,
   useSelector,
 } from 'brickd-core';
-import { generateCSS, getElementInfo, getIframe, getSelectedNode } from '../../utils';
-import { selectClassTarget } from '../../common/constants';
+import {
+  formatUnit,
+  generateCSS,
+  getElementInfo,
+  getIframe,
+  getIsModalChild,
+  getSelectedNode,
+  setPosition,
+} from '../../utils';
 import { Item } from './Item';
 import styles from './index.less';
 import map from 'lodash/map';
 import { ActionSheet } from '../ActionSheet';
 import get from 'lodash/get';
-import { formatUnit } from '../../utils';
 
 type ResizeState = {
   selectedInfo: SelectedInfoType,
@@ -47,10 +53,11 @@ type OriginSizeType = {
   direction: Direction
 }
 
+
 export function Resize() {
   const iframe=getIframe()
   const { selectedInfo, hoverKey, componentConfigs } = useSelector<ResizeState, STATE_PROPS>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate);
-  const { selectedKey } = selectedInfo || {};
+  const { selectedKey,domTreeKeys } = selectedInfo||{};
   const resizeRef = useRef<any>();
   const originSizeRef = useRef<OriginSizeType>();
   const sizeResultRef = useRef<ResizePayload>({});
@@ -58,7 +65,10 @@ export function Resize() {
   const heightRef = useRef<any>();
   const baseboardRef = useRef<HTMLDivElement|any>();
   const selectNodeRef = useRef<HTMLElement>();
-
+  const [isOut, setIsOut] = useState<boolean>(true);
+  const {props,childNodes}=componentConfigs[selectedKey]||{}
+  const { width = 'auto', height = 'auto' } = get(props,'style',{});
+  const isModal=useMemo(()=>getIsModalChild(componentConfigs,domTreeKeys),[domTreeKeys,componentConfigs])
   selectNodeRef.current = useMemo(() => getSelectedNode(selectedKey, iframe), [iframe, selectedKey]);
 
   useEffect(() => {
@@ -67,15 +77,16 @@ export function Resize() {
     contentWindow.addEventListener('mousemove', onMouseMove);
     contentWindow.addEventListener('mouseleave', onMouseUp);
     contentWindow.addEventListener('resize', setSelectedBorder);
+    contentWindow.addEventListener('animationend',setSelectedBorder)
     return () => {
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
       contentWindow.removeEventListener('mousemove', onMouseUp);
       contentWindow.removeEventListener('resize', setSelectedBorder);
+      contentWindow.removeEventListener('animationend',setSelectedBorder)
 
     };
-  }, []);
-
+  }, [isModal]);
 
   useEffect(() => {
     if (selectedKey) {
@@ -91,6 +102,7 @@ export function Resize() {
   if (!selectedKey && resizeRef.current) {
     resizeRef.current.style.display = 'none';
   }
+
   const onMouseUp = useCallback(() => {
     originSizeRef.current = undefined;
     baseboardRef.current!.style.display = 'none';
@@ -99,7 +111,14 @@ export function Resize() {
     sizeResultRef.current = {};
   }, [originSizeRef.current, baseboardRef.current, resizeRef.current, sizeResultRef.current]);
 
+  const changeBaseboard=()=>{
+    const {contentDocument}=iframe!
+    baseboardRef.current!.style.display = 'block';
+    baseboardRef.current!.style.width=`${contentDocument!.body.scrollWidth}px`
+    baseboardRef.current!.style.height=`${contentDocument!.body.scrollHeight}px`
+  }
   const onMouseMove = useCallback((event: MouseEvent) => {
+    event.stopPropagation()
     if (originSizeRef.current) {
       const { clientX, clientY } = event;
       const { x, y, direction, height, width } = originSizeRef.current;
@@ -149,6 +168,7 @@ export function Resize() {
       }
       showSize(sizeResultRef.current.width, sizeResultRef.current.height);
       setSelectedBorder();
+      changeBaseboard()
     }
 
   }, [originSizeRef.current, sizeResultRef.current, selectNodeRef.current]);
@@ -166,12 +186,19 @@ export function Resize() {
   const setSelectedBorder = () => {
     if (selectNodeRef.current) {
       const { left, top, width, height } = getElementInfo(selectNodeRef.current)
+      if (top <= 14&& isOut) {
+        setIsOut(false);
+      } else if (top > 14&&!isOut) {
+        setIsOut(true);
+      }
       resizeRef.current.style.cssText = generateCSS(left, top, width, height);
+      setPosition([resizeRef.current],isModal)
+
     }
   }
   const onResizeStart = useCallback(function(event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {
     if (event.nativeEvent&&iframe) {
-      const { contentWindow,contentDocument } = iframe!;
+      const { contentWindow } = iframe!;
       const { width, height, minWidth, minHeight, maxWidth, maxHeight } = contentWindow!.getComputedStyle(selectNodeRef.current!);
       originSizeRef.current = {
         x: event.nativeEvent.clientX,
@@ -185,12 +212,11 @@ export function Resize() {
         maxHeight: formatUnit(maxHeight),
       };
       resizeRef.current.style.pointerEvents = 'auto';
-      baseboardRef.current!.style.display = 'block';
-      baseboardRef.current!.style.width=`${contentDocument!.body.scrollWidth}px`
-      baseboardRef.current!.style.height=`${contentDocument!.body.scrollHeight}px`
 
+      changeBaseboard()
     }
   }, [iframe, selectNodeRef.current, resizeRef.current, baseboardRef.current, originSizeRef.current]);
+
 
   const changeWidth = useCallback(() => {
     widthRef.current.contentEditable = 'true';
@@ -212,13 +238,12 @@ export function Resize() {
 
   setSelectedBorder();
 
-  const { width = 'auto', height = 'auto' } = get(componentConfigs, [selectedKey, 'props', 'style'], {});
-  const hasChildNodes = !!get(componentConfigs, [selectedKey, 'childNodes']);
+
 
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        <ActionSheet hasChildNodes={hasChildNodes} isRoot={selectedKey === ROOT}/>
+        <ActionSheet  isOut={isOut} hasChildNodes={!!childNodes} isRoot={selectedKey === ROOT}/>
         {map(Direction, (direction) => <Item onResizeStart={onResizeStart} direction={direction} key={direction}/>)}
         <div className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']} ref={widthRef}
              onDoubleClick={updateSize}

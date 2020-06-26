@@ -1,13 +1,14 @@
 import React, { useMemo, useRef } from 'react';
-import { generateCSS, getElementPosition, getIframe, getSelectedNode, getElementInfo } from '../../utils';
-import { DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
+import { generateCSS, getElementInfo, getIframe, getIsModalChild, getSelectedNode, setPosition } from '../../utils';
+import { ComponentConfigsType, DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import styles from './index.less';
 import each from 'lodash/each';
 
 interface DistancesState {
   hoverKey: string | null,
   selectedInfo: SelectedInfoType | null,
-  dragSource: DragSourceType | null
+  dragSource: DragSourceType | null,
+  componentConfigs: ComponentConfigsType
 }
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
@@ -159,8 +160,10 @@ export function Distances() {
   const rightRef = useRef<any>();
   const iframe=getIframe()
 
-  const { hoverKey, selectedInfo, dragSource } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo', 'dragSource']);
-  const { selectedKey } = selectedInfo || {};
+  const { hoverKey, selectedInfo, dragSource,componentConfigs } = useSelector<DistancesState, STATE_PROPS>(['hoverKey', 'selectedInfo', 'dragSource','componentConfigs']);
+  const { selectedKey,domTreeKeys } = selectedInfo || {};
+  const isModal=getIsModalChild(componentConfigs,domTreeKeys)
+
   const hoverNode = getSelectedNode(hoverKey, iframe);
   const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [selectedKey, iframe]);
 
@@ -169,6 +172,8 @@ export function Distances() {
     const {  width, height,top,left }=selectRect
     const hoverRect: ClientRect=getElementInfo(hoverNode)
     const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance } = handleDistances(selectRect,hoverRect);
+
+
     if (leftDistance !== 0) {
       leftRef.current.style.cssText = generateCSS(leftGuide, top + height / 2, leftDistance);
       leftRef.current.dataset.distance = `${leftDistance}px`;
@@ -201,6 +206,8 @@ export function Distances() {
     } else {
       bottomRef.current.style.display = 'none';
     }
+    setPosition([leftRef.current,rightRef.current,topRef.current,bottomRef.current],isModal)
+
   } else if (leftRef.current) {
     leftRef.current.style.display = 'none';
     rightRef.current.style.display = 'none';

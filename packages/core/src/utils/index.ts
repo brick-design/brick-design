@@ -213,7 +213,7 @@ export function getComponentConfig(componentName:string):ComponentConfigTypes{
     error('Component configuration information set not found！! !')
   }
   const componentConfig=allComponentConfigs[componentName]
-  if(!componentConfig){
+  if(componentName&&!componentConfig){
     warn(`${componentName} configuration information not found！! !`)
   }
   return componentConfig
