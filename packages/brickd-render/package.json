@@ -1,6 +1,6 @@
 {
   "name": "brickd-render",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "homepage": "",
@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "lodash": "^4.17.15",
-    "brickd-core": "^1.0.0-alpha.7"
+    "brickd-core": "^1.0.0-alpha.8"
 
   },
   "devDependencies": {
