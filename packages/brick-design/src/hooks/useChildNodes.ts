@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { ChildNodesType, getComponentConfig, SelectedInfoBaseType } from 'brickd-core';
-import { handleSelectedStatus } from '..';
+import { handleSelectedStatus } from '../common/events';
 
 export interface UseChildNodeType {
   specialProps: SelectedInfoBaseType,

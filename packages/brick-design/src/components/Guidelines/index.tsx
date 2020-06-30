@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import styles from './index.less';
 import {
   ComponentConfigsType,
@@ -19,11 +19,11 @@ type SelectState = {
 
 }
 
-const controlUpdate = (prevState: SelectState, nextState: SelectState) => {
+const controlUpdate = () => {
   return true;
 };
 
-export function Guidelines() {
+function Guidelines() {
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -63,3 +63,5 @@ export function Guidelines() {
     <div ref={bottomRef} className={guidH}/>
   </>);
 }
+
+export default memo(Guidelines)

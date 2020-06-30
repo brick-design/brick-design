@@ -1,5 +1,5 @@
 import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'react';
-import merge from 'lodash/merge';
+import {merge} from 'lodash';
 import { formatSpecialProps, getComponent } from '../utils';
 import {
   ChildNodesType,
@@ -24,7 +24,7 @@ import {
   propAreEqual,
   stateSelector,
 } from '../common/handleFuns';
-import { getDropTargetInfo } from '..';
+import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
@@ -118,7 +118,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   return (
     createElement(getComponent(componentName), {
       ...restProps,
-      className: handlePropsClassName(key,isHidden&&!isDragAddChild,dragKey===key, className, animateClass,selectedKey===key),
+      className: handlePropsClassName(key,isHidden&&!isDragAddChild,dragKey===key, className, animateClass),
       ...(isDragAddChild ?{}:{
         onDragEnter,
         onDragLeave,

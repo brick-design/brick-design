@@ -10,7 +10,7 @@ import {
   stateSelector,
 } from '../common/handleFuns';
 import { formatSpecialProps, getComponent } from '../utils';
-import merge from 'lodash/merge';
+import {merge} from 'lodash';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 

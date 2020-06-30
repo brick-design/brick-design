@@ -23,10 +23,11 @@
     "brickd-core": "^1.0.0-alpha.8",
     "lodash": "^4.17.15",
     "react-color": "^2.18.0",
-    "sortablejs": "^1.10.2"
+    "sortablejs": "^1.10.2",
+    "react": "^16.8.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@types/sortablejs": "^1.10.4"

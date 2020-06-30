@@ -1,4 +1,5 @@
 import {createConfig} from '../../scripts/create.rollup.config'
+import pakg from './package.json'
 
 
-export default createConfig(["brickd-core","react","react-dom","lodash"],'BrickDesign')
+export default createConfig(pakg,'BrickDesign')

@@ -82,11 +82,6 @@
 	"engines": {
 		"node": ">= 10.0"
 	},
-	"dependencies": {
-		"antd": "3.26.16",
-		"react": "^16.13.1",
-		"react-dom": "^16.13.1"
-	},
 	"jest": {
 		"clearMocks": true,
 		"cacheDirectory": ".jest-cache",

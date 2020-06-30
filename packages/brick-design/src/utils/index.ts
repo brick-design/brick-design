@@ -1,11 +1,5 @@
-import each from 'lodash/each';
-import get from 'lodash/get';
-import isObject from 'lodash/isObject';
+import {each,get,isObject,isEmpty,isEqual,keys,isUndefined} from 'lodash';
 import { ComponentConfigsType, getComponentConfig, LEGO_BRIDGE, PROPS_TYPES } from 'brickd-core';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
-import keys from 'lodash/keys';
-import isUndefined from 'lodash/isUndefined';
 import { useEffect, useRef } from 'react';
 import { selectClassTarget } from '../common/constants';
 

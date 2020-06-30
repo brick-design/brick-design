@@ -1,4 +1,4 @@
-import React, { IframeHTMLAttributes, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { IframeHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   clearHovered,
   ComponentConfigsType,
@@ -14,9 +14,9 @@ import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
-import { Guidelines } from './components/Guidelines';
-import { Distances } from './components/Distances';
-import { Resize } from './components/Resize';
+import Guidelines from './components/Guidelines';
+import  Distances from './components/Distances';
+import  Resize  from './components/Resize';
 
 const onIframeLoad = (divContainer: any, designPage: any,iframe:HTMLIFrameElement) => {
   const head = document.head.cloneNode(true);
@@ -82,7 +82,6 @@ return !componentConfigs[ROOT]||componentConfigs[ROOT]!==prevComponentConfigs[RO
 }
 
 function BrickDesign(props: BrickDesignProps) {
-
   const { componentConfigs,dragSource } = useSelector<BrickdHookState,STATE_PROPS>(stateSelector,controlUpdate);
   const iframeRef=useRef<HTMLIFrameElement>()
   const designPage: any = useMemo(() => {
@@ -136,4 +135,4 @@ function BrickDesign(props: BrickDesignProps) {
   );
 }
 
-export default BrickDesign
+export default memo(BrickDesign)

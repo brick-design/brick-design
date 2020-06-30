@@ -9,7 +9,7 @@ import { terser } from 'rollup-plugin-terser'
 
 let override = { compilerOptions: { declaration: false } };
 
-export function createConfig(external,name) {
+export function createConfig(pakg,name) {
 
   return{
   input: path.resolve(__dirname, 'src/index.ts'),
@@ -31,7 +31,7 @@ export function createConfig(external,name) {
       ]
     },
   ],
-  external,
+  external:Object.keys(pakg.dependencies),
   plugins: [
     resolve({ browser: true }),
     image(),
@@ -43,7 +43,7 @@ export function createConfig(external,name) {
           javascriptEnabled: true
         }]
       ],
-      inject: false, // dev 环境下的 样式是入住到 js 中的，其他环境不会注入
+      inject: true, // dev 环境下的 样式是入住到 js 中的，其他环境不会注入
       extract: false // 无论是 dev 还是其他环境这个配置项都不做 样式的抽离
     }),
     commonjs(),

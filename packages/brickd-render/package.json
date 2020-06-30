@@ -9,13 +9,15 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "../../scripts/build_package.sh",
+    "build": "tsc && rollup -c rollup.config.js",
     "clean": "../../scripts/clean_package.sh",
     "start": "../../scripts/watch_package.sh"
   },
   "dependencies": {
     "brickd-core": "^1.0.0-alpha.8",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react": "^16.8.0"
+
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149",

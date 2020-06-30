@@ -14,11 +14,9 @@ import {
   STATE_PROPS,
 } from 'brickd-core';
 import { handleSelectedStatus, onDragStart, onMouseOver } from './events';
-import map from 'lodash/map';
-import each from 'lodash/each';
+import {map,each,isEqual} from 'lodash';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
-import isEqual from 'lodash/isEqual';
 import { selectClassTarget } from './constants';
 import { getIframe } from '../utils';
 
@@ -31,7 +29,7 @@ import { getIframe } from '../utils';
  * @param animateClass
  * @param isDropTarget
  */
-export function handlePropsClassName( key:string,isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string,isDropTarget?:boolean) {
+export function handlePropsClassName( key:string,isHidden: boolean,isDragTarget:boolean, className: any, animateClass: string) {
   return  `${selectClassTarget+key} ${className} ${animateClass} ${isDragTarget?styles['forbid-event']:styles['allow-event']} ${isHidden&&styles['hidden-component']}`;
 
 }

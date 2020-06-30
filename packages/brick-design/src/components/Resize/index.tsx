@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState,memo } from 'react';
 import {
   ComponentConfigsType,
   resizeChange,
@@ -19,9 +19,8 @@ import {
 } from '../../utils';
 import { Item } from './Item';
 import styles from './index.less';
-import map from 'lodash/map';
-import { ActionSheet } from '../ActionSheet';
-import get from 'lodash/get';
+import {map,get} from 'lodash';
+import ActionSheet from '../ActionSheet';
 
 type ResizeState = {
   selectedInfo: SelectedInfoType,
@@ -54,7 +53,7 @@ type OriginSizeType = {
 }
 
 
-export function Resize() {
+function Resize() {
   const iframe=getIframe()
   const { selectedInfo, hoverKey, componentConfigs } = useSelector<ResizeState, STATE_PROPS>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate);
   const { selectedKey,domTreeKeys,propName } = selectedInfo||{};
@@ -256,3 +255,5 @@ export function Resize() {
     </>
   );
 }
+
+export default memo(Resize)

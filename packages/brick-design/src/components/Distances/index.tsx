@@ -1,8 +1,8 @@
-import React, { useMemo, useRef } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import { generateCSS, getElementInfo, getIframe, getIsModalChild, getSelectedNode, setPosition } from '../../utils';
 import { ComponentConfigsType, DragSourceType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
 import styles from './index.less';
-import each from 'lodash/each';
+import {each} from 'lodash';
 
 interface DistancesState {
   hoverKey: string | null,
@@ -153,7 +153,7 @@ function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
 }
 
 
-export function Distances() {
+function Distances() {
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -223,3 +223,4 @@ export function Distances() {
     <div ref={rightRef} className={styles['distances-h']}/>
   </>);
 }
+export default memo(Distances)

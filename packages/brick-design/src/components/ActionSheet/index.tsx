@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './index.less';
 import configs, { ACTIONS } from './configs';
 
@@ -8,7 +8,7 @@ interface ActionSheetProps {
   isRoot: boolean
 }
 
-export function ActionSheet(props: ActionSheetProps) {
+function ActionSheet(props: ActionSheetProps) {
   const { isOut, isRoot, hasChildNodes } = props;
 
   return (<div className={styles['container']} style={{ top: isOut ? -13 : 0 }}>
@@ -22,3 +22,5 @@ export function ActionSheet(props: ActionSheetProps) {
     })}
   </div>);
 }
+
+export default memo(ActionSheet)
