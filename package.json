@@ -28,7 +28,7 @@
 		"precommit": "lint-staged",
 		"watch": "lerna run --parallel --stream watch",
 		"precommit:format": "pretty-quick --staged",
-		"start": "lerna run --parallel --stream start",
+		"dev": "lerna run --parallel --stream dev",
 		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
 	},
 	"devDependencies": {
