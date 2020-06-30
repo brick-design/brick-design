@@ -3,20 +3,19 @@
   "version": "1.0.0-alpha.8",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
-  "homepage": "",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
-  },
-  "files": [
-    "dist"
-  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
   "scripts": {
-    "build": "father-build"
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh",
+    "start": "../../scripts/watch_package.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brick-design/react-visual-editor.git"
   },
   "dependencies": {
     "antd": "3.26.16",
@@ -30,7 +29,6 @@
     "react": "^16.8.0"
   },
   "devDependencies": {
-    "@types/sortablejs": "^1.10.4",
-    "father-build": "^1.18.0"
+    "@types/sortablejs": "^1.10.4"
   }
 }

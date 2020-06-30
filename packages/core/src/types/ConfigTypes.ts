@@ -1,4 +1,3 @@
-import { CategoryType } from './CategoryTypes';
 import { ComponentConfigTypes } from './ComponentConfigTypes';
 
 /**

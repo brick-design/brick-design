@@ -10,7 +10,7 @@ import {
   UndoRedoType,
 } from '../../types';
 import config from '../configs';
-import {  ROOT } from '../../utils';
+import { ROOT } from '../../utils';
 import { LayoutSortPayload } from '../../actions';
 
 jest.resetModules();

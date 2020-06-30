@@ -7,7 +7,7 @@ import {
   deleteComponent,
   onLayoutSortChange,
 } from './handleComponentConfig';
-import { clearDropTarget, getDragSource, getDropTarget, clearDragSource } from './handleDragDrop';
+import { clearDragSource, clearDropTarget, getDragSource, getDropTarget } from './handleDragDrop';
 import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import { addPropsConfig, changeProps, deletePropsConfig, resetProps } from './handleProps';

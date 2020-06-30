@@ -2,7 +2,6 @@ module.exports = {
 	presets: [
 		[
 			'@babel/preset-env',
-			'@babel/preset-typescript',
 			{
 				modules: false,
 				targets: {
@@ -10,6 +9,7 @@ module.exports = {
 				},
 			},
 		],
+		'@babel/preset-typescript'
 	],
 	plugins: [
 		'@babel/proposal-class-properties',

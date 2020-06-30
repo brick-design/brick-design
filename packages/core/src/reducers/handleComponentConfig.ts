@@ -3,15 +3,15 @@ import {
   copyConfig,
   deleteChildNodes,
   deleteChildNodesKey,
-  getComponentConfig,
   getLocation,
   getNewKey,
-  HandleInfoType, handleRules, restObject,
+  HandleInfoType,
+  handleRules,
+  restObject,
   ROOT,
   warn,
 } from '../utils';
-import get from 'lodash/get';
-import update from 'lodash/update';
+import {get,update} from 'lodash';
 import { produce } from 'immer';
 import { LayoutSortPayload } from '../actions';
 

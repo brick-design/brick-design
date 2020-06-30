@@ -3,7 +3,7 @@ import ACTION_TYPES from '../../actions/actionTypes';
 import { DragSourcePayload } from '../../actions';
 import { LEGO_BRIDGE, legoState } from '../../store';
 import config from '../configs';
-import {  ROOT } from '../../utils';
+import { ROOT } from '../../utils';
 import { ComponentConfigsType, DropTargetType, StateType } from '../../types';
 
 beforeAll(() => {

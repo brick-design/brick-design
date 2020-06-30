@@ -1,13 +1,14 @@
 import {
   BrickAction,
   ChildNodesType,
-  ComponentConfigsType, ComponentConfigTypes,
+  ComponentConfigsType,
+  ComponentConfigTypes,
   PropsConfigSheetType,
   PropsNodeType,
-  SelectedInfoType, StateType,
+  SelectedInfoType,
+  StateType,
 } from '../types';
-import each from 'lodash/each';
-import get from 'lodash/get';
+import {each,get} from 'lodash';
 import { LEGO_BRIDGE } from '../store';
 import { ReducerType } from '../reducers';
 

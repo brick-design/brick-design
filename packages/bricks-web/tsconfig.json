@@ -1,21 +1,8 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "module": "esnext",
-    "target": "es2015",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "jsx": "react",
-    "strict": true,
-    "lib": ["dom", "esnext"],
-    "esModuleInterop": true
+    "outDir": "./lib",
+    "baseUrl": "./src"
   },
-  "include": ["./src", "./typing.d.ts"],
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "./src/__tests__"
-  ]
+  "include": ["./src/index.ts","typing.d.ts"]
 }

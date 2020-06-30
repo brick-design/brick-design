@@ -5,7 +5,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "lib": ["esnext", "dom"],
-    "strict": true,
+    "strict": false,
     "experimentalDecorators": true,
     "noUnusedLocals": true,
     "jsx": "react",

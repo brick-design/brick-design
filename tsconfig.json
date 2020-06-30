@@ -9,11 +9,8 @@
       "brickd-core": ["packages/core/src/index"],
       "brickd-core/*": ["packages/core/src/*"],
       "bricks-web": ["packages/bricks-web/src/index"],
-      "bricks-web/*": ["packages/bricks-web/src/*"],
-      "bricks-native": ["packages/bricks-native/src/index"],
-      "bricks-native/*": ["packages/bricks-native/src/*"]
+      "bricks-web/*": ["packages/bricks-web/src/*"]
     }
   },
-  "include": ["./typings.d.ts"],
-  "exclude": ["**/node_modules/**"]
+  "exclude": ["**/node_modules/**", "**/lib/**","node_modules"]
 }

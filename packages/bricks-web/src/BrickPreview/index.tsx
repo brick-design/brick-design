@@ -8,7 +8,7 @@ import DragAbleItem from './DragAbleItem';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
-import { CategoryType, ComponentCategoryType, ComponentInfoType, LEGO_BRIDGE, useSelector } from 'brickd-core';
+import { CategoryType, ComponentCategoryType, ComponentInfoType, useSelector } from 'brickd-core';
 import { flattenDeepArray, usePrevious } from '../utils';
 
 const { Panel } = Collapse;
@@ -74,7 +74,7 @@ function renderHeader (categoryName: string, isFold: boolean) {
 /**
  * 渲染拖拽item
  */
-function renderDragItem (span: number = 24, key: string, componentName: string, defaultProps?: any) {
+function renderDragItem (span = 24, key: string, componentName: string, defaultProps?: any) {
   return (<Col span={span} key={key}>
     <DragAbleItem
       dragSource={{ componentName, defaultProps }}

@@ -1,8 +1,8 @@
 import { StateType } from '../types';
 import produce from 'immer';
-import { ResizePayload, stylePayload, undo } from '../actions';
+import { ResizePayload, stylePayload } from '../actions';
 import { restObject } from '../utils';
-import update from 'lodash/update';
+import {update} from 'lodash';
 
 /**
  * 样式改变时调用

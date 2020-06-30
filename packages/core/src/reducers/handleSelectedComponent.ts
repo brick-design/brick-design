@@ -1,8 +1,6 @@
-import get from 'lodash/get';
 import { merge } from 'lodash';
 import { StateType } from '../types';
 import { SelectComponentPayload } from '../actions';
-import { LEGO_BRIDGE } from '../store';
 import { getComponentConfig, handleRequiredHasChild } from '../utils';
 import produce from 'immer';
 

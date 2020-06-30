@@ -140,7 +140,6 @@ function renderHeader(isUnfold: boolean,
 function renderSortTree(props: SortItemPropsType,  isUnfold: boolean,componentName:string,nodePropsConfig?:NodePropsConfigType,childNodes?: ChildNodesType,) {
     const {
         specialProps,
-        specialProps: {key, domTreeKeys},
         propName,
         nodeProps
     } = props;

@@ -18,8 +18,6 @@ import { Guidelines } from './components/Guidelines';
 import { Distances } from './components/Distances';
 import { Resize } from './components/Resize';
 
-export * from './common/events';
-
 const onIframeLoad = (divContainer: any, designPage: any,iframe:HTMLIFrameElement) => {
   const head = document.head.cloneNode(true);
   const contentDocument=iframe.contentDocument!
@@ -83,7 +81,7 @@ const controlUpdate=(prevState:BrickdHookState,nextState:BrickdHookState)=> {
 return !componentConfigs[ROOT]||componentConfigs[ROOT]!==prevComponentConfigs[ROOT]
 }
 
-export function BrickDesign(props: BrickDesignProps) {
+function BrickDesign(props: BrickDesignProps) {
 
   const { componentConfigs,dragSource } = useSelector<BrickdHookState,STATE_PROPS>(stateSelector,controlUpdate);
   const iframeRef=useRef<HTMLIFrameElement>()
@@ -138,3 +136,4 @@ export function BrickDesign(props: BrickDesignProps) {
   );
 }
 
+export default BrickDesign

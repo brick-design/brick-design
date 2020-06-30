@@ -1,8 +1,8 @@
-import { merge, update } from 'lodash';
+import { merge, update,get } from 'lodash';
 import { getComponentConfig, getFieldInPropsLocation, restObject, warn } from '../utils';
 import { PropsConfigSheetALL, StateType } from '../types';
-import produce, { original } from 'immer';
-import get from 'lodash/get';
+import produce from 'immer';
+
 import { AddPropsConfigPayload, ChangePropsPayload, DeletePropsConfigPayload } from '../actions';
 
 /**
