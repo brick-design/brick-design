@@ -1,6 +1,7 @@
 {
   "name": "brickd-example",
   "version": "0.0.1",
+  "private": true,
   "dependencies": {
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
