@@ -198,7 +198,7 @@ function SortItem(props: SortItemPropsType) {
     const {childNodes: vDomChildNodes, componentName} = vDom||{}
     const {fatherNodesRule,nodePropsConfig} = getComponentConfig(componentName);
     const childNodes: ChildNodesType | undefined = propChildNodes || vDomChildNodes
-    const [isUnfold, setIsUnfold] = useState(true);
+    const [isUnfold, setIsUnfold] = useState(!isEmpty(childNodes));
     // 保存子组件dom
     const prevChildNodes = usePrevious<ChildNodesType>(childNodes);
 

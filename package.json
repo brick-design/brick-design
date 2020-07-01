@@ -6,6 +6,7 @@
 		"type": "git",
 		"url": "https://github.com/brick-design/react-visual-editor.git"
 	},
+	"publishConfig": { "registry": "https://npm.pkg.github.com/" },
 	"keywords": [
 		"react",
 		"drag-and-drop",
