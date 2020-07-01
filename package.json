@@ -24,11 +24,14 @@
 		"clean": "lerna run clean",
 		"clern:modules": "lerna clean -y",
 		"build": "lerna run build --stream",
+		"dev": "lerna run --parallel --stream dev",
+		"release": "run-s clean test go_no_go publish changelog",
+		"go_no_go": "node scripts/go_no_go.js",
+		"publish": "lerna publish",
 		"test": "jest --coverage",
 		"precommit": "lint-staged",
 		"watch": "lerna run --parallel --stream watch",
 		"precommit:format": "pretty-quick --staged",
-		"dev": "lerna run --parallel --stream dev",
 		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
 	},
 	"devDependencies": {
@@ -163,7 +166,8 @@
 	},
 	"workspaces": {
 		"packages": [
-			"packages/*"
+			"packages/*",
+			"example"
 		]
 	}
 }

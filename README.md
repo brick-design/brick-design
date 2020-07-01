@@ -18,7 +18,8 @@
 ```sh
 yarn add brickd brickd-core bricks-web
 ```
-```bash
+OR
+```sh
 npm install brickd brickd-core bricks-web
 ```
 ## Usage
@@ -37,16 +38,10 @@ const App = () => (
 
 );
 ```
-And import style manually:
-
-```jsx
-import 'bricks-web/dist/index.css';
-import 'brickd/dist/index.css';
-```
 
 ### 技术交流
 
- <img src="./packages/docs/QQ.jpeg" width="300" />
+ <img src="./docs/QQ.jpeg" width="300" />
 
 ## LICENSE
 

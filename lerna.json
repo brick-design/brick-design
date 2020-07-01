@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha.8",
   "useWorkspaces": true,
   "packages": [
-    "packages/*"
+    "packages/*",
+    "example"
   ]
 }
