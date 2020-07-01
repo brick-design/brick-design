@@ -27,7 +27,7 @@
 		"dev": "lerna run --parallel --stream dev",
 		"release": "run-s clean test go_no_go publish changelog",
 		"go_no_go": "node scripts/go_no_go.js",
-		"publish": "lerna publish",
+		"publish": "npm run build && lerna publish -m \"chore: publish\"",
 		"test": "jest --coverage",
 		"precommit": "lint-staged",
 		"watch": "lerna run --parallel --stream watch",
