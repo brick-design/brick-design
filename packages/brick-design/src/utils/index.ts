@@ -128,7 +128,16 @@ export function setPosition(nodes:any[],isModal?:boolean) {
     each(nodes,(node)=>node.style.position='fixed')
   }else {
     each(nodes,(node)=>node.style.position='absolute')
-
   }
+}
 
+export function generateRequiredProps(componentName:string) {
+const {propsConfig}=getComponentConfig(componentName)
+  const requiredProps:any={}
+  each(propsConfig,(config,propName)=>{
+    const {isRequired,defaultValue}=config
+    if(isRequired) requiredProps[propName]=defaultValue
+  })
+
+  return requiredProps
 }

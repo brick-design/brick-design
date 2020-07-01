@@ -9,7 +9,7 @@ import {
   propAreEqual,
   stateSelector,
 } from '../common/handleFuns';
-import { formatSpecialProps, getComponent } from '../utils';
+import {formatSpecialProps, generateRequiredProps, getComponent} from '../utils';
 import {merge} from 'lodash';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
@@ -48,7 +48,8 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
         onDragEnter,
         ...handleEvents(specialProps, isSelected),
       }),
-      ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
+        ...generateRequiredProps(componentName),
+        ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
         merge(oldPropsConfig, propsConfigSheet[specialProps.key]);
       })),
       draggable: true,

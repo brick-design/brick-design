@@ -1,142 +1,143 @@
-import { createElement, forwardRef, memo, useEffect, useMemo, useState } from 'react';
+import {createElement, forwardRef, memo, useEffect, useMemo, useState} from 'react';
 import {merge} from 'lodash';
-import { formatSpecialProps, getComponent } from '../utils';
+import {formatSpecialProps, generateRequiredProps, getComponent} from '../utils';
 import {
-  ChildNodesType,
-  clearDropTarget,
-  getComponentConfig,
-  handleRules,
-  produce,
-  PropsNodeType,
-  ROOT,
-  STATE_PROPS,
-  useSelector,
+    ChildNodesType,
+    clearDropTarget,
+    getComponentConfig,
+    handleRules,
+    produce,
+    PropsNodeType,
+    ROOT,
+    STATE_PROPS,
+    useSelector,
 } from 'brickd-core';
 
 import {
-  CommonPropsType,
-  controlUpdate,
-  handleChildNodes,
-  handleEvents,
-  handleModalTypeContainer,
-  handlePropsClassName,
-  HookState,
-  propAreEqual,
-  stateSelector,
+    CommonPropsType,
+    controlUpdate,
+    handleChildNodes,
+    handleEvents,
+    handleModalTypeContainer,
+    handlePropsClassName,
+    HookState,
+    propAreEqual,
+    stateSelector,
 } from '../common/handleFuns';
-import { getDropTargetInfo } from '../common/events';
-import { useSelect } from '../hooks/useSelect';
-import { useDragDrop } from '../hooks/useDragDrop';
-import { useChildNodes } from '../hooks/useChildNodes';
+import {getDropTargetInfo} from '../common/events';
+import {useSelect} from '../hooks/useSelect';
+import {useDragDrop} from '../hooks/useDragDrop';
+import {useChildNodes} from '../hooks/useChildNodes';
 
 /**
  * 所有的容器组件名称
  */
 function Container(allProps: CommonPropsType, ref: any) {
-  const {
-    specialProps,
-    specialProps: {
-      key,
-      domTreeKeys,
-    },
-    isDragAddChild,
-    ...rest
-  } = allProps;
+    const {
+        specialProps,
+        specialProps: {
+            key,
+            domTreeKeys,
+        },
+        isDragAddChild,
+        ...rest
+    } = allProps;
 
-  const { componentConfigs:PageDom, propsConfigSheet } = useSelector<HookState, STATE_PROPS>(stateSelector,
-    (prevState, nextState) => controlUpdate(prevState, nextState, key));
-  const { dragSource, dropTarget, isHidden } = useDragDrop(key);
-  const { dragKey,parentKey,vDOMCollection} = dragSource || {};
-  const { selectedKey } = dropTarget || {};
+    const {componentConfigs: PageDom, propsConfigSheet} = useSelector<HookState, STATE_PROPS>(stateSelector,
+        (prevState, nextState) => controlUpdate(prevState, nextState, key));
+    const {dragSource, dropTarget, isHidden} = useDragDrop(key);
+    const {dragKey, parentKey, vDOMCollection} = dragSource || {};
+    const {selectedKey} = dropTarget || {};
 
-  const componentConfigs=PageDom[ROOT]?PageDom:vDOMCollection||{}
+    const componentConfigs = PageDom[ROOT] ? PageDom : vDOMCollection || {}
 
-  const { props, childNodes, componentName } = componentConfigs[key] ||{};
+    const {props, childNodes, componentName} = componentConfigs[key] || {};
 
-  useChildNodes({ childNodes, componentName, specialProps });
-  const [children, setChildren] = useState<ChildNodesType|undefined>(childNodes);
-  const { mirrorModalField, propsConfig,nodePropsConfig } = useMemo(() => getComponentConfig(componentName), []);
-  const { selectedDomKeys, isSelected } = useSelect(specialProps,!!mirrorModalField);
+    useChildNodes({childNodes, componentName, specialProps});
+    const [children, setChildren] = useState<ChildNodesType | undefined>(childNodes);
+    const {mirrorModalField, propsConfig, nodePropsConfig} = useMemo(() => getComponentConfig(componentName), []);
+    const {selectedDomKeys, isSelected} = useSelect(specialProps, !!mirrorModalField);
 
-  const onDragEnter = (e: Event) => {
-    e.stopPropagation();
-      let propName;
-      //判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
-      if (parentKey!==key&&
-        dragKey&&
-        dragKey!==key&&
-        !domTreeKeys.includes(dragKey)&&
-        (!selectedDomKeys||!selectedDomKeys.includes(dragKey))) {
-        if(childNodes){
-          if (Array.isArray(childNodes)&&!handleRules(componentConfigs,dragKey,key,undefined,true)) {
-            setChildren([...childNodes, dragKey]);
-          } else {
-            setChildren(produce((childNodes as PropsNodeType), oldChild => {
-              propName = Object.keys(oldChild!)[0];
-              if( !handleRules(componentConfigs,dragKey,key,propName,true)){
-                oldChild![propName] = [...oldChild[propName]!, dragKey];
-              }
-            }));
-          }
-        }else {
-          if(!nodePropsConfig){
-            setChildren([dragKey])
-          }else {
-            const keys=Object.keys(nodePropsConfig)
-            propName=keys[0]
-            setChildren({[propName]:[dragKey]})
-          }
+    const onDragEnter = (e: Event) => {
+        e.stopPropagation();
+        let propName;
+        //判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
+        if (parentKey !== key &&
+            dragKey &&
+            dragKey !== key &&
+            !domTreeKeys.includes(dragKey) &&
+            (!selectedDomKeys || !selectedDomKeys.includes(dragKey))) {
+            if (childNodes) {
+                if (Array.isArray(childNodes)) {
+                    if (!handleRules(componentConfigs, dragKey, key, undefined, true)) {
+                        setChildren([...childNodes, dragKey]);
+                    }
+                } else {
+                    setChildren(produce((childNodes as PropsNodeType), oldChild => {
+                        propName = Object.keys(oldChild!)[0];
+                        if (!handleRules(componentConfigs, dragKey, key, propName, true)) {
+                            oldChild![propName] = [...oldChild[propName]!, dragKey];
+                        }
+                    }));
+                }
+            } else {
+                if (!nodePropsConfig) {
+                    setChildren([dragKey])
+                } else {
+                    const keys = Object.keys(nodePropsConfig)
+                    propName = keys[0]
+                    setChildren({[propName]: [dragKey]})
+                }
+            }
         }
-      }
-      getDropTargetInfo(e, domTreeKeys, key, propName);
-  };
-  const onDragLeave = (e: Event) => {
-    e.stopPropagation();
-    if (isSelected) {
-      clearDropTarget();
+        getDropTargetInfo(e, domTreeKeys, key, propName);
+    };
+    const onDragLeave = (e: Event) => {
+        e.stopPropagation();
+        if (isSelected) {
+            clearDropTarget();
+        }
+    };
+
+    useEffect(() => {
+        setChildren(childNodes);
+    }, [childNodes]);
+
+    if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
+        setChildren(childNodes);
     }
-  };
 
-  useEffect(() => {
-    setChildren(childNodes);
-  }, [childNodes]);
+    if (!componentName) return null;
 
-  if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
-    setChildren(childNodes);
-  }
+    let modalProps: any = {};
+    if (mirrorModalField) {
+        const {displayPropName, mountedProps} = handleModalTypeContainer(mirrorModalField);
+        const isVisible = isSelected || selectedDomKeys && selectedDomKeys.includes(key);
+        modalProps = {[displayPropName]: isVisible, ...mountedProps};
+    }
 
-  if (!componentName) return null;
-
-  let modalProps: any = {};
-  if (mirrorModalField) {
-    const { displayPropName, mountedProps } = handleModalTypeContainer(mirrorModalField);
-    const isVisible = isSelected || selectedDomKeys && selectedDomKeys.includes(key);
-    modalProps = { [displayPropName]: isVisible, ...mountedProps };
-  }
-
-  const { className, animateClass, ...restProps } = props || {};
-  return (
-    createElement(getComponent(componentName), {
-      ...restProps,
-      className: handlePropsClassName(key,isHidden&&!isDragAddChild,dragKey===key, className, animateClass),
-      ...(isDragAddChild ?{}:{
-        onDragEnter,
-        onDragLeave,
-        ...handleEvents(specialProps, isSelected, childNodes),
-      }),
-      ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes!==children, isDragAddChild),
-      ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
-        merge(oldPropsConfig, propsConfigSheet[key]);
-      })),
-      draggable: true,
-      /**
-       * 设置组件id方便抓取图片
-       */
-      ref,
-      ...rest,
-      ...modalProps,
+    const {className, animateClass, ...restProps} = props || {};
+    return createElement(getComponent(componentName), {
+        ...restProps,
+        className: handlePropsClassName(key, isHidden && !isDragAddChild, dragKey === key, className, animateClass),
+        ...(isDragAddChild ? {} : {
+            onDragEnter,
+            onDragLeave,
+            ...handleEvents(specialProps, isSelected, childNodes),
+        }),
+        ...generateRequiredProps(componentName),
+        ...handleChildNodes(specialProps, componentConfigs, children!, dragKey, childNodes !== children, isDragAddChild),
+        ...formatSpecialProps(props, produce(propsConfig, oldPropsConfig => {
+            merge(oldPropsConfig, propsConfigSheet[key]);
+        })),
+        draggable: true,
+        /**
+         * 设置组件id方便抓取图片
+         */
+        ref,
+        ...rest,
+        ...modalProps,
     })
-  );
 }
 
 export default memo<CommonPropsType>(forwardRef(Container), propAreEqual);

@@ -50,7 +50,8 @@ export interface PropInfoType {
   //因为每个属性在属性设置面板都是以一个formItem的形式可视化的展示的，
   // 所以你可以设置当前属性在属性设置面板中formItem的一些特性，可参考antd form.Item设置
   formItemProps?: any,
-  unDelete?: boolean
+  unDelete?: boolean,
+  isRequired?:boolean
 }
 
 /**

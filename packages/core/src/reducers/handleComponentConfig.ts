@@ -26,6 +26,7 @@ export function addComponent(state: StateType): StateType {
     componentConfigs,
     dragSource,
     dropTarget,
+    selectedInfo
   } = state;
   /**
    * 如果没有拖拽的组件不做添加动作, 如果没有
@@ -47,7 +48,7 @@ export function addComponent(state: StateType): StateType {
       redo,
     };
   }
-  const { selectedKey, propName, domTreeKeys } = dropTarget||{};
+  const { selectedKey, propName, domTreeKeys } = dropTarget||selectedInfo||{};
 
   /**
    * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，

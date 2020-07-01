@@ -117,6 +117,8 @@ const TabPane: ComponentConfigTypes = {
     tab: {
       label: '选项卡头显示文字',
       type: PROPS_TYPES.string,
+      isRequired:true,
+      defaultValue:'tab'
     },
     forceRender: {
       label: '隐藏是否渲染',
@@ -126,6 +128,8 @@ const TabPane: ComponentConfigTypes = {
     key: {
       label: '对应activeKey',
       type: PROPS_TYPES.string,
+      isRequired:true,
+      defaultValue:'tab'
     },
   },
 };
