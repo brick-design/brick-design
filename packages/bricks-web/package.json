@@ -1,6 +1,6 @@
 {
   "name": "bricks-web",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^1.0.0-alpha.8",
-    "brickd-core": "^1.0.0-alpha.8",
+    "brickd": "^1.0.0-alpha.9",
+    "brickd-core": "^1.0.0-alpha.9",
     "lodash": "^4.17.15",
+    "react": "^16.8.0",
     "react-color": "^2.18.0",
-    "sortablejs": "^1.10.2",
-    "react": "^16.8.0"
+    "sortablejs": "^1.10.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
