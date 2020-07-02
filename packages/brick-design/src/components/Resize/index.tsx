@@ -72,17 +72,18 @@ function Resize() {
 
   useEffect(() => {
     const contentWindow = iframe!.contentWindow!;
+    const changeSize=()=>setSelectedBorder()
     contentWindow.addEventListener('mouseup', onMouseUp);
     contentWindow.addEventListener('mousemove', onMouseMove);
     contentWindow.addEventListener('mouseleave', onMouseUp);
-    contentWindow.addEventListener('resize', setSelectedBorder);
-    contentWindow.addEventListener('animationend',setSelectedBorder)
+    contentWindow.addEventListener('resize', changeSize);
+    contentWindow.addEventListener('animationend',changeSize)
     return () => {
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
       contentWindow.removeEventListener('mousemove', onMouseUp);
-      contentWindow.removeEventListener('resize', setSelectedBorder);
-      contentWindow.removeEventListener('animationend',setSelectedBorder)
+      contentWindow.removeEventListener('resize', changeSize);
+      contentWindow.removeEventListener('animationend',changeSize)
 
     };
   }, [isModal]);
@@ -106,6 +107,9 @@ function Resize() {
     originSizeRef.current = undefined;
     baseboardRef.current!.style.display = 'none';
     resizeRef.current.style.pointerEvents = 'none';
+    resizeRef.current.style.transitionProperty='all';
+    resizeRef.current.style.transitionDuration='100ms';
+
     resizeChange(sizeResultRef.current);
     sizeResultRef.current = {};
   }, [originSizeRef.current, baseboardRef.current, resizeRef.current, sizeResultRef.current]);
@@ -166,7 +170,7 @@ function Resize() {
         selectNodeRef.current!.style.height = `${heightResult}px`;
       }
       showSize(sizeResultRef.current.width, sizeResultRef.current.height);
-      setSelectedBorder();
+      setSelectedBorder('pointer-events: auto; transition:none;');
       changeBaseboard()
     }
 
@@ -182,7 +186,7 @@ function Resize() {
     }
   }, [heightRef.current, widthRef.current]);
 
-  const setSelectedBorder = () => {
+  const setSelectedBorder = (css='') => {
     if (selectNodeRef.current) {
       const { left, top, width, height } = getElementInfo(selectNodeRef.current)
       if (top <= 14&& isOut) {
@@ -190,7 +194,7 @@ function Resize() {
       } else if (top > 14&&!isOut) {
         setIsOut(true);
       }
-      resizeRef.current.style.cssText = generateCSS(left, top, width, height);
+      resizeRef.current.style.cssText = generateCSS(left, top, width, height)+css;
       setPosition([resizeRef.current],isModal)
 
     }
@@ -210,8 +214,6 @@ function Resize() {
         maxWidth: formatUnit(maxWidth),
         maxHeight: formatUnit(maxHeight),
       };
-      resizeRef.current.style.pointerEvents = 'auto';
-
       changeBaseboard()
     }
   }, [iframe, selectNodeRef.current, resizeRef.current, baseboardRef.current, originSizeRef.current]);
