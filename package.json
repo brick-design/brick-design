@@ -32,7 +32,8 @@
 		"precommit": "lint-staged",
 		"watch": "lerna run --parallel --stream watch",
 		"precommit:format": "pretty-quick --staged",
-		"prettify:source": "prettier 'packages/*/src/**/*.ts*'"
+		"prettify:source": "prettier 'packages/*/src/**/*.ts*'",
+		"start:docs": "dumi dev"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.7.5",
