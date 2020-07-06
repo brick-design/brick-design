@@ -94,22 +94,18 @@ export function generateCSS(left: number, top: number, width?: number, height?: 
   `;
 }
 
-export function getElementPosition(element:any) {
-  let left = 0;
-  let top = 0;
-  while (element !== null)  {
-    left += element.offsetLeft;
-    top += element.offsetTop;
-    element = element.offsetParent;
+
+export function getElementInfo(element:any,iframe:HTMLIFrameElement,isModal?:boolean) {
+  const {contentWindow}=iframe
+  const {scrollX,scrollY}=contentWindow
+  const {width,height,left,top}=element.getBoundingClientRect()
+  let newLeft=left
+  let newTop=top
+  if(!isModal){
+    newLeft+=scrollX
+    newTop+=scrollY
   }
-  return {left,  top};
-}
-
-
-export function getElementInfo(element:any) {
-  const {left,top }=getElementPosition(element)
-  const {width,height}=element.getBoundingClientRect()
-  return {width,height,left,top,bottom:top+height,right:left+width}
+  return {width,height,left:newLeft,top:newTop,bottom:newTop+height,right:newLeft+width}
 
 }
 

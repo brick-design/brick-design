@@ -36,22 +36,34 @@ function Guidelines() {
   const isModal=getIsModalChild(componentConfigs,domTreeKeys)
   const guidControl = hoverKey && (!selectedInfo || selectedInfo && !dragSource);
   useEffect(()=>{
-    const node = getSelectedNode(hoverKey!, iframe);
-    if (guidControl && node) {
-      const { left, top, bottom, right, width, height } = getElementInfo(node);
-      const { contentDocument } = iframe!;
-      hoverNodeRef.current.style.cssText = generateCSS(left, top, width, height);
-      topRef.current.style.top = `${top}px`;
-      topRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
-      leftRef.current.style.left = `${left }px`;
-      leftRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
-      rightRef.current.style.left = `${right - 1 }px`;
-      rightRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
-      bottomRef.current.style.top = `${bottom - 1 }px`;
-      bottomRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
-      setPosition([hoverNodeRef.current,leftRef.current,rightRef.current,topRef.current,bottomRef.current],isModal)
+    const {contentWindow}=iframe
+   const renderGuideLines=()=>{
+     const node = getSelectedNode(hoverKey!, iframe);
+     if (guidControl && node) {
+       const { left, top, bottom, right, width, height } = getElementInfo(node,iframe,isModal);
+       const { contentDocument } = iframe!;
+       hoverNodeRef.current.style.cssText = generateCSS(left, top, width, height);
+       topRef.current.style.top = `${top}px`;
+       topRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
+       leftRef.current.style.left = `${left }px`;
+       leftRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
+       rightRef.current.style.left = `${right - 1 }px`;
+       rightRef.current.style.height=`${contentDocument!.body.scrollHeight}px`
+       bottomRef.current.style.top = `${bottom - 1 }px`;
+       bottomRef.current.style.width=`${contentDocument!.body.scrollWidth}px`
+       setPosition([hoverNodeRef.current,leftRef.current,rightRef.current,topRef.current,bottomRef.current],isModal)
+     }
+   }
+    renderGuideLines()
+    const onScroll=()=>{
+      setTimeout(renderGuideLines,66)
+    }
+    contentWindow.addEventListener('scroll',onScroll)
+    return()=>{
+      contentWindow.removeEventListener('scroll',onScroll)
     }
   })
+
 
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
   const guidV = guidControl ? styles['guide-v'] : styles['guide-hidden'];

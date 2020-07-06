@@ -168,9 +168,9 @@ function Distances() {
   const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [selectedKey, iframe]);
 
   if (!dragSource && hoverNode && selectNode) {
-    const selectRect:ClientRect=getElementInfo(selectNode);
+    const selectRect:ClientRect=getElementInfo(selectNode,iframe,isModal);
     const {  width, height,top,left }=selectRect
-    const hoverRect: ClientRect=getElementInfo(hoverNode)
+    const hoverRect: ClientRect=getElementInfo(hoverNode,iframe,isModal)
     const { leftGuide, leftDistance, rightDistance, rightGuide, topDistance, topGuide, bottomGuide, bottomDistance } = handleDistances(selectRect,hoverRect);
 
 

@@ -25,7 +25,6 @@
 		"clean": "lerna run clean",
 		"clern:modules": "lerna clean -y",
 		"build": "lerna run build --stream",
-		"dev": "lerna run --parallel --stream dev",
 		"release": "run-s clean test go_no_go publish changelog",
 		"go_no_go": "node scripts/go_no_go.js",
 		"publish": "npm run build && lerna publish -m \"chore: publish\"",

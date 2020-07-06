@@ -108,17 +108,19 @@ function Resize() {
     baseboardRef.current!.style.display = 'none';
     resizeRef.current.style.pointerEvents = 'none';
     resizeRef.current.style.transitionProperty='all';
-    resizeRef.current.style.transitionDuration='100ms';
+    resizeRef.current.style.transitionDuration='50ms';
 
     resizeChange(sizeResultRef.current);
     sizeResultRef.current = {};
   }, [originSizeRef.current, baseboardRef.current, resizeRef.current, sizeResultRef.current]);
 
   const changeBaseboard=()=>{
-    const {contentDocument}=iframe!
-    baseboardRef.current!.style.display = 'block';
-    baseboardRef.current!.style.width=`${contentDocument!.body.scrollWidth}px`
-    baseboardRef.current!.style.height=`${contentDocument!.body.scrollHeight}px`
+    const {body:{scrollWidth,scrollHeight}}=iframe!.contentDocument
+    baseboardRef.current!.style.cssText=`
+    display:block;
+    width:${scrollWidth}px;
+    height:${scrollHeight}px
+    `;
   }
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation()
@@ -188,7 +190,7 @@ function Resize() {
 
   const setSelectedBorder = (css='') => {
     if (selectNodeRef.current) {
-      const { left, top, width, height } = getElementInfo(selectNodeRef.current)
+      const { left, top, width, height } = getElementInfo(selectNodeRef.current,iframe,isModal)
       if (top <= 14&& isOut) {
         setIsOut(false);
       } else if (top > 14&&!isOut) {
