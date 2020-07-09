@@ -27,7 +27,12 @@ return LEGO_BRIDGE.store!.dispatch(action)
 }
 export function createLegStore(initState: Partial<StateType> = {},customReducer?:ReducerType) {
   if (LEGO_BRIDGE.store) return LEGO_BRIDGE.store;
-  const store = createStore(combineReducers(reducer,customReducer), { ...legoState, ...initState });
+  const store = createStore(
+    combineReducers(reducer,customReducer), 
+    { ...legoState, ...initState },
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+  );
   LEGO_BRIDGE.store = store;
   return store;
 }
