@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { HookState } from '../BrickTree/SortItem';
 import flattenDeep from 'lodash/flattenDeep';
 import map from 'lodash/map';
 import { PROPS_TYPES } from 'brickd-core';
@@ -16,21 +15,6 @@ export function usePrevious<T>(value: any) {
 }
 
 
-export function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
-
-    if (prevState.componentConfigs[key] === nextState.componentConfigs[key]) {
-        const {selectedKey: prevSelectedKey,propName:prevPropName} = prevState.selectedInfo || {}
-        const {selectedKey,propName} = nextState.selectedInfo || {}
-        return prevSelectedKey == key &&
-            (selectedKey !== key||selectedKey === key&&prevPropName!==propName) ||
-            prevSelectedKey !== key && selectedKey === key ||
-            prevState.hoverKey === key && nextState.hoverKey !== key ||
-            prevState.hoverKey !== key && nextState.hoverKey === key;
-
-
-    }
-    return true
-}
 
 /**
  * 用于获取组件名字数组

@@ -3,7 +3,7 @@ import styles from '../../index.less';
 import each from 'lodash/each';
 import map from 'lodash/map';
 import { PaneType } from './ObjectArrayComponent';
-import Sortable from '../../components/ReactSortable';
+import { ReactSortable } from 'brickd';
 
 interface SortComponentPropsType {
   onSortChange: (data: any) => any,
@@ -36,7 +36,7 @@ function SortComponent(props: SortComponentPropsType) {
   };
 
   return (
-    <Sortable
+    <ReactSortable
       options={{
         animation: 200,
         dataIdAttr: 'id',
@@ -49,7 +49,7 @@ function SortComponent(props: SortComponentPropsType) {
       onChange={onLayoutSortChange}
     >
       {map(sortData, renderSortItem)}
-    </Sortable>
+    </ReactSortable>
   );
 }
 

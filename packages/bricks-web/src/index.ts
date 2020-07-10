@@ -11,7 +11,6 @@ import {
   StringComponent,
 } from './PropComponent';
 
-export * from './BrickTree'
 export {default as BrickPreview} from './BrickPreview'
 export * from './PropComponent'
 

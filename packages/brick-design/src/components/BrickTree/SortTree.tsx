@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
-import map from 'lodash/map';
-import isEqual from 'lodash/isEqual';
+import React, { useCallback,memo } from 'react';
+import {map,isEqual} from 'lodash'
 import styles from './index.less';
 import SortItem from './SortItem';
 import { NodeProps, onLayoutSortChange, SelectedInfoBaseType } from 'brickd-core';
-import ReactSortable from '../components/ReactSortable';
+import ReactSortable from './ReactSortable';
 
 interface SortTreePropsType {
     isFold?: boolean,
@@ -100,4 +99,4 @@ function SortTree(props: SortTreePropsType) {
     );
 }
 
-export default SortTree;
+export default memo(SortTree);

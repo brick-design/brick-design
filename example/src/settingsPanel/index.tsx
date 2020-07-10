@@ -3,7 +3,7 @@ import { Tabs } from 'antd/lib/index';
 import PropsSettings from './propsSettings';
 import StyleSettings from './styleSettings';
 import { ComponentConfigsType, SelectedInfoType, STATE_PROPS, useSelector } from 'brickd-core';
-import { BrickTree } from 'bricks-web';
+import { BrickTree } from 'brickd';
 import styles from '../index.less'
 import get  from 'lodash/get';
 
@@ -14,9 +14,8 @@ type SettingPanelType={
 }
 function SettingPanel() {
 const {selectedInfo,componentConfigs}=useSelector<SettingPanelType,STATE_PROPS>(['selectedInfo','componentConfigs'])
-  console.log('componentConfigs>>>>',JSON.stringify(componentConfigs))
   const [activeKey, setActiveKey] = useState('1');
-const {props:selectProps,selectedKey}=selectedInfo||{}
+const {selectedKey}=selectedInfo||{}
 const style=get(componentConfigs,[selectedKey,'props','style'])
   return (
     <Tabs

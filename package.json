@@ -23,7 +23,7 @@
 	],
 	"scripts": {
 		"clean": "lerna run clean",
-		"clern:modules": "lerna clean -y",
+		"clern:modules": "lerna clean -y && lerna run clean",
 		"build": "lerna run build --stream",
 		"release": "run-s clean test go_no_go publish changelog",
 		"go_no_go": "node scripts/go_no_go.js",
