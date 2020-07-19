@@ -3,7 +3,7 @@ import {map,isEqual} from 'lodash'
 import styles from './index.less';
 import SortItem from './SortItem';
 import { NodeProps, onLayoutSortChange, SelectedInfoBaseType } from 'brickd-core';
-import ReactSortable from './ReactSortable';
+import ReactSortable from './components/ReactSortable';
 
 interface SortTreePropsType {
     isFold?: boolean,

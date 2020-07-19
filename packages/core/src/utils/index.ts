@@ -8,7 +8,7 @@ import {
   SelectedInfoType,
   StateType,
 } from '../types';
-import {each,get} from 'lodash';
+import {each,get,isEmpty} from 'lodash';
 import { LEGO_BRIDGE } from '../store';
 import { ReducerType } from '../reducers';
 
@@ -295,5 +295,39 @@ export function combineReducers(brickReducer:ReducerType,customReducer?:ReducerT
       return newState
     }
   }
+}
+
+export function createTemplateConfigs(templateConfigs:ComponentConfigsType,
+                                      templatePropsConfigSheet:PropsConfigSheetType,
+                                      componentConfigs:ComponentConfigsType,
+                                      propsConfigSheet:PropsConfigSheetType,
+                                      childNodes:ChildNodesType) {
+  if(Array.isArray(childNodes)){
+    for (const key of childNodes){
+      templateConfigs[key]=componentConfigs[key];
+      if(propsConfigSheet[key]){
+        templatePropsConfigSheet[key]=propsConfigSheet[key]
+      }
+      const {childNodes}=templateConfigs[key]
+      if(childNodes) createTemplateConfigs(templateConfigs,templatePropsConfigSheet,componentConfigs,propsConfigSheet,childNodes)
+    }
+  }else {
+    each(childNodes,(childKeys)=>{
+      if(!isEmpty(childKeys)) createTemplateConfigs(templateConfigs,templatePropsConfigSheet,componentConfigs,propsConfigSheet,childKeys)
+    })
+  }
+}
+
+
+export function createTemplate(state:StateType) {
+  const {selectedInfo,componentConfigs,propsConfigSheet}=state
+  const {selectedKey}=selectedInfo
+  const templateConfigs={[ROOT]:componentConfigs[selectedKey]}
+  const templatePropsConfigSheet={[ROOT]:propsConfigSheet[selectedKey]}
+  const {childNodes}=componentConfigs[selectedKey]
+  if(!isEmpty(childNodes)){
+    createTemplateConfigs(templateConfigs,templatePropsConfigSheet,componentConfigs,propsConfigSheet,childNodes)
+  }
+  return { templateConfigs,templatePropsConfigSheet }
 }
 

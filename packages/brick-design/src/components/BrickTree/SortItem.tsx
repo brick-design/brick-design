@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useState } from 'react'
-import { isEmpty, map, isArray, isEqual } from 'lodash'
+import { isEmpty, map, isArray, isEqual,get } from 'lodash'
 import SortTree from './SortTree'
 import styles from './index.less'
-import { usePrevious } from '../../utils'
+import { isEqualKey, usePrevious } from '../../utils'
 import {
 	ChildNodesType,
 	clearDropTarget,
@@ -11,17 +11,14 @@ import {
 	isContainer,
 	NodeProps,
 	NodePropsConfigType,
-	PropsNodeType,
 	SelectedInfoBaseType,
 	SelectedInfoType,
 	STATE_PROPS,
 	useSelector,
 } from 'brickd-core'
-import { getDropTargetInfo, handleSelectedStatus, onMouseOver, selectedStatus } from '../../common/events'
+import { getDropTargetInfo} from '../../common/events'
 import Collapse, { Panel } from 'rc-collapse'
-
-import {LayoutIcon,TriangleIcon,RowIcon} from './Icons'
-
+import Header from './components/Header'
 
 function controlUpdate(prevState: HookState, nextState: HookState, key: string) {
 
@@ -30,9 +27,7 @@ function controlUpdate(prevState: HookState, nextState: HookState, key: string) 
 		const { selectedKey, propName } = nextState.selectedInfo || {}
 		return prevSelectedKey == key &&
 			(selectedKey !== key || selectedKey === key && prevPropName !== propName) ||
-			prevSelectedKey !== key && selectedKey === key ||
-			prevState.hoverKey === key && nextState.hoverKey !== key ||
-			prevState.hoverKey !== key && nextState.hoverKey === key
+			prevSelectedKey !== key && selectedKey === key
 
 
 	}
@@ -71,72 +66,6 @@ interface SortItemPropsType {
 // }
 
 /**
- * 渲染页面结构节点
- * @returns {*}
- */
-function renderHeader(isUnfold: boolean,
-											props: SortItemPropsType,
-											isSelected: boolean,
-											isHovered: boolean,
-											setIsUnfold: any,
-											componentName: string,
-											childNodes?: ChildNodesType,
-											nodePropsConfig?: NodePropsConfigType,
-) {
-	const { specialProps, specialProps: { key } } = props
-	const selectedColor = '#5E96FF'
-	const unSelectedColor = '#555555'
-	const selectedBGColor = '#F2F2F2'
-	const hoveredBGColor = '#F1F1F1'
-	const color = isSelected ? selectedColor : unSelectedColor
-	let propName = props.propName
-	let isNodePropsRoot = false
-
-	if (nodePropsConfig && !propName) {
-		propName = Object.keys(nodePropsConfig)[0]
-		isNodePropsRoot = true
-	}
-	return (
-		<div
-			style={{ backgroundColor: isSelected ? selectedBGColor : isHovered ? hoveredBGColor : '#0000' }}
-			className={styles['header-container']}
-		>
-			<div onClick={() => handleSelectedStatus(null, isSelected, specialProps, propName)}
-					 onMouseOver={(e: any) => onMouseOver(e, isNodePropsRoot || propName ? `${key}${propName}` : key, isSelected)}
-					 style={{ display: 'flex', flex: 1, alignItems: 'center', color }}>
-				<TriangleIcon
-					className={isUnfold &&styles.rotate90}
-					style={{
-						padding: 3,
-						width:22,
-						height:22,
-						transition: 'all 0.2s',
-						cursor:'pointer',
-						visibility: isNodePropsRoot || !isEmpty(childNodes) ? 'visible' : 'hidden',
-					}}
-					onClick={(event) => {
-						event.stopPropagation()
-						setIsUnfold(!isUnfold)
-					}
-					}
-				/>
-				{componentName.includes('Layout')?<LayoutIcon style={{color,marginRight:5}} />:<RowIcon style={{color,marginRight:5}}/>}
-				<span>{componentName}</span>
-			</div>
-			{/*{*/}
-			{/*	isSelected &&*/}
-			{/*	<Dropdown*/}
-			{/*		trigger={['click']}*/}
-			{/*		overlay={renderMenu(key)}*/}
-			{/*	>*/}
-			{/*		<Icon component={getIcon('more')} style={{ color }}/>*/}
-			{/*	</Dropdown>*/}
-			{/*}*/}
-		</div>
-	)
-}
-
-/**
  * 渲染子组件或者属性节点
  * @returns {Array|*}
  */
@@ -146,10 +75,11 @@ function renderSortTree(props: SortItemPropsType, isUnfold: boolean, componentNa
 		propName,
 		nodeProps,
 	} = props
-	if (childNodes && isArray(childNodes) || !childNodes && !nodePropsConfig) {
+
+	if (isArray(childNodes) || !childNodes && nodePropsConfig) {
 		return (<SortTree
 			isFold={!isUnfold}
-			childNodes={childNodes && (childNodes as string[]) || []}
+			childNodes={childNodes?(childNodes as string[]):[]}
 			propName={propName}
 			specialProps={specialProps}
 			nodeProps={nodeProps}
@@ -161,11 +91,9 @@ function renderSortTree(props: SortItemPropsType, isUnfold: boolean, componentNa
 	 * 处理属性节点子组件
 	 */
 	return map(nodePropsConfig, (nodeProps, propName) => {
-		// const propKey = `${key}${propName}`;
-		const propChildNodes = childNodes && (childNodes as PropsNodeType)[propName] || []
 		return <SortItem
 			{...props}
-			propChildNodes={propChildNodes}
+			propChildNodes={get(childNodes,propName,[])}
 			specialProps={specialProps}
 			propName={propName}
 			key={propName}
@@ -175,28 +103,39 @@ function renderSortTree(props: SortItemPropsType, isUnfold: boolean, componentNa
 
 }
 
+/**
+ * 获取组件选中状态
+ * @param key
+ * @param hoverKey
+ * @param selectedKey
+ */
+export function selectedStatus(key: string, hoverKey: string | null, selectedKey?: string) {
+	const isSelected = isEqualKey(key,selectedKey);
+	/** 是否hover到当前组件 */
+	const isHovered = isEqualKey(key,hoverKey);
+	return { isHovered, isSelected };
+}
 
 export type HookState = {
 	selectedInfo: SelectedInfoType,
-	hoverKey: string,
 	componentConfigs: ComponentConfigsType
 }
 
-export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'hoverKey', 'componentConfigs']
+export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'componentConfigs']
 
 function SortItem(props: SortItemPropsType) {
 	const {
+		specialProps,
 		specialProps: { key, parentPropName, parentKey, domTreeKeys },
 		isFold,
 		propName,
 		propChildNodes,
 	} = props
 
-	const { selectedInfo, hoverKey, componentConfigs } = useSelector(stateSelector,
+	const { selectedInfo, componentConfigs } = useSelector(stateSelector,
 		(prevState, nextState) => controlUpdate(prevState, nextState, key))
-	const { selectedKey, domTreeKeys: nextSDTKeys, propName: selectedPropName } = selectedInfo || {}
-	const { isHovered, isSelected } = selectedStatus(propName ? `${key}${propName}` : key, hoverKey,
-		selectedPropName ? `${selectedKey}${selectedPropName}` : selectedKey)
+	const { domTreeKeys: nextSDTKeys } = selectedInfo || {}
+
 	const vDom = componentConfigs[key]
 	const { childNodes: vDomChildNodes, componentName } = vDom || {}
 	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName)
@@ -245,8 +184,14 @@ function SortItem(props: SortItemPropsType) {
 				getDropTargetInfo(e, domTreeKeys, key, propNameResult)
 			}}
 		>
-			{renderHeader(isUnfold, props, isSelected, isHovered, setIsUnfold, propName || componentName, childNodes, nodePropsConfig)}
-
+			<Header
+				isUnfold={isUnfold}
+				specialProps={specialProps}
+				propName={propName}
+				setIsUnfold={setIsUnfold}
+				hasChildNodes={!isEmpty(childNodes)}
+				componentName={propName||componentName}
+			/>
 			{isContainerComponent && <Collapse
 				activeKey={isUnfold ? '1' : '2'}
 				style={{ marginLeft: 24 }}

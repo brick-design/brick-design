@@ -25,8 +25,8 @@ npm install brickd brickd-core bricks-web
 ## Usage
 ```jsx
 import { LegoProvider } from 'brickd-core';
-import {BrickDesign} from 'brickd';
-import {BrickTree,BrickPreview} from 'bricks-web';
+import {BrickDesign,BrickTree} from 'brickd';
+import {BrickPreview} from 'bricks-web';
 const App = () => (
   <LegoProvider config={{...}}>
 <div>
@@ -37,6 +37,13 @@ const App = () => (
   </LegoProvider>
 
 );
+```
+### example
+
+```
+yarn  install
+
+npm run start:example
 ```
 
 ### 技术交流

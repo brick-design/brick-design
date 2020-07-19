@@ -8,7 +8,6 @@ import {
   selectComponent,
   SelectedInfoBaseType,
 } from 'brickd-core';
-import { isEqualKey } from '../utils';
 
 
 export function handleSelectedStatus(
@@ -31,6 +30,7 @@ export function handleSelectedStatus(
  * hover组件上触发
  * @param event
  * @param key
+ * @param isSelected
  */
 export function onMouseOver(event: Event, key: string,isSelected:boolean) {
   event&&event.stopPropagation&&event.stopPropagation();
@@ -82,18 +82,7 @@ export function onDragStart(event: Event, dragKey: string, parentKey: string, pa
 
 }
 
-/**
- * 获取组件选中状态
- * @param key
- * @param hoverKey
- * @param selectedKey
- */
-export function selectedStatus(key: string, hoverKey: string | null, selectedKey?: string) {
-  const isSelected = isEqualKey(key,selectedKey);
-  /** 是否hover到当前组件 */
-  const isHovered = isEqualKey(key,hoverKey);
-  return { isHovered, isSelected };
-}
+
 
 
 export function onDragover(e: any) {

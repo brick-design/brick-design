@@ -7,13 +7,13 @@ import {onDrop,onDragover} from '../../common/events'
 interface BrickTreeProps {
   className?:string
 }
+
 function BrickTree(props:BrickTreeProps) {
   const {componentConfigs}=useSelector<{componentConfigs:ComponentConfigsType},STATE_PROPS>(['componentConfigs'],
     (prevState,nextState)=>{
     const {componentConfigs:{[ROOT]:prevRoot}}=prevState
     const {componentConfigs:{[ROOT]:root}}=nextState
     return !!(!prevRoot && root);
-
   })
   const onMouseLeave = useCallback((e: any) => {
     e.stopPropagation();
