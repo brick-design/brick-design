@@ -1,6 +1,6 @@
 {
   "name": "bricks-web",
-  "version": "1.0.0-alpha.10",
+  "version": "1.0.0-alpha.11",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "antd": "3.26.16",
-    "brickd": "^1.0.0-alpha.10",
-    "brickd-core": "^1.0.0-alpha.10",
+    "brickd": "^1.0.0-alpha.11",
+    "brickd-core": "^1.0.0-alpha.11",
     "lodash": "^4.17.15",
     "react": "^16.8.0",
     "react-color": "^2.18.0",
