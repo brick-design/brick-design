@@ -1,7 +1,9 @@
 # brickd-core
 
 > TODO: description
+
 ## Usage
+
 ```jsx
 import { LegoProvider } from 'brickd-core';
 import {BrickDesign,BrickTree} from 'brickd';
@@ -19,4 +21,3 @@ const App = () => (
 
 );
 ```
-

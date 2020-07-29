@@ -4,7 +4,10 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["esnext", "dom"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "strict": false,
     "experimentalDecorators": true,
     "noUnusedLocals": true,

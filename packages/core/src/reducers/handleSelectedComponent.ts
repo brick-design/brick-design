@@ -1,8 +1,8 @@
-import { merge } from 'lodash';
-import { StateType } from '../types';
-import { SelectComponentPayload } from '../actions';
-import { getComponentConfig, handleRequiredHasChild } from '../utils';
-import produce from 'immer';
+import { merge } from 'lodash'
+import { StateType } from '../types'
+import { SelectComponentPayload } from '../actions'
+import { getComponentConfig, handleRequiredHasChild } from '../utils'
+import produce from 'immer'
 
 /**
  * 选中组件
@@ -11,62 +11,66 @@ import produce from 'immer';
  * @returns {{ undo: *, propsSetting: {propsConfig, mergePropsConfig, addPropsConfig: *, props: *}, redo: *, selectedInfo: {selectedKey: *, location: *, domTreeKeys: *[], fatherLocation: *, isContainer: boolean, style: *, componentName: *, nodePropsConfig}}}
  */
 
-export function selectComponent(state: StateType, payload: SelectComponentPayload): StateType {
-  const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state;
-  const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
-  if (selectedInfo) {
-    const { selectedKey, propName: selectedPropName } = selectedInfo;
-    if (selectedKey === key && selectedPropName == propName || handleRequiredHasChild(selectedInfo, componentConfigs)) return state;
-    if (selectedKey === key) {
-      if (propName && selectedPropName !== propName) {
-        domTreeKeys.push(`${key}${propName}`);
-        return {
-          ...state,
-          selectedInfo: {
-            ...selectedInfo,
-            propName,
-            domTreeKeys,
-          },
-        };
-      } else {
-        return {
-          ...state,
-          selectedInfo: {
-            ...selectedInfo,
-            parentKey,
-            parentPropName,
-          },
+export function selectComponent(
+	state: StateType,
+	payload: SelectComponentPayload,
+): StateType {
+	const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state
+	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload
+	if (selectedInfo) {
+		const { selectedKey, propName: selectedPropName } = selectedInfo
+		if (
+			(selectedKey === key && selectedPropName == propName) ||
+			handleRequiredHasChild(selectedInfo, componentConfigs)
+		)
+			return state
+		if (selectedKey === key) {
+			if (propName && selectedPropName !== propName) {
+				domTreeKeys.push(`${key}${propName}`)
+				return {
+					...state,
+					selectedInfo: {
+						...selectedInfo,
+						propName,
+						domTreeKeys,
+					},
+				}
+			} else {
+				return {
+					...state,
+					selectedInfo: {
+						...selectedInfo,
+						parentKey,
+						parentPropName,
+					},
+				}
+			}
+		}
+	}
 
-        };
-      }
-
-    }
-  }
-
-  propName && domTreeKeys.push(`${key}${propName}`);
-  const { props, componentName } = componentConfigs[key];
-  const { propsConfig } = getComponentConfig(componentName);
-  undo.push({ selectedInfo });
-  redo.length = 0;
-  return {
-    ...state,
-    dropTarget: null,
-    selectedInfo: {
-      selectedKey: key,
-      propName,
-      domTreeKeys,
-      parentKey,
-      parentPropName,
-      props,
-      propsConfig: produce(propsConfig, oldPropsConfig => {
-        merge(oldPropsConfig, propsConfigSheet[key]);
-      }),
-    },
-    undo,
-    redo,
-    hoverKey: null,
-
-  };
+	propName && domTreeKeys.push(`${key}${propName}`)
+	const { props, componentName } = componentConfigs[key]
+	const { propsConfig } = getComponentConfig(componentName)
+	undo.push({ selectedInfo })
+	redo.length = 0
+	return {
+		...state,
+		dropTarget: null,
+		selectedInfo: {
+			selectedKey: key,
+			propName,
+			domTreeKeys,
+			parentKey,
+			parentPropName,
+			props,
+			propsConfig: produce(propsConfig, (oldPropsConfig) => {
+				merge(oldPropsConfig, propsConfigSheet[key])
+			}),
+		},
+		undo,
+		redo,
+		hoverKey: null,
+	}
 }
 
 /**
@@ -75,17 +79,17 @@ export function selectComponent(state: StateType, payload: SelectComponentPayloa
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state: StateType) {
-  const { selectedInfo, componentConfigs, undo, redo } = state;
-  if (!selectedInfo || handleRequiredHasChild(selectedInfo, componentConfigs)) {
-    return state;
-  }
-  undo.push({ selectedInfo });
-  redo.length = 0;
-  return {
-    ...state,
-    dropTarget: null,
-    selectedInfo: null,
-    undo,
-    redo,
-  };
+	const { selectedInfo, componentConfigs, undo, redo } = state
+	if (!selectedInfo || handleRequiredHasChild(selectedInfo, componentConfigs)) {
+		return state
+	}
+	undo.push({ selectedInfo })
+	redo.length = 0
+	return {
+		...state,
+		dropTarget: null,
+		selectedInfo: null,
+		undo,
+		redo,
+	}
 }

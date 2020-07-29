@@ -1,5 +1,5 @@
 {
-  "name": "brickd-core",
+  "name": "@brickd/core",
   "version": "1.0.0-alpha.11",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
@@ -20,14 +20,9 @@
   "dependencies": {
     "immer": "^6.0.5",
     "lodash": "^4.17.15",
-    "react": "^16.8.0",
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149",
-    "@types/react": "^16.9.35"
-  },
-  "peerDependencies": {
-    "react": ">= 16.8"
+    "@types/lodash": "^4.14.149"
   }
 }

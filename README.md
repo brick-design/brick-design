@@ -16,19 +16,18 @@
 
 ###  📦 Install
 ```sh
-yarn add brickd brickd-core bricks-web
+yarn add @brickd/react  @brickd/react-web
 ```
 OR
 ```sh
-npm install brickd brickd-core bricks-web
+npm install @brickd/react @brickd/react-web
 ```
 ## Usage
 ```jsx
-import { LegoProvider } from 'brickd-core';
-import {BrickDesign,BrickTree} from 'brickd';
+import {BrickDesign,BrickTree,BrickProvider} from '@brickd/react';
 import {BrickPreview} from 'bricks-web';
 const App = () => (
-  <LegoProvider config={{...}}>
+  <BrickProvider initState={{}} customReducer={(state,action)=>state} config={{...}}>
 <div>
     <BrickPreview/>
     <BrickDesign />

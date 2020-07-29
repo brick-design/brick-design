@@ -1,175 +1,179 @@
 {
-	"name": "root",
-	"private": true,
-	"author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/brick-design/react-visual-editor.git"
-	},
-	"publishConfig": { "registry": "https://npm.pkg.github.com/" },
-	"keywords": [
-		"react",
-		"drag-and-drop",
-		"web-design",
-		"typescript",
-		"page-editor",
-		"web-builder",
-		"site-generator",
-		"site-builder",
-		"html-builder",
-		"nocode",
-		"lowcode",
-		"web-editor"
-	],
-	"scripts": {
-		"clean": "lerna run clean",
-		"clern:modules": "lerna clean -y && lerna run clean",
-		"build": "lerna run build --stream",
-		"release": "run-s clean test go_no_go publish changelog",
-		"go_no_go": "node scripts/go_no_go.js",
-		"publish": "npm run build && lerna publish -m \"chore: publish\"",
-		"test": "jest --coverage",
-		"precommit": "lint-staged",
-		"watch": "lerna run --parallel --stream watch",
-		"precommit:format": "pretty-quick --staged",
-		"prettify:source": "prettier 'packages/*/src/**/*.ts*'",
-		"start:docs": "dumi dev",
-		"start:example": "lerna run build --stream && lerna run start"
-	},
-	"devDependencies": {
-		"@babel/cli": "^7.7.5",
-		"@babel/core": "^7.7.5",
-		"@babel/plugin-proposal-class-properties": "^7.7.4",
-		"@babel/plugin-proposal-object-rest-spread": "^7.7.4",
-		"@babel/preset-env": "^7.7.5",
-		"@babel/preset-typescript": "^7.10.1",
-		"@commitlint/cli": "^8.2.0",
-		"@commitlint/config-conventional": "^8.2.0",
-		"@rollup/plugin-babel": "^5.0.4",
-		"@rollup/plugin-commonjs": "^13.0.0",
-		"@rollup/plugin-image": "^2.0.5",
-		"@rollup/plugin-node-resolve": "^8.1.0",
-		"@testing-library/jest-dom": "^5.9.0",
-		"@testing-library/react": "^10.2.1",
-		"@testing-library/react-hooks": "^3.3.0",
-		"@testing-library/user-event": "^11.2.1",
-		"@types/jest": "^25.2.3",
-		"@typescript-eslint/eslint-plugin": "^2.8.0",
-		"@typescript-eslint/parser": "^2.8.0",
-		"babel-jest": "^26.0.1",
-		"dumi": "^1.0.25",
-		"eslint": "^6.7.0",
-		"eslint-config-prettier": "^6.7.0",
-		"eslint-config-react-app": "^5.0.2",
-		"eslint-plugin-prettier": "^3.1.1",
-		"eslint-plugin-react": "^7.16.0",
-		"eslint-plugin-react-hooks": "^2.3.0",
-		"husky": "^4.2.5",
-		"inquirer": "^7.2.0",
-		"jest": "^26.0.1",
-		"jest-environment-jsdom-fourteen": "^1.0.1",
-		"jest-resolve": "^26.0.1",
-		"jest-svg-transformer": "^1.0.0",
-		"jest-watch-typeahead": "^0.6.0",
-		"lerna": "^3.20.2",
-		"lint-staged": "^10.2.11",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^2.0.5",
-		"pretty-quick": "^2.0.1",
-		"react-test-renderer": "^16.13.1",
-		"rollup": "^2.18.1",
-		"rollup-plugin-postcss": "^3.1.2",
-		"rollup-plugin-terser": "^6.1.0",
-		"rollup-plugin-typescript2": "^0.27.1",
-		"ts-jest": "^26.1.0",
-		"typescript": "^3.9.3"
-	},
-	"engines": {
-		"node": ">= 10.0"
-	},
-	"jest": {
-		"clearMocks": true,
-		"cacheDirectory": ".jest-cache",
-		"moduleFileExtensions": [
-			"ts",
-			"tsx",
-			"js",
-			"jsx"
-		],
-		"modulePaths": [
-			"<rootDir>/packages/"
-		],
-		"moduleNameMapper": {
-			"^brickd-core$": "core/src",
-			"^brickd$": "brick-design/src",
-			"^bricks-web$": "bricks-web/src",
-			"\\.less$": "identity-obj-proxy"
-		},
-		"collectCoverageFrom": [
-			"packages/**/*.{ts,tsx}",
-			"!packages/core/src/index.ts",
-			"!**/node_modules/**",
-			"!**/dist/**",
-			"!**/__tests__/**",
-			"!packages/docs/**",
-			"!packages/bricks-web/**",
-			"!packages/example/**",
-			"!**/typing.d.ts"
-		],
-		"testMatch": [
-			"<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
-			"<rootDir>/packages/brick-design/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
-			"<rootDir>/packages/bricks-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
-		],
-		"transform": {
-			"^.+\\.(ts|tsx)$": "ts-jest",
-			"^.+\\.svg$": "jest-svg-transformer"
-		},
-		"globals": {
-			"ts-jest": {
-				"tsConfig": "tsconfig.jest.json",
-				"diagnostics": {
-					"pathRegex": "/.(spec|test).ts$/"
-				}
-			}
-		}
-	},
-	"lint-staged": {
-		"*.{ts,tsx}": [
-			"eslint --fix",
-			"prettier"
-		]
-	},
-	"prettier": {
-		"semi": false,
-		"singleQuote": true,
-		"trailingComma": "all",
-		"useTabs": true,
-		"overrides": [
-			{
-				"files": "*.md",
-				"options": {
-					"useTabs": false
-				}
-			},
-			{
-				"files": "*.json",
-				"options": {
-					"useTabs": false,
-					"tabWidth": 2
-				}
-			}
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged"
-		}
-	},
-	"workspaces": {
-		"packages": [
-			"packages/*",
-			"example"
-		]
-	}
+  "name": "root",
+  "private": true,
+  "author": "anye931123 <1278998669@qq.com> (http://github.com/anye931123)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brick-design/react-visual-editor.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "keywords": [
+    "react",
+    "drag-and-drop",
+    "web-design",
+    "typescript",
+    "page-editor",
+    "web-builder",
+    "site-generator",
+    "site-builder",
+    "html-builder",
+    "nocode",
+    "lowcode",
+    "web-editor"
+  ],
+  "scripts": {
+    "clean": "lerna run clean",
+    "clern:modules": "lerna clean -y && lerna run clean",
+    "build": "lerna run build --stream",
+    "release": "run-s clean test go_no_go publish changelog",
+    "go_no_go": "node scripts/go_no_go.js",
+    "publish": "npm run build && lerna publish -m \"chore: publish\"",
+    "test": "jest --coverage",
+    "precommit": "lint-staged",
+    "watch": "lerna run --parallel --stream watch",
+    "precommit:format": "pretty-quick --staged",
+    "prettify:source": "prettier 'packages/*/src/**/*.ts*'",
+    "start:docs": "dumi dev",
+    "start:example": "lerna run build --stream && lerna run start"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/preset-env": "^7.7.5",
+    "@babel/preset-typescript": "^7.10.1",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@rollup/plugin-babel": "^5.0.4",
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-image": "^2.0.5",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^10.2.1",
+    "@testing-library/react-hooks": "^3.3.0",
+    "@testing-library/user-event": "^11.2.1",
+    "@types/jest": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "babel-jest": "^26.0.1",
+    "dumi": "^1.0.25",
+    "eslint": "^6.7.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-react-app": "^5.0.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "husky": "^4.2.5",
+    "inquirer": "^7.2.0",
+    "jest": "^26.0.1",
+    "jest-environment-jsdom-fourteen": "^1.0.1",
+    "jest-resolve": "^26.0.1",
+    "jest-svg-transformer": "^1.0.0",
+    "jest-watch-typeahead": "^0.6.0",
+    "lerna": "^3.20.2",
+    "lint-staged": "^10.2.11",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "react-test-renderer": "^16.13.1",
+    "rollup": "^2.18.1",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.3"
+  },
+  "engines": {
+    "node": ">= 10.0"
+  },
+  "jest": {
+    "clearMocks": true,
+    "cacheDirectory": ".jest-cache",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ],
+    "modulePaths": [
+      "<rootDir>/packages/"
+    ],
+    "moduleNameMapper": {
+      "^@brickd/core$": "core/src",
+      "^@brickd/react$": "react/src",
+      "^@brickd/react-web$": "react-web/src",
+      "^@brickd/redux-bridge$": "redux-bridge/src",
+      "\\.less$": "identity-obj-proxy"
+    },
+    "collectCoverageFrom": [
+      "packages/**/*.{ts,tsx}",
+      "!packages/core/src/index.ts",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/lib/**",
+      "!**/__tests__/**",
+      "!packages/react-web/**",
+      "!**/typing.d.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+      "<rootDir>/packages/react/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+      "<rootDir>/packages/react-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+      "<rootDir>/packages/redux-bridge/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
+
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest",
+      "^.+\\.svg$": "jest-svg-transformer"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.jest.json",
+        "diagnostics": {
+          "pathRegex": "/.(spec|test).ts$/"
+        }
+      }
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "useTabs": true,
+    "overrides": [
+      {
+        "files": "*.md",
+        "options": {
+          "useTabs": false
+        }
+      },
+      {
+        "files": "*.json",
+        "options": {
+          "useTabs": false,
+          "tabWidth": 2
+        }
+      }
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "example"
+    ]
+  }
 }

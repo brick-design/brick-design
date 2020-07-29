@@ -1,0 +1,15 @@
+{
+  "name": "@brickd/redux-bridge",
+  "version": "1.0.0-alpha.11",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh"
+  }
+}

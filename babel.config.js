@@ -9,7 +9,7 @@ module.exports = {
 				},
 			},
 		],
-		'@babel/preset-typescript'
+		'@babel/preset-typescript',
 	],
 	plugins: [
 		'@babel/proposal-class-properties',

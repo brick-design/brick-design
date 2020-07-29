@@ -1,0 +1,51 @@
+@import '../../global';
+
+.sort-container {
+	height: 100%;
+	overflow: auto;
+	background: #fff;
+
+	:global {
+		.rc-collapse {
+			background-color: #f7f7f7;
+		}
+
+		.rc-collapse-anim-active {
+			transition: height 0.15s ease-out;
+		}
+
+		.rc-collapse-content {
+			overflow: hidden;
+			color: #666;
+			background-color: #fff;
+		}
+
+		.rc-collapse-content-inactive {
+			display: none;
+		}
+	}
+}
+
+.header-container {
+	display: flex;
+	flex: 1;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px 15px 5px 10px;
+}
+
+.item-background {
+	background-color: #d9d9d9;
+}
+
+.sort-item {
+	position: relative;
+}
+
+.triangle {
+	padding: 3px;
+	width: 22px;
+	height: 22px;
+	transition: all 0.2s;
+	cursor: pointer;
+}

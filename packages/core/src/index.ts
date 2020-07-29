@@ -1,7 +1,6 @@
-export * from './types';
-export * from './actions';
-export * from './hooks/useSelector';
-export * from './store';
-export * from './components/LegoProvider';
-export * from './utils';
-export { produce, original } from 'immer';
+export * from './types'
+export * from './actions'
+export * from './store'
+export * from './utils'
+export { ReducerType } from './reducers'
+export { produce, original } from 'immer'

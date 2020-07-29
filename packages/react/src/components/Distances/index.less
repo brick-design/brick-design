@@ -1,0 +1,39 @@
+@import '../../global';
+
+.distances-common {
+	position: absolute;
+	z-index: 30000;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	pointer-events: none;
+	.animate();
+}
+
+.distances-v {
+	.distances-common();
+	width: 1px;
+	height: 100%;
+	background-color: @selectColor;
+
+	&:before {
+		.distances-tip();
+		content: attr(data-distance);
+		pointer-events: none;
+		left: 5px;
+	}
+}
+
+.distances-h {
+	.distances-common();
+	height: 1px;
+	width: 100%;
+	background-color: @selectColor;
+
+	&:before {
+		.distances-tip();
+		content: attr(data-distance);
+		pointer-events: none;
+		top: -20px;
+	}
+}
