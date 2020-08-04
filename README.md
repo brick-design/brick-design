@@ -1,7 +1,7 @@
 <h1 align='center'>Brick Design</h1>
 
 [![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
-[![npm version](https://img.shields.io/npm/v/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
+[![npm version](https://img.shields.io/npm/v/@brickd/react.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
@@ -24,13 +24,17 @@ npm install @brickd/react @brickd/react-web
 ```
 ## Usage
 ```jsx
+import {createElement} from 'react';
 import {BrickDesign,BrickTree,BrickProvider} from '@brickd/react';
-import {BrickPreview} from 'bricks-web';
+import {BrickPreview} from '@brickd/react-web';
+import brickRender from '@brickd/render';
+const plugins=[(vDom,componentConfig)=>vDom];
 const App = () => (
   <BrickProvider initState={{}} customReducer={(state,action)=>state} config={{...}}>
 <div>
     <BrickPreview/>
     <BrickDesign />
+{brickRender(pageConfig,createElement,plugins)}
 <BrickTree/>
 </div>
   </BrickProvider>
