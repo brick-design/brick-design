@@ -8,6 +8,9 @@
   "module": "./dist/esm/index.js",
   "types": "./lib/index.d.ts",
   "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc && rollup -c rollup.config.js",
     "clean": "../../scripts/clean_package.sh"

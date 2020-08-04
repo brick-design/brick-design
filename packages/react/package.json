@@ -13,6 +13,9 @@
     "clean": "../../scripts/clean_package.sh",
     "dev": "tsc -w && rollup -c rollup.config.js -w"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/brick-design/react-visual-editor.git"

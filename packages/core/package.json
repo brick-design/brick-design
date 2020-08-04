@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://github.com/brick-design/react-visual-editor.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "immer": "^6.0.5",
     "lodash": "^4.17.15",
