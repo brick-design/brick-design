@@ -16,7 +16,6 @@ import menus, { CONTEXT_MENU, ENABLED } from './config'
 import styles from './style.less'
 
 import { redo, undo, useSelector } from '@brickd/react'
-import ContextMenu from './component/ContextMenu'
 
 const REST_STYLE = 'resetStyle'
 const UNDO = 'undo'
@@ -230,13 +229,6 @@ function ToolBar() {
 				{/*    />}*/}
 				{/*</Modal>*/}
 			</Row>
-			<ContextMenu
-				isSelected={!isEmpty(selectedInfo)}
-				enableMenu={useMemo(
-					() => filter(CONTEXT_MENU, (menu) => enabled.includes(menu)),
-					[enabled],
-				)}
-			/>
 		</>
 	)
 }

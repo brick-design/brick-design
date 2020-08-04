@@ -106,6 +106,7 @@
       "^@brickd/react$": "react/src",
       "^@brickd/react-web$": "react-web/src",
       "^@brickd/redux-bridge$": "redux-bridge/src",
+      "^@brickd/render$": "render/src",
       "\\.less$": "identity-obj-proxy"
     },
     "collectCoverageFrom": [
@@ -122,7 +123,8 @@
       "<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/react/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/react-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
-      "<rootDir>/packages/redux-bridge/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
+      "<rootDir>/packages/redux-bridge/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+      "<rootDir>/packages/render/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
 
     ],
     "transform": {
@@ -173,7 +175,7 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "example"
+      "examples/*"
     ]
   }
 }

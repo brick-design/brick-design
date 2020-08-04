@@ -22,7 +22,7 @@ export default function brickRender(pageConfigs: ComponentConfigsType, createEle
 		return map(childNodes, key => {
 			const vDom = pageConfigs[key]
 			const { componentName, childNodes } = vDom
-			return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), { ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) })
+			return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) })
 		})
 	}
 

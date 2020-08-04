@@ -14,5 +14,6 @@
     },
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules", "dist", "typings", "__tests__"]
+  "exclude": ["node_modules", "dist",
+    "typings", "__tests__"]
 }

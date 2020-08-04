@@ -4,23 +4,29 @@
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "brickd": [
-        "packages/brick-design/src/index"
+      "@brickd/react": [
+        "packages/react/src/index"
       ],
-      "brickd/*": [
-        "packages/brick-design/src/*"
+      "@brickd/react/*": [
+        "packages/react/src/*"
       ],
-      "brickd-core": [
+      "@brickd/core": [
         "packages/core/src/index"
       ],
-      "brickd-core/*": [
+      "@brickd/core/*": [
         "packages/core/src/*"
       ],
-      "bricks-web": [
-        "packages/bricks-web/src/index"
+      "@brickd/react-web": [
+        "packages/react-web/src/index"
       ],
-      "bricks-web/*": [
-        "packages/bricks-web/src/*"
+      "@brickd/react-web/*": [
+        "packages/react-web/src/*"
+      ],
+      "@brickd/render": [
+        "packages/render/src/index"
+      ],
+      "@brickd/render/*": [
+        "packages/render/src/*"
       ]
     }
   },

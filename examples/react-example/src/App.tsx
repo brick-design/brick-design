@@ -52,7 +52,7 @@ export default function App() {
 					</Resizable>
 
 					<div className={styles['canvas-container']}>
-						<Radio.Group defaultValue={'1'} style={{marginBottom:20}}
+						<Radio.Group defaultValue={'0'} style={{marginBottom:20}}
 												 onChange={(e)=>setIsPreview(e.target.value==='1')}>
 							<Radio.Button value={'0'}>
 								编辑
