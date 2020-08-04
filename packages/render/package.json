@@ -1,6 +1,6 @@
 {
   "name": "@brickd/render",
-  "version": "1.0.0-alpha.11",
+  "version": "1.0.0-alpha.12",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -13,8 +13,8 @@
     "clean": "../../scripts/clean_package.sh"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
-    "@brickd/core": "1.0.0-alpha.11"
+    "@brickd/core": "^1.0.0-alpha.12",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149"
