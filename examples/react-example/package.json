@@ -1,11 +1,11 @@
 {
   "name": "brickd-example",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "private": true,
   "dependencies": {
-    "@brickd/react": "^1.0.0-alpha.12",
-    "@brickd/react-web": "^1.0.0-alpha.12",
-    "@brickd/render": "^1.0.0-alpha.12",
+    "@brickd/react": "^1.0.0-alpha.13",
+    "@brickd/react-web": "^1.0.0-alpha.13",
+    "@brickd/render": "^1.0.0-alpha.13",
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
     "classnames": "^2.2.6",
