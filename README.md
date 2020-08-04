@@ -33,7 +33,7 @@ const App = () => (
     <BrickDesign />
 <BrickTree/>
 </div>
-  </LegoProvider>
+  </BrickProvider>
 
 );
 ```

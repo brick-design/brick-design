@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SettingsPanel from './settingsPanel'
 import styles from './index.less'
 import AllComponents from './ComponentsPreview'
 import ToolBar from './toolBar'
+import {Radio} from 'antd'
 import { Resizable } from 're-resizable'
 import 'antd/dist/antd.css'
 import 'animate.css/animate.min.css'
 import { BrickProvider } from '@brickd/react'
 import DesignPanel from './DesignPanel'
+import PreviewPanel from './PreviewPanel'
 import config from './configs'
 import initData from './initData'
 
@@ -35,6 +37,7 @@ const RIGHT_ENABLE = {
  *
  */
 export default function App() {
+	const [isPreview,setIsPreview]=useState(false)
 	return (
 		<BrickProvider initState={{ componentConfigs: initData }} config={config}>
 			<div className={styles['wrapper']}>
@@ -49,7 +52,17 @@ export default function App() {
 					</Resizable>
 
 					<div className={styles['canvas-container']}>
-						<DesignPanel />
+						<Radio.Group defaultValue={'1'} style={{marginBottom:20}}
+												 onChange={(e)=>setIsPreview(e.target.value==='1')}>
+							<Radio.Button value={'0'}>
+								编辑
+							</Radio.Button>
+							<Radio.Button value='1'>
+								预览
+							</Radio.Button>
+						</Radio.Group>
+						{isPreview?<PreviewPanel/>:<DesignPanel />}
+
 					</div>
 					<Resizable
 						enable={RIGHT_ENABLE}

@@ -7,6 +7,7 @@
     "antd": "3.26.16",
     "@brickd/react": "^1.0.0-alpha.11",
     "@brickd/react-web": "^1.0.0-alpha.11",
+    "@brickd/render": "^1.0.0-alpha.11",
     "classnames": "^2.2.6",
     "highlight.js": "^9.17.1",
     "html2canvas": "^1.0.0-rc.5",

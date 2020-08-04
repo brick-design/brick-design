@@ -4,10 +4,13 @@ import { LEGO_BRIDGE, ROOT, StateType } from '@brickd/core'
 import { useChildNodes, UseChildNodeType } from '../../hooks/useChildNodes'
 import BrickProvider from '../../components/BrickProvider'
 import config from '../configs'
+import { REDUX_BRIDGE } from '@brickd/redux-bridge'
 
 afterEach(() => {
 	LEGO_BRIDGE.config = undefined
 	LEGO_BRIDGE.store = null
+	REDUX_BRIDGE.store=null
+
 })
 describe('useChildNodes', () => {
 	it('childNodes===undefined', () => {

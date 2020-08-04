@@ -13,7 +13,6 @@ export function LegoProvider({ children }: LegoProviderProps = {}) {
 	if (!REDUX_BRIDGE.context) {
 		REDUX_BRIDGE.context = createContext(null)
 	}
-	console.log('REDUX_BRIDGE>>>>>', REDUX_BRIDGE)
 	return createElement(
 		REDUX_BRIDGE.context.Provider,
 		{ value: REDUX_BRIDGE.store },

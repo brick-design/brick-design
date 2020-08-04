@@ -8,9 +8,11 @@ import {
 	useDragDrop,
 } from '../../hooks/useDragDrop'
 import BrickProvider from '../../components/BrickProvider'
+import { REDUX_BRIDGE } from '@brickd/redux-bridge'
 afterEach(() => {
 	LEGO_BRIDGE.config = undefined
 	LEGO_BRIDGE.store = null
+	REDUX_BRIDGE.store=null
 })
 describe('useDragDrop', () => {
 	it('当没有拖拽组件时', () => {

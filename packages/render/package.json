@@ -13,7 +13,8 @@
     "clean": "../../scripts/clean_package.sh"
   },
   "dependencies": {
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "@brickd/core": "1.0.0-alpha.11"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.149"
