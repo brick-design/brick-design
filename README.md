@@ -2,7 +2,7 @@
 
 [![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
 [![npm version](https://img.shields.io/npm/v/@brickd/react.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
-[![npm downloads](https://img.shields.io/npm/dm/@brickd/react.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
+[![npm downloads](https://img.shields.io/npm/dm/@brickd/react.svg?maxAge=43200&style=flat-square)](https://www.npmjs.com/package/brickd)
 [![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
 ## SNAPSHOT
