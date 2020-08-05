@@ -2,7 +2,7 @@
 
 [![build status](https://travis-ci.org/brick-design/react-visual-editor.svg?branch=brickd)](https://travis-ci.org/github/brick-design/react-visual-editor)
 [![npm version](https://img.shields.io/npm/v/@brickd/react.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
-[![npm downloads](https://img.shields.io/npm/dm/brickd.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
+[![npm downloads](https://img.shields.io/npm/dm/@brickd/react.svg?style=flat-square)](https://www.npmjs.com/package/brickd)
 [![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
 ## SNAPSHOT
@@ -16,38 +16,93 @@
 
 ###  📦 Install
 ```sh
-yarn add @brickd/react  @brickd/react-web
+yarn add @brickd/react  @brickd/react-web @brickd/render
 ```
 OR
 ```sh
-npm install @brickd/react @brickd/react-web
+npm install @brickd/react @brickd/react-web @brickd/render
 ```
 ## Usage
 ```jsx
 import {createElement} from 'react';
-import {BrickDesign,BrickTree,BrickProvider} from '@brickd/react';
+import {BrickDesign,BrickTree,BrickProvider,useSelector,createActions} from '@brickd/react';
 import {BrickPreview} from '@brickd/react-web';
-import brickRender from '@brickd/render';
+import BrickRender from '@brickd/render';
 const plugins=[(vDom,componentConfig)=>vDom];
-const App = () => (
-  <BrickProvider initState={{}} customReducer={(state,action)=>state} config={{...}}>
-<div>
+const customReducer=(state,action)=>{
+const {type,payload}=action
+switch (type){
+case 'customReducer':
+return {...state}
+default:
+return state
+}
+
+}
+const App = () => {
+const {componentConfigs}=useSelector(['componentConfigs'])
+
+	return(<BrickProvider initState={{}} customReducer={customReducer} config={{...}}>
+<div onClick={()=>createActions({type:"customReducer",payload:{...}})}> 出发action</div>
+
     <BrickPreview/>
     <BrickDesign />
-{brickRender(pageConfig,createElement,plugins)}
+<BrickRender componentConfigs={componentConfigs} createElement={createElement} plugins={plugins}/>
 <BrickTree/>
-</div>
-  </BrickProvider>
 
-);
+  </BrickProvider>);
+}
 ```
-### example
+### run example
 
 ```
 yarn  install
 
 npm run start:example
 ```
+### Features
+1. 画布
+    - [x] 参考线
+    - [x] 组件间距查看
+    - [x] 拖拽改变组件形状
+    - [x] 拖拽实时预览
+    - [x] 组件: 复制
+    - [x] 组件: 删除
+    - [x] 父组件: 清除子组件
+    - [ ] 组件排序 
+    - [x] 模板：生成
+    - [x] 模板：添加
+    - [x] 快速预览
+    - [x] 撤销、重做
+    - [x] 样式可视化操作实时预览
+    - [x] 组件自由拖拽嵌套
+    - [x] 父子组件约束
+    - [x] 组件对象(vDom)扩展
+    - [x] 自定义reducer处理页面状态
+    - [ ] 组件逻辑判断
+    - [x] React
+    - [ ] rax
+    
+2. 组件树
+    - [x] 组件: 复制
+    - [x] 组件: 删除
+    - [x] 父组件: 清除子组件
+    - [x] 同级组件排序 
+    - [x] 模板：生成
+    - [x] 模板：添加 
+    - [x] 拖拽添加组件
+    - [x] 拖拽跨组件排序
+    - [x] 与画布实时映射
+
+3. 渲染器
+    - [x] 支持react
+    - [x] 支持rax
+    - [x] 支持plugins处理组件
+
+4. 代码生成器
+   - [ ] 代码生成
+   - [ ] 画布与代码相互转换
+   - [ ] 画布与代码实时交互
 
 ### 技术交流
 

@@ -2,32 +2,42 @@
 
 > 拖拽画板
 
-### 📦 Install
-
+###  📦 Install
 ```sh
-yarn add brickd @brickd/core bricks-web
+yarn add @brickd/react  @brickd/react-web @brickd/render
 ```
-
-```bash
-npm install brickd @brickd/core bricks-web
+OR
+```sh
+npm install @brickd/react @brickd/react-web @brickd/render
 ```
-
 ## Usage
-
 ```jsx
-import { LegoProvider } from '@brickd/core';
-import {BrickDesign,BrickTree} from 'brickd';
-import {BrickPreview} from 'bricks-web'
+import {createElement} from 'react';
+import {BrickDesign,BrickTree,BrickProvider,useSelector,createActions} from '@brickd/react';
+import {BrickPreview} from '@brickd/react-web';
+import BrickRender from '@brickd/render';
+const plugins=[(vDom,componentConfig)=>vDom];
+const customReducer=(state,action)=>{
+const {type,payload}=action
+switch (type){
+case 'customReducer':
+return {...state}
+default:
+return state
+}
 
+}
+const App = () => {
+const {componentConfigs}=useSelector(['componentConfigs'])
 
-const App = () => (
-  <LegoProvider config={{...}}>
-<div>
-    <BrickPreview componentsCategory={...}/>
+	return(<BrickProvider initState={{}} customReducer={customReducer} config={{...}}>
+<div onClick={()=>createActions({type:"customReducer",payload:{...}})}> 出发action</div>
+
+    <BrickPreview/>
     <BrickDesign />
+<BrickRender componentConfigs={componentConfigs} createElement={createElement} plugins={plugins}/>
 <BrickTree/>
-</div>
-  </LegoProvider>
 
-);
+  </BrickProvider>);
+}
 ```

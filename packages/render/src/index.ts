@@ -1,16 +1,22 @@
 import {
 	ChildNodesType,
-	ComponentConfigsType,
 	PropsNodeType,
 	ROOT,
 	LEGO_BRIDGE,
 	VirtualDOMType,
 	ComponentConfigTypes,
+	 ComponentConfigsType,
 } from '@brickd/core'
 import { each, get, isArray, map, reduce } from 'lodash'
 type PluginType=(vDom: VirtualDOMType,componentConfig:ComponentConfigTypes)=>VirtualDOMType
 
-export default function brickRender(pageConfigs: ComponentConfigsType, createElement: any, plugins?: PluginType[]) {
+interface BrickRenderType{
+	componentConfigs:ComponentConfigsType
+	createElement: any,
+	plugins?: PluginType[]
+}
+export default function BrickRender(props:BrickRenderType) {
+	const {componentConfigs,createElement,plugins}=props
 
 	function handlePlugins(vDom: VirtualDOMType, plugins: any=[]) {
 		const componentConfig=get(LEGO_BRIDGE.config.AllComponentConfigs,vDom.componentName)
@@ -20,9 +26,7 @@ export default function brickRender(pageConfigs: ComponentConfigsType, createEle
 
 	function renderArrChildNodes(childNodes: string[]) {
 		return map(childNodes, key => {
-			const vDom = pageConfigs[key]
-			const { componentName, childNodes } = vDom
-			return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) })
+			return renderNode(componentConfigs[key],key)
 		})
 	}
 
@@ -42,7 +46,11 @@ export default function brickRender(pageConfigs: ComponentConfigsType, createEle
 		}
 	}
 
-	const Root = pageConfigs[ROOT]
-	const { componentName, childNodes } = Root
-	return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), { ...handlePlugins(Root, plugins), ...renderChildNodes(childNodes) })
+	function renderNode(vDom:VirtualDOMType,key?:string){
+		const { componentName, childNodes } = vDom
+		return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) })
+	}
+
+
+	return renderNode(componentConfigs[ROOT])
 }

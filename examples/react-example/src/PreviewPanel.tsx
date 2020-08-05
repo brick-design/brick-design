@@ -1,7 +1,7 @@
 import React,{createElement} from 'react'
 import styles from './index.less'
 import { useSelector } from '@brickd/react'
-import brickRender from '@brickd/render'
+import BrickRender from '@brickd/render'
 
 export default function PreviewPanel() {
 	const { platformInfo,componentConfigs } = useSelector(['platformInfo','componentConfigs'])
@@ -14,7 +14,7 @@ export default function PreviewPanel() {
 			style={style}
 			className={`${styles['browser-mockup']} ${styles['with-url']}`}
 		>
-			{brickRender(componentConfigs,createElement)}
+			<BrickRender componentConfigs={componentConfigs} createElement={createElement}/>
 		</div>
 	)
 }

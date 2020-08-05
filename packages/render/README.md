@@ -1,11 +1,24 @@
-# `core`
+# `@brickd/render`
 
 > TODO: description
 
 ## Usage
 
 ```
-const core = require('core');
+import {createElement} from 'react';
+import {BrickDesign,BrickTree,BrickProvider,} from '@brickd/react';
+import {BrickPreview} from '@brickd/react-web';
+import BrickRender from '@brickd/render';
+const plugins=[(vDom,componentConfig)=>vDom];
+const App = () => (
+  <BrickProvider initState={{}} customReducer={(state,action)=>state} config={{...}}>
+<div>
+    <BrickPreview/>
+    <BrickDesign />
+<BrickRender />
+<BrickTree/>
+</div>
+  </BrickProvider>
 
-// TODO: DEMONSTRATE API
+);
 ```
