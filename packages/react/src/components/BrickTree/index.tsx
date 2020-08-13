@@ -3,7 +3,7 @@ import SortTree from './SortTree'
 import styles from './index.less'
 import {
 	clearHovered,
-	ComponentConfigsType,
+	ComponentConfigsType, DragSourceType,
 	ROOT,
 	STATE_PROPS,
 } from '@brickd/core'
@@ -15,17 +15,21 @@ interface BrickTreeProps {
 }
 
 function BrickTree(props: BrickTreeProps) {
-	const { componentConfigs } = useSelector<
-		{ componentConfigs: ComponentConfigsType },
+	const { componentConfigs,dragSource } = useSelector<
+		{ componentConfigs: ComponentConfigsType,
+			dragSource:DragSourceType
+		},
 		STATE_PROPS
-	>(['componentConfigs'], (prevState, nextState) => {
+	>(['componentConfigs','dragSource'], (prevState, nextState) => {
 		const {
 			componentConfigs: { [ROOT]: prevRoot },
+			dragSource:prevDragSource
 		} = prevState
 		const {
 			componentConfigs: { [ROOT]: root },
+			dragSource
 		} = nextState
-		return !!(!prevRoot && root)
+		return !!(!prevRoot && root)||prevDragSource!==dragSource
 	})
 	const onMouseLeave = useCallback((e: any) => {
 		e.stopPropagation()
@@ -36,7 +40,7 @@ function BrickTree(props: BrickTreeProps) {
 	const { className } = props
 	return (
 		<div
-			onDrop={onDrop}
+			onDrop={dragSource&&onDrop}
 			onDragOver={onDragover}
 			onMouseLeave={onMouseLeave}
 			className={`${styles['sort-container']} ${className}`}

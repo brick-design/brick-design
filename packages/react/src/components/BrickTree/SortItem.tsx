@@ -48,28 +48,6 @@ interface SortItemPropsType {
 	nodeProps?: NodeProps
 }
 
-// const handleMenuClick = (e: any) => {
-// 	switch (e.key) {
-// 		case '1':
-// 			return clearChildNodes()
-// 		case '2':
-// 		case '3':
-// 			return copyComponent()
-// 		case '4':
-// 			return deleteComponent()
-// 	}
-// }
-
-// function renderMenu(domKey: string, isOnlyNode?: boolean, isClear?: boolean) {
-// 	const isRoot = domKey === ROOT
-// 	return (
-// 		<Menu onClick={handleMenuClick}>
-// 			{isClear && <Item key={1}>清除</Item>}
-// 			{!isRoot && !isOnlyNode && <Item key={3}>复制</Item>}
-// 			{!isRoot && <Item key={4}>删除</Item>}
-// 		</Menu>)
-// }
-
 /**
  * 渲染子组件或者属性节点
  * @returns {Array|*}
@@ -156,7 +134,7 @@ function SortItem(props: SortItemPropsType) {
 	const { childNodes: vDomChildNodes, componentName } = vDom || {}
 	const childNodes: ChildNodesType | undefined =
 		propChildNodes || vDomChildNodes
-	const [isUnfold, setIsUnfold] = useState(!isEmpty(childNodes))
+	const [isUnfold, setIsUnfold] = useState(isEmpty(childNodes))
 	// 保存子组件dom
 	const prevChildNodes = usePrevious<ChildNodesType>(childNodes)
 

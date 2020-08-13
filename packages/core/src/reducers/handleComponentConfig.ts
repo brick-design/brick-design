@@ -162,7 +162,7 @@ export function onLayoutSortChange(
 			/**
 			 * dragInfo有值说明为跨组件排序，需要删除拖拽组件原先父组件中的引用
 			 */
-			if (dragInfo) {
+			if (dragInfo&&(dragInfo.parentKey!==parentKey||dragInfo.parentPropName!==parentPropName)) {
 				const { key, parentKey, parentPropName } = dragInfo
 				update(oldConfigs, getLocation(parentKey), (childNodes) =>
 					deleteChildNodesKey(childNodes, key, parentPropName),
