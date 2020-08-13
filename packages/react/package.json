@@ -1,6 +1,6 @@
 {
   "name": "@brickd/react",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "url": "https://github.com/brick-design/react-visual-editor.git"
   },
   "dependencies": {
-    "@brickd/core": "^1.0.0-alpha.14",
+    "@brickd/core": "^1.0.0-alpha.15",
     "@brickd/redux-bridge": "^1.0.0-alpha.14",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",

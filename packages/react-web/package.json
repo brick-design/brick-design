@@ -1,6 +1,6 @@
 {
   "name": "@brickd/react-web",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "url": "https://github.com/brick-design/react-visual-editor.git"
   },
   "dependencies": {
-    "@brickd/react": "^1.0.0-alpha.14",
+    "@brickd/react": "^1.0.0-alpha.15",
     "antd": "3.26.16",
     "lodash": "^4.17.15",
     "react": "^16.8.0",

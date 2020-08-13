@@ -1,6 +1,6 @@
 {
   "name": "@brickd/render",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@brickd/core": "^1.0.0-alpha.14",
+    "@brickd/core": "^1.0.0-alpha.15",
     "lodash": "^4.17.15"
   },
   "devDependencies": {

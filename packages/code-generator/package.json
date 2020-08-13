@@ -1,6 +1,6 @@
 {
   "name": "@brickd/code-generator",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -12,9 +12,9 @@
     "access": "public"
   },
   "dependencies": {
+    "@babel/generator": "^7.11.0",
     "@babel/parser": "^7.11.1",
-    "@babel/traverse": "^7.11.0",
-    "@babel/generator":"^7.11.0"
+    "@babel/traverse": "^7.11.0"
   },
   "scripts": {
     "build": "tsc && rollup -c rollup.config.js",
