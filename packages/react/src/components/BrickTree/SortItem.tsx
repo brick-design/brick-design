@@ -61,7 +61,7 @@ function renderSortTree(
 ) {
 	const { specialProps, propName, nodeProps } = props
 
-	if (isArray(childNodes) || (!childNodes && nodePropsConfig)) {
+	if (isArray(childNodes) || (!childNodes && !nodePropsConfig)) {
 		return (
 			<SortTree
 				isFold={!isUnfold}
@@ -165,7 +165,6 @@ function SortItem(props: SortItemPropsType) {
 	const isContainerComponent = isContainer(componentName)
 	if(!componentName) return  null
 	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName)
-
 	return (
 		<div
 			className={styles['sort-item']}
@@ -193,7 +192,7 @@ function SortItem(props: SortItemPropsType) {
 				componentName={propName || componentName}
 			/>
 			{isContainerComponent && (
-				<Collapse activeKey={isUnfold ? '1' : '2'} style={{ marginLeft: 24 }}>
+				<Collapse activeKey={isUnfold||isEmpty(childNodes) ? '1' : '2'} style={{ marginLeft: 24 }}>
 					<Panel
 						showArrow={false}
 						key="1"
