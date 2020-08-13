@@ -154,7 +154,6 @@ function SortItem(props: SortItemPropsType) {
 
 	const vDom = componentConfigs[key]
 	const { childNodes: vDomChildNodes, componentName } = vDom || {}
-	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName)
 	const childNodes: ChildNodesType | undefined =
 		propChildNodes || vDomChildNodes
 	const [isUnfold, setIsUnfold] = useState(!isEmpty(childNodes))
@@ -165,7 +164,7 @@ function SortItem(props: SortItemPropsType) {
 
 	//新添加组件展开
 	useEffect(() => {
-		if (!isUnfold && !isEqual(prevChildNodes, childNodes)) {
+		if (!isUnfold &&prevChildNodes&& !isEqual(prevChildNodes, childNodes)) {
 			setIsUnfold(true)
 		}
 	}, [prevChildNodes, childNodes, isUnfold])
@@ -186,6 +185,8 @@ function SortItem(props: SortItemPropsType) {
 	}
 
 	const isContainerComponent = isContainer(componentName)
+	if(!componentName) return  null
+	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName)
 
 	return (
 		<div
