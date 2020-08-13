@@ -35,8 +35,6 @@ function Guidelines() {
 	const leftRef = useRef<any>()
 	const rightRef = useRef<any>()
 	const hoverNodeRef = useRef<any>()
-
-	const iframe = getIframe()
 	const {
 		hoverKey,
 		dropTarget,
@@ -58,7 +56,9 @@ function Guidelines() {
 	const guidControl =
 		hoverKey && (!selectedInfo || (selectedInfo && !dragSource))
 	useEffect(() => {
-		const { contentWindow } = iframe
+		const iframe = getIframe()
+		if(!iframe) return
+		const { contentWindow,contentDocument } = iframe
 		const renderGuideLines = () => {
 			const node = getSelectedNode(hoverKey!, iframe)
 			if (guidControl && node) {
@@ -67,7 +67,6 @@ function Guidelines() {
 					iframe,
 					isModal,
 				)
-				const { contentDocument } = iframe!
 				hoverNodeRef.current.style.cssText = generateCSS(
 					left,
 					top,

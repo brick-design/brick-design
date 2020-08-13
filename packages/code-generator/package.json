@@ -1,0 +1,23 @@
+{
+  "name": "@brickd/code-generator",
+  "version": "1.0.0-alpha.14",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.11.1",
+    "@babel/traverse": "^7.11.0",
+    "@babel/generator":"^7.11.0"
+  },
+  "scripts": {
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh"
+  }
+}
