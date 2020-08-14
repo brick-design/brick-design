@@ -21,24 +21,6 @@ import { isEqualKey, usePrevious } from '../../utils';
 
 import { getDropTargetInfo } from '../../common/events';
 
-function controlUpdate(
-	prevState: HookState,
-	nextState: HookState,
-	key: string,
-) {
-	if (prevState.componentConfigs[key] === nextState.componentConfigs[key]) {
-		const { selectedKey: prevSelectedKey, propName: prevPropName } =
-			prevState.selectedInfo || {};
-		const { selectedKey, propName } = nextState.selectedInfo || {};
-		return (
-			(prevSelectedKey == key &&
-				(selectedKey !== key ||
-					(selectedKey === key && prevPropName !== propName))) ||
-			(prevSelectedKey !== key && selectedKey === key)
-		);
-	}
-	return true;
-}
 
 interface SortItemPropsType {
 	isFold?: boolean
@@ -124,16 +106,13 @@ function SortItem(props: SortItemPropsType) {
 		propChildNodes,
 	} = props;
 
-	const { selectedInfo, componentConfigs } = useSelector(
-		stateSelector,
-		(prevState, nextState) => controlUpdate(prevState, nextState, key),
-	);
+	const { selectedInfo, componentConfigs } = useSelector(stateSelector);
 	const { domTreeKeys: nextSDTKeys } = selectedInfo || {};
 
 	const vDom = componentConfigs[key];
 	const { childNodes: vDomChildNodes, componentName } = vDom || {};
-	const childNodes: ChildNodesType | undefined =
-		propChildNodes || vDomChildNodes;
+	const childNodes: ChildNodesType | undefined = propChildNodes || vDomChildNodes;
+
 	const [isUnfold, setIsUnfold] = useState(isEmpty(childNodes));
 	// 保存子组件dom
 	const prevChildNodes = usePrevious<ChildNodesType>(childNodes);
@@ -152,18 +131,19 @@ function SortItem(props: SortItemPropsType) {
 		if (isFold && isUnfold) setIsUnfold(false);
 	}, [isFold, isUnfold]);
 
+	useEffect(()=>{
+		if (!isEqual(prevSDTKeys, nextSDTKeys) && nextSDTKeys&&isUnfold&&!nextSDTKeys.includes(key)) {
+			setIsUnfold(false);
+		}
+	},[prevSDTKeys,nextSDTKeys,isUnfold]);
+
 	if (!componentName) return null;
-	if (
-		!isEqual(prevSDTKeys, nextSDTKeys) &&
-		nextSDTKeys &&
-		!isUnfold &&
-		nextSDTKeys.includes(key)
-	) {
+
+	if (!isEqual(prevSDTKeys, nextSDTKeys) && nextSDTKeys&&!isUnfold &&	nextSDTKeys.includes(key)) {
 		setIsUnfold(true);
 	}
 
 	const isContainerComponent = isContainer(componentName);
-	if(!componentName) return  null;
 	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName);
 	return (
 		<div
