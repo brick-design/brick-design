@@ -6,7 +6,7 @@ import {
 	UseLayoutEffectType,
 	UseReducerType,
 	UseRefType,
-} from '../types'
+} from '../types';
 
 interface FrameworkType {
 	createContext: CreateContextType
@@ -27,6 +27,6 @@ export const REDUX_BRIDGE: ReduxBridgeType = {
 	framework: null,
 	context: null,
 	store: null,
-}
+};
 export const initFramework = (framework: FrameworkType) =>
-	(REDUX_BRIDGE.framework = framework)
+	(REDUX_BRIDGE.framework = framework);

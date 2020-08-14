@@ -1,22 +1,22 @@
-import React, { createElement, forwardRef, memo } from 'react'
-import { Col, Form, Icon, Row, Tooltip } from 'antd'
-import map from 'lodash/map'
-import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
-import SelectAddProps from './SelectAddProps'
-import styles from '../../index.less'
-import { filterProps, formatPropsFieldConfigLocation } from '../../utils'
-import isArray from 'lodash/isArray'
-import each from 'lodash/each'
+import React, { createElement, forwardRef, memo } from 'react';
+import { Col, Form, Icon, Row, Tooltip } from 'antd';
+import map from 'lodash/map';
+import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
+import isArray from 'lodash/isArray';
+import each from 'lodash/each';
 import {
 	deletePropsConfig,
 	PropInfoType,
 	PROPS_TYPES,
 	PropsConfigType,
-} from '@brickd/react'
-import { FormComponentProps } from 'antd/es/form'
-import SwitchMultiTypes from '../SwitchMultiTypes'
-import { confirmModal, TYPES_TO_COMPONENT } from '../../index'
+} from '@brickd/react';
+import { FormComponentProps } from 'antd/es/form';
+import SelectAddProps from './SelectAddProps';
+import { filterProps, formatPropsFieldConfigLocation } from '../../utils';
+import styles from '../../index.less';
+import SwitchMultiTypes from '../SwitchMultiTypes';
+import { confirmModal, TYPES_TO_COMPONENT } from '../../index';
 
 interface ObjectComponentPropsType extends FormComponentProps {
 	childPropsConfig: PropsConfigType
@@ -29,7 +29,7 @@ interface ObjectComponentPropsType extends FormComponentProps {
 	onChange?: (value: any) => void
 }
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 function ObjectComponent(props: ObjectComponentPropsType) {
 	const {
@@ -40,10 +40,10 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 		childPropsConfig,
 		field,
 		isHideDivider,
-	} = props
+	} = props;
 
 	function renderFormItemTitle(config: PropInfoType, field: string) {
-		const { label, tip, isAdd } = config
+		const { label, tip, isAdd } = config;
 		return (
 			<span className={styles['form-item-title-container']}>
 				<Tooltip title={tip || label}>{label}</Tooltip>
@@ -55,7 +55,7 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 					/>
 				)}
 			</span>
-		)
+		);
 	}
 
 	/**
@@ -73,12 +73,12 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 					tabIndex,
 				),
 			}),
-		)
+		);
 	}
 
 	function renderFormItem(config: PropInfoType, field: string) {
-		const { getFieldDecorator } = form
-		const { type, rules } = config
+		const { getFieldDecorator } = form;
+		const { type, rules } = config;
 		const { defaultValue, value, ...restProps }: any = {
 			field,
 			...config,
@@ -89,7 +89,7 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 				tabIndex,
 			),
 			size: type === PROPS_TYPES.boolean ? 'default' : 'small',
-		}
+		};
 
 		if (isArray(type))
 			return (
@@ -103,7 +103,7 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 					tip={config.tip}
 					label={config.label}
 				/>
-			)
+			);
 
 		return (
 			<Col span={24} key={field}>
@@ -113,7 +113,7 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 					)}
 				</FormItem>
 			</Col>
-		)
+		);
 	}
 
 	return (
@@ -128,38 +128,38 @@ function ObjectComponent(props: ObjectComponentPropsType) {
 				)}
 			/>
 		</Form>
-	)
+	);
 }
 
 export default Form.create<ObjectComponentPropsType>({
 	mapPropsToFields(props) {
-		const { value } = props
-		const formatFields: any = {}
+		const { value } = props;
+		const formatFields: any = {};
 		each(
 			value,
 			(v, field) => (formatFields[field] = Form.createFormField({ value: v })),
-		)
-		return formatFields
+		);
+		return formatFields;
 	},
 	onValuesChange: (props, _, allValues) => {
-		const { onChange } = props
-		onChange && onChange(filterProps(allValues))
+		const { onChange } = props;
+		onChange && onChange(filterProps(allValues));
 	},
 })(
 	memo<ObjectComponentPropsType>(
 		forwardRef(ObjectComponent),
 		(prevProps, nextProps) => {
-			const { childPropsConfig, tabIndex, value } = nextProps
+			const { childPropsConfig, tabIndex, value } = nextProps;
 			const {
 				childPropsConfig: prevChildPropsConfig,
 				tabIndex: prevTabIndex,
 				value: prevValue,
-			} = prevProps
+			} = prevProps;
 			return (
 				isEqual(childPropsConfig, prevChildPropsConfig) &&
 				isEqual(prevTabIndex, tabIndex) &&
 				isEqual(prevValue, value)
-			)
+			);
 		},
 	),
-)
+);

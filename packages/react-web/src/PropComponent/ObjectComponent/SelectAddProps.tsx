@@ -1,29 +1,29 @@
-import React, { useState } from 'react'
-import { Input, Select, Tooltip } from 'antd'
-import map from 'lodash/map'
-import { TYPES_TO_COMPONENT } from '../../index'
-import { addPropsConfig, PROPS_TYPES } from '@brickd/react'
+import React, { useState } from 'react';
+import { Input, Select, Tooltip } from 'antd';
+import map from 'lodash/map';
+import { addPropsConfig, PROPS_TYPES } from '@brickd/react';
+import { TYPES_TO_COMPONENT } from '../../index';
 
-const { Option } = Select
+const { Option } = Select;
 
 interface SelectAddPropsType {
 	fatherFieldLocation: string
 }
 
 function SelectAddProps(props: SelectAddPropsType) {
-	const [newPropField, setNewPropField] = useState('')
-	const [propType, setPropType] = useState(PROPS_TYPES.string)
+	const [newPropField, setNewPropField] = useState('');
+	const [propType, setPropType] = useState(PROPS_TYPES.string);
 
 	function addParam() {
-		const { fatherFieldLocation } = props
+		const { fatherFieldLocation } = props;
 		if (/^[0-9a-zA-Z$_][0-9a-zA-Z\d_]*$/.test(newPropField)) {
 			addPropsConfig({
 				newPropField,
 				propType,
 				fatherFieldLocation,
-			})
+			});
 
-			setNewPropField('')
+			setNewPropField('');
 		}
 	}
 
@@ -38,7 +38,7 @@ function SelectAddProps(props: SelectAddPropsType) {
 					</Option>
 				))}
 			</Select>
-		)
+		);
 	}
 
 	return (
@@ -50,7 +50,7 @@ function SelectAddProps(props: SelectAddPropsType) {
 			onSearch={addParam}
 			enterButton="Add"
 		/>
-	)
+	);
 }
 
-export default SelectAddProps
+export default SelectAddProps;

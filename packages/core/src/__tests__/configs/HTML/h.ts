@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types'
+import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
 
 const h: ComponentConfigTypes = {
 	childNodesRule: ['img'],
@@ -9,6 +9,6 @@ const h: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default h
+export default h;

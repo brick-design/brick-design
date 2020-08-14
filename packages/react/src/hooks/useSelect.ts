@@ -1,12 +1,12 @@
+import { useEffect } from 'react';
 import {
 	SelectedInfoBaseType,
 	SelectedInfoType,
 	STATE_PROPS,
-} from '@brickd/core'
-import { useEffect } from 'react'
-import { handleSelectedStatus } from '../common/events'
-import { isEqualKey } from '../utils'
-import { useSelector } from '@brickd/redux-bridge'
+} from '@brickd/core';
+import { useSelector } from '@brickd/redux-bridge';
+import { handleSelectedStatus } from '../common/events';
+import { isEqualKey } from '../utils';
 
 interface SelectType {
 	selectedInfo: SelectedInfoType
@@ -22,24 +22,24 @@ function controlUpdate(
 		selectedKey: prevSelectedKey,
 		propName: prevPropName,
 		domTreeKeys: prevDomTreeKeys,
-	} = prevState.selectedInfo || {}
-	const { selectedKey, propName, domTreeKeys } = nextState.selectedInfo || {}
+	} = prevState.selectedInfo || {};
+	const { selectedKey, propName, domTreeKeys } = nextState.selectedInfo || {};
 
 	if (!prevSelectedKey && selectedKey) {
 		if (isModal) {
 			if (domTreeKeys.includes(key)) {
-				return true
+				return true;
 			}
 		}
-		return isEqualKey(key, selectedKey)
+		return isEqualKey(key, selectedKey);
 	}
 	if (prevSelectedKey && !selectedKey) {
 		if (isModal) {
 			if (prevDomTreeKeys.includes(key)) {
-				return true
+				return true;
 			}
 		}
-		return isEqualKey(key, prevSelectedKey)
+		return isEqualKey(key, prevSelectedKey);
 	}
 	if (prevSelectedKey && selectedKey) {
 		if (isModal) {
@@ -47,19 +47,19 @@ function controlUpdate(
 				(!prevDomTreeKeys.includes(key) && domTreeKeys.includes(key)) ||
 				(prevDomTreeKeys.includes(key) && !domTreeKeys.includes(key))
 			) {
-				return true
+				return true;
 			}
 		}
 		if (prevSelectedKey !== selectedKey) {
 			return (
 				isEqualKey(key, prevSelectedKey) ||
 				(!isEqualKey(key, prevSelectedKey) && isEqualKey(key, selectedKey))
-			)
+			);
 		} else {
-			return propName !== prevPropName
+			return propName !== prevPropName;
 		}
 	}
-	return false
+	return false;
 }
 
 interface UseSelectType {
@@ -71,17 +71,17 @@ export function useSelect(
 	specialProps: SelectedInfoBaseType,
 	isModal?: boolean,
 ): UseSelectType {
-	const { key } = specialProps
+	const { key } = specialProps;
 	const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
 		['selectedInfo'],
 		(prevState, nextState) => controlUpdate(prevState, nextState, key, isModal),
-	)
-	const { selectedKey, domTreeKeys: selectedDomKeys } = selectedInfo || {}
-	const isSelected = isEqualKey(key, selectedKey)
+	);
+	const { selectedKey, domTreeKeys: selectedDomKeys } = selectedInfo || {};
+	const isSelected = isEqualKey(key, selectedKey);
 	useEffect(() => {
 		if (isSelected) {
-			handleSelectedStatus(null, false, specialProps)
+			handleSelectedStatus(null, false, specialProps);
 		}
-	}, [])
-	return { selectedDomKeys, isSelected }
+	}, []);
+	return { selectedDomKeys, isSelected };
 }

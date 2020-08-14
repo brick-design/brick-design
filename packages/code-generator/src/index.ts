@@ -5,5 +5,5 @@ export function brickAST(code:string){
 		plugins:[
 			'jsx'
 		]
-	})
+	});
 }

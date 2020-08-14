@@ -1,12 +1,12 @@
-import React, { forwardRef, memo } from 'react'
-import { Select, Tooltip } from 'antd'
-import map from 'lodash/map'
-import isObject from 'lodash/isObject'
-import styles from '../index.less'
-import { SelectProps } from 'antd/lib/select'
-import { propsAreEqual } from '../utils'
+import React, { forwardRef, memo } from 'react';
+import { Select, Tooltip } from 'antd';
+import map from 'lodash/map';
+import isObject from 'lodash/isObject';
+import { SelectProps } from 'antd/lib/select';
+import styles from '../index.less';
+import { propsAreEqual } from '../utils';
 
-const { Option } = Select
+const { Option } = Select;
 
 interface EnumComponentPropsType extends SelectProps {
 	enumData: string[] | { key: string; label: string }
@@ -14,7 +14,7 @@ interface EnumComponentPropsType extends SelectProps {
 }
 
 const EnumComponent = forwardRef(function Component(props: EnumComponentPropsType, ref: any) {
-	const { enumData, ...rest } = props
+	const { enumData, ...rest } = props;
 	return (
 		<Select
 			ref={ref}
@@ -26,11 +26,11 @@ const EnumComponent = forwardRef(function Component(props: EnumComponentPropsTyp
 		>
 			{map(enumData, (item, index) => {
 				let key = '',
-					label = ''
+					label = '';
 				if (isObject(item)) {
-					;({ key, label } = item)
+					;({ key, label } = item);
 				} else {
-					key = label = item
+					key = label = item;
 				}
 				return (
 					<Option value={key} key={index}>
@@ -38,10 +38,10 @@ const EnumComponent = forwardRef(function Component(props: EnumComponentPropsTyp
 							{label}
 						</Tooltip>
 					</Option>
-				)
+				);
 			})}
 		</Select>
-	)
-})
+	);
+});
 
-export default memo<EnumComponentPropsType>(EnumComponent, propsAreEqual)
+export default memo<EnumComponentPropsType>(EnumComponent, propsAreEqual);

@@ -1,8 +1,8 @@
-import { merge } from 'lodash'
-import { StateType } from '../types'
-import { SelectComponentPayload } from '../actions'
-import { getComponentConfig, handleRequiredHasChild } from '../utils'
-import produce from 'immer'
+import { merge } from 'lodash';
+import produce from 'immer';
+import { StateType } from '../types';
+import { SelectComponentPayload } from '../actions';
+import { getComponentConfig, handleRequiredHasChild } from '../utils';
 
 /**
  * 选中组件
@@ -15,18 +15,18 @@ export function selectComponent(
 	state: StateType,
 	payload: SelectComponentPayload,
 ): StateType {
-	const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state
-	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload
+	const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state;
+	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
 	if (selectedInfo) {
-		const { selectedKey, propName: selectedPropName } = selectedInfo
+		const { selectedKey, propName: selectedPropName } = selectedInfo;
 		if (
 			(selectedKey === key && selectedPropName == propName) ||
 			handleRequiredHasChild(selectedInfo, componentConfigs)
 		)
-			return state
+			return state;
 		if (selectedKey === key) {
 			if (propName && selectedPropName !== propName) {
-				domTreeKeys.push(`${key}${propName}`)
+				domTreeKeys.push(`${key}${propName}`);
 				return {
 					...state,
 					selectedInfo: {
@@ -34,7 +34,7 @@ export function selectComponent(
 						propName,
 						domTreeKeys,
 					},
-				}
+				};
 			} else {
 				return {
 					...state,
@@ -43,16 +43,16 @@ export function selectComponent(
 						parentKey,
 						parentPropName,
 					},
-				}
+				};
 			}
 		}
 	}
 
-	propName && domTreeKeys.push(`${key}${propName}`)
-	const { props, componentName } = componentConfigs[key]
-	const { propsConfig } = getComponentConfig(componentName)
-	undo.push({ selectedInfo })
-	redo.length = 0
+	propName && domTreeKeys.push(`${key}${propName}`);
+	const { props, componentName } = componentConfigs[key];
+	const { propsConfig } = getComponentConfig(componentName);
+	undo.push({ selectedInfo });
+	redo.length = 0;
 	return {
 		...state,
 		dropTarget: null,
@@ -64,13 +64,13 @@ export function selectComponent(
 			parentPropName,
 			props,
 			propsConfig: produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, propsConfigSheet[key])
+				merge(oldPropsConfig, propsConfigSheet[key]);
 			}),
 		},
 		undo,
 		redo,
 		hoverKey: null,
-	}
+	};
 }
 
 /**
@@ -79,17 +79,17 @@ export function selectComponent(
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state: StateType) {
-	const { selectedInfo, componentConfigs, undo, redo } = state
+	const { selectedInfo, componentConfigs, undo, redo } = state;
 	if (!selectedInfo || handleRequiredHasChild(selectedInfo, componentConfigs)) {
-		return state
+		return state;
 	}
-	undo.push({ selectedInfo })
-	redo.length = 0
+	undo.push({ selectedInfo });
+	redo.length = 0;
 	return {
 		...state,
 		dropTarget: null,
 		selectedInfo: null,
 		undo,
 		redo,
-	}
+	};
 }

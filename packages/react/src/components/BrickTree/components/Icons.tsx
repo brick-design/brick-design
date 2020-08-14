@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export const LayoutIcon = (props: any) => (
 	<svg
@@ -15,7 +15,7 @@ export const LayoutIcon = (props: any) => (
 			p-id="2734"
 		/>
 	</svg>
-)
+);
 
 export const MoreIcon = (props: any) => (
 	<svg
@@ -32,7 +32,7 @@ export const MoreIcon = (props: any) => (
 			p-id="2854"
 		/>
 	</svg>
-)
+);
 
 export const RowIcon = (props: any) => (
 	<svg
@@ -50,7 +50,7 @@ export const RowIcon = (props: any) => (
 			p-id="2039"
 		/>
 	</svg>
-)
+);
 
 export const TriangleIcon = (props: any) => (
 	<svg
@@ -66,4 +66,4 @@ export const TriangleIcon = (props: any) => (
 			d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"
 		/>
 	</svg>
-)
+);

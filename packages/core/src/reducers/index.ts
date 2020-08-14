@@ -1,83 +1,83 @@
-import { BrickAction, StateType } from '../types'
-import ACTION_TYPES from '../actions/actionTypes'
+import { Reducer } from 'redux';
 import {
 	addComponent,
 	clearChildNodes,
 	copyComponent,
 	deleteComponent,
 	onLayoutSortChange,
-} from './handleComponentConfig'
+} from './handleComponentConfig';
 import {
 	clearDragSource,
 	clearDropTarget,
 	getDragSource,
 	getDropTarget,
-} from './handleDragDrop'
-import { clearHovered, overTarget } from './handleHover'
-import { changePlatform } from './handlePlatform'
+} from './handleDragDrop';
+import { clearHovered, overTarget } from './handleHover';
+import { changePlatform } from './handlePlatform';
 import {
 	addPropsConfig,
 	changeProps,
 	deletePropsConfig,
 	resetProps,
-} from './handleProps'
-import { clearSelectedStatus, selectComponent } from './handleSelectedComponent'
-import { changeStyles, resetStyles, resizeChange } from './handleStyles'
-import { redo, undo } from './handleRedoUndo'
-import { Reducer } from 'redux'
+} from './handleProps';
+import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
+import { changeStyles, resetStyles, resizeChange } from './handleStyles';
+import { redo, undo } from './handleRedoUndo';
+import ACTION_TYPES from '../actions/actionTypes';
+import { BrickAction, StateType } from '../types';
 
 export type ReducerType = Reducer<StateType, BrickAction>
 export const reducer: ReducerType = (prevState, action) => {
-	const state = prevState as StateType
-	const { type, payload } = action
+	const state = prevState as StateType;
+	const { type, payload } = action;
 	switch (type) {
 		case ACTION_TYPES.addComponent:
-			return addComponent(state)
+			return addComponent(state);
 		case ACTION_TYPES.clearChildNodes:
-			return clearChildNodes(state)
+			return clearChildNodes(state);
 		case ACTION_TYPES.onLayoutSortChange:
-			return onLayoutSortChange(state, payload)
+			return onLayoutSortChange(state, payload);
 		case ACTION_TYPES.deleteComponent:
-			return deleteComponent(state)
+			return deleteComponent(state);
 		case ACTION_TYPES.copyComponent:
-			return copyComponent(state)
+			return copyComponent(state);
 		case ACTION_TYPES.getDragSource:
-			return getDragSource(state, payload)
+			return getDragSource(state, payload);
 		case ACTION_TYPES.getDropTarget:
-			return getDropTarget(state, payload)
+			return getDropTarget(state, payload);
 		case ACTION_TYPES.clearHovered:
-			return clearHovered(state)
+			return clearHovered(state);
 		case ACTION_TYPES.overTarget:
-			return overTarget(state, payload)
+			return overTarget(state, payload);
 		case ACTION_TYPES.changePlatform:
-			return changePlatform(state, payload)
+			return changePlatform(state, payload);
 		case ACTION_TYPES.addPropsConfig:
-			return addPropsConfig(state, payload)
+			return addPropsConfig(state, payload);
 		case ACTION_TYPES.deletePropsConfig:
-			return deletePropsConfig(state, payload)
+			return deletePropsConfig(state, payload);
 		case ACTION_TYPES.changeProps:
-			return changeProps(state, payload)
+			return changeProps(state, payload);
 		case ACTION_TYPES.selectComponent:
-			return selectComponent(state, payload)
+			return selectComponent(state, payload);
 		case ACTION_TYPES.clearSelectedStatus:
-			return clearSelectedStatus(state)
+			return clearSelectedStatus(state);
 		case ACTION_TYPES.changeStyles:
-			return changeStyles(state, payload)
+			return changeStyles(state, payload);
 		case ACTION_TYPES.undo:
-			return undo(state)
+			return undo(state);
 		case ACTION_TYPES.redo:
-			return redo(state)
+			return redo(state);
 		case ACTION_TYPES.resetProps:
-			return resetProps(state)
+			return resetProps(state);
 		case ACTION_TYPES.resetStyles:
-			return resetStyles(state)
+			return resetStyles(state);
 		case ACTION_TYPES.clearDropTarget:
-			return clearDropTarget(state)
+			return clearDropTarget(state);
 		case ACTION_TYPES.resizeChange:
-			return resizeChange(state, payload)
+			return resizeChange(state, payload);
 		case ACTION_TYPES.clearDragSource:
-			return clearDragSource(state)
+			return clearDragSource(state);
 		default:
-			return state
+			return state;
 	}
-}
+};

@@ -1,5 +1,5 @@
-import { StateType } from '../types'
-import { OverTargetPayload } from '../actions'
+import { StateType } from '../types';
+import { OverTargetPayload } from '../actions';
 
 /**
  * 清除hover状态
@@ -10,7 +10,7 @@ export function clearHovered(state: StateType): StateType {
 	return {
 		...state,
 		hoverKey: null,
-	}
+	};
 }
 
 /**
@@ -22,11 +22,11 @@ export function overTarget(
 	state: StateType,
 	payload: OverTargetPayload,
 ): StateType {
-	const { hoverKey } = payload
-	const { hoverKey: prevHoverKey } = state
-	if (hoverKey === prevHoverKey) return state
+	const { hoverKey } = payload;
+	const { hoverKey: prevHoverKey } = state;
+	if (hoverKey === prevHoverKey) return state;
 	return {
 		...state,
 		hoverKey,
-	}
+	};
 }

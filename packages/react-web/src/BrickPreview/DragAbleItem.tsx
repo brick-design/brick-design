@@ -1,7 +1,7 @@
-import React, { createElement, memo, useRef } from 'react'
-import styles from './index.less'
-import get from 'lodash/get'
-import { getDragSource, LEGO_BRIDGE } from '@brickd/react'
+import React, { createElement, memo, useRef } from 'react';
+import get from 'lodash/get';
+import { getDragSource, LEGO_BRIDGE } from '@brickd/react';
+import styles from './index.less';
 
 interface DragAbleItemPropsType {
 	dragSource: {
@@ -21,7 +21,7 @@ const defaultColors = [
 	'#7D26CD',
 	'#7FFFD4',
 	'#008B8B',
-]
+];
 
 /**
  * 拖拽组件
@@ -33,17 +33,17 @@ function DragAbleItem(props: DragAbleItemPropsType) {
 	const {
 		dragSource,
 		dragSource: { defaultProps, componentName },
-	} = props
-	const randomIndex: number = useRef(Math.floor(Math.random() * 10)).current
+	} = props;
+	const randomIndex: number = useRef(Math.floor(Math.random() * 10)).current;
 
 	function renderDragComponent() {
 		if (!defaultProps) {
-			return componentName
+			return componentName;
 		}
 		return createElement(
 			get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName),
 			defaultProps,
-		)
+		);
 	}
 
 	// 没有设置默认属性说明组件无法展示，设置背景色
@@ -52,7 +52,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
 				backgroundColor: defaultColors[randomIndex],
 				border: 0,
 		  }
-		: undefined
+		: undefined;
 	return (
 		<div
 			draggable
@@ -62,7 +62,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
 		>
 			{renderDragComponent()}
 		</div>
-	)
+	);
 }
 
-export default memo(DragAbleItem, () => true)
+export default memo(DragAbleItem, () => true);

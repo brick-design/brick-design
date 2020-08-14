@@ -1,3 +1,4 @@
+import { each, get, isEmpty } from 'lodash';
 import {
 	BrickAction,
 	ChildNodesType,
@@ -7,15 +8,14 @@ import {
 	PropsNodeType,
 	SelectedInfoType,
 	StateType,
-} from '../types'
-import { each, get, isEmpty } from 'lodash'
-import { LEGO_BRIDGE } from '../store'
-import { ReducerType } from '../reducers'
+} from '../types';
+import { LEGO_BRIDGE } from '../store';
+import { ReducerType } from '../reducers';
 
 /**
  * 根节点key
  */
-export const ROOT = '0'
+export const ROOT = '0';
 
 /**
  * 复制组件
@@ -33,38 +33,38 @@ export const copyConfig = (
 	selectedKey: string,
 	newKey: number,
 ) => {
-	const { componentConfigs, propsConfigSheet } = handleInfo
+	const { componentConfigs, propsConfigSheet } = handleInfo;
 	if (propsConfigSheet[selectedKey]) {
-		propsConfigSheet[newKey] = propsConfigSheet[selectedKey]
+		propsConfigSheet[newKey] = propsConfigSheet[selectedKey];
 	}
-	const vDom = componentConfigs[selectedKey]
-	const childNodes = vDom.childNodes
+	const vDom = componentConfigs[selectedKey];
+	const childNodes = vDom.childNodes;
 	if (!childNodes) {
-		componentConfigs[newKey] = vDom
+		componentConfigs[newKey] = vDom;
 	} else {
-		const newVDom = { ...vDom }
-		componentConfigs[newKey] = newVDom
+		const newVDom = { ...vDom };
+		componentConfigs[newKey] = newVDom;
 		if (Array.isArray(childNodes)) {
-			newVDom.childNodes = copyChildNodes(handleInfo, childNodes)
+			newVDom.childNodes = copyChildNodes(handleInfo, childNodes);
 		} else {
-			const newChildNodes: PropsNodeType = {}
+			const newChildNodes: PropsNodeType = {};
 			each(childNodes, (nodes, propName) => {
-				newChildNodes[propName] = copyChildNodes(handleInfo, nodes!)
-			})
-			newVDom.childNodes = newChildNodes
+				newChildNodes[propName] = copyChildNodes(handleInfo, nodes!);
+			});
+			newVDom.childNodes = newChildNodes;
 		}
 	}
-}
+};
 
 function copyChildNodes(handleInfo: HandleInfoType, childNodes: string[]) {
-	const { componentConfigs } = handleInfo
-	const newChildKeys: string[] = []
+	const { componentConfigs } = handleInfo;
+	const newChildKeys: string[] = [];
 	for (const oldKey of childNodes) {
-		const newChildKey = getNewKey(componentConfigs)
-		newChildKeys.push(`${newChildKey}`)
-		copyConfig(handleInfo, oldKey, newChildKey)
+		const newChildKey = getNewKey(componentConfigs);
+		newChildKeys.push(`${newChildKey}`);
+		copyConfig(handleInfo, oldKey, newChildKey);
 	}
-	return newChildKeys
+	return newChildKeys;
 }
 
 export function deleteChildNodes(
@@ -73,29 +73,29 @@ export function deleteChildNodes(
 	propName?: string,
 ) {
 	if (Array.isArray(childNodes)) {
-		deleteArrChild(handleInfo, childNodes)
+		deleteArrChild(handleInfo, childNodes);
 	} else {
 		each(childNodes, (propChildNodes, key) => {
 			if (propName) {
 				if (key === propName) {
-					deleteArrChild(handleInfo, propChildNodes!)
+					deleteArrChild(handleInfo, propChildNodes!);
 				}
 			} else {
-				deleteArrChild(handleInfo, propChildNodes!)
+				deleteArrChild(handleInfo, propChildNodes!);
 			}
-		})
+		});
 	}
 }
 
 function deleteArrChild(handleInfo: HandleInfoType, childNodes: string[]) {
 	for (const key of childNodes) {
-		const childNodesInfo = handleInfo.componentConfigs[key].childNodes
+		const childNodesInfo = handleInfo.componentConfigs[key].childNodes;
 		if (childNodesInfo) {
-			deleteChildNodes(handleInfo, childNodesInfo)
+			deleteChildNodes(handleInfo, childNodesInfo);
 		}
 
-		delete handleInfo.componentConfigs[key]
-		delete handleInfo.propsConfigSheet[key]
+		delete handleInfo.componentConfigs[key];
+		delete handleInfo.propsConfigSheet[key];
 	}
 }
 
@@ -103,8 +103,8 @@ function deleteArrChild(handleInfo: HandleInfoType, childNodes: string[]) {
  * 获取路径
  * */
 export function getLocation(key: string, propName?: string): string[] {
-	const basePath = [key, 'childNodes']
-	return propName ? [...basePath, propName] : basePath
+	const basePath = [key, 'childNodes'];
+	return propName ? [...basePath, propName] : basePath;
 }
 
 export interface VDOMAndPropsConfigType {
@@ -126,42 +126,42 @@ export const generateNewKey = (
 	dragVDOMAndPropsConfig: DragVDomAndPropsConfigType,
 	rootKey: number,
 ) => {
-	const { vDOMCollection, propsConfigCollection } = dragVDOMAndPropsConfig
-	const keyMap: { [key: string]: string } = {}
-	const newVDOMCollection: ComponentConfigsType = {}
-	let newPropsConfigCollection: PropsConfigSheetType | undefined
-	let newKey = rootKey
+	const { vDOMCollection, propsConfigCollection } = dragVDOMAndPropsConfig;
+	const keyMap: { [key: string]: string } = {};
+	const newVDOMCollection: ComponentConfigsType = {};
+	let newPropsConfigCollection: PropsConfigSheetType | undefined;
+	let newKey = rootKey;
 	each(vDOMCollection, (vDom, key) => {
-		++newKey
+		++newKey;
 		if (key === ROOT) {
-			newKey = rootKey
+			newKey = rootKey;
 		}
-		keyMap[key] = `${newKey}`
-		newVDOMCollection[newKey] = vDom
-	})
+		keyMap[key] = `${newKey}`;
+		newVDOMCollection[newKey] = vDom;
+	});
 
 	each(newVDOMCollection, (vDom) => {
-		const childNodes = vDom.childNodes
-		if (!childNodes) return
+		const childNodes = vDom.childNodes;
+		if (!childNodes) return;
 		if (Array.isArray(childNodes)) {
-			vDom.childNodes = childNodes.map((key) => keyMap[key])
+			vDom.childNodes = childNodes.map((key) => keyMap[key]);
 		} else {
-			const newChildNodes: PropsNodeType = {}
+			const newChildNodes: PropsNodeType = {};
 			each(childNodes, (nodes, propName) => {
-				newChildNodes[propName] = nodes!.map((key) => keyMap[key])
-			})
-			vDom.childNodes = newChildNodes
+				newChildNodes[propName] = nodes!.map((key) => keyMap[key]);
+			});
+			vDom.childNodes = newChildNodes;
 		}
-	})
+	});
 	if (propsConfigCollection) {
-		newPropsConfigCollection = {}
+		newPropsConfigCollection = {};
 		each(propsConfigCollection, (v, k) => {
-			newPropsConfigCollection![keyMap[k]] = v
-		})
+			newPropsConfigCollection![keyMap[k]] = v;
+		});
 	}
 
-	return { newVDOMCollection, newPropsConfigCollection }
-}
+	return { newVDOMCollection, newPropsConfigCollection };
+};
 
 /**
  * 获取字段在props中的位置
@@ -171,8 +171,8 @@ export const generateNewKey = (
 export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
 	return fieldConfigLocation
 		.split('.')
-		.filter((location) => location !== 'childPropsConfig')
-}
+		.filter((location) => location !== 'childPropsConfig');
+};
 
 /**
  * 处理子节点非空
@@ -184,22 +184,22 @@ export const handleRequiredHasChild = (
 	selectedInfo: SelectedInfoType,
 	componentConfigs: ComponentConfigsType,
 ) => {
-	const { selectedKey, propName: selectedPropName } = selectedInfo
-	const { componentName, childNodes } = componentConfigs[selectedKey]
-	const { nodePropsConfig, isRequired } = getComponentConfig(componentName)
+	const { selectedKey, propName: selectedPropName } = selectedInfo;
+	const { componentName, childNodes } = componentConfigs[selectedKey];
+	const { nodePropsConfig, isRequired } = getComponentConfig(componentName);
 	return (
 		(selectedPropName &&
 			nodePropsConfig![selectedPropName].isRequired &&
 			!get(childNodes, selectedPropName)) ||
 		(isRequired && !childNodes)
-	)
-}
+	);
+};
 
 export function shallowEqual(objA: any, objB: any) {
 	for (const k of Object.keys(objA)) {
-		if (objA[k] !== objB[k]) return false
+		if (objA[k] !== objB[k]) return false;
 	}
-	return true
+	return true;
 }
 
 export function deleteChildNodesKey(
@@ -210,18 +210,18 @@ export function deleteChildNodesKey(
 	if (Array.isArray(childNodes)) {
 		const resultChildNodes = childNodes.filter(
 			(nodeKey: string) => nodeKey !== deleteKey,
-		)
-		return restObject(resultChildNodes)
+		);
+		return restObject(resultChildNodes);
 	} else {
 		const resultChildNodes = childNodes[parentPropName!]!.filter(
 			(nodeKey: string) => nodeKey !== deleteKey,
-		)
+		);
 		if (resultChildNodes.length === 0) {
-			delete childNodes[parentPropName!]
+			delete childNodes[parentPropName!];
 		} else {
-			childNodes[parentPropName!] = resultChildNodes
+			childNodes[parentPropName!] = resultChildNodes;
 		}
-		return restObject(childNodes)
+		return restObject(childNodes);
 	}
 }
 
@@ -231,52 +231,52 @@ export function getComponentConfig(
 	const allComponentConfigs = get(LEGO_BRIDGE, [
 		'config',
 		'AllComponentConfigs',
-	])
+	]);
 	if (!allComponentConfigs) {
-		error('Component configuration information set not found！! !')
+		error('Component configuration information set not found！! !');
 	}
-	const componentConfig = allComponentConfigs[componentName]
+	const componentConfig = allComponentConfigs[componentName];
 	if (componentName && !componentConfig) {
-		warn(`${componentName} configuration information not found！! !`)
+		warn(`${componentName} configuration information not found！! !`);
 	}
-	return componentConfig
+	return componentConfig;
 }
 
 export function isContainer(componentName: string) {
-	const containers = get(LEGO_BRIDGE, ['config', 'containers'])
+	const containers = get(LEGO_BRIDGE, ['config', 'containers']);
 	if (!containers) {
-		error(`Please configure the container category of the components`)
+		error(`Please configure the container category of the components`);
 	} else {
-		return containers.includes(componentName)
+		return containers.includes(componentName);
 	}
 }
 
 export function error(msg: string) {
-	console.error(msg)
-	throw new Error(msg)
+	console.error(msg);
+	throw new Error(msg);
 }
 
 export function warn(msg: string) {
-	const warn = get(LEGO_BRIDGE, ['config', 'warn'])
+	const warn = get(LEGO_BRIDGE, ['config', 'warn']);
 	if (warn) {
-		warn(msg)
+		warn(msg);
 	} else {
-		console.warn(msg)
+		console.warn(msg);
 	}
-	return true
+	return true;
 }
 
 export function getNewKey(componentConfigs: ComponentConfigsType) {
-	const lastKey = Object.keys(componentConfigs).pop()
-	return Number(lastKey) + 1
+	const lastKey = Object.keys(componentConfigs).pop();
+	return Number(lastKey) + 1;
 }
 
 export function restObject(obj: any, field?: string) {
 	if (field) {
-		delete obj[field]
+		delete obj[field];
 	}
-	if (Object.keys(obj).length === 0) return undefined
-	return obj
+	if (Object.keys(obj).length === 0) return undefined;
+	return obj;
 }
 
 export function handleRules(
@@ -289,27 +289,27 @@ export function handleRules(
 	/**
 	 * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
 	 */
-	const dragComponentName = componentConfigs[dragKey!].componentName
-	const dropComponentName = componentConfigs[selectedKey!].componentName
-	const { fatherNodesRule } = getComponentConfig(dragComponentName)
+	const dragComponentName = componentConfigs[dragKey!].componentName;
+	const dropComponentName = componentConfigs[selectedKey!].componentName;
+	const { fatherNodesRule } = getComponentConfig(dragComponentName);
 	const { nodePropsConfig, childNodesRule } = getComponentConfig(
 		dropComponentName,
-	)
+	);
 
 	/**
 	 * 子组件约束限制，减少不必要的组件错误嵌套
 	 */
 	const childRules = propName
 		? nodePropsConfig![propName].childNodesRule
-		: childNodesRule
+		: childNodesRule;
 	if (childRules && !childRules.includes(dragComponentName)) {
 		!isForbid &&
 			warn(
 				`${
 					propName || dropComponentName
 				}:only allow drag and drop to add${childRules.toString()}`,
-			)
-		return true
+			);
+		return true;
 	}
 	/**
 	 * 父组件约束限制，减少不必要的组件错误嵌套
@@ -323,10 +323,10 @@ export function handleRules(
 		!isForbid &&
 			warn(
 				`${dragComponentName}:Only allowed as a child node or attribute node of${fatherNodesRule.toString()}`,
-			)
-		return true
+			);
+		return true;
 	}
-	return false
+	return false;
 }
 
 export function combineReducers(
@@ -334,13 +334,13 @@ export function combineReducers(
 	customReducer?: ReducerType,
 ): ReducerType {
 	return (state: StateType | undefined, action: BrickAction): StateType => {
-		const newState = brickReducer(state, action)
+		const newState = brickReducer(state, action);
 		if (customReducer) {
-			return customReducer(newState, action)
+			return customReducer(newState, action);
 		} else {
-			return newState
+			return newState;
 		}
-	}
+	};
 }
 
 export function createTemplateConfigs(
@@ -352,11 +352,11 @@ export function createTemplateConfigs(
 ) {
 	if (Array.isArray(childNodes)) {
 		for (const key of childNodes) {
-			templateConfigs[key] = componentConfigs[key]
+			templateConfigs[key] = componentConfigs[key];
 			if (propsConfigSheet[key]) {
-				templatePropsConfigSheet[key] = propsConfigSheet[key]
+				templatePropsConfigSheet[key] = propsConfigSheet[key];
 			}
-			const { childNodes } = templateConfigs[key]
+			const { childNodes } = templateConfigs[key];
 			if (childNodes)
 				createTemplateConfigs(
 					templateConfigs,
@@ -364,7 +364,7 @@ export function createTemplateConfigs(
 					componentConfigs,
 					propsConfigSheet,
 					childNodes,
-				)
+				);
 		}
 	} else {
 		each(childNodes, (childKeys) => {
@@ -375,17 +375,17 @@ export function createTemplateConfigs(
 					componentConfigs,
 					propsConfigSheet,
 					childKeys,
-				)
-		})
+				);
+		});
 	}
 }
 
 export function createTemplate(state: StateType) {
-	const { selectedInfo, componentConfigs, propsConfigSheet } = state
-	const { selectedKey } = selectedInfo
-	const templateConfigs = { [ROOT]: componentConfigs[selectedKey] }
-	const templatePropsConfigSheet = { [ROOT]: propsConfigSheet[selectedKey] }
-	const { childNodes } = componentConfigs[selectedKey]
+	const { selectedInfo, componentConfigs, propsConfigSheet } = state;
+	const { selectedKey } = selectedInfo;
+	const templateConfigs = { [ROOT]: componentConfigs[selectedKey] };
+	const templatePropsConfigSheet = { [ROOT]: propsConfigSheet[selectedKey] };
+	const { childNodes } = componentConfigs[selectedKey];
 	if (!isEmpty(childNodes)) {
 		createTemplateConfigs(
 			templateConfigs,
@@ -393,7 +393,7 @@ export function createTemplate(state: StateType) {
 			componentConfigs,
 			propsConfigSheet,
 			childNodes,
-		)
+		);
 	}
-	return { templateConfigs, templatePropsConfigSheet }
+	return { templateConfigs, templatePropsConfigSheet };
 }

@@ -1,7 +1,7 @@
-import { generateNewKey, getNewKey, ROOT } from '../utils'
-import { DropTargetType, StateType } from '../types'
-import { DragSourcePayload } from '../actions'
-import produce from 'immer'
+import produce from 'immer';
+import { generateNewKey, getNewKey, ROOT } from '../utils';
+import { DropTargetType, StateType } from '../types';
+import { DragSourcePayload } from '../actions';
 
 /**
  * 获取拖拽组件数据
@@ -14,24 +14,24 @@ export function getDragSource(
 	payload: DragSourcePayload,
 ): StateType {
 	// eslint-disable-next-line prefer-const
-	let { componentConfigs, undo, propsConfigSheet } = state
+	let { componentConfigs, undo, propsConfigSheet } = state;
 	// eslint-disable-next-line prefer-const
 	let {
 		vDOMCollection,
 		dragKey,
-	} = payload
-	const {componentName,defaultProps,propsConfigCollection,parentKey,parentPropName, }=payload
+	} = payload;
+	const {componentName,defaultProps,propsConfigCollection,parentKey,parentPropName, }=payload;
 	/**
 	 * componentName有值说明为新添加的组件，为其生成vDom
 	 */
-	dragKey = dragKey || ROOT
+	dragKey = dragKey || ROOT;
 	if (componentName) {
 		vDOMCollection = {
 			[ROOT]: {
 				componentName: componentName,
 				props: defaultProps,
 			},
-		}
+		};
 	}
 
 	/**
@@ -39,25 +39,25 @@ export function getDragSource(
 	 * vDom合并到componentConfigs，为实时拖拽预览做准备
 	 */
 	if (componentConfigs[ROOT] && vDOMCollection) {
-		undo.push({ componentConfigs, propsConfigSheet })
-		const newKey = getNewKey(componentConfigs)
-		dragKey = `${newKey}`
+		undo.push({ componentConfigs, propsConfigSheet });
+		const newKey = getNewKey(componentConfigs);
+		dragKey = `${newKey}`;
 		const { newPropsConfigCollection, newVDOMCollection } = generateNewKey(
 			{
 				vDOMCollection,
 				propsConfigCollection,
 			},
 			newKey,
-		)
+		);
 		componentConfigs = produce(componentConfigs, (oldConfigs) => {
 			//为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
-			Object.assign(oldConfigs, newVDOMCollection)
-		})
+			Object.assign(oldConfigs, newVDOMCollection);
+		});
 		propsConfigSheet = produce(propsConfigSheet, (oldPropsConfig) => {
 			if (newPropsConfigCollection) {
-				Object.assign(oldPropsConfig, newPropsConfigCollection)
+				Object.assign(oldPropsConfig, newPropsConfigCollection);
 			}
-		})
+		});
 	}
 	return {
 		...state,
@@ -70,7 +70,7 @@ export function getDragSource(
 		componentConfigs,
 		propsConfigSheet,
 		undo,
-	}
+	};
 }
 
 /**
@@ -86,22 +86,22 @@ export function getDropTarget(
 	 * 如果location为undefined说明当前组件不是容器组件
 	 * 清除dropTarget信息
 	 */
-	const { selectedInfo, dropTarget } = state
-	const { selectedKey, domTreeKeys } = payload
-	let dropTargetResult = payload
+	const { selectedInfo, dropTarget } = state;
+	const { selectedKey, domTreeKeys } = payload;
+	let dropTargetResult = payload;
 	if (selectedInfo) {
-		const { selectedKey, propName } = selectedInfo
+		const { selectedKey, propName } = selectedInfo;
 		if (domTreeKeys.includes(selectedKey) && !dropTarget) {
-			dropTargetResult = { selectedKey, propName, domTreeKeys }
+			dropTargetResult = { selectedKey, propName, domTreeKeys };
 		} else {
-			return state
+			return state;
 		}
 	}
 	return {
 		...state,
 		dropTarget: dropTargetResult,
 		hoverKey: selectedKey,
-	}
+	};
 }
 
 export function clearDropTarget(state: StateType): StateType {
@@ -109,11 +109,11 @@ export function clearDropTarget(state: StateType): StateType {
 		...state,
 		dropTarget: null,
 		hoverKey: null,
-	}
+	};
 }
 
 export function clearDragSource(state: StateType) {
-	const { dragSource } = state
-	if (dragSource) return { ...state, dragSource: null }
-	return state
+	const { dragSource } = state;
+	if (dragSource) return { ...state, dragSource: null };
+	return state;
 }

@@ -1,10 +1,10 @@
-import React, { forwardRef, memo, useEffect, useState } from 'react'
-import { Input } from 'antd'
-import isObject from 'lodash/isObject'
-import isEqual from 'lodash/isEqual'
-import { propsAreEqual } from '../utils'
+import React, { forwardRef, memo, useEffect, useState } from 'react';
+import { Input } from 'antd';
+import isObject from 'lodash/isObject';
+import isEqual from 'lodash/isEqual';
+import { propsAreEqual } from '../utils';
 
-const { TextArea } = Input
+const { TextArea } = Input;
 
 interface JsonTextAreaPropsType {
 	value?: any
@@ -12,22 +12,24 @@ interface JsonTextAreaPropsType {
 }
 
 function JsonTextArea(props: JsonTextAreaPropsType, ref: any) {
-	const { onChange, value } = props
-	const [json, setJson] = useState<string>()
+	const { onChange, value } = props;
+	const [json, setJson] = useState<string>();
 	useEffect(() => {
 		try {
-			let strObj
-			eval(`strObj=${json}`)
+			let strObj;
+			eval(`strObj=${json}`);
 			if (isObject(strObj) && !isEqual(value, strObj)) {
-				onChange && onChange(strObj)
+				onChange && onChange(strObj);
 			}
-		} catch (e) {}
-	}, [json, onChange])
+		} catch (e) {
+			console.error(e);
+		}
+	}, [json, onChange]);
 
 	useEffect(() => {
-		const jsonStr = JSON.stringify(value, null, 2)
-		setJson(jsonStr)
-	}, [value])
+		const jsonStr = JSON.stringify(value, null, 2);
+		setJson(jsonStr);
+	}, [value]);
 
 	return (
 		<TextArea
@@ -35,7 +37,7 @@ function JsonTextArea(props: JsonTextAreaPropsType, ref: any) {
 			value={json}
 			onChange={(e) => setJson(e.target.value)}
 		/>
-	)
+	);
 }
 
-export default memo(forwardRef(JsonTextArea), propsAreEqual)
+export default memo(forwardRef(JsonTextArea), propsAreEqual);

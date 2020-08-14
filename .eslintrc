@@ -2,7 +2,8 @@
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint",
-    "react-hooks"
+    "react-hooks",
+    "import"
   ],
   "extends": [
     "eslint:recommended",
@@ -28,6 +29,27 @@
     "@typescript-eslint/no-object-literal-type-assertion": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/no-use-before-define": 0,
-    "react/prop-types": 0
+    "react/jsx-indent-props": 0,
+    "react/jsx-uses-react": 1,
+    "react/prop-types": 0,
+    "semi": [2, "always"],
+    "import/no-self-import": [2],
+    "import/no-cycle": [2],
+    "import/no-duplicates": [2],
+    "import/newline-after-import": [2],
+    "import/order": [
+      "error",
+      {
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["builtin"],
+        "groups": ["external", "builtin", "internal", "sibling", "parent"]
+      }
+    ]
   }
 }

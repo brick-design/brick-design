@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core'
+import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core';
 
 const img: ComponentConfigTypes = {
 	propsConfig: {
@@ -22,5 +22,5 @@ const img: ComponentConfigTypes = {
 			type: PROPS_TYPES.objectArray,
 		},
 	},
-}
-export default img
+};
+export default img;

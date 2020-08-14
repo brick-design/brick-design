@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core'
+import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core';
 
 const h: ComponentConfigTypes = {
 	childNodesRule: ['img'],
@@ -9,6 +9,6 @@ const h: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default h
+export default h;

@@ -1,12 +1,13 @@
-import { createElement, forwardRef, memo, useMemo } from 'react'
+import { createElement, forwardRef, memo, useMemo } from 'react';
 import {
 	clearDropTarget,
 	getComponentConfig,
 	produce,
 	ROOT,
 	STATE_PROPS,
-} from '@brickd/core'
-import { useSelector } from '@brickd/redux-bridge'
+} from '@brickd/core';
+import { useSelector } from '@brickd/redux-bridge';
+import { merge } from 'lodash';
 import {
 	CommonPropsType,
 	controlUpdate,
@@ -15,15 +16,14 @@ import {
 	HookState,
 	propAreEqual,
 	stateSelector,
-} from '../common/handleFuns'
+} from '../common/handleFuns';
 import {
 	formatSpecialProps,
 	generateRequiredProps,
 	getComponent,
-} from '../utils'
-import { merge } from 'lodash'
-import { useSelect } from '../hooks/useSelect'
-import { useDragDrop } from '../hooks/useDragDrop'
+} from '../utils';
+import { useSelect } from '../hooks/useSelect';
+import { useDragDrop } from '../hooks/useDragDrop';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const {
@@ -31,30 +31,30 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 		specialProps: { key, domTreeKeys },
 		isDragAddChild,
 		...rest
-	} = allProps
+	} = allProps;
 	const { componentConfigs: PageDom, propsConfigSheet } = useSelector<
 		HookState,
 		STATE_PROPS
 	>(stateSelector, (prevState, nextState) =>
 		controlUpdate(prevState, nextState, key),
-	)
-	const { isSelected } = useSelect(specialProps)
-	const { dragSource, isHidden } = useDragDrop(key)
-	const { dragKey, vDOMCollection } = dragSource || {}
-	const componentConfigs = PageDom[ROOT] ? PageDom : vDOMCollection || {}
-	const { props, componentName } = componentConfigs[key] || {}
-	const { propsConfig } = useMemo(() => getComponentConfig(componentName), [])
+	);
+	const { isSelected } = useSelect(specialProps);
+	const { dragSource, isHidden } = useDragDrop(key);
+	const { dragKey, vDOMCollection } = dragSource || {};
+	const componentConfigs = PageDom[ROOT] ? PageDom : vDOMCollection || {};
+	const { props, componentName } = componentConfigs[key] || {};
+	const { propsConfig } = useMemo(() => getComponentConfig(componentName), []);
 
-	if (!componentName) return null
+	if (!componentName) return null;
 
 	const onDragEnter = (e: Event) => {
-		e.stopPropagation()
+		e.stopPropagation();
 		if (dragKey && domTreeKeys.includes(dragKey)) {
-			clearDropTarget()
+			clearDropTarget();
 		}
-	}
+	};
 
-	const { className, animateClass, ...restProps } = props || {}
+	const { className, animateClass, ...restProps } = props || {};
 	return createElement(getComponent(componentName), {
 		...restProps,
 		className: handlePropsClassName(
@@ -74,7 +74,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 		...formatSpecialProps(
 			props,
 			produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, propsConfigSheet[specialProps.key])
+				merge(oldPropsConfig, propsConfigSheet[specialProps.key]);
 			}),
 		),
 		draggable: true,
@@ -83,7 +83,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 		 */
 		ref,
 		...rest,
-	})
+	});
 }
 
-export default memo<CommonPropsType>(forwardRef(NoneContainer), propAreEqual)
+export default memo<CommonPropsType>(forwardRef(NoneContainer), propAreEqual);

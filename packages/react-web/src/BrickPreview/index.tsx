@@ -1,22 +1,22 @@
-import React, { memo, useCallback, useEffect, useState } from 'react'
-import { AutoComplete, Col, Collapse, Divider, Icon, Input, Row } from 'antd'
-import map from 'lodash/map'
-import update from 'lodash/update'
-import each from 'lodash/each'
-import styles from './index.less'
-import DragAbleItem from './DragAbleItem'
-import isArray from 'lodash/isArray'
-import isEmpty from 'lodash/isEmpty'
-import isEqual from 'lodash/isEqual'
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import { AutoComplete, Col, Collapse, Divider, Icon, Input, Row } from 'antd';
+import map from 'lodash/map';
+import update from 'lodash/update';
+import each from 'lodash/each';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import {
 	CategoryType,
 	ComponentCategoryType,
 	ComponentInfoType,
 	useSelector,
-} from '@brickd/react'
-import { flattenDeepArray, usePrevious } from '../utils'
+} from '@brickd/react';
+import DragAbleItem from './DragAbleItem';
+import styles from './index.less';
+import { flattenDeepArray, usePrevious } from '../utils';
 
-const { Panel } = Collapse
+const { Panel } = Collapse;
 
 /**
  * 获取过滤后的组件配置信息
@@ -30,50 +30,50 @@ function getFilterCategory(
 	value?: string,
 	rule?: string[],
 ) {
-	const filterOpenKeys: string[] = []
-	const filterCategory: CategoryType = {}
-	value = isEmpty(value) ? undefined : value
+	const filterOpenKeys: string[] = [];
+	const filterCategory: CategoryType = {};
+	value = isEmpty(value) ? undefined : value;
 
 	if (value && rule) {
-		rule = rule.filter((name) => name.includes(value!))
+		rule = rule.filter((name) => name.includes(value!));
 	} else if (!value && !rule) {
-		return { filterCategory: prevComponentsCategory, filterOpenKeys }
+		return { filterCategory: prevComponentsCategory, filterOpenKeys };
 	}
 	each(prevComponentsCategory, (infos, category) => {
-		const { components } = infos || { components: null }
+		const { components } = infos || { components: null };
 		if (components) {
 			each(components, (componentInfo, componentName) => {
 				if (
 					(!rule && componentName.includes(value!)) ||
 					(rule && rule.includes(componentName))
 				) {
-					!filterOpenKeys.includes(category) && filterOpenKeys.push(category)
+					!filterOpenKeys.includes(category) && filterOpenKeys.push(category);
 					update(
 						filterCategory,
 						`${category}.components`,
 						(componentInfos = {}) => {
-							componentInfos[componentName] = componentInfo
-							return componentInfos
+							componentInfos[componentName] = componentInfo;
+							return componentInfos;
 						},
-					)
+					);
 				}
-			})
+			});
 		} else if (
 			(!rule && category.includes(value!)) ||
 			(rule && rule.includes(category))
 		) {
-			filterOpenKeys.push(category)
-			filterCategory[category] = infos
+			filterOpenKeys.push(category);
+			filterCategory[category] = infos;
 		}
-	})
-	return { filterOpenKeys, filterCategory }
+	});
+	return { filterOpenKeys, filterCategory };
 }
 
 /**
  * 搜索过滤回调
  */
 function searchFilter(inputValue: string, option: any) {
-	return option.props.children.toUpperCase().includes(inputValue.toUpperCase())
+	return option.props.children.toUpperCase().includes(inputValue.toUpperCase());
 }
 
 /**
@@ -93,7 +93,7 @@ function renderHeader(categoryName: string, isFold: boolean) {
 			/>
 			<span style={{ color: '#555555' }}>{categoryName}</span>
 		</div>
-	)
+	);
 }
 
 /**
@@ -109,7 +109,7 @@ function renderDragItem(
 		<Col span={span} key={key}>
 			<DragAbleItem dragSource={{ componentName, defaultProps }} />
 		</Col>
-	)
+	);
 }
 
 /**
@@ -124,22 +124,22 @@ function renderContent(
 	isShow?: boolean,
 ) {
 	let items: any = null,
-		isShowCategoryName = false
+		isShowCategoryName = false;
 	if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
-		items = renderDragItem(undefined, categoryName, categoryName)
+		items = renderDragItem(undefined, categoryName, categoryName);
 	} else {
-		const { span = 24, props, components } = categoryInfo
-		const renderItems = props || components
+		const { span = 24, props, components } = categoryInfo;
+		const renderItems = props || components;
 		items = map(renderItems, (v: ComponentCategoryType | any, k) => {
 			if (!isArray(renderItems)) {
-				return renderContent(v, k, true)
+				return renderContent(v, k, true);
 			}
 			/**
 			 * 如果有默认属性显示分割分类
 			 */
-			if (v) isShowCategoryName = true
-			return renderDragItem(span as number, k, categoryName, v)
-		})
+			if (v) isShowCategoryName = true;
+			return renderDragItem(span as number, k, categoryName, v);
+		});
 	}
 
 	return (
@@ -151,7 +151,7 @@ function renderContent(
 				</Divider>
 			)}
 		</Row>
-	)
+	);
 }
 
 interface FoldPanelPropsType {
@@ -161,17 +161,17 @@ interface FoldPanelPropsType {
 }
 
 function BrickPreview(props: FoldPanelPropsType) {
-	const { componentsCategory, isShow = true, className } = props
-	const searchValues = flattenDeepArray(componentsCategory)
-	const { selectedInfo } = useSelector(['selectedInfo'])
-	const { childNodesRule } = selectedInfo || {}
-	const [openKeys = [], setOpenKeys] = useState<string[]>([])
-	const [searchValue, setSearchValue] = useState('')
-	const [category, setCategory] = useState(componentsCategory)
+	const { componentsCategory, isShow = true, className } = props;
+	const searchValues = flattenDeepArray(componentsCategory);
+	const { selectedInfo } = useSelector(['selectedInfo']);
+	const { childNodesRule } = selectedInfo || {};
+	const [openKeys = [], setOpenKeys] = useState<string[]>([]);
+	const [searchValue, setSearchValue] = useState('');
+	const [category, setCategory] = useState(componentsCategory);
 
-	const prevIsShow = usePrevious(isShow)
-	const prevChildNodesRule = usePrevious(childNodesRule)
-	const prevCategory = usePrevious(category)
+	const prevIsShow = usePrevious(isShow);
+	const prevChildNodesRule = usePrevious(childNodesRule);
+	const prevCategory = usePrevious(category);
 	useEffect(() => {
 		if (
 			isShow !== prevIsShow ||
@@ -181,10 +181,10 @@ function BrickPreview(props: FoldPanelPropsType) {
 				componentsCategory,
 				searchValue,
 				childNodesRule,
-			)
+			);
 			if (!isEqual(filterCategory, prevCategory)) {
-				setOpenKeys(filterOpenKeys)
-				setCategory(filterCategory)
+				setOpenKeys(filterOpenKeys);
+				setCategory(filterCategory);
 			}
 		}
 	}, [
@@ -194,7 +194,7 @@ function BrickPreview(props: FoldPanelPropsType) {
 		childNodesRule,
 		prevCategory,
 		isShow,
-	])
+	]);
 
 	/**
 	 * 搜搜指定组件
@@ -202,22 +202,22 @@ function BrickPreview(props: FoldPanelPropsType) {
 	const onChange = useCallback(
 		(value: any) => {
 			let filterOpenKeys: any[] = [],
-				filterCategory = componentsCategory
+				filterCategory = componentsCategory;
 			if (isEmpty(value)) {
 				if (childNodesRule) {
 					;({ filterOpenKeys, filterCategory } = getFilterCategory(
 						componentsCategory,
 						undefined,
 						childNodesRule,
-					))
+					));
 				}
-				setOpenKeys(filterOpenKeys)
-				setCategory(filterCategory)
-				setSearchValue(value)
+				setOpenKeys(filterOpenKeys);
+				setCategory(filterCategory);
+				setSearchValue(value);
 			}
 		},
 		[childNodesRule],
-	)
+	);
 
 	/**
 	 * 搜索下拉框选中组件名称时的回调
@@ -228,13 +228,13 @@ function BrickPreview(props: FoldPanelPropsType) {
 				componentsCategory,
 				value,
 				childNodesRule,
-			)
-			setOpenKeys(filterOpenKeys)
-			setSearchValue(value)
-			setCategory(filterCategory)
+			);
+			setOpenKeys(filterOpenKeys);
+			setSearchValue(value);
+			setCategory(filterCategory);
 		},
 		[childNodesRule],
-	)
+	);
 
 	return (
 		<div className={`${styles['container']}  ${className}`}>
@@ -258,7 +258,7 @@ function BrickPreview(props: FoldPanelPropsType) {
 						onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}
 					>
 						{map(category, (categoryInfo: ComponentInfoType, categoryName) => {
-							const isFold = openKeys.includes(categoryName)
+							const isFold = openKeys.includes(categoryName);
 							return (
 								<Panel
 									style={{ border: 0 }}
@@ -268,22 +268,22 @@ function BrickPreview(props: FoldPanelPropsType) {
 								>
 									{renderContent(categoryInfo, categoryName)}
 								</Panel>
-							)
+							);
 						})}
 					</Collapse>
 				)}
 			</div>
 		</div>
-	)
+	);
 }
 
 export default memo<FoldPanelPropsType>(
 	BrickPreview,
 	(prevProps, nextProps) => {
-		const { isShow } = nextProps
+		const { isShow } = nextProps;
 		/**
 		 * 当前组件不可见时 不触发组件渲染，相反触发渲染
 		 */
-		return !isShow
+		return !isShow;
 	},
-)
+);

@@ -1,1 +1,1 @@
-export const selectClassTarget = 'brickd-select-class-target'
+export const selectClassTarget = 'brickd-select-class-target';

@@ -1,15 +1,15 @@
-import React, { memo } from 'react'
-import { handleSelectedStatus, onMouseOver } from '../../../common/events'
-import { LayoutIcon, RowIcon, TriangleIcon } from './Icons'
-import styles from '../index.less'
-import { SelectedInfoBaseType } from '@brickd/core'
-import { useSelector } from '@brickd/redux-bridge'
-import { isEqualKey } from '../../../utils'
+import React, { memo } from 'react';
+import { SelectedInfoBaseType } from '@brickd/core';
+import { useSelector } from '@brickd/redux-bridge';
+import { LayoutIcon, RowIcon, TriangleIcon } from './Icons';
+import { handleSelectedStatus, onMouseOver } from '../../../common/events';
+import styles from '../index.less';
+import { isEqualKey } from '../../../utils';
 
-const selectedColor = '#5E96FF'
-const unSelectedColor = '#555555'
-const selectedBGColor = '#F2F2F2'
-const hoveredBGColor = '#F1F1F1'
+const selectedColor = '#5E96FF';
+const unSelectedColor = '#555555';
+const selectedBGColor = '#F2F2F2';
+const hoveredBGColor = '#F1F1F1';
 
 interface HeaderProps {
 	specialProps: SelectedInfoBaseType
@@ -21,7 +21,7 @@ interface HeaderProps {
 }
 
 function controlUpdate(prevState, nextState, key: string) {
-	return true
+	return true;
 }
 
 function Header(props: HeaderProps) {
@@ -33,19 +33,19 @@ function Header(props: HeaderProps) {
 		isUnfold,
 		componentName,
 		hasChildNodes,
-	} = props
+	} = props;
 	const { selectedInfo, hoverKey } = useSelector(
 		['selectedInfo', 'hoverKey'],
 		(prevState, nextState) => controlUpdate(prevState, nextState, key),
-	)
-	const { propName: selectedPropName, selectedKey } = selectedInfo || {}
-	const sortItemKey = propName ? `${key}${propName}` : key
+	);
+	const { propName: selectedPropName, selectedKey } = selectedInfo || {};
+	const sortItemKey = propName ? `${key}${propName}` : key;
 	const isSelected = isEqualKey(
 		sortItemKey,
 		selectedPropName ? `${selectedKey}${selectedPropName}` : selectedKey,
-	)
-	const isHovered = isEqualKey(sortItemKey, hoverKey)
-	const color = isSelected ? selectedColor : unSelectedColor
+	);
+	const isHovered = isEqualKey(sortItemKey, hoverKey);
+	const color = isSelected ? selectedColor : unSelectedColor;
 
 	return (
 		<div
@@ -70,8 +70,8 @@ function Header(props: HeaderProps) {
 						visibility: hasChildNodes ? 'visible' : 'hidden',
 					}}
 					onClick={(event) => {
-						event.stopPropagation()
-						setIsUnfold(!isUnfold)
+						event.stopPropagation();
+						setIsUnfold(!isUnfold);
 					}}
 				/>
 				{componentName.includes('Layout') ? (
@@ -82,7 +82,7 @@ function Header(props: HeaderProps) {
 				<span>{componentName}</span>
 			</div>
 		</div>
-	)
+	);
 }
 
-export default memo(Header)
+export default memo(Header);

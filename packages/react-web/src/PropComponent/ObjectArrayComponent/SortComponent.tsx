@@ -1,9 +1,9 @@
-import React from 'react'
-import styles from '../../index.less'
-import each from 'lodash/each'
-import map from 'lodash/map'
-import { PaneType } from './ObjectArrayComponent'
-import { ReactSortable } from '@brickd/react'
+import React from 'react';
+import each from 'lodash/each';
+import map from 'lodash/map';
+import { ReactSortable } from '@brickd/react';
+import { PaneType } from './ObjectArrayComponent';
+import styles from '../../index.less';
 
 interface SortComponentPropsType {
 	onSortChange: (data: any) => any
@@ -11,24 +11,24 @@ interface SortComponentPropsType {
 }
 
 function SortComponent(props: SortComponentPropsType) {
-	const { onSortChange, sortData } = props
+	const { onSortChange, sortData } = props;
 
 	function renderSortItem({ key }: any) {
 		return (
 			<div className={styles['sort-item']} id={key} key={key}>
 				{key}
 			</div>
-		)
+		);
 	}
 
 	function onLayoutSortChange(sortKeys = []) {
-		const dataMap: { [key: string]: PaneType } = {}
+		const dataMap: { [key: string]: PaneType } = {};
 		each(sortData, (data) => {
-			dataMap[data.key] = data
-		})
-		const nextSortData: PaneType[] = []
-		each(sortKeys, (key) => nextSortData.push(dataMap[key]))
-		onSortChange && onSortChange(nextSortData)
+			dataMap[data.key] = data;
+		});
+		const nextSortData: PaneType[] = [];
+		each(sortKeys, (key) => nextSortData.push(dataMap[key]));
+		onSortChange && onSortChange(nextSortData);
 	}
 
 	return (
@@ -51,7 +51,7 @@ function SortComponent(props: SortComponentPropsType) {
 		>
 			{map(sortData, renderSortItem)}
 		</ReactSortable>
-	)
+	);
 }
 
-export default SortComponent
+export default SortComponent;

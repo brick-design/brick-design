@@ -1,4 +1,4 @@
-import { NODE_PROPS_TYPES, PROPS_TYPES } from './ConfigTypes'
+import { NODE_PROPS_TYPES, PROPS_TYPES } from './ConfigTypes';
 
 /**
  * 组件属性的配置信息

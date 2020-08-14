@@ -1,4 +1,4 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types'
+import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
 
 const a: ComponentConfigTypes = {
 	propsConfig: {
@@ -25,6 +25,6 @@ const a: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default a
+export default a;

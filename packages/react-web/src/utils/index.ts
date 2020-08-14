@@ -1,17 +1,17 @@
-import { useEffect, useRef } from 'react'
-import flattenDeep from 'lodash/flattenDeep'
-import map from 'lodash/map'
-import { PROPS_TYPES } from '@brickd/react'
-import each from 'lodash/each'
-import isEmpty from 'lodash/isEmpty'
-import isEqual from 'lodash/isEqual'
+import { useEffect, useRef } from 'react';
+import flattenDeep from 'lodash/flattenDeep';
+import map from 'lodash/map';
+import { PROPS_TYPES } from '@brickd/react';
+import each from 'lodash/each';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 
 export function usePrevious<T>(value: any) {
-	const ref = useRef<T>()
+	const ref = useRef<T>();
 	useEffect(() => {
-		ref.current = value
-	})
-	return ref.current
+		ref.current = value;
+	});
+	return ref.current;
 }
 
 /**
@@ -22,10 +22,10 @@ export function usePrevious<T>(value: any) {
 export function flattenDeepArray(data: any) {
 	return flattenDeep(
 		map(data, (v, k) => {
-			if (v && v.components) return map(v.components, (_, subK) => subK)
-			return k
+			if (v && v.components) return map(v.components, (_, subK) => subK);
+			return k;
 		}),
-	)
+	);
 }
 
 /**
@@ -42,31 +42,31 @@ export const formatPropsFieldConfigLocation = (
 	fatherFieldLocation: string,
 	tabIndex?: number,
 ) => {
-	let fieldConfigLocation = fatherFieldLocation ? `${fatherFieldLocation}.` : ''
+	let fieldConfigLocation = fatherFieldLocation ? `${fatherFieldLocation}.` : '';
 	if (type === PROPS_TYPES.object) {
-		fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig`
+		fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig`;
 	} else if (type === PROPS_TYPES.objectArray) {
 		fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig${
 			tabIndex !== undefined ? `.[${tabIndex}]` : ''
-		}`
+		}`;
 	}
-	return fieldConfigLocation
-}
+	return fieldConfigLocation;
+};
 /**
  * 过滤掉值为undefined的字段
  * @param value
  * @returns {undefined}
  */
 export const filterProps = (value: any) => {
-	const props: any = {}
+	const props: any = {};
 	each(value, (v, k) => {
 		if (v !== undefined) {
-			props[k] = v
+			props[k] = v;
 		}
-	})
+	});
 
-	return isEmpty(props) ? undefined : props
-}
+	return isEmpty(props) ? undefined : props;
+};
 
 /**
  * form 方法受控组件减少不必要渲染
@@ -74,4 +74,4 @@ export const filterProps = (value: any) => {
  * @param nextProps
  */
 export const propsAreEqual = (prevProps: any, nextProps: any) =>
-	isEqual(prevProps.value, nextProps.value)
+	isEqual(prevProps.value, nextProps.value);

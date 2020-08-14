@@ -1,13 +1,13 @@
-import React, { memo, useCallback } from 'react'
-import { isEqual, map } from 'lodash'
-import styles from './index.less'
-import SortItem from './SortItem'
+import React, { memo, useCallback } from 'react';
+import { isEqual, map } from 'lodash';
 import {
 	NodeProps,
 	onLayoutSortChange,
 	SelectedInfoBaseType,
-} from '@brickd/core'
-import ReactSortable from './components/ReactSortable'
+} from '@brickd/core';
+import styles from './index.less';
+import SortItem from './SortItem';
+import ReactSortable from './components/ReactSortable';
 
 interface SortTreePropsType {
 	isFold?: boolean
@@ -30,7 +30,7 @@ function renderSortItems(key: string, props: SortTreePropsType) {
 		isFold,
 		propName: parentPropName,
 		specialProps: { domTreeKeys = [], key: parentKey },
-	} = props
+	} = props;
 	return (
 		<SortItem
 			isFold={isFold}
@@ -42,24 +42,24 @@ function renderSortItems(key: string, props: SortTreePropsType) {
 				parentPropName,
 			}}
 		/>
-	)
+	);
 }
 
 const putItem = (c: any, props: SortTreePropsType) => {
-	const { childNodes = [], nodeProps, componentName } = props
-	const fatherNodesRule = c.dataset.farules
-	const dragName = c.dataset.name
+	const { childNodes = [], nodeProps, componentName } = props;
+	const fatherNodesRule = c.dataset.farules;
+	const dragName = c.dataset.name;
 	if (fatherNodesRule && !JSON.parse(fatherNodesRule).include(componentName))
-		return false
+		return false;
 	if (nodeProps) {
-		if (nodeProps.isOnlyNode && childNodes.length === 1) return false
+		if (nodeProps.isOnlyNode && childNodes.length === 1) return false;
 		if (nodeProps.childNodesRule) {
-			return nodeProps.childNodesRule.includes(dragName)
+			return nodeProps.childNodesRule.includes(dragName);
 		}
 	}
 
-	return true
-}
+	return true;
+};
 
 function SortTree(props: SortTreePropsType) {
 	const {
@@ -67,7 +67,7 @@ function SortTree(props: SortTreePropsType) {
 		disabled,
 		specialProps: { key },
 		propName,
-	} = props
+	} = props;
 
 	/**
 	 * 拖拽排序
@@ -78,24 +78,24 @@ function SortTree(props: SortTreePropsType) {
 	const layoutSortChange = useCallback(
 		function (sortKeys: string[], evt) {
 			if (isEqual(childNodes, sortKeys) || sortKeys.length < childNodes.length)
-				return
+				return;
 			/**
 			 * 获取拖住节点的信息
 			 * @type {any}
 			 */
-			let dragInfo: any
+			let dragInfo: any;
 			if (sortKeys.length > childNodes.length) {
-				dragInfo = JSON.parse(evt.clone.dataset.special)
+				dragInfo = JSON.parse(evt.clone.dataset.special);
 			}
 			onLayoutSortChange({
 				sortKeys,
 				parentKey: key,
 				parentPropName: propName!,
 				dragInfo,
-			})
+			});
 		},
 		[childNodes],
-	)
+	);
 	return (
 		<ReactSortable
 			options={{
@@ -113,7 +113,7 @@ function SortTree(props: SortTreePropsType) {
 		>
 			{map(childNodes, (key) => renderSortItems(key, props))}
 		</ReactSortable>
-	)
+	);
 }
 
-export default memo(SortTree)
+export default memo(SortTree);

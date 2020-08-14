@@ -1,6 +1,6 @@
-import React from 'react'
-import styles from './index.less'
-import { Direction } from './index'
+import React from 'react';
+import styles from './index.less';
+import { Direction } from './index';
 
 interface ItemProps {
 	onResizeStart: (
@@ -47,15 +47,15 @@ const positionStyles: { [key: string]: React.CSSProperties } = {
 		top: '-4px',
 		cursor: 'nw-resize',
 	},
-}
+};
 
 export function Item(props: ItemProps) {
-	const { onResizeStart, direction } = props
+	const { onResizeStart, direction } = props;
 	return (
 		<span
 			style={positionStyles[direction]}
 			onMouseDown={(e) => onResizeStart(e, direction)}
 			className={styles['resize-item']}
 		/>
-	)
+	);
 }

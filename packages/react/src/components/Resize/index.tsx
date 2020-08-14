@@ -5,7 +5,7 @@ import React, {
 	useMemo,
 	useRef,
 	useState,
-} from 'react'
+} from 'react';
 import {
 	ComponentConfigsType,
 	resizeChange,
@@ -13,9 +13,12 @@ import {
 	ROOT,
 	SelectedInfoType,
 	STATE_PROPS,
-} from '@brickd/core'
-import { useSelector } from '@brickd/redux-bridge'
+} from '@brickd/core';
+import { useSelector } from '@brickd/redux-bridge';
 
+import { get, map } from 'lodash';
+import { Item } from './Item';
+import styles from './index.less';
 import {
 	formatUnit,
 	generateCSS,
@@ -24,11 +27,8 @@ import {
 	getIsModalChild,
 	getSelectedNode,
 	setPosition,
-} from '../../utils'
-import { Item } from './Item'
-import styles from './index.less'
-import { get, map } from 'lodash'
-import ActionSheet from '../ActionSheet'
+} from '../../utils';
+import ActionSheet from '../ActionSheet';
 
 type ResizeState = {
 	selectedInfo: SelectedInfoType
@@ -48,15 +48,15 @@ export enum Direction {
 }
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
-	const { selectedInfo, componentConfigs, hoverKey } = nextState
+	const { selectedInfo, componentConfigs, hoverKey } = nextState;
 	return (
 		prevState.selectedInfo !== selectedInfo ||
 		(selectedInfo &&
 			(prevState.componentConfigs !== componentConfigs ||
 				(prevState.hoverKey === null && hoverKey !== null) ||
 				(prevState.hoverKey !== null && hoverKey === null)))
-	)
-}
+	);
+};
 
 type OriginSizeType = {
 	x: number
@@ -71,170 +71,170 @@ type OriginSizeType = {
 }
 
 function Resize() {
-	const iframe = getIframe()
+	const iframe = getIframe();
 	const { selectedInfo, hoverKey, componentConfigs } = useSelector<
 		ResizeState,
 		STATE_PROPS
-	>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate)
-	const { selectedKey, domTreeKeys, propName } = selectedInfo || {}
-	const resizeRef = useRef<any>()
-	const originSizeRef = useRef<OriginSizeType>()
-	const sizeResultRef = useRef<ResizePayload>({})
-	const widthRef = useRef<any>()
-	const heightRef = useRef<any>()
-	const baseboardRef = useRef<HTMLDivElement | any>()
-	const selectNodeRef = useRef<HTMLElement>()
-	const [isOut, setIsOut] = useState<boolean>(true)
-	const { props, childNodes } = componentConfigs[selectedKey] || {}
-	const { width = 'auto', height = 'auto' } = get(props, 'style', {})
+	>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate);
+	const { selectedKey, domTreeKeys, propName } = selectedInfo || {};
+	const resizeRef = useRef<any>();
+	const originSizeRef = useRef<OriginSizeType>();
+	const sizeResultRef = useRef<ResizePayload>({});
+	const widthRef = useRef<any>();
+	const heightRef = useRef<any>();
+	const baseboardRef = useRef<HTMLDivElement | any>();
+	const selectNodeRef = useRef<HTMLElement>();
+	const [isOut, setIsOut] = useState<boolean>(true);
+	const { props, childNodes } = componentConfigs[selectedKey] || {};
+	const { width = 'auto', height = 'auto' } = get(props, 'style', {});
 	const isModal = useMemo(
 		() => getIsModalChild(componentConfigs, domTreeKeys),
 		[domTreeKeys, componentConfigs],
-	)
+	);
 	selectNodeRef.current = useMemo(() => getSelectedNode(selectedKey, iframe), [
 		iframe,
 		selectedKey,
-	])
+	]);
 
 	useEffect(() => {
-		const contentWindow = iframe!.contentWindow!
-		const changeSize = () => setSelectedBorder()
-		contentWindow.addEventListener('mouseup', onMouseUp)
-		contentWindow.addEventListener('mousemove', onMouseMove)
-		contentWindow.addEventListener('mouseleave', onMouseUp)
-		contentWindow.addEventListener('resize', changeSize)
-		contentWindow.addEventListener('animationend', changeSize)
+		const contentWindow = iframe!.contentWindow!;
+		const changeSize = () => setSelectedBorder();
+		contentWindow.addEventListener('mouseup', onMouseUp);
+		contentWindow.addEventListener('mousemove', onMouseMove);
+		contentWindow.addEventListener('mouseleave', onMouseUp);
+		contentWindow.addEventListener('resize', changeSize);
+		contentWindow.addEventListener('animationend', changeSize);
 		return () => {
-			contentWindow.removeEventListener('mouseup', onMouseUp)
-			contentWindow.removeEventListener('mousemove', onMouseMove)
-			contentWindow.removeEventListener('mousemove', onMouseUp)
-			contentWindow.removeEventListener('resize', changeSize)
-			contentWindow.removeEventListener('animationend', changeSize)
-		}
-	}, [isModal])
+			contentWindow.removeEventListener('mouseup', onMouseUp);
+			contentWindow.removeEventListener('mousemove', onMouseMove);
+			contentWindow.removeEventListener('mousemove', onMouseUp);
+			contentWindow.removeEventListener('resize', changeSize);
+			contentWindow.removeEventListener('animationend', changeSize);
+		};
+	}, [isModal]);
 
 	useEffect(() => {
 		if (selectedKey) {
 			if (selectNodeRef.current) {
-				selectNodeRef.current = getSelectedNode(selectedKey, iframe)
-				setSelectedBorder()
+				selectNodeRef.current = getSelectedNode(selectedKey, iframe);
+				setSelectedBorder();
 			} else {
-				setSelectedBorder()
+				setSelectedBorder();
 			}
 		}
-	}, [selectedKey, selectNodeRef.current, iframe, componentConfigs])
+	}, [selectedKey, selectNodeRef.current, iframe, componentConfigs]);
 
 	if (!selectedKey && resizeRef.current) {
-		resizeRef.current.style.display = 'none'
+		resizeRef.current.style.display = 'none';
 	}
 
 	const onMouseUp = useCallback(() => {
-		originSizeRef.current = undefined
-		baseboardRef.current!.style.display = 'none'
-		resizeRef.current.style.pointerEvents = 'none'
-		resizeRef.current.style.transitionProperty = 'all'
-		resizeRef.current.style.transitionDuration = '50ms'
+		originSizeRef.current = undefined;
+		baseboardRef.current!.style.display = 'none';
+		resizeRef.current.style.pointerEvents = 'none';
+		resizeRef.current.style.transitionProperty = 'all';
+		resizeRef.current.style.transitionDuration = '50ms';
 
-		resizeChange(sizeResultRef.current)
-		sizeResultRef.current = {}
+		resizeChange(sizeResultRef.current);
+		sizeResultRef.current = {};
 	}, [
 		originSizeRef.current,
 		baseboardRef.current,
 		resizeRef.current,
 		sizeResultRef.current,
-	])
+	]);
 
 	const changeBaseboard = () => {
 		const {
 			body: { scrollWidth, scrollHeight },
-		} = iframe!.contentDocument
+		} = iframe!.contentDocument;
 		baseboardRef.current!.style.cssText = `
     display:block;
     width:${scrollWidth}px;
     height:${scrollHeight}px
-    `
-	}
+    `;
+	};
 	const onMouseMove = useCallback(
 		(event: MouseEvent) => {
-			event.stopPropagation()
+			event.stopPropagation();
 			if (originSizeRef.current) {
-				const { clientX, clientY } = event
-				const { x, y, direction, height, width } = originSizeRef.current
-				let offsetY = 0
-				let offsetX = 0
+				const { clientX, clientY } = event;
+				const { x, y, direction, height, width } = originSizeRef.current;
+				let offsetY = 0;
+				let offsetX = 0;
 				switch (direction) {
 					case Direction.left:
-						offsetX = x - clientX
-						break
+						offsetX = x - clientX;
+						break;
 					case Direction.right:
-						offsetX = clientX - x
-						break
+						offsetX = clientX - x;
+						break;
 					case Direction.top:
-						offsetY = y - clientY
-						break
+						offsetY = y - clientY;
+						break;
 					case Direction.bottom:
-						offsetY = clientY - y
-						break
+						offsetY = clientY - y;
+						break;
 					case Direction.topLeft:
-						offsetY = y - clientY
-						offsetX = x - clientX
-						break
+						offsetY = y - clientY;
+						offsetX = x - clientX;
+						break;
 					case Direction.topRight:
-						offsetY = y - clientY
-						offsetX = clientX - x
-						break
+						offsetY = y - clientY;
+						offsetX = clientX - x;
+						break;
 					case Direction.bottomLeft:
-						offsetX = x - clientX
-						offsetY = clientY - y
-						break
+						offsetX = x - clientX;
+						offsetY = clientY - y;
+						break;
 					case Direction.bottomRight:
-						offsetY = clientY - y
-						offsetX = clientX - x
-						break
+						offsetY = clientY - y;
+						offsetX = clientX - x;
+						break;
 				}
-				const heightResult = height + offsetY
-				const widthResult = width + offsetX
+				const heightResult = height + offsetY;
+				const widthResult = width + offsetX;
 				const {
 					minWidth,
 					maxHeight,
 					maxWidth,
 					minHeight,
-				} = originSizeRef.current
+				} = originSizeRef.current;
 				if (
 					offsetX !== 0 &&
 					(minWidth === null || widthResult >= minWidth) &&
 					(maxWidth === null || widthResult <= maxWidth)
 				) {
-					sizeResultRef.current.width = `${widthResult}px`
-					selectNodeRef.current!.style.width = `${widthResult}px`
+					sizeResultRef.current.width = `${widthResult}px`;
+					selectNodeRef.current!.style.width = `${widthResult}px`;
 				}
 				if (
 					offsetY !== 0 &&
 					(minHeight === null || heightResult >= minHeight) &&
 					(maxHeight === null || heightResult <= maxHeight)
 				) {
-					sizeResultRef.current.height = `${heightResult}px`
-					selectNodeRef.current!.style.height = `${heightResult}px`
+					sizeResultRef.current.height = `${heightResult}px`;
+					selectNodeRef.current!.style.height = `${heightResult}px`;
 				}
-				showSize(sizeResultRef.current.width, sizeResultRef.current.height)
-				setSelectedBorder('pointer-events: auto; transition:none;')
-				changeBaseboard()
+				showSize(sizeResultRef.current.width, sizeResultRef.current.height);
+				setSelectedBorder('pointer-events: auto; transition:none;');
+				changeBaseboard();
 			}
 		},
 		[originSizeRef.current, sizeResultRef.current, selectNodeRef.current],
-	)
+	);
 
 	const showSize = useCallback(
 		(width?: string, height?: string) => {
 			if (width) {
-				widthRef.current.innerHTML = width
+				widthRef.current.innerHTML = width;
 			}
 			if (height) {
-				heightRef.current.innerHTML = height
+				heightRef.current.innerHTML = height;
 			}
 		},
 		[heightRef.current, widthRef.current],
-	)
+	);
 
 	const setSelectedBorder = (css = '') => {
 		if (selectNodeRef.current) {
@@ -242,21 +242,21 @@ function Resize() {
 				selectNodeRef.current,
 				iframe,
 				isModal,
-			)
+			);
 			if (top <= 14 && isOut) {
-				setIsOut(false)
+				setIsOut(false);
 			} else if (top > 14 && !isOut) {
-				setIsOut(true)
+				setIsOut(true);
 			}
 			resizeRef.current.style.cssText =
-				generateCSS(left, top, width, height) + css
-			setPosition([resizeRef.current], isModal)
+				generateCSS(left, top, width, height) + css;
+			setPosition([resizeRef.current], isModal);
 		}
-	}
+	};
 	const onResizeStart = useCallback(
 		function (event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {
 			if (event.nativeEvent && iframe) {
-				const { contentWindow } = iframe!
+				const { contentWindow } = iframe!;
 				const {
 					width,
 					height,
@@ -264,7 +264,7 @@ function Resize() {
 					minHeight,
 					maxWidth,
 					maxHeight,
-				} = contentWindow!.getComputedStyle(selectNodeRef.current!)
+				} = contentWindow!.getComputedStyle(selectNodeRef.current!);
 				originSizeRef.current = {
 					x: event.nativeEvent.clientX,
 					y: event.nativeEvent.clientY,
@@ -275,8 +275,8 @@ function Resize() {
 					minHeight: formatUnit(minHeight),
 					maxWidth: formatUnit(maxWidth),
 					maxHeight: formatUnit(maxHeight),
-				}
-				changeBaseboard()
+				};
+				changeBaseboard();
 			}
 		},
 		[
@@ -286,27 +286,27 @@ function Resize() {
 			baseboardRef.current,
 			originSizeRef.current,
 		],
-	)
+	);
 
 	const changeWidth = useCallback(() => {
-		widthRef.current.contentEditable = 'true'
-	}, [widthRef.current])
+		widthRef.current.contentEditable = 'true';
+	}, [widthRef.current]);
 	const changeHeight = useCallback(() => {
-		heightRef.current.contentEditable = 'true'
-	}, [heightRef.current])
+		heightRef.current.contentEditable = 'true';
+	}, [heightRef.current]);
 
 	/**
 	 * 更新组件宽高
 	 */
 	const updateSize = useCallback(() => {
-		const width = widthRef.current.innerHTML
-		const height = heightRef.current.innerHTML
-		resizeChange({ width, height })
-		widthRef.current.contentEditable = 'false'
-		heightRef.current.contentEditable = 'false'
-	}, [widthRef.current, heightRef.current])
+		const width = widthRef.current.innerHTML;
+		const height = heightRef.current.innerHTML;
+		resizeChange({ width, height });
+		widthRef.current.contentEditable = 'false';
+		heightRef.current.contentEditable = 'false';
+	}, [widthRef.current, heightRef.current]);
 
-	setSelectedBorder()
+	setSelectedBorder();
 
 	return (
 		<>
@@ -344,7 +344,7 @@ function Resize() {
 			</div>
 			<div ref={baseboardRef} className={styles['baseboard']} />
 		</>
-	)
+	);
 }
 
-export default memo(Resize)
+export default memo(Resize);

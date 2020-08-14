@@ -1,4 +1,4 @@
-import { createConfig } from '../../scripts/create.rollup.config'
-import pakg from './package.json'
+import pakg from './package.json';
+import { createConfig } from '../../scripts/create.rollup.config';
 
-export default createConfig(pakg, 'brickd-redux-bridge')
+export default createConfig(pakg, 'brickd-redux-bridge');

@@ -1,21 +1,21 @@
-import React, { createElement, forwardRef, useEffect, useState } from 'react'
-import { Form, Tooltip } from 'antd'
-import styles from '../index.less'
-import EnumComponent from './EnumComponent'
-import isArray from 'lodash/isArray'
-import isNumber from 'lodash/isNumber'
-import isString from 'lodash/isString'
-import isObject from 'lodash/isObject'
-import isBoolean from 'lodash/isBoolean'
-import isEmpty from 'lodash/isEmpty'
-import isEqual from 'lodash/isEqual'
-import get from 'lodash/get'
-import keys from 'lodash/keys'
-import { FormComponentProps } from 'antd/lib/form'
-import { PROPS_TYPES, PropsConfigType } from '@brickd/react'
-import { TYPES_TO_COMPONENT } from '../index'
+import React, { createElement, forwardRef, useEffect, useState } from 'react';
+import { Form, Tooltip } from 'antd';
+import isArray from 'lodash/isArray';
+import isNumber from 'lodash/isNumber';
+import isString from 'lodash/isString';
+import isObject from 'lodash/isObject';
+import isBoolean from 'lodash/isBoolean';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
+import get from 'lodash/get';
+import keys from 'lodash/keys';
+import { FormComponentProps } from 'antd/lib/form';
+import { PROPS_TYPES, PropsConfigType } from '@brickd/react';
+import EnumComponent from './EnumComponent';
+import styles from '../index.less';
+import { TYPES_TO_COMPONENT } from '../index';
 
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 interface SwitchMultiTypesPropsType extends FormComponentProps {
 	types: PROPS_TYPES[]
@@ -41,45 +41,45 @@ function SwitchMultiTypes(props: SwitchMultiTypesPropsType, ref: any) {
 		tip,
 		label,
 		componentProps,
-	} = props
-	const [type, setType] = useState(types[0])
-	const value = getFieldValue(field)
+	} = props;
+	const [type, setType] = useState(types[0]);
+	const value = getFieldValue(field);
 	useEffect(() => {
-		let type = null
+		let type = null;
 		if (isArray(value)) {
-			let firstValue = value[0]
+			const firstValue = value[0];
 			if (isNumber(firstValue)) {
-				type = PROPS_TYPES.numberArray
+				type = PROPS_TYPES.numberArray;
 			} else if (isString(firstValue)) {
-				type = PROPS_TYPES.stringArray
+				type = PROPS_TYPES.stringArray;
 			} else if (isObject(firstValue)) {
-				type = PROPS_TYPES.objectArray
+				type = PROPS_TYPES.objectArray;
 			}
 		} else if (isObject(value)) {
 			if (
 				isEmpty(childPropsConfig) ||
 				!isEqual(keys(value), keys(childPropsConfig))
 			) {
-				type = PROPS_TYPES.json
+				type = PROPS_TYPES.json;
 			} else {
-				type = PROPS_TYPES.object
+				type = PROPS_TYPES.object;
 			}
 		} else if (isNumber(value)) {
-			type = PROPS_TYPES.number
+			type = PROPS_TYPES.number;
 		} else if (isString(value)) {
-			type = PROPS_TYPES.string
+			type = PROPS_TYPES.string;
 		} else if (isBoolean(value)) {
-			type = PROPS_TYPES.boolean
+			type = PROPS_TYPES.boolean;
 		}
-		type && setType(type)
-	}, [])
+		type && setType(type);
+	}, []);
 
 	useEffect(() => {
-		setFieldsValue({ [field]: value })
-	}, [type])
+		setFieldsValue({ [field]: value });
+	}, [type]);
 
 	if (type === PROPS_TYPES.boolean) {
-		extraObj.valuePropName = 'checked'
+		extraObj.valuePropName = 'checked';
 	}
 	return (
 		<FormItem
@@ -106,7 +106,7 @@ function SwitchMultiTypes(props: SwitchMultiTypesPropsType, ref: any) {
 				}),
 			)}
 		</FormItem>
-	)
+	);
 }
 
-export default forwardRef(SwitchMultiTypes)
+export default forwardRef(SwitchMultiTypes);

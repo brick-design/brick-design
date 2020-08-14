@@ -29,4 +29,4 @@ export default {
 	resetStyles: 'resetStyles',
 	clearDropTarget: 'clearDropTarget',
 	clearDragSource: 'clearDragSource',
-}
+};

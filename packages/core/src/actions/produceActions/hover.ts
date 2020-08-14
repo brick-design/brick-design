@@ -1,8 +1,8 @@
-import ACTION_TYPES from '../actionTypes'
-import { createActions } from '../../store'
+import ACTION_TYPES from '../actionTypes';
+import { createActions } from '../../store';
 
 export const clearHovered = () =>
-	createActions({ type: ACTION_TYPES.clearHovered })
+	createActions({ type: ACTION_TYPES.clearHovered });
 export type OverTargetPayload = {
 	hoverKey: string
 }
@@ -10,4 +10,4 @@ export const overTarget = (payload: OverTargetPayload) =>
 	createActions({
 		type: ACTION_TYPES.overTarget,
 		payload,
-	})
+	});

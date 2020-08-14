@@ -1,4 +1,4 @@
-import { ComponentConfigTypes } from './ComponentConfigTypes'
+import { ComponentConfigTypes } from './ComponentConfigTypes';
 
 /**
  * 属性类型定义

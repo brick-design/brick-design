@@ -1,8 +1,5 @@
-import React, { memo, useEffect, useState } from 'react'
-import { get, isArray, isEmpty, isEqual, map } from 'lodash'
-import SortTree from './SortTree'
-import styles from './index.less'
-import { isEqualKey, usePrevious } from '../../utils'
+import React, { memo, useEffect, useState } from 'react';
+import { get, isArray, isEmpty, isEqual, map } from 'lodash';
 import {
 	ChildNodesType,
 	clearDropTarget,
@@ -14,12 +11,15 @@ import {
 	SelectedInfoBaseType,
 	SelectedInfoType,
 	STATE_PROPS,
-} from '@brickd/core'
-import { useSelector } from '@brickd/redux-bridge'
+} from '@brickd/core';
+import { useSelector } from '@brickd/redux-bridge';
+import Collapse, { Panel } from 'rc-collapse';
+import SortTree from './SortTree';
+import styles from './index.less';
+import Header from './components/Header';
+import { isEqualKey, usePrevious } from '../../utils';
 
-import { getDropTargetInfo } from '../../common/events'
-import Collapse, { Panel } from 'rc-collapse'
-import Header from './components/Header'
+import { getDropTargetInfo } from '../../common/events';
 
 function controlUpdate(
 	prevState: HookState,
@@ -28,16 +28,16 @@ function controlUpdate(
 ) {
 	if (prevState.componentConfigs[key] === nextState.componentConfigs[key]) {
 		const { selectedKey: prevSelectedKey, propName: prevPropName } =
-			prevState.selectedInfo || {}
-		const { selectedKey, propName } = nextState.selectedInfo || {}
+			prevState.selectedInfo || {};
+		const { selectedKey, propName } = nextState.selectedInfo || {};
 		return (
 			(prevSelectedKey == key &&
 				(selectedKey !== key ||
 					(selectedKey === key && prevPropName !== propName))) ||
 			(prevSelectedKey !== key && selectedKey === key)
-		)
+		);
 	}
-	return true
+	return true;
 }
 
 interface SortItemPropsType {
@@ -59,7 +59,7 @@ function renderSortTree(
 	nodePropsConfig?: NodePropsConfigType,
 	childNodes?: ChildNodesType,
 ) {
-	const { specialProps, propName, nodeProps } = props
+	const { specialProps, propName, nodeProps } = props;
 
 	if (isArray(childNodes) || (!childNodes && !nodePropsConfig)) {
 		return (
@@ -71,7 +71,7 @@ function renderSortTree(
 				nodeProps={nodeProps}
 				componentName={componentName}
 			/>
-		)
+		);
 	}
 
 	/**
@@ -87,8 +87,8 @@ function renderSortTree(
 				key={propName}
 				nodeProps={nodeProps}
 			/>
-		)
-	})
+		);
+	});
 }
 
 /**
@@ -102,10 +102,10 @@ export function selectedStatus(
 	hoverKey: string | null,
 	selectedKey?: string,
 ) {
-	const isSelected = isEqualKey(key, selectedKey)
+	const isSelected = isEqualKey(key, selectedKey);
 	/** 是否hover到当前组件 */
-	const isHovered = isEqualKey(key, hoverKey)
-	return { isHovered, isSelected }
+	const isHovered = isEqualKey(key, hoverKey);
+	return { isHovered, isSelected };
 }
 
 export type HookState = {
@@ -113,7 +113,7 @@ export type HookState = {
 	componentConfigs: ComponentConfigsType
 }
 
-export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'componentConfigs']
+export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'componentConfigs'];
 
 function SortItem(props: SortItemPropsType) {
 	const {
@@ -122,49 +122,49 @@ function SortItem(props: SortItemPropsType) {
 		isFold,
 		propName,
 		propChildNodes,
-	} = props
+	} = props;
 
 	const { selectedInfo, componentConfigs } = useSelector(
 		stateSelector,
 		(prevState, nextState) => controlUpdate(prevState, nextState, key),
-	)
-	const { domTreeKeys: nextSDTKeys } = selectedInfo || {}
+	);
+	const { domTreeKeys: nextSDTKeys } = selectedInfo || {};
 
-	const vDom = componentConfigs[key]
-	const { childNodes: vDomChildNodes, componentName } = vDom || {}
+	const vDom = componentConfigs[key];
+	const { childNodes: vDomChildNodes, componentName } = vDom || {};
 	const childNodes: ChildNodesType | undefined =
-		propChildNodes || vDomChildNodes
-	const [isUnfold, setIsUnfold] = useState(isEmpty(childNodes))
+		propChildNodes || vDomChildNodes;
+	const [isUnfold, setIsUnfold] = useState(isEmpty(childNodes));
 	// 保存子组件dom
-	const prevChildNodes = usePrevious<ChildNodesType>(childNodes)
+	const prevChildNodes = usePrevious<ChildNodesType>(childNodes);
 
-	const prevSDTKeys = usePrevious(nextSDTKeys)
+	const prevSDTKeys = usePrevious(nextSDTKeys);
 
 	//新添加组件展开
 	useEffect(() => {
 		if (!isUnfold &&prevChildNodes&& !isEqual(prevChildNodes, childNodes)) {
-			setIsUnfold(true)
+			setIsUnfold(true);
 		}
-	}, [prevChildNodes, childNodes, isUnfold])
+	}, [prevChildNodes, childNodes, isUnfold]);
 
 	// 父节点折叠当前节点是展开的就折叠当前节点
 	useEffect(() => {
-		if (isFold && isUnfold) setIsUnfold(false)
-	}, [isFold, isUnfold])
+		if (isFold && isUnfold) setIsUnfold(false);
+	}, [isFold, isUnfold]);
 
-	if (!componentName) return null
+	if (!componentName) return null;
 	if (
 		!isEqual(prevSDTKeys, nextSDTKeys) &&
 		nextSDTKeys &&
 		!isUnfold &&
 		nextSDTKeys.includes(key)
 	) {
-		setIsUnfold(true)
+		setIsUnfold(true);
 	}
 
-	const isContainerComponent = isContainer(componentName)
-	if(!componentName) return  null
-	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName)
+	const isContainerComponent = isContainer(componentName);
+	if(!componentName) return  null;
+	const { fatherNodesRule, nodePropsConfig } = getComponentConfig(componentName);
 	return (
 		<div
 			className={styles['sort-item']}
@@ -174,13 +174,13 @@ function SortItem(props: SortItemPropsType) {
 			data-name={componentName}
 			onDragEnter={(e: any) => {
 				//如果目标组件为非容器组件就重置目标容器信息
-				if (!isContainerComponent) return clearDropTarget()
-				let propNameResult = propName
+				if (!isContainerComponent) return clearDropTarget();
+				let propNameResult = propName;
 				//如果当前目标是多属性节点容器，获取容器的最后一属性节点作为目标容器
 				if (!propNameResult && nodePropsConfig) {
-					propNameResult = Object.keys(nodePropsConfig).pop()
+					propNameResult = Object.keys(nodePropsConfig).pop();
 				}
-				getDropTargetInfo(e, domTreeKeys, key, propNameResult)
+				getDropTargetInfo(e, domTreeKeys, key, propNameResult);
 			}}
 		>
 			<Header
@@ -209,7 +209,7 @@ function SortItem(props: SortItemPropsType) {
 				</Collapse>
 			)}
 		</div>
-	)
+	);
 }
 
-export default memo<SortItemPropsType>(SortItem)
+export default memo<SortItemPropsType>(SortItem);

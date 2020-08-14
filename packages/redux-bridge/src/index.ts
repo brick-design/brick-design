@@ -1,3 +1,3 @@
-export * from './hooks/useSelector'
-export * from './components/LegoProvider'
-export * from './configs'
+export * from './hooks/useSelector';
+export * from './components/LegoProvider';
+export * from './configs';

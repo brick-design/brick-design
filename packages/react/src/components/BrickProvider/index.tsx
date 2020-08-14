@@ -1,13 +1,13 @@
-import * as React from 'react'
-import { initFramework, LegoProvider, REDUX_BRIDGE } from '@brickd/redux-bridge'
+import * as React from 'react';
+import { initFramework, LegoProvider, REDUX_BRIDGE } from '@brickd/redux-bridge';
 import {
 	ConfigType,
 	createLegStore,
 	ReducerType,
 	StateType,
-} from '@brickd/core'
+} from '@brickd/core';
 
-initFramework(React)
+initFramework(React);
 
 interface BrickProviderType {
 	initState?: Partial<StateType>
@@ -17,11 +17,11 @@ interface BrickProviderType {
 }
 
 function BrickProvider(props: BrickProviderType) {
-	const { initState, config, customReducer, children } = props
+	const { initState, config, customReducer, children } = props;
 	if (!REDUX_BRIDGE.store) {
-		REDUX_BRIDGE.store = createLegStore(initState, config, customReducer)
+		REDUX_BRIDGE.store = createLegStore(initState, config, customReducer);
 	}
-	return <LegoProvider>{children}</LegoProvider>
+	return <LegoProvider>{children}</LegoProvider>;
 }
 
-export default React.memo(BrickProvider)
+export default React.memo(BrickProvider);

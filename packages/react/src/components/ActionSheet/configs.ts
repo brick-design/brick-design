@@ -1,7 +1,7 @@
-import { clearChildNodes, copyComponent, deleteComponent } from '@brickd/core'
-import deleteSvg from './svgs/delete.svg'
-import copySvg from './svgs/copy.svg'
-import clearSvg from './svgs/clear.svg'
+import { clearChildNodes, copyComponent, deleteComponent } from '@brickd/core';
+import deleteSvg from './svgs/delete.svg';
+import copySvg from './svgs/copy.svg';
+import clearSvg from './svgs/clear.svg';
 
 interface ActionSheetConfig {
 	icon: any
@@ -13,7 +13,7 @@ export const ACTIONS = {
 	delete: 'delete',
 	copy: 'copy',
 	clear: 'clear',
-}
+};
 const configs: ActionSheetConfig[] = [
 	{
 		type: ACTIONS.delete,
@@ -30,6 +30,6 @@ const configs: ActionSheetConfig[] = [
 		action: clearChildNodes,
 		icon: clearSvg,
 	},
-]
+];
 
-export default configs
+export default configs;

@@ -7,7 +7,7 @@ import {
 	overTarget,
 	selectComponent,
 	SelectedInfoBaseType,
-} from '@brickd/core'
+} from '@brickd/core';
 
 export function handleSelectedStatus(
 	event: Event | null,
@@ -15,11 +15,11 @@ export function handleSelectedStatus(
 	specialProps: SelectedInfoBaseType,
 	propName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation()
+	event && event.stopPropagation && event.stopPropagation();
 	if (isSelected) {
-		clearSelectedStatus()
+		clearSelectedStatus();
 	} else {
-		selectComponent({ ...specialProps, propName })
+		selectComponent({ ...specialProps, propName });
 	}
 }
 
@@ -30,13 +30,13 @@ export function handleSelectedStatus(
  * @param isSelected
  */
 export function onMouseOver(event: Event, key: string, isSelected: boolean) {
-	event && event.stopPropagation && event.stopPropagation()
+	event && event.stopPropagation && event.stopPropagation();
 	if (isSelected) {
-		clearHovered()
+		clearHovered();
 	} else {
 		overTarget({
 			hoverKey: key,
-		})
+		});
 	}
 }
 
@@ -53,13 +53,13 @@ export function getDropTargetInfo(
 	selectedKey: string,
 	propName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation()
+	event && event.stopPropagation && event.stopPropagation();
 
 	getDropTarget({
 		propName,
 		selectedKey,
 		domTreeKeys,
-	})
+	});
 }
 
 /**
@@ -75,21 +75,21 @@ export function onDragStart(
 	parentKey: string,
 	parentPropName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation()
+	event && event.stopPropagation && event.stopPropagation();
 	setTimeout(() => {
 		getDragSource({
 			dragKey,
 			parentKey,
 			parentPropName,
-		})
-	}, 0)
+		});
+	}, 0);
 }
 
 export function onDragover(e: any) {
-	e.preventDefault()
+	e.preventDefault();
 }
 
 export function onDrop(e: any) {
-	e.stopPropagation()
-	addComponent()
+	e.stopPropagation();
+	addComponent();
 }

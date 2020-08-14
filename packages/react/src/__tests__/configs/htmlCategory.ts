@@ -1,4 +1,4 @@
-import { CategoryType } from '@brickd/core'
+import { CategoryType } from '@brickd/core';
 
 export const htmlContainers: CategoryType = {
 	HTMLTag: {
@@ -11,7 +11,7 @@ export const htmlContainers: CategoryType = {
 	},
 	p: null,
 	h: null,
-}
+};
 
 export const htmlNonContainers: CategoryType = {
 	HTMLTag: {
@@ -27,4 +27,4 @@ export const htmlNonContainers: CategoryType = {
 			},
 		},
 	},
-}
+};

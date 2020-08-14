@@ -1,7 +1,7 @@
-import React, { forwardRef, memo, useEffect, useState } from 'react'
-import { Button, Col, Dropdown, Icon, Input, Row } from 'antd'
-import { ChromePicker } from 'react-color'
-import { propsAreEqual } from '../utils'
+import React, { forwardRef, memo, useEffect, useState } from 'react';
+import { Button, Col, Dropdown, Icon, Input, Row } from 'antd';
+import { ChromePicker } from 'react-color';
+import { propsAreEqual } from '../utils';
 
 interface StringComponentPropsType {
 	isFont: boolean
@@ -32,35 +32,35 @@ function StringComponent(props: StringComponentPropsType, ref: any) {
 		inputColProps = { span: 18 },
 		colorColProps = { span: 6 },
 		inputProps = {},
-	} = props
-	const [color, setColor] = useState(value)
+	} = props;
+	const [color, setColor] = useState(value);
 	useEffect(() => {
-		setColor(value)
-	}, [value])
+		setColor(value);
+	}, [value]);
 
 	useEffect(() => {
-		let timer = setTimeout(() => onChange && onChange(color), 100)
-		return () => clearTimeout(timer)
-	}, [color])
+		const timer = setTimeout(() => onChange && onChange(color), 100);
+		return () => clearTimeout(timer);
+	}, [color]);
 
 	function handleChangeColor(value: any) {
-		let color
+		let color;
 		if (value.target) {
-			color = value.target.value
+			color = value.target.value;
 		} else {
 			const {
 				rgb: { r, g, b, a },
 				hex,
-			} = value
-			color = colorType === 'hex' ? hex : `rgba(${r},${g},${b},${a})`
+			} = value;
+			color = colorType === 'hex' ? hex : `rgba(${r},${g},${b},${a})`;
 		}
-		setColor(color)
+		setColor(color);
 	}
 
-	const childNode = children || (isFont && <Icon type={'font-colors'} />)
+	const childNode = children || (isFont && <Icon type={'font-colors'} />);
 	const colorStyle = childNode
 		? { color, fontSize: 16 }
-		: { backgroundColor: color }
+		: { backgroundColor: color };
 	return (
 		<Row {...rowProps}>
 			{isShowInput && (
@@ -92,10 +92,10 @@ function StringComponent(props: StringComponentPropsType, ref: any) {
 				</Col>
 			)}
 		</Row>
-	)
+	);
 }
 
 export default memo<StringComponentPropsType>(
 	forwardRef(StringComponent),
 	propsAreEqual,
-)
+);

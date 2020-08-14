@@ -2,7 +2,7 @@ import {
 	ComponentConfigTypes,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '../../../types'
+} from '../../../types';
 
 const div: ComponentConfigTypes = {
 	fatherNodesRule: ['div.children'],
@@ -18,6 +18,6 @@ const div: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default div
+export default div;

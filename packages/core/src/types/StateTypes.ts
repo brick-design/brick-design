@@ -1,5 +1,5 @@
-import { PropInfoType, PropsConfigType } from './ComponentConfigTypes'
-import { Action } from 'redux'
+import { Action } from 'redux';
+import { PropInfoType, PropsConfigType } from './ComponentConfigTypes';
 
 export type PropsNodeType = {
 	[propName: string]: string[] | undefined

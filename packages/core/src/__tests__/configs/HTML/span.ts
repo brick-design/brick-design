@@ -2,7 +2,7 @@ import {
 	ComponentConfigTypes,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '../../../types'
+} from '../../../types';
 
 const span: ComponentConfigTypes = {
 	nodePropsConfig: {
@@ -21,6 +21,6 @@ const span: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default span
+export default span;

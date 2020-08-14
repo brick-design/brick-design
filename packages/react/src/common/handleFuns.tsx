@@ -1,5 +1,4 @@
-import React, { AllHTMLAttributes, createElement } from 'react'
-import styles from './style.less'
+import React, { AllHTMLAttributes, createElement } from 'react';
 import {
 	ChildNodesType,
 	clearDragSource,
@@ -12,13 +11,14 @@ import {
 	PropsNodeType,
 	SelectedInfoBaseType,
 	STATE_PROPS,
-} from '@brickd/core'
-import { handleSelectedStatus, onDragStart, onMouseOver } from './events'
-import { each, isEmpty, isEqual, map } from 'lodash'
-import Container from '../warppers/Container'
-import NoneContainer from '../warppers/NoneContainer'
-import { selectClassTarget } from './constants'
-import { generateRequiredProps, getComponent, getIframe } from '../utils'
+} from '@brickd/core';
+import { each, isEmpty, isEqual, map } from 'lodash';
+import styles from './style.less';
+import { handleSelectedStatus, onDragStart, onMouseOver } from './events';
+import { selectClassTarget } from './constants';
+import Container from '../warppers/Container';
+import NoneContainer from '../warppers/NoneContainer';
+import { generateRequiredProps, getComponent, getIframe } from '../utils';
 
 /**
  * 处理样式
@@ -38,7 +38,7 @@ export function handlePropsClassName(
 ) {
 	return `${selectClassTarget + key} ${className} ${animateClass} ${
 		isDragTarget ? styles['forbid-event'] : styles['allow-event']
-	} ${isHidden && styles['hidden-component']}`
+	} ${isHidden && styles['hidden-component']}`;
 }
 
 export type DragAddStatusType = {
@@ -64,15 +64,15 @@ function renderNodes(
 	parentPropName?: string,
 	isOnlyNode?: boolean,
 ) {
-	const { dragKey, isDragAdd, isDragAddChild } = dragAddStatus
-	let { domTreeKeys } = specialProps
-	const parentKey = specialProps.key
+	const { dragKey, isDragAdd, isDragAddChild } = dragAddStatus;
+	let { domTreeKeys } = specialProps;
+	const parentKey = specialProps.key;
 	if (parentPropName) {
-		domTreeKeys = [...domTreeKeys, `${parentKey}${parentPropName}`]
+		domTreeKeys = [...domTreeKeys, `${parentKey}${parentPropName}`];
 	}
 	const resultChildNodes = map(childNodes, (key) => {
-		const { componentName } = componentConfigs[key] || {}
-		if (!componentName) return null
+		const { componentName } = componentConfigs[key] || {};
+		if (!componentName) return null;
 		/** 根据组件类型处理属性 */
 		const props = {
 			specialProps: {
@@ -81,7 +81,7 @@ function renderNodes(
 				parentKey,
 				parentPropName,
 			},
-		}
+		};
 		return isContainer(componentName) ? (
 			<Container
 				{...props}
@@ -94,44 +94,44 @@ function renderNodes(
 				isDragAddChild={isDragAddChild || (dragKey === key && isDragAdd)}
 				key={key}
 			/>
-		)
-	})
+		);
+	});
 	/** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
 	if (isOnlyNode) {
-		return resultChildNodes[0]
+		return resultChildNodes[0];
 	}
 
-	return resultChildNodes
+	return resultChildNodes;
 }
 
 function renderRequiredChildNodes(childNodesRule?: string[]) {
 	if (childNodesRule) {
-		const componentName = childNodesRule[0]
+		const componentName = childNodesRule[0];
 		return createElement(
 			getComponent(componentName),
 			generateRequiredProps(componentName),
-		)
+		);
 	} else {
-		return <div />
+		return <div />;
 	}
 }
 
 function handleRequiredChildNodes(componentName: string) {
 	const { isRequired, nodePropsConfig, childNodesRule } = getComponentConfig(
 		componentName,
-	)
-	const nodeProps: any = {}
+	);
+	const nodeProps: any = {};
 	if (isRequired) {
-		nodeProps.children = renderRequiredChildNodes(childNodesRule)
+		nodeProps.children = renderRequiredChildNodes(childNodesRule);
 	} else if (nodePropsConfig) {
 		each(nodePropsConfig, (propConfig, key) => {
-			const { isRequired, childNodesRule } = propConfig
+			const { isRequired, childNodesRule } = propConfig;
 			if (isRequired) {
-				nodeProps[key] = renderRequiredChildNodes(childNodesRule)
+				nodeProps[key] = renderRequiredChildNodes(childNodesRule);
 			}
-		})
+		});
 	}
-	return nodeProps
+	return nodeProps;
 }
 
 export function handleChildNodes(
@@ -142,18 +142,18 @@ export function handleChildNodes(
 	isDragAdd?: boolean,
 	isDragAddChild?: boolean,
 ) {
-	const nodeProps: any = {}
-	const { key: parentKey } = specialProps
-	const { componentName } = componentConfigs[parentKey]
+	const nodeProps: any = {};
+	const { key: parentKey } = specialProps;
+	const { componentName } = componentConfigs[parentKey];
 	if (isEmpty(children)) {
-		return handleRequiredChildNodes(componentName)
+		return handleRequiredChildNodes(componentName);
 	}
 	const dragAddStatus: DragAddStatusType = {
 		isDragAdd,
 		dragKey,
 		isDragAddChild,
-	}
-	const { nodePropsConfig, isOnlyNode } = getComponentConfig(componentName)
+	};
+	const { nodePropsConfig, isOnlyNode } = getComponentConfig(componentName);
 	if (Array.isArray(children)) {
 		nodeProps.children = renderNodes(
 			children,
@@ -162,17 +162,17 @@ export function handleChildNodes(
 			dragAddStatus,
 			undefined,
 			isOnlyNode,
-		)
+		);
 	} else {
 		each(children, (nodes, propName: string) => {
 			const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![
 				propName
-			]
+			];
 			if (isEmpty(nodes))
 				return (
 					isRequired &&
 					(nodeProps[propName] = renderRequiredChildNodes(childNodesRule))
-				)
+				);
 			nodeProps[propName] = renderNodes(
 				nodes,
 				specialProps,
@@ -180,11 +180,11 @@ export function handleChildNodes(
 				dragAddStatus,
 				propName,
 				isOnlyNode,
-			)
-		})
+			);
+		});
 	}
 
-	return nodeProps
+	return nodeProps;
 }
 
 /**
@@ -195,17 +195,17 @@ export function handleChildNodes(
 export function handleModalTypeContainer(
 	mirrorModalField: MirrorModalFieldType,
 ) {
-	const mountedProps: any = {}
-	const { displayPropName, mounted } = mirrorModalField
+	const mountedProps: any = {};
+	const { displayPropName, mounted } = mirrorModalField;
 	if (mounted) {
-		const { propName, type } = mounted
-		const iframe: any = getIframe()
-		const mountedNode = iframe.contentDocument.body
+		const { propName, type } = mounted;
+		const iframe: any = getIframe();
+		const mountedNode = iframe.contentDocument.body;
 		mountedProps[propName] =
-			type === PROPS_TYPES.function ? () => mountedNode : mountedNode
+			type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
 	}
 
-	return { displayPropName, mountedProps }
+	return { displayPropName, mountedProps };
 }
 
 /**
@@ -217,10 +217,10 @@ export function handleEvents(
 	isSelected: boolean,
 	childNodes?: ChildNodesType,
 ) {
-	const { key, parentKey, parentPropName } = specialProps
-	let propName: string | undefined
+	const { key, parentKey, parentPropName } = specialProps;
+	let propName: string | undefined;
 	if (childNodes && !Array.isArray(childNodes)) {
-		propName = Object.keys(childNodes as PropsNodeType)[0]
+		propName = Object.keys(childNodes as PropsNodeType)[0];
 	}
 	return {
 		onClick: (e: Event) =>
@@ -228,7 +228,7 @@ export function handleEvents(
 		onMouseOver: (e: Event) => onMouseOver(e, key, isSelected),
 		onDragStart: (e: Event) => onDragStart(e, key, parentKey!, parentPropName),
 		onDragEnd: () => clearDragSource(),
-	}
+	};
 }
 
 export type HookState = {
@@ -239,14 +239,14 @@ export type HookState = {
 export const stateSelector: STATE_PROPS[] = [
 	'componentConfigs',
 	'propsConfigSheet',
-]
+];
 
 export function controlUpdate(
 	prevState: HookState,
 	nextState: HookState,
 	key: string,
 ) {
-	return prevState.componentConfigs[key] !== nextState.componentConfigs[key]
+	return prevState.componentConfigs[key] !== nextState.componentConfigs[key];
 }
 
 export interface CommonPropsType extends AllHTMLAttributes<any> {
@@ -264,11 +264,11 @@ export function propAreEqual(
 		specialProps: prevSpecialProps,
 		isDragAddChild: prevIsDragAddChild,
 		...prevRest
-	} = prevProps
-	const { specialProps, isDragAddChild, ...rest } = nextProps
+	} = prevProps;
+	const { specialProps, isDragAddChild, ...rest } = nextProps;
 	return (
 		isEqual(prevRest, rest) &&
 		isEqual(prevSpecialProps, specialProps) &&
 		prevIsDragAddChild === isDragAddChild
-	)
+	);
 }

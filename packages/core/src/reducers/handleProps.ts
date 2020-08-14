@@ -1,18 +1,18 @@
-import { get, merge, update } from 'lodash'
+import { get, merge, update } from 'lodash';
+import produce from 'immer';
 import {
 	getComponentConfig,
 	getFieldInPropsLocation,
 	restObject,
 	warn,
-} from '../utils'
-import { PropsConfigSheetALL, StateType } from '../types'
-import produce from 'immer'
+} from '../utils';
+import { PropsConfigSheetALL, StateType } from '../types';
 
 import {
 	AddPropsConfigPayload,
 	ChangePropsPayload,
 	DeletePropsConfigPayload,
-} from '../actions'
+} from '../actions';
 
 /**
  * 添加属性配置
@@ -24,66 +24,66 @@ export function addPropsConfig(
 	state: StateType,
 	payload: AddPropsConfigPayload,
 ): StateType {
-	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state
-	if (!selectedInfo) return state
+	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state;
+	if (!selectedInfo) return state;
 	const {
 		newPropField,
 		fatherFieldLocation,
 		childPropsConfig,
 		propType,
-	} = payload
-	const { selectedKey } = selectedInfo
-	let isAdd = true
-	let addPropsConfig: PropsConfigSheetALL = propsConfigSheet[selectedKey] || {}
+	} = payload;
+	const { selectedKey } = selectedInfo;
+	let isAdd = true;
+	let addPropsConfig: PropsConfigSheetALL = propsConfigSheet[selectedKey] || {};
 
 	addPropsConfig = produce(addPropsConfig, (oldAddPropsConfig) => {
-		const msg = `${newPropField}:This property already exists`
+		const msg = `${newPropField}:This property already exists`;
 		const newPropFieldConfig = {
 			type: propType,
 			isAdd,
-		}
+		};
 		if (fatherFieldLocation) {
 			update(oldAddPropsConfig, fatherFieldLocation, (propsContent: any) => {
 				// 对象数组 添加一个对象时的逻辑
-				if (!newPropField) return childPropsConfig
-				if (!propsContent) propsContent = {}
+				if (!newPropField) return childPropsConfig;
+				if (!propsContent) propsContent = {};
 				if (propsContent[newPropField]) {
-					isAdd = false
-					warn(msg)
+					isAdd = false;
+					warn(msg);
 				} else {
-					propsContent[newPropField] = newPropFieldConfig
+					propsContent[newPropField] = newPropFieldConfig;
 				}
-				return propsContent
-			})
+				return propsContent;
+			});
 		} else if (oldAddPropsConfig[newPropField!]) {
-			isAdd = false
-			warn(msg)
+			isAdd = false;
+			warn(msg);
 		} else {
-			oldAddPropsConfig[newPropField!] = newPropFieldConfig
+			oldAddPropsConfig[newPropField!] = newPropFieldConfig;
 		}
-	})
+	});
 
-	if (!isAdd) return state
+	if (!isAdd) return state;
 	const { propsConfig } = getComponentConfig(
 		componentConfigs[selectedKey].componentName,
-	)
+	);
 
-	undo.push({ selectedInfo, propsConfigSheet })
-	redo.length = 0
+	undo.push({ selectedInfo, propsConfigSheet });
+	redo.length = 0;
 	return {
 		...state,
 		selectedInfo: {
 			...selectedInfo,
 			propsConfig: produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, addPropsConfig)
+				merge(oldPropsConfig, addPropsConfig);
 			}),
 		},
 		propsConfigSheet: produce(propsConfigSheet, (oldPropsConfigSheet) => {
-			oldPropsConfigSheet[selectedKey] = addPropsConfig
+			oldPropsConfigSheet[selectedKey] = addPropsConfig;
 		}),
 		undo,
 		redo,
-	}
+	};
 }
 
 /**
@@ -96,51 +96,51 @@ export function deletePropsConfig(
 	state: StateType,
 	payload: DeletePropsConfigPayload,
 ): StateType {
-	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state
-	if (!selectedInfo) return state
-	const { fatherFieldLocation, field } = payload
-	const { selectedKey } = selectedInfo
+	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state;
+	if (!selectedInfo) return state;
+	const { fatherFieldLocation, field } = payload;
+	const { selectedKey } = selectedInfo;
 
-	const fieldInPropsLocation = getFieldInPropsLocation(fatherFieldLocation)
-	const addPropsConfig = propsConfigSheet[selectedKey]
+	const fieldInPropsLocation = getFieldInPropsLocation(fatherFieldLocation);
+	const addPropsConfig = propsConfigSheet[selectedKey];
 	const newAddPropsConfig = produce(addPropsConfig, (oldAddPropsConfig) => {
 		if (fatherFieldLocation) {
 			update(oldAddPropsConfig, fatherFieldLocation, (prevPropsConfig) => {
-				return restObject(prevPropsConfig, field)
-			})
+				return restObject(prevPropsConfig, field);
+			});
 		} else {
-			return restObject(oldAddPropsConfig, field)
+			return restObject(oldAddPropsConfig, field);
 		}
-	})
+	});
 	const { propsConfig } = getComponentConfig(
 		componentConfigs[selectedKey].componentName,
-	)
-	undo.push({ selectedInfo, propsConfigSheet, componentConfigs })
-	redo.length = 0
+	);
+	undo.push({ selectedInfo, propsConfigSheet, componentConfigs });
+	redo.length = 0;
 	return {
 		...state,
 		componentConfigs: produce(componentConfigs, (oldConfig) => {
 			const fieldPath =
-				fieldInPropsLocation[0] !== '' ? fieldInPropsLocation : []
-			const paths = [selectedKey, 'props', ...fieldPath]
+				fieldInPropsLocation[0] !== '' ? fieldInPropsLocation : [];
+			const paths = [selectedKey, 'props', ...fieldPath];
 			if (get(oldConfig, [...paths, field]) !== undefined) {
 				update(oldConfig, paths, (prevProps) => {
-					return restObject(prevProps, field)
-				})
+					return restObject(prevProps, field);
+				});
 			}
 		}),
 		propsConfigSheet: produce(propsConfigSheet, (oldPropsConfigSheet) => {
-			oldPropsConfigSheet[selectedKey] = newAddPropsConfig
+			oldPropsConfigSheet[selectedKey] = newAddPropsConfig;
 		}),
 		selectedInfo: {
 			...selectedInfo,
 			propsConfig: produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, newAddPropsConfig)
+				merge(oldPropsConfig, newAddPropsConfig);
 			}),
 		},
 		undo,
 		redo,
-	}
+	};
 }
 
 /**
@@ -153,25 +153,25 @@ export function changeProps(
 	state: StateType,
 	payload: ChangePropsPayload,
 ): StateType {
-	const { componentConfigs, selectedInfo, undo, redo } = state
-	if (!selectedInfo) return state
-	const { props } = payload
-	const { selectedKey } = selectedInfo
-	undo.push({ componentConfigs })
-	redo.length = 0
+	const { componentConfigs, selectedInfo, undo, redo } = state;
+	if (!selectedInfo) return state;
+	const { props } = payload;
+	const { selectedKey } = selectedInfo;
+	undo.push({ componentConfigs });
+	redo.length = 0;
 	return {
 		...state,
 		componentConfigs: produce(componentConfigs!, (oldConfigs) => {
-			const style = get(oldConfigs, [selectedKey, 'props', 'style'])
+			const style = get(oldConfigs, [selectedKey, 'props', 'style']);
 			if (style) {
-				oldConfigs[selectedKey].props = { ...props, style }
+				oldConfigs[selectedKey].props = { ...props, style };
 			} else {
-				oldConfigs[selectedKey].props = props
+				oldConfigs[selectedKey].props = props;
 			}
 		}),
 		undo,
 		redo,
-	}
+	};
 }
 
 /**
@@ -179,22 +179,22 @@ export function changeProps(
  * @param state
  */
 export function resetProps(state: StateType): StateType {
-	const { selectedInfo, componentConfigs, undo, redo } = state
-	if (!selectedInfo) return state
-	const { selectedKey, props } = selectedInfo
-	undo.push({ componentConfigs })
-	redo.length = 0
+	const { selectedInfo, componentConfigs, undo, redo } = state;
+	if (!selectedInfo) return state;
+	const { selectedKey, props } = selectedInfo;
+	undo.push({ componentConfigs });
+	redo.length = 0;
 	return {
 		...state,
 		componentConfigs: produce(componentConfigs, (oldConfigs) => {
-			const style = get(oldConfigs, [selectedKey, 'props', 'style'])
+			const style = get(oldConfigs, [selectedKey, 'props', 'style']);
 			if (style) {
-				oldConfigs[selectedKey].props = { ...props, style }
+				oldConfigs[selectedKey].props = { ...props, style };
 			} else {
-				oldConfigs[selectedKey].props = props
+				oldConfigs[selectedKey].props = props;
 			}
 		}),
 		undo,
 		redo,
-	}
+	};
 }

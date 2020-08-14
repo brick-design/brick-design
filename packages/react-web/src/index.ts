@@ -1,5 +1,5 @@
-import { PROPS_TYPES } from '@brickd/react'
-import { InputNumber, Switch } from 'antd'
+import { PROPS_TYPES } from '@brickd/react';
+import { InputNumber, Switch } from 'antd';
 import {
 	EnumComponent,
 	FunctionComponent,
@@ -9,10 +9,10 @@ import {
 	ObjectComponent,
 	StringArray,
 	StringComponent,
-} from './PropComponent'
+} from './PropComponent';
 
-export { default as BrickPreview } from './BrickPreview'
-export * from './PropComponent'
+export { default as BrickPreview } from './BrickPreview';
+export * from './PropComponent';
 
 export const TYPES_TO_COMPONENT: any = {
 	[PROPS_TYPES.object]: ObjectComponent,
@@ -25,4 +25,4 @@ export const TYPES_TO_COMPONENT: any = {
 	[PROPS_TYPES.json]: JsonTextArea,
 	[PROPS_TYPES.boolean]: Switch,
 	[PROPS_TYPES.number]: InputNumber,
-}
+};

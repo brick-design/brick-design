@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import {
 	each,
 	get,
@@ -6,33 +7,32 @@ import {
 	isObject,
 	isUndefined,
 	keys,
-} from 'lodash'
+} from 'lodash';
 import {
 	ComponentConfigsType,
 	getComponentConfig,
 	LEGO_BRIDGE,
 	PROPS_TYPES,
-} from '@brickd/core'
-import { useEffect, useRef } from 'react'
-import { selectClassTarget } from '../common/constants'
+} from '@brickd/core';
+import { selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
 	null: null,
-}
+};
 
 export const formatSpecialProps = (props: any, propsConfig: any) => {
-	const nextProps = props
+	const nextProps = props;
 	each(props, (v, k) => {
 		if (get(propsConfig, k)) {
 			if (!isObject(v)) {
 				if (SPECIAL_STRING_CONSTANTS[v] !== undefined) {
-					nextProps[k] = SPECIAL_STRING_CONSTANTS[v]
+					nextProps[k] = SPECIAL_STRING_CONSTANTS[v];
 				} else if (propsConfig[k].type === PROPS_TYPES.function) {
-					const funcTemplate = get(propsConfig, `${k}.placeholder`)
+					const funcTemplate = get(propsConfig, `${k}.placeholder`);
 					if (funcTemplate) {
-						nextProps[k] = () => eval(funcTemplate)
+						nextProps[k] = () => eval(funcTemplate);
 					} else {
-						nextProps[k] = () => void 0
+						nextProps[k] = () => void 0;
 					}
 				}
 			} else if (
@@ -40,21 +40,21 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
 				!isEmpty(propsConfig[k].childPropsConfig) &&
 				isEqual(keys(v), keys(propsConfig[k].childPropsConfig))
 			) {
-				formatSpecialProps(v, propsConfig[k].childPropsConfig)
+				formatSpecialProps(v, propsConfig[k].childPropsConfig);
 			}
 		} else if (isUndefined(v)) {
-			delete nextProps[k]
+			delete nextProps[k];
 		}
-	})
-	return nextProps
-}
+	});
+	return nextProps;
+};
 
 export function usePrevious<T>(value: any) {
-	const ref = useRef<T>()
+	const ref = useRef<T>();
 	useEffect(() => {
-		ref.current = value
-	})
-	return ref.current
+		ref.current = value;
+	});
+	return ref.current;
 }
 
 export const iframeSrcDoc = `<!DOCTYPE html>
@@ -64,29 +64,29 @@ export const iframeSrcDoc = `<!DOCTYPE html>
 <div id="dnd-container" style="width: 100%;height: 100%"></div>
 </body>
 </html>
-`
+`;
 
 export const isEqualKey = (key: string, selectKey?: string | null) => {
-	if (!selectKey) return false
-	return selectKey.includes(key) && parseInt(selectKey) === parseInt(key)
-}
+	if (!selectKey) return false;
+	return selectKey.includes(key) && parseInt(selectKey) === parseInt(key);
+};
 
 export const getIframe = (): HTMLIFrameElement => {
-	return document.getElementById('dnd-iframe') as HTMLIFrameElement
-}
+	return document.getElementById('dnd-iframe') as HTMLIFrameElement;
+};
 
 export const getComponent = (componentName: string) =>
-	get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName)
+	get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName);
 
 export function formatUnit(target: string | null) {
 	if (target) {
-		const result = target.match(/\d+/)
+		const result = target.match(/\d+/);
 		if (result) {
-			return Number.parseInt(result[0])
+			return Number.parseInt(result[0]);
 		}
 	}
 
-	return null
+	return null;
 }
 
 export const getSelectedNode = (
@@ -94,12 +94,12 @@ export const getSelectedNode = (
 	iframe?: HTMLIFrameElement,
 ): HTMLElement | undefined => {
 	if (iframe && key) {
-		const { contentDocument } = iframe
+		const { contentDocument } = iframe;
 		return contentDocument!.getElementsByClassName(
 			selectClassTarget + parseInt(key),
-		)[0] as HTMLElement
+		)[0] as HTMLElement;
 	}
-}
+};
 
 export function generateCSS(
 	left: number,
@@ -113,7 +113,7 @@ export function generateCSS(
     display:flex;
     left:${left}px;
     top:${top}px;
-  `
+  `;
 }
 
 export function getElementInfo(
@@ -121,14 +121,14 @@ export function getElementInfo(
 	iframe: HTMLIFrameElement,
 	isModal?: boolean,
 ) {
-	const { contentWindow } = iframe
-	const { scrollX, scrollY } = contentWindow
-	const { width, height, left, top } = element.getBoundingClientRect()
-	let newLeft = left
-	let newTop = top
+	const { contentWindow } = iframe;
+	const { scrollX, scrollY } = contentWindow;
+	const { width, height, left, top } = element.getBoundingClientRect();
+	let newLeft = left;
+	let newTop = top;
 	if (!isModal) {
-		newLeft += scrollX
-		newTop += scrollY
+		newLeft += scrollX;
+		newTop += scrollY;
 	}
 	return {
 		width,
@@ -137,7 +137,7 @@ export function getElementInfo(
 		top: newTop,
 		bottom: newTop + height,
 		right: newLeft + width,
-	}
+	};
 }
 
 export function getIsModalChild(
@@ -147,28 +147,28 @@ export function getIsModalChild(
 	if (domTreeKeys) {
 		for (const key of domTreeKeys) {
 			const { mirrorModalField } =
-				getComponentConfig(get(componentConfigs, [key, 'componentName'])) || {}
-			if (mirrorModalField) return true
+				getComponentConfig(get(componentConfigs, [key, 'componentName'])) || {};
+			if (mirrorModalField) return true;
 		}
 	}
-	return false
+	return false;
 }
 
 export function setPosition(nodes: any[], isModal?: boolean) {
 	if (isModal) {
-		each(nodes, (node) => (node.style.position = 'fixed'))
+		each(nodes, (node) => (node.style.position = 'fixed'));
 	} else {
-		each(nodes, (node) => (node.style.position = 'absolute'))
+		each(nodes, (node) => (node.style.position = 'absolute'));
 	}
 }
 
 export function generateRequiredProps(componentName: string) {
-	const { propsConfig } = getComponentConfig(componentName)
-	const requiredProps: any = {}
+	const { propsConfig } = getComponentConfig(componentName);
+	const requiredProps: any = {};
 	each(propsConfig, (config, propName) => {
-		const { isRequired, defaultValue } = config
-		if (isRequired) requiredProps[propName] = defaultValue
-	})
+		const { isRequired, defaultValue } = config;
+		if (isRequired) requiredProps[propName] = defaultValue;
+	});
 
-	return requiredProps
+	return requiredProps;
 }

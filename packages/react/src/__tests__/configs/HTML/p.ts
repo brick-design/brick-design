@@ -2,7 +2,7 @@ import {
 	ComponentConfigTypes,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/core'
+} from '@brickd/core';
 
 const p: ComponentConfigTypes = {
 	nodePropsConfig: {
@@ -16,6 +16,6 @@ const p: ComponentConfigTypes = {
 			type: PROPS_TYPES.string,
 		},
 	},
-}
+};
 
-export default p
+export default p;
