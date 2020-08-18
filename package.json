@@ -26,6 +26,7 @@
   "scripts": {
     "clean": "lerna run clean",
     "clern:modules": "lerna clean -y && lerna run clean",
+    "dev": "lerna run --parallel --stream dev",
     "build": "lerna run build --stream",
     "release": "run-s clean test go_no_go publish changelog",
     "go_no_go": "node scripts/go_no_go.js",
@@ -36,7 +37,8 @@
     "precommit:format": "pretty-quick --staged",
     "prettify:source": "prettier 'packages/*/src/**/*.ts*'",
     "start:docs": "dumi dev",
-    "start:example": "lerna run build --stream && lerna run start"
+    "start:example": "lerna run build --stream && lerna run start",
+    "dev:example": "lerna run dev --stream & lerna run start"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.5",

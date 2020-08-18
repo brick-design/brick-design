@@ -1,13 +1,13 @@
-import path from 'path'
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import postcss from 'rollup-plugin-postcss'
-import typescript from 'rollup-plugin-typescript2'
-import babel from '@rollup/plugin-babel'
-import image from '@rollup/plugin-image'
-import { terser } from 'rollup-plugin-terser'
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import postcss from 'rollup-plugin-postcss';
+import typescript from 'rollup-plugin-typescript2';
+import babel from '@rollup/plugin-babel';
+import image from '@rollup/plugin-image';
+import { terser } from 'rollup-plugin-terser';
+import path from 'path';
 
-let override = { compilerOptions: { declaration: false } }
+const override = { compilerOptions: { declaration: false } };
 
 export function createConfig(pakg, name) {
 
@@ -31,6 +31,10 @@ export function createConfig(pakg, name) {
 				],
 			},
 		],
+		watch: {
+			include: 'src/**',
+			exclude: 'src/__tests__/**',
+		},
 		external: pakg.dependencies && Object.keys(pakg.dependencies),
 		plugins: [
 			resolve({ browser: true }),
@@ -51,5 +55,5 @@ export function createConfig(pakg, name) {
 			babel({
 				exclude: 'node_modules/**',  // 排除node_modules 下的文件
 			})],
-	}
+	};
 }
