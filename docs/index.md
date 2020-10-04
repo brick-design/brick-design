@@ -1,9 +1,9 @@
 ---
-title: Brick Design - 基于 React的组件可视化拖拽页面搭建源码生成工具
+title: Brick Design - 组件可视化拖拽页面搭建源码生成工具
 order: 10
 hero:
   title: Brick Design
-  desc: 基于 React的组件可视化拖拽页面搭建源码生成工具
+  desc: 组件可视化拖拽页面搭建源码生成工具
   actions:
     - text: 快速上手
       link: /guide/getting-started
@@ -21,26 +21,10 @@ footer: Open-source MIT Licensed | Copyright © 2019-present<br />Powered by sel
 ---
 
 ## 轻松上手
-### Install
 ```bash
-yarn add brickd brickd-core bricks-web
-//或者
-npm install brickd brickd-core bricks-web
+yarn add @brickd/react  @brickd/react-web @brickd/render
 ```
-### Usage
-```
-import { LegoProvider } from 'brickd-core';
-import {BrickDesign} from 'brickd';
-import {BrickTree,BrickPreview} from 'bricks-web'
-
-const App = () => (
-  <LegoProvider config={{...}}>
-<div>
-    <BrickPreview componentsCategory={...}/>
-    <BrickDesign />
-<BrickTree/>
-</div>
-  </LegoProvider>
-
-);
+OR
+```bash
+npm install @brickd/react @brickd/react-web @brickd/render
 ```

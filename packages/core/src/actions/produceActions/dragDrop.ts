@@ -11,6 +11,21 @@ export const getDragSource = (payload: DragSourcePayload) =>
 		type: ACTION_TYPES.getDragSource,
 		payload,
 	});
+
+export type DragTemplatePayload = Required<Omit<DragSourceType,'dragKey'|'parentKey'|'parentPropName'>>
+export const getDragTemplate= (payload: DragTemplatePayload) =>
+	createActions({
+		type: ACTION_TYPES.getDragSource,
+		payload,
+	});
+
+export type DragComponentPayload = Omit<DragSourceType,'vDOMCollection'|'propsConfigCollection'>
+export const getDragComponent= (payload: DragComponentPayload) =>
+	createActions({
+		type: ACTION_TYPES.getDragSource,
+		payload,
+	});
+
 export const getDropTarget = (payload: DropTargetType) =>
 	createActions({
 		type: ACTION_TYPES.getDropTarget,
