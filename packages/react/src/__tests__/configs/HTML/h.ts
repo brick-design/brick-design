@@ -1,6 +1,6 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core';
+import { ComponentSchemaType, PROPS_TYPES } from '@brickd/core';
 
-const h: ComponentConfigTypes = {
+const h: ComponentSchemaType = {
 	childNodesRule: ['img'],
 	isRequired: true,
 	propsConfig: {

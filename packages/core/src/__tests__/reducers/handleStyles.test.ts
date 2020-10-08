@@ -1,7 +1,7 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { legoState } from '../../store';
-import { ComponentConfigsType, SelectedInfoType, StateType } from '../../types';
+import { PageConfigType, SelectedInfoType, StateType } from '../../types';
 import { ROOT } from '../../utils';
 
 describe('changeStyle', () => {
@@ -22,7 +22,7 @@ describe('changeStyle', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'img',
 				},
@@ -32,7 +32,7 @@ describe('changeStyle', () => {
 			...action,
 			payload: { style: {} },
 		});
-		expect(state.componentConfigs[ROOT].props).toEqual({ style: {} });
+		expect(state.pageConfig[ROOT].props).toEqual({ style: {} });
 	});
 	test('props!==undefined', () => {
 		const prevState: StateType = {
@@ -43,7 +43,7 @@ describe('changeStyle', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'img',
 					props: {},
@@ -54,7 +54,7 @@ describe('changeStyle', () => {
 			...action,
 			payload: { style: {} },
 		});
-		expect(state.componentConfigs[ROOT].props).toEqual({ style: {} });
+		expect(state.pageConfig[ROOT].props).toEqual({ style: {} });
 	});
 });
 describe('resetStyle', () => {
@@ -69,20 +69,20 @@ describe('resetStyle', () => {
 			domTreeKeys: [],
 			parentKey: '',
 		};
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'a', props: { style: { a: 1 } } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
 			selectedInfo,
-			componentConfigs,
+			pageConfig,
 		};
 		const state = reducer(prevState, action);
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'a',
 				},
@@ -98,20 +98,20 @@ describe('resetStyle', () => {
 			props: { style: {} },
 			parentKey: '',
 		};
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'a', props: { style: { a: 1 } } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
 			selectedInfo,
-			componentConfigs,
+			pageConfig,
 		};
 		const state = reducer(prevState, action);
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'a',
 					props: { style: {} },
@@ -128,14 +128,14 @@ describe('resizeChange', () => {
 		expect(reducer(legoState, action)).toBe(legoState);
 	});
 	it('更改组件宽高有宽和高', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'div' },
 		};
 
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [],
@@ -149,8 +149,8 @@ describe('resizeChange', () => {
 		});
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'div',
 					props: { style: { width: 12, height: 13 } },
@@ -160,14 +160,14 @@ describe('resizeChange', () => {
 		expect(state).toEqual(expectState);
 	});
 	it('更改组件宽高没有宽和高', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'div' },
 		};
 
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [],

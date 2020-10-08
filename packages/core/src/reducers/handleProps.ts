@@ -24,7 +24,7 @@ export function addPropsConfig(
 	state: StateType,
 	payload: AddPropsConfigPayload,
 ): StateType {
-	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state;
+	const { selectedInfo, undo, redo, propsConfigSheet, pageConfig } = state;
 	if (!selectedInfo) return state;
 	const {
 		newPropField,
@@ -65,7 +65,7 @@ export function addPropsConfig(
 
 	if (!isAdd) return state;
 	const { propsConfig } = getComponentConfig(
-		componentConfigs[selectedKey].componentName,
+		pageConfig[selectedKey].componentName,
 	);
 
 	undo.push({ selectedInfo, propsConfigSheet });
@@ -96,7 +96,7 @@ export function deletePropsConfig(
 	state: StateType,
 	payload: DeletePropsConfigPayload,
 ): StateType {
-	const { selectedInfo, undo, redo, propsConfigSheet, componentConfigs } = state;
+	const { selectedInfo, undo, redo, propsConfigSheet, pageConfig } = state;
 	if (!selectedInfo) return state;
 	const { fatherFieldLocation, field } = payload;
 	const { selectedKey } = selectedInfo;
@@ -113,13 +113,13 @@ export function deletePropsConfig(
 		}
 	});
 	const { propsConfig } = getComponentConfig(
-		componentConfigs[selectedKey].componentName,
+		pageConfig[selectedKey].componentName,
 	);
-	undo.push({ selectedInfo, propsConfigSheet, componentConfigs });
+	undo.push({ selectedInfo, propsConfigSheet, pageConfig });
 	redo.length = 0;
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs, (oldConfig) => {
+		pageConfig: produce(pageConfig, (oldConfig) => {
 			const fieldPath =
 				fieldInPropsLocation[0] !== '' ? fieldInPropsLocation : [];
 			const paths = [selectedKey, 'props', ...fieldPath];
@@ -147,21 +147,21 @@ export function deletePropsConfig(
  * 提交属性
  * @param state
  * @param payload
- * @returns {{propsSetting: *, componentConfigs: *}}
+ * @returns {{propsSetting: *, pageConfig: *}}
  */
 export function changeProps(
 	state: StateType,
 	payload: ChangePropsPayload,
 ): StateType {
-	const { componentConfigs, selectedInfo, undo, redo } = state;
+	const { pageConfig, selectedInfo, undo, redo } = state;
 	if (!selectedInfo) return state;
 	const { props } = payload;
 	const { selectedKey } = selectedInfo;
-	undo.push({ componentConfigs });
+	undo.push({ pageConfig });
 	redo.length = 0;
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs!, (oldConfigs) => {
+		pageConfig: produce(pageConfig!, (oldConfigs) => {
 			const style = get(oldConfigs, [selectedKey, 'props', 'style']);
 			if (style) {
 				oldConfigs[selectedKey].props = { ...props, style };
@@ -179,14 +179,14 @@ export function changeProps(
  * @param state
  */
 export function resetProps(state: StateType): StateType {
-	const { selectedInfo, componentConfigs, undo, redo } = state;
+	const { selectedInfo, pageConfig, undo, redo } = state;
 	if (!selectedInfo) return state;
 	const { selectedKey, props } = selectedInfo;
-	undo.push({ componentConfigs });
+	undo.push({ pageConfig });
 	redo.length = 0;
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs, (oldConfigs) => {
+		pageConfig: produce(pageConfig, (oldConfigs) => {
 			const style = get(oldConfigs, [selectedKey, 'props', 'style']);
 			if (style) {
 				oldConfigs[selectedKey].props = { ...props, style };

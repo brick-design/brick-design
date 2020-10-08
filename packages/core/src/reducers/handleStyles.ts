@@ -8,20 +8,20 @@ import { restObject } from '../utils';
  * 样式改变时调用
  * @param state
  * @param payload
- * @returns {{propsSetting: *, componentConfigs: *}|*}
+ * @returns {{propsSetting: *, pageConfig: *}|*}
  */
 export function changeStyles(
 	state: StateType,
 	payload: stylePayload,
 ): StateType {
-	const { undo, redo, selectedInfo, componentConfigs } = state;
+	const { undo, redo, selectedInfo, pageConfig } = state;
 	if (!selectedInfo) return state;
 	const { style } = payload;
-	undo.push({ componentConfigs });
+	undo.push({ pageConfig });
 	redo.length = 0;
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs, (oldConfigs) => {
+		pageConfig: produce(pageConfig, (oldConfigs) => {
 			const config = oldConfigs[selectedInfo.selectedKey];
 			if (config.props) {
 				config.props.style = style;
@@ -35,14 +35,14 @@ export function changeStyles(
 }
 
 export function resetStyles(state: StateType): StateType {
-	const { selectedInfo, undo, componentConfigs, redo } = state;
+	const { selectedInfo, undo, pageConfig, redo } = state;
 	if (!selectedInfo) return state;
 	const { props, selectedKey } = selectedInfo;
-	undo.push({ componentConfigs });
+	undo.push({ pageConfig });
 	redo.length = 0;
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs, (oldConfigs) => {
+		pageConfig: produce(pageConfig, (oldConfigs) => {
 			const config = oldConfigs[selectedKey];
 			if (props && props.style) {
 				config.props.style = props.style;
@@ -56,18 +56,18 @@ export function resetStyles(state: StateType): StateType {
 }
 
 export function resizeChange(state: StateType, payload: ResizePayload) {
-	const { componentConfigs, undo, redo, selectedInfo } = state;
+	const { pageConfig, undo, redo, selectedInfo } = state;
 	if (!selectedInfo) return state;
 	const { selectedKey } = selectedInfo;
 	const { width, height } = payload;
 	if (width || height) {
-		undo.push({ componentConfigs });
+		undo.push({ pageConfig });
 		redo.length = 0;
 	}
 
 	return {
 		...state,
-		componentConfigs: produce(componentConfigs, (oldConfigs) => {
+		pageConfig: produce(pageConfig, (oldConfigs) => {
 			if (width) {
 				update(oldConfigs[selectedKey], 'props.style.width', () => width);
 			}

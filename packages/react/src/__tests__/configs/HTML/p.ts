@@ -1,10 +1,10 @@
 import {
-	ComponentConfigTypes,
+	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
 } from '@brickd/core';
 
-const p: ComponentConfigTypes = {
+const p: ComponentSchemaType = {
 	nodePropsConfig: {
 		children: {
 			type: NODE_PROPS_TYPES.reactNode,

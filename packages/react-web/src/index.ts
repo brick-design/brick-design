@@ -11,6 +11,8 @@ import {
 	StringComponent,
 } from './PropComponent';
 
+export * from './BrickPreview/CategoryTypes';
+
 export { default as BrickPreview } from './BrickPreview';
 export * from './PropComponent';
 

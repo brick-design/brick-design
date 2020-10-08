@@ -2,7 +2,7 @@ import React, { AllHTMLAttributes, createElement } from 'react';
 import {
 	ChildNodesType,
 	clearDragSource,
-	ComponentConfigsType,
+	PageConfigType,
 	getComponentConfig,
 	isContainer,
 	MirrorModalFieldType,
@@ -51,7 +51,7 @@ export type DragAddStatusType = {
  * 渲染组件的子节点
  * @param childNodes
  * @param specialProps
- * @param componentConfigs
+ * @param pageConfig
  * @param dragAddStatus
  * @param parentPropName
  * @param isOnlyNode
@@ -59,7 +59,7 @@ export type DragAddStatusType = {
 function renderNodes(
 	childNodes: string[],
 	specialProps: SelectedInfoBaseType,
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 	dragAddStatus: DragAddStatusType,
 	parentPropName?: string,
 	isOnlyNode?: boolean,
@@ -71,7 +71,7 @@ function renderNodes(
 		domTreeKeys = [...domTreeKeys, `${parentKey}${parentPropName}`];
 	}
 	const resultChildNodes = map(childNodes, (key) => {
-		const { componentName } = componentConfigs[key] || {};
+		const { componentName } = pageConfig[key] || {};
 		if (!componentName) return null;
 		/** 根据组件类型处理属性 */
 		const props = {
@@ -136,7 +136,7 @@ function handleRequiredChildNodes(componentName: string) {
 
 export function handleChildNodes(
 	specialProps: SelectedInfoBaseType,
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 	children?: ChildNodesType,
 	dragKey?: string,
 	isDragAdd?: boolean,
@@ -144,7 +144,7 @@ export function handleChildNodes(
 ) {
 	const nodeProps: any = {};
 	const { key: parentKey } = specialProps;
-	const { componentName } = componentConfigs[parentKey];
+	const { componentName } = pageConfig[parentKey];
 	if (isEmpty(children)) {
 		return handleRequiredChildNodes(componentName);
 	}
@@ -158,7 +158,7 @@ export function handleChildNodes(
 		nodeProps.children = renderNodes(
 			children,
 			specialProps,
-			componentConfigs,
+			pageConfig,
 			dragAddStatus,
 			undefined,
 			isOnlyNode,
@@ -176,7 +176,7 @@ export function handleChildNodes(
 			nodeProps[propName] = renderNodes(
 				nodes,
 				specialProps,
-				componentConfigs,
+				pageConfig,
 				dragAddStatus,
 				propName,
 				isOnlyNode,
@@ -232,12 +232,12 @@ export function handleEvents(
 }
 
 export type HookState = {
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 	propsConfigSheet: PropsConfigSheetType
 }
 
 export const stateSelector: STATE_PROPS[] = [
-	'componentConfigs',
+	'pageConfig',
 	'propsConfigSheet',
 ];
 
@@ -246,7 +246,7 @@ export function controlUpdate(
 	nextState: HookState,
 	key: string,
 ) {
-	return prevState.componentConfigs[key] !== nextState.componentConfigs[key];
+	return prevState.pageConfig[key] !== nextState.pageConfig[key];
 }
 
 export interface CommonPropsType extends AllHTMLAttributes<any> {

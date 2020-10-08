@@ -32,7 +32,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 		isDragAddChild,
 		...rest
 	} = allProps;
-	const { componentConfigs: PageDom, propsConfigSheet } = useSelector<
+	const { pageConfig: PageDom, propsConfigSheet } = useSelector<
 		HookState,
 		STATE_PROPS
 	>(stateSelector, (prevState, nextState) =>
@@ -41,8 +41,8 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const { isSelected } = useSelect(specialProps);
 	const { dragSource, isHidden } = useDragDrop(key);
 	const { dragKey, vDOMCollection } = dragSource || {};
-	const componentConfigs = PageDom[ROOT] ? PageDom : vDOMCollection || {};
-	const { props, componentName } = componentConfigs[key] || {};
+	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
+	const { props, componentName } = pageConfig[key] || {};
 	const { propsConfig } = useMemo(() => getComponentConfig(componentName), []);
 
 	if (!componentName) return null;

@@ -1,10 +1,11 @@
 import {
-	ComponentConfigTypes,
+	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
 } from '../../../types';
 
-const p: ComponentConfigTypes = {
+const p: ComponentSchemaType = {
+	isNonContainer:true,
 	nodePropsConfig: {
 		children: {
 			type: NODE_PROPS_TYPES.reactNode,

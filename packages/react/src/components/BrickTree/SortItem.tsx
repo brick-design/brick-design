@@ -3,7 +3,7 @@ import { get, isArray, isEmpty, isEqual, map } from 'lodash';
 import {
 	ChildNodesType,
 	clearDropTarget,
-	ComponentConfigsType,
+	PageConfigType,
 	getComponentConfig,
 	isContainer,
 	NodeProps,
@@ -92,10 +92,10 @@ export function selectedStatus(
 
 export type HookState = {
 	selectedInfo: SelectedInfoType
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 }
 
-export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'componentConfigs'];
+export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'pageConfig'];
 
 function SortItem(props: SortItemPropsType) {
 	const {
@@ -106,10 +106,10 @@ function SortItem(props: SortItemPropsType) {
 		propChildNodes,
 	} = props;
 
-	const { selectedInfo, componentConfigs } = useSelector(stateSelector);
+	const { selectedInfo, pageConfig } = useSelector(stateSelector);
 	const { domTreeKeys: nextSDTKeys } = selectedInfo || {};
 
-	const vDom = componentConfigs[key];
+	const vDom = pageConfig[key];
 	const { childNodes: vDomChildNodes, componentName } = vDom || {};
 	const childNodes: ChildNodesType | undefined = propChildNodes || vDomChildNodes;
 

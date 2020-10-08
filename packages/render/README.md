@@ -9,7 +9,7 @@ import {createElement} from 'react';
 import {BrickDesign,BrickTree,BrickProvider,} from '@brickd/react';
 import {BrickPreview} from '@brickd/react-web';
 import BrickRender from '@brickd/render';
-const plugins=[(vDom,componentConfig)=>vDom];
+const plugins=[(vDom,componentSchema)=>vDom];
 const App = () => (
   <BrickProvider initState={{}} customReducer={(state,action)=>state} config={{...}}>
 <div>

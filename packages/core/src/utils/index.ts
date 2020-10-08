@@ -2,8 +2,8 @@ import { each, get, isEmpty } from 'lodash';
 import {
 	BrickAction,
 	ChildNodesType,
-	ComponentConfigsType,
-	ComponentConfigTypes,
+	PageConfigType,
+	ComponentSchemaType,
 	PropsConfigSheetType,
 	PropsNodeType,
 	SelectedInfoType,
@@ -19,12 +19,12 @@ export const ROOT = '0';
 
 /**
  * 复制组件
- * @param componentConfigs
+ * @param pageConfig
  * @param selectedKey
  * @param newKey
  */
 export interface HandleInfoType {
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 	propsConfigSheet: PropsConfigSheetType
 }
 
@@ -33,17 +33,17 @@ export const copyConfig = (
 	selectedKey: string,
 	newKey: number,
 ) => {
-	const { componentConfigs, propsConfigSheet } = handleInfo;
+	const { pageConfig, propsConfigSheet } = handleInfo;
 	if (propsConfigSheet[selectedKey]) {
 		propsConfigSheet[newKey] = propsConfigSheet[selectedKey];
 	}
-	const vDom = componentConfigs[selectedKey];
+	const vDom = pageConfig[selectedKey];
 	const childNodes = vDom.childNodes;
 	if (!childNodes) {
-		componentConfigs[newKey] = vDom;
+		pageConfig[newKey] = vDom;
 	} else {
 		const newVDom = { ...vDom };
-		componentConfigs[newKey] = newVDom;
+		pageConfig[newKey] = newVDom;
 		if (Array.isArray(childNodes)) {
 			newVDom.childNodes = copyChildNodes(handleInfo, childNodes);
 		} else {
@@ -57,10 +57,10 @@ export const copyConfig = (
 };
 
 function copyChildNodes(handleInfo: HandleInfoType, childNodes: string[]) {
-	const { componentConfigs } = handleInfo;
+	const { pageConfig } = handleInfo;
 	const newChildKeys: string[] = [];
 	for (const oldKey of childNodes) {
-		const newChildKey = getNewKey(componentConfigs);
+		const newChildKey = getNewKey(pageConfig);
 		newChildKeys.push(`${newChildKey}`);
 		copyConfig(handleInfo, oldKey, newChildKey);
 	}
@@ -89,12 +89,12 @@ export function deleteChildNodes(
 
 function deleteArrChild(handleInfo: HandleInfoType, childNodes: string[]) {
 	for (const key of childNodes) {
-		const childNodesInfo = handleInfo.componentConfigs[key].childNodes;
+		const childNodesInfo = handleInfo.pageConfig[key].childNodes;
 		if (childNodesInfo) {
 			deleteChildNodes(handleInfo, childNodesInfo);
 		}
 
-		delete handleInfo.componentConfigs[key];
+		delete handleInfo.pageConfig[key];
 		delete handleInfo.propsConfigSheet[key];
 	}
 }
@@ -108,12 +108,12 @@ export function getLocation(key: string, propName?: string): string[] {
 }
 
 export interface VDOMAndPropsConfigType {
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 	propsConfigSheet: PropsConfigSheetType
 }
 
 export interface DragVDomAndPropsConfigType {
-	vDOMCollection: ComponentConfigsType
+	vDOMCollection: PageConfigType
 	propsConfigCollection?: PropsConfigSheetType
 }
 
@@ -128,7 +128,7 @@ export const generateNewKey = (
 ) => {
 	const { vDOMCollection, propsConfigCollection } = dragVDOMAndPropsConfig;
 	const keyMap: { [key: string]: string } = {};
-	const newVDOMCollection: ComponentConfigsType = {};
+	const newVDOMCollection: PageConfigType = {};
 	let newPropsConfigCollection: PropsConfigSheetType | undefined;
 	let newKey = rootKey;
 	each(vDOMCollection, (vDom, key) => {
@@ -177,15 +177,15 @@ export const getFieldInPropsLocation = (fieldConfigLocation: string) => {
 /**
  * 处理子节点非空
  * @param selectedInfo
- * @param componentConfigs
+ * @param pageConfig
  * @param payload
  */
 export const handleRequiredHasChild = (
 	selectedInfo: SelectedInfoType,
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 ) => {
 	const { selectedKey, propName: selectedPropName } = selectedInfo;
-	const { componentName, childNodes } = componentConfigs[selectedKey];
+	const { componentName, childNodes } = pageConfig[selectedKey];
 	const { nodePropsConfig, isRequired } = getComponentConfig(componentName);
 	return (
 		(selectedPropName &&
@@ -227,23 +227,23 @@ export function deleteChildNodesKey(
 
 export function getComponentConfig(
 	componentName: string,
-): ComponentConfigTypes {
-	const allComponentConfigs = get(LEGO_BRIDGE, [
+): ComponentSchemaType {
+	const componentSchemasMap = get(LEGO_BRIDGE, [
 		'config',
-		'AllComponentConfigs',
+		'componentSchemasMap',
 	]);
-	if (!allComponentConfigs) {
+	if (!componentSchemasMap) {
 		error('Component configuration information set not found！! !');
 	}
-	const componentConfig = allComponentConfigs[componentName];
-	if (componentName && !componentConfig) {
+	const componentSchema = componentSchemasMap[componentName];
+	if (componentName && !componentSchema) {
 		warn(`${componentName} configuration information not found！! !`);
 	}
-	return componentConfig;
+	return componentSchema;
 }
 
 export function isContainer(componentName: string) {
-	return  !get(LEGO_BRIDGE, ['config', 'AllComponentConfigs',componentName,'isNonContainer']);
+	return  !get(LEGO_BRIDGE, ['config', 'componentSchemasMap',componentName,'isNonContainer']);
 }
 
 export function error(msg: string) {
@@ -252,7 +252,7 @@ export function error(msg: string) {
 }
 
 export function warn(msg: string) {
-	const warn = get(LEGO_BRIDGE, ['config', 'warn']);
+	const warn = get(LEGO_BRIDGE, ['warn']);
 	if (warn) {
 		warn(msg);
 	} else {
@@ -261,8 +261,8 @@ export function warn(msg: string) {
 	return true;
 }
 
-export function getNewKey(componentConfigs: ComponentConfigsType) {
-	const lastKey = Object.keys(componentConfigs).pop();
+export function getNewKey(pageConfig: PageConfigType) {
+	const lastKey = Object.keys(pageConfig).pop();
 	return Number(lastKey) + 1;
 }
 
@@ -275,7 +275,7 @@ export function restObject(obj: any, field?: string) {
 }
 
 export function handleRules(
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 	dragKey: string,
 	selectedKey: string,
 	propName?: string,
@@ -284,8 +284,8 @@ export function handleRules(
 	/**
 	 * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
 	 */
-	const dragComponentName = componentConfigs[dragKey!].componentName;
-	const dropComponentName = componentConfigs[selectedKey!].componentName;
+	const dragComponentName = pageConfig[dragKey!].componentName;
+	const dropComponentName = pageConfig[selectedKey!].componentName;
 	const { fatherNodesRule } = getComponentConfig(dragComponentName);
 	const { nodePropsConfig, childNodesRule } = getComponentConfig(
 		dropComponentName,
@@ -339,15 +339,15 @@ export function combineReducers(
 }
 
 export function createTemplateConfigs(
-	templateConfigs: ComponentConfigsType,
+	templateConfigs: PageConfigType,
 	templatePropsConfigSheet: PropsConfigSheetType,
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 	propsConfigSheet: PropsConfigSheetType,
 	childNodes: ChildNodesType,
 ) {
 	if (Array.isArray(childNodes)) {
 		for (const key of childNodes) {
-			templateConfigs[key] = componentConfigs[key];
+			templateConfigs[key] = pageConfig[key];
 			if (propsConfigSheet[key]) {
 				templatePropsConfigSheet[key] = propsConfigSheet[key];
 			}
@@ -356,7 +356,7 @@ export function createTemplateConfigs(
 				createTemplateConfigs(
 					templateConfigs,
 					templatePropsConfigSheet,
-					componentConfigs,
+					pageConfig,
 					propsConfigSheet,
 					childNodes,
 				);
@@ -367,7 +367,7 @@ export function createTemplateConfigs(
 				createTemplateConfigs(
 					templateConfigs,
 					templatePropsConfigSheet,
-					componentConfigs,
+					pageConfig,
 					propsConfigSheet,
 					childKeys,
 				);
@@ -376,16 +376,16 @@ export function createTemplateConfigs(
 }
 
 export function createTemplate(state: StateType) {
-	const { selectedInfo, componentConfigs, propsConfigSheet } = state;
+	const { selectedInfo, pageConfig, propsConfigSheet } = state;
 	const { selectedKey } = selectedInfo;
-	const templateConfigs = { [ROOT]: componentConfigs[selectedKey] };
+	const templateConfigs = { [ROOT]: pageConfig[selectedKey] };
 	const templatePropsConfigSheet = { [ROOT]: propsConfigSheet[selectedKey] };
-	const { childNodes } = componentConfigs[selectedKey];
+	const { childNodes } = pageConfig[selectedKey];
 	if (!isEmpty(childNodes)) {
 		createTemplateConfigs(
 			templateConfigs,
 			templatePropsConfigSheet,
-			componentConfigs,
+			pageConfig,
 			propsConfigSheet,
 			childNodes,
 		);

@@ -34,7 +34,7 @@ describe('useChildNodes', () => {
 		};
 
 		const initState: Partial<StateType> = {
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'h',
 				},
@@ -61,7 +61,7 @@ describe('useChildNodes', () => {
 			},
 		};
 		const initState: Partial<StateType> = {
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 				},

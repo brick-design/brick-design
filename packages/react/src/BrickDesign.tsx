@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import {
 	clearHovered,
-	ComponentConfigsType,
+	PageConfigType,
 	DragSourceType,
 	isContainer,
 	ROOT,
@@ -56,10 +56,10 @@ const onDragLeave = (divContainer: any) => {
 	ReactDOM.unmountComponentAtNode(divContainer.current);
 };
 
-const renderComponent = (componentConfigs: ComponentConfigsType) => {
+const renderComponent = (pageConfig: PageConfigType) => {
 	const {
 		[ROOT]: { componentName },
-	} = componentConfigs;
+	} = pageConfig;
 	const props = {
 		specialProps: {
 			domTreeKeys: [ROOT],
@@ -81,10 +81,10 @@ interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	onLoadEnd?: () => void
 }
 
-const stateSelector: STATE_PROPS[] = ['componentConfigs', 'dragSource'];
+const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource'];
 
 type BrickdHookState = {
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 	dragSource: DragSourceType
 }
 
@@ -92,25 +92,25 @@ const controlUpdate = (
 	prevState: BrickdHookState,
 	nextState: BrickdHookState,
 ) => {
-	const { componentConfigs: prevComponentConfigs } = prevState;
-	const { componentConfigs } = nextState;
+	const { pageConfig: prevComponentConfigs } = prevState;
+	const { pageConfig } = nextState;
 
 	return (
-		!componentConfigs[ROOT] ||
-		componentConfigs[ROOT] !== prevComponentConfigs[ROOT]
+		!pageConfig[ROOT] ||
+		pageConfig[ROOT] !== prevComponentConfigs[ROOT]
 	);
 };
 
 function BrickDesign(props: BrickDesignProps) {
-	const { componentConfigs, dragSource } = useSelector<
+	const { pageConfig, dragSource } = useSelector<
 		BrickdHookState,
 		STATE_PROPS
 	>(stateSelector, controlUpdate);
 	const iframeRef = useRef<HTMLIFrameElement>();
 	const designPage: any = useMemo(() => {
-		if (!componentConfigs[ROOT]) return null;
-		return renderComponent(componentConfigs);
-	}, [componentConfigs]);
+		if (!pageConfig[ROOT]) return null;
+		return renderComponent(pageConfig);
+	}, [pageConfig]);
 
 	const divContainer = useRef(null);
 
@@ -126,7 +126,7 @@ function BrickDesign(props: BrickDesignProps) {
 	}, []);
 
 	useEffect(() => {
-		if (componentConfigs[ROOT]) return;
+		if (pageConfig[ROOT]) return;
 		const contentWindow = getIframe()!.contentWindow!;
 		const dragEnter = () => onDragEnter(dragSource, divContainer);
 		const dragLeave = () => onDragLeave(divContainer);
@@ -136,7 +136,7 @@ function BrickDesign(props: BrickDesignProps) {
 			contentWindow.removeEventListener('dragenter', dragEnter);
 			contentWindow.removeEventListener('dragleave', dragLeave);
 		};
-	}, [componentConfigs, dragSource, divContainer, iframeRef]);
+	}, [pageConfig, dragSource, divContainer, iframeRef]);
 
 	useEffect(() => {
 		if (divContainer.current) {

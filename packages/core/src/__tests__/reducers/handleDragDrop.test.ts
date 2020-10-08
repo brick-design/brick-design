@@ -4,7 +4,7 @@ import { DragSourcePayload } from '../../actions';
 import { LEGO_BRIDGE, legoState } from '../../store';
 import config from '../configs';
 import { ROOT } from '../../utils';
-import { ComponentConfigsType, DropTargetType, StateType } from '../../types';
+import { PageConfigType, DropTargetType, StateType } from '../../types';
 
 beforeAll(() => {
 	LEGO_BRIDGE.config = config;
@@ -34,20 +34,20 @@ describe('drag', () => {
 	});
 	it('当componentConfigs有root节点', () => {
 		const payload: DragSourcePayload = { componentName: 'span' };
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'a' },
 		};
-		const prevState: StateType = { ...legoState, componentConfigs };
+		const prevState: StateType = { ...legoState, pageConfig };
 
 		const state = reducer(prevState, { ...action, payload });
 		expect(state.dragSource?.dragKey).not.toBeUndefined();
-		expect(state.undo).toEqual([{ componentConfigs, propsConfigSheet: {} }]);
+		expect(state.undo).toEqual([{ pageConfig, propsConfigSheet: {} }]);
 	});
 
 	it('拖拽设计面板中的组建', () => {
 		const prevState: StateType = {
 			...legoState,
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: { componentName: 'a', childNodes: ['1'] },
 				1: { componentName: 'a' },
 			},
@@ -59,7 +59,7 @@ describe('drag', () => {
 	it('拖拽添加模板配置信息带有属性配置表', () => {
 		const prevState: StateType = {
 			...legoState,
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: { componentName: 'a' },
 			},
 		};
@@ -82,18 +82,18 @@ describe('drag', () => {
 			},
 		};
 		const state = reducer(prevState, { ...action, payload });
-		expect(Object.keys(state.componentConfigs).length).toBe(6);
-		expect(Object.keys(state.componentConfigs)).toEqual(
+		expect(Object.keys(state.pageConfig).length).toBe(6);
+		expect(Object.keys(state.pageConfig)).toEqual(
 			expect.arrayContaining(Object.keys(state.propsConfigSheet)),
 		);
 	});
 	it('拖拽添加模板配置信息不带属性配置表', () => {
-		const componentConfigs = {
+		const pageConfig = {
 			[ROOT]: { componentName: 'a' },
 		};
 		const prevState: StateType = {
 			...legoState,
-			componentConfigs,
+			pageConfig,
 			undo: [],
 		};
 		const vDOMCollection = {
@@ -112,8 +112,8 @@ describe('drag', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs, propsConfigSheet: {} }],
-			componentConfigs: {
+			undo: [{ pageConfig, propsConfigSheet: {} }],
+			pageConfig: {
 				[ROOT]: { componentName: 'a' },
 				1: { componentName: 'a', childNodes: ['2'] },
 				2: {
@@ -136,7 +136,7 @@ describe('getDropTarget', () => {
 	// it('如果拖拽组件(非容器)与drop组件是同一个', () => {
 	//   const prevState: StateType = {
 	//     ...legoState,
-	//     componentConfigs: {
+	//     pageConfig: {
 	//       root: { componentName: 'a', props: {}, childNodes: ['1'] },
 	//       1: { componentName: 'img', props: {} },
 	//     },

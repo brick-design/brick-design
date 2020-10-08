@@ -1,6 +1,6 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
+import { ComponentSchemaType, PROPS_TYPES } from '../../../types';
 
-const a: ComponentConfigTypes = {
+const a: ComponentSchemaType = {
 	propsConfig: {
 		target: {
 			label: '规定在何处打开链接文档',

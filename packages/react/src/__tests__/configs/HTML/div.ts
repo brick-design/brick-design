@@ -1,10 +1,10 @@
 import {
-	ComponentConfigTypes,
+	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
 } from '@brickd/core';
 
-const div: ComponentConfigTypes = {
+const div: ComponentSchemaType = {
 	fatherNodesRule: ['div.children'],
 	nodePropsConfig: {
 		children: {

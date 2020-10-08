@@ -5,11 +5,12 @@ import {
 	createLegStore,
 	ReducerType,
 	StateType,
+	LegoBridgeType
 } from '@brickd/core';
 
 initFramework(React);
 
-interface BrickProviderType {
+interface BrickProviderType extends Omit<LegoBridgeType, 'store'>{
 	initState?: Partial<StateType>
 	config: ConfigType
 	customReducer?: ReducerType
@@ -17,9 +18,9 @@ interface BrickProviderType {
 }
 
 function BrickProvider(props: BrickProviderType) {
-	const { initState, config, customReducer, children } = props;
+	const { initState, config, customReducer, children,warn } = props;
 	if (!REDUX_BRIDGE.store) {
-		REDUX_BRIDGE.store = createLegStore(initState, config, customReducer);
+		REDUX_BRIDGE.store = createLegStore(initState, config, customReducer,warn);
 	}
 	return <LegoProvider>{children}</LegoProvider>;
 }

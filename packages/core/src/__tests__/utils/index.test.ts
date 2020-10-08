@@ -17,11 +17,6 @@ describe('getComponentConfig', () => {
 });
 
 describe('isContainer', () => {
-	it('如果没有配置容器信息集报错', () => {
-		LEGO_BRIDGE.config = undefined;
-		console.error = jest.fn();
-		expect(isContainer).toThrow();
-	});
 
 	it('未找到指定组件的配置信息', () => {
 		LEGO_BRIDGE.config = config;

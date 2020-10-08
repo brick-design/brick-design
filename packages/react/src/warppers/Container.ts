@@ -51,7 +51,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		...rest
 	} = allProps;
 
-	const { componentConfigs: PageDom, propsConfigSheet } = useSelector<
+	const { pageConfig: PageDom, propsConfigSheet } = useSelector<
 		HookState,
 		STATE_PROPS
 	>(stateSelector, (prevState, nextState) =>
@@ -61,9 +61,9 @@ function Container(allProps: CommonPropsType, ref: any) {
 	const { dragKey, parentKey, vDOMCollection } = dragSource || {};
 	const { selectedKey } = dropTarget || {};
 
-	const componentConfigs = PageDom[ROOT] ? PageDom : vDOMCollection || {};
+	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
 
-	const { props, childNodes, componentName } = componentConfigs[key] || {};
+	const { props, childNodes, componentName } = pageConfig[key] || {};
 
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(
@@ -91,7 +91,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		) {
 			if (childNodes) {
 				if (Array.isArray(childNodes)) {
-					if (!handleRules(componentConfigs, dragKey, key, undefined, true)) {
+					if (!handleRules(pageConfig, dragKey, key, undefined, true)) {
 						setChildren([...childNodes, dragKey]);
 					}
 				} else {
@@ -99,7 +99,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 						produce(childNodes as PropsNodeType, (oldChild) => {
 							propName = Object.keys(oldChild!)[0];
 							if (
-								!handleRules(componentConfigs, dragKey, key, propName, true)
+								!handleRules(pageConfig, dragKey, key, propName, true)
 							) {
 								oldChild![propName] = [...oldChild[propName]!, dragKey];
 							}
@@ -165,7 +165,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		...generateRequiredProps(componentName),
 		...handleChildNodes(
 			specialProps,
-			componentConfigs,
+			pageConfig,
 			children!,
 			dragKey,
 			childNodes !== children,

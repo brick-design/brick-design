@@ -12,11 +12,11 @@ export default defineConfig({
 			},
 			{
 				title: '基础配置',
-				children: ['guide/configs','guide/component-config','guide/category-config'],
+				children: ['guide/configs','guide/component-schema'],
 			},
 			{
 				title: '类型定义',
-				children: ['guide/types/ConfigType','guide/types/ComponentConfigTypes'],
+				children: ['guide/types/ConfigType','guide/types/ComponentSchemaTypes'],
 			}
 		],
 		'/react': [

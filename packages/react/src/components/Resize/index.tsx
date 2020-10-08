@@ -7,7 +7,7 @@ import React, {
 	useState,
 } from 'react';
 import {
-	ComponentConfigsType,
+	PageConfigType,
 	resizeChange,
 	ResizePayload,
 	ROOT,
@@ -33,7 +33,7 @@ import ActionSheet from '../ActionSheet';
 type ResizeState = {
 	selectedInfo: SelectedInfoType
 	hoverKey: string | null
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 }
 
 export enum Direction {
@@ -48,11 +48,11 @@ export enum Direction {
 }
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
-	const { selectedInfo, componentConfigs, hoverKey } = nextState;
+	const { selectedInfo, pageConfig, hoverKey } = nextState;
 	return (
 		prevState.selectedInfo !== selectedInfo ||
 		(selectedInfo &&
-			(prevState.componentConfigs !== componentConfigs ||
+			(prevState.pageConfig !== pageConfig ||
 				(prevState.hoverKey === null && hoverKey !== null) ||
 				(prevState.hoverKey !== null && hoverKey === null)))
 	);
@@ -72,10 +72,10 @@ type OriginSizeType = {
 
 function Resize() {
 	const iframe = getIframe();
-	const { selectedInfo, hoverKey, componentConfigs } = useSelector<
+	const { selectedInfo, hoverKey, pageConfig } = useSelector<
 		ResizeState,
 		STATE_PROPS
-	>(['selectedInfo', 'componentConfigs', 'hoverKey'], controlUpdate);
+	>(['selectedInfo', 'pageConfig', 'hoverKey'], controlUpdate);
 	const { selectedKey, domTreeKeys, propName } = selectedInfo || {};
 	const resizeRef = useRef<any>();
 	const originSizeRef = useRef<OriginSizeType>();
@@ -85,11 +85,11 @@ function Resize() {
 	const baseboardRef = useRef<HTMLDivElement | any>();
 	const selectNodeRef = useRef<HTMLElement>();
 	const [isOut, setIsOut] = useState<boolean>(true);
-	const { props, childNodes } = componentConfigs[selectedKey] || {};
+	const { props, childNodes } = pageConfig[selectedKey] || {};
 	const { width = 'auto', height = 'auto' } = get(props, 'style', {});
 	const isModal = useMemo(
-		() => getIsModalChild(componentConfigs, domTreeKeys),
-		[domTreeKeys, componentConfigs],
+		() => getIsModalChild(pageConfig, domTreeKeys),
+		[domTreeKeys, pageConfig],
 	);
 	selectNodeRef.current = useMemo(() => getSelectedNode(selectedKey, iframe), [
 		iframe,
@@ -122,7 +122,7 @@ function Resize() {
 				setSelectedBorder();
 			}
 		}
-	}, [selectedKey, selectNodeRef.current, iframe, componentConfigs]);
+	}, [selectedKey, selectNodeRef.current, iframe, pageConfig]);
 
 	if (!selectedKey && resizeRef.current) {
 		resizeRef.current.style.display = 'none';

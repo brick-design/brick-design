@@ -4,7 +4,7 @@ import { useSelector } from '@brickd/react'
 import BrickRender from '@brickd/render'
 
 export default function PreviewPanel() {
-	const { platformInfo,componentConfigs } = useSelector(['platformInfo','componentConfigs'])
+	const { platformInfo,pageConfig } = useSelector(['platformInfo','pageConfig'])
 	const { size } = platformInfo
 
 	const style = { width: size[0], maxHeight: size[1], transition: 'all 700ms' }
@@ -14,7 +14,7 @@ export default function PreviewPanel() {
 			style={style}
 			className={`${styles['browser-mockup']} ${styles['with-url']}`}
 		>
-			<BrickRender componentConfigs={componentConfigs} createElement={createElement}/>
+			<BrickRender pageConfig={pageConfig} createElement={createElement}/>
 		</div>
 	)
 }

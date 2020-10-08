@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useRef } from 'react';
 import {
-	ComponentConfigsType,
+	PageConfigType,
 	DragSourceType,
 	SelectedInfoType,
 	STATE_PROPS,
@@ -21,7 +21,7 @@ interface DistancesState {
 	hoverKey: string | null
 	selectedInfo: SelectedInfoType | null
 	dragSource: DragSourceType | null
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 }
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
@@ -190,12 +190,12 @@ function Distances() {
 	const rightRef = useRef<any>();
 	const iframe = getIframe();
 
-	const { hoverKey, selectedInfo, dragSource, componentConfigs } = useSelector<
+	const { hoverKey, selectedInfo, dragSource, pageConfig } = useSelector<
 		DistancesState,
 		STATE_PROPS
-	>(['hoverKey', 'selectedInfo', 'dragSource', 'componentConfigs']);
+	>(['hoverKey', 'selectedInfo', 'dragSource', 'pageConfig']);
 	const { selectedKey, domTreeKeys } = selectedInfo || {};
-	const isModal = getIsModalChild(componentConfigs, domTreeKeys);
+	const isModal = getIsModalChild(pageConfig, domTreeKeys);
 
 	const hoverNode = getSelectedNode(hoverKey, iframe);
 	const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [

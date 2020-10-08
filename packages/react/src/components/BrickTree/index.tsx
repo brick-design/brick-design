@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react';
 import {
 	clearHovered,
-	ComponentConfigsType, DragSourceType,
+	PageConfigType, DragSourceType,
 	ROOT,
 	STATE_PROPS,
 } from '@brickd/core';
@@ -15,18 +15,18 @@ interface BrickTreeProps {
 }
 
 function BrickTree(props: BrickTreeProps) {
-	const { componentConfigs,dragSource } = useSelector<
-		{ componentConfigs: ComponentConfigsType,
+	const { pageConfig,dragSource } = useSelector<
+		{ pageConfig: PageConfigType,
 			dragSource:DragSourceType
 		},
 		STATE_PROPS
-	>(['componentConfigs','dragSource'], (prevState, nextState) => {
+	>(['pageConfig','dragSource'], (prevState, nextState) => {
 		const {
-			componentConfigs: { [ROOT]: prevRoot },
+			pageConfig: { [ROOT]: prevRoot },
 			dragSource:prevDragSource
 		} = prevState;
 		const {
-			componentConfigs: { [ROOT]: root },
+			pageConfig: { [ROOT]: root },
 			dragSource
 		} = nextState;
 		return !!(!prevRoot && root)||prevDragSource!==dragSource;
@@ -36,7 +36,7 @@ function BrickTree(props: BrickTreeProps) {
 		clearHovered();
 	}, []);
 
-	if (!componentConfigs[ROOT]) return null;
+	if (!pageConfig[ROOT]) return null;
 	const { className } = props;
 	return (
 		<div

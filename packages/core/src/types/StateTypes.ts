@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { PropInfoType, PropsConfigType } from './ComponentConfigTypes';
+import { PropInfoType, PropsConfigType } from './ComponentSchemaTypes';
 
 export type PropsNodeType = {
 	[propName: string]: string[] | undefined
@@ -34,7 +34,7 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
 }
 
 export interface DragSourceType extends Partial<ParentNodeInfo> {
-	vDOMCollection?: ComponentConfigsType
+	vDOMCollection?: PageConfigType
 	dragKey?: string
 	propsConfigCollection?: PropsConfigSheetType
 }
@@ -65,7 +65,7 @@ export interface PropsConfigSheetType {
 	[componentKey: string]: PropsConfigSheetALL
 }
 
-export interface ComponentConfigsType {
+export interface PageConfigType {
 	[key: string]: VirtualDOMType
 }
 
@@ -76,7 +76,7 @@ export interface BrickAction extends Action<string> {
 export type UndoRedoType = Partial<Omit<StateType, 'undo' | 'redo'>>
 
 export interface StateType {
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 	selectedInfo: SelectedInfoType | null
 	undo: UndoRedoType[]
 	redo: UndoRedoType[]

@@ -5,7 +5,7 @@ import {
 	copyComponent,
 	deleteComponent,
 	onLayoutSortChange,
-} from './handleComponentConfig';
+} from './handleComponentSchema';
 import {
 	clearDragSource,
 	clearDropTarget,

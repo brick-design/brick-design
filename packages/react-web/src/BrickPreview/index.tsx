@@ -7,11 +7,9 @@ import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import {
-	CategoryType,
-	ComponentCategoryType,
-	ComponentInfoType,
 	useSelector,
 } from '@brickd/react';
+import {	CategoryType, ComponentCategoryType,	ComponentInfoType} from './CategoryTypes';
 import DragAbleItem from './DragAbleItem';
 import styles from './index.less';
 import { flattenDeepArray, usePrevious } from '../utils';

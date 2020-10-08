@@ -1,10 +1,9 @@
 import { htmlContainers, htmlNonContainers } from './htmlCategory'
 import { reactContainers, reactNonContainers } from './reactCategory'
 import * as Ants from 'antd/es'
-import AllComponentConfigs from './componentConfigs'
+import componentSchemas from './componentSchemas'
 import { ConfigType } from '@brickd/react'
-import { flattenDeepArray } from '../utils'
-import { message } from 'antd'
+
 
 /**
  * 容器组件分类
@@ -24,11 +23,8 @@ export const NON_CONTAINER_CATEGORY = {
  * 否则设计面板渲染的页面将是无样式的效果
  */
 const config: ConfigType = {
-	OriginalComponents: Ants,
-	AllComponentConfigs,
-	warn: (msg: string) => {
-		message.warning(msg)
-	},
+	componentsMap: Ants,
+	componentSchemasMap:componentSchemas,
 }
 
 export default config

@@ -9,7 +9,7 @@ import {
 	keys,
 } from 'lodash';
 import {
-	ComponentConfigsType,
+	PageConfigType,
 	getComponentConfig,
 	LEGO_BRIDGE,
 	PROPS_TYPES,
@@ -76,7 +76,7 @@ export const getIframe = (): HTMLIFrameElement => {
 };
 
 export const getComponent = (componentName: string) =>
-	get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName);
+	get(LEGO_BRIDGE.config!.componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
 	if (target) {
@@ -141,13 +141,13 @@ export function getElementInfo(
 }
 
 export function getIsModalChild(
-	componentConfigs: ComponentConfigsType,
+	pageConfig: PageConfigType,
 	domTreeKeys?: string[],
 ) {
 	if (domTreeKeys) {
 		for (const key of domTreeKeys) {
 			const { mirrorModalField } =
-				getComponentConfig(get(componentConfigs, [key, 'componentName'])) || {};
+				getComponentConfig(get(pageConfig, [key, 'componentName'])) || {};
 			if (mirrorModalField) return true;
 		}
 	}

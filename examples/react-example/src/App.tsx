@@ -3,7 +3,7 @@ import SettingsPanel from './settingsPanel'
 import styles from './index.less'
 import AllComponents from './ComponentsPreview'
 import ToolBar from './toolBar'
-import {Radio} from 'antd'
+import { message, Radio } from 'antd'
 import { Resizable } from 're-resizable'
 import 'antd/dist/antd.css'
 import 'animate.css/animate.min.css'
@@ -39,7 +39,12 @@ const RIGHT_ENABLE = {
 export default function App() {
 	const [isPreview,setIsPreview]=useState(false)
 	return (
-		<BrickProvider initState={{ componentConfigs: initData }} config={config}>
+		<BrickProvider initState={{ pageConfig: initData }}
+									 config={config}
+									 warn={(msg: string) => {
+										 message.warning(msg)
+									 }}
+		>
 			<div className={styles['wrapper']}>
 				<ToolBar />
 				<div className={styles['content']}>

@@ -15,13 +15,13 @@ export function selectComponent(
 	state: StateType,
 	payload: SelectComponentPayload,
 ): StateType {
-	const { undo, redo, selectedInfo, propsConfigSheet, componentConfigs } = state;
+	const { undo, redo, selectedInfo, propsConfigSheet, pageConfig } = state;
 	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
 	if (selectedInfo) {
 		const { selectedKey, propName: selectedPropName } = selectedInfo;
 		if (
 			(selectedKey === key && selectedPropName == propName) ||
-			handleRequiredHasChild(selectedInfo, componentConfigs)
+			handleRequiredHasChild(selectedInfo, pageConfig)
 		)
 			return state;
 		if (selectedKey === key) {
@@ -49,7 +49,7 @@ export function selectComponent(
 	}
 
 	propName && domTreeKeys.push(`${key}${propName}`);
-	const { props, componentName } = componentConfigs[key];
+	const { props, componentName } = pageConfig[key];
 	const { propsConfig } = getComponentConfig(componentName);
 	undo.push({ selectedInfo });
 	redo.length = 0;
@@ -79,8 +79,8 @@ export function selectComponent(
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state: StateType) {
-	const { selectedInfo, componentConfigs, undo, redo } = state;
-	if (!selectedInfo || handleRequiredHasChild(selectedInfo, componentConfigs)) {
+	const { selectedInfo, pageConfig, undo, redo } = state;
+	if (!selectedInfo || handleRequiredHasChild(selectedInfo, pageConfig)) {
 		return state;
 	}
 	undo.push({ selectedInfo });

@@ -1,4 +1,4 @@
-import { ComponentConfigTypes } from './ComponentConfigTypes';
+import { ComponentSchemaType } from './ComponentSchemaTypes';
 
 /**
  * 属性类型定义
@@ -24,17 +24,16 @@ export enum NODE_PROPS_TYPES {
 /**
  * 全局配置类型定义
  */
-interface OriginalComponentsType {
+interface ComponentsMapType {
 	[componentName: string]: any
 }
 
-export type AllComponentConfigsType = {
-	[componentName: string]: ComponentConfigTypes
+export type ComponentSchemasMapType = {
+	[componentName: string]: ComponentSchemaType
 }
 
 export interface ConfigType {
-	OriginalComponents: OriginalComponentsType //所有的React原始组件
+	componentsMap: ComponentsMapType //所有的React原始组件
 	//所有的组件配置汇总
-	AllComponentConfigs: AllComponentConfigsType
-	warn?: (msg: string) => void
+	componentSchemasMap: ComponentSchemasMapType
 }

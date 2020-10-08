@@ -4,7 +4,7 @@ import PropsSettings from './propsSettings'
 import StyleSettings from './styleSettings'
 import {
 	BrickTree,
-	ComponentConfigsType,
+	PageConfigType,
 	SelectedInfoType,
 	STATE_PROPS,
 	useSelector,
@@ -15,17 +15,17 @@ import get from 'lodash/get'
 const { TabPane } = Tabs
 type SettingPanelType = {
 	selectedInfo: SelectedInfoType
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 }
 
 function SettingPanel() {
-	const { selectedInfo, componentConfigs } = useSelector<
+	const { selectedInfo, pageConfig } = useSelector<
 		SettingPanelType,
 		STATE_PROPS
-	>(['selectedInfo', 'componentConfigs'])
+	>(['selectedInfo', 'pageConfig'])
 	const [activeKey, setActiveKey] = useState('1')
 	const { selectedKey } = selectedInfo || {}
-	const style = get(componentConfigs, [selectedKey, 'props', 'style'])
+	const style = get(pageConfig, [selectedKey, 'props', 'style'])
 	return (
 		<Tabs
 			onChange={(activeKey: any) => setActiveKey(activeKey)}

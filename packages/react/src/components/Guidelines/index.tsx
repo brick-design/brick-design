@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef } from 'react';
 import {
-	ComponentConfigsType,
+	PageConfigType,
 	DragSourceType,
 	DropTargetType,
 	SelectedInfoType,
@@ -22,7 +22,7 @@ type SelectState = {
 	dropTarget: DropTargetType | null
 	selectedInfo: SelectedInfoType | null
 	dragSource: DragSourceType | null
-	componentConfigs: ComponentConfigsType
+	pageConfig: PageConfigType
 }
 
 const controlUpdate = () => {
@@ -40,19 +40,19 @@ function Guidelines() {
 		dropTarget,
 		dragSource,
 		selectedInfo,
-		componentConfigs,
+		pageConfig,
 	} = useSelector<SelectState, STATE_PROPS>(
 		[
 			'hoverKey',
 			'dropTarget',
 			'dragSource',
 			'selectedInfo',
-			'componentConfigs',
+			'pageConfig',
 		],
 		controlUpdate,
 	);
 	const { domTreeKeys } = selectedInfo || {};
-	const isModal = getIsModalChild(componentConfigs, domTreeKeys);
+	const isModal = getIsModalChild(pageConfig, domTreeKeys);
 	const guidControl =
 		hoverKey && (!selectedInfo || (selectedInfo && !dragSource));
 	useEffect(() => {

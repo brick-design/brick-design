@@ -1,6 +1,6 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/core';
+import { ComponentSchemaType, PROPS_TYPES } from '@brickd/core';
 
-const img: ComponentConfigTypes = {
+const img: ComponentSchemaType = {
 	propsConfig: {
 		alt: {
 			label: '图像的替代文本',

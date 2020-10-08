@@ -5,7 +5,7 @@ import ACTION_TYPES from '../../actions/actionTypes';
 import config from '../configs';
 
 import {
-	ComponentConfigsType,
+	PageConfigType,
 	PROPS_TYPES,
 	PropsConfigSheetType,
 	SelectedInfoType,
@@ -29,7 +29,7 @@ describe('addPropsConfig', () => {
 	});
 
 	it('添加object属性配置', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'a' },
 		};
 		const selectedInfo: SelectedInfoType = {
@@ -41,7 +41,7 @@ describe('addPropsConfig', () => {
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			propsConfigSheet: {},
 			selectedInfo,
 		};
@@ -122,7 +122,7 @@ describe('addPropsConfig', () => {
 		};
 		const prevState: StateType = {
 			...legoState,
-			componentConfigs: { [ROOT]: { componentName: 'a' } },
+			pageConfig: { [ROOT]: { componentName: 'a' } },
 			undo: [],
 			selectedInfo,
 		};
@@ -183,7 +183,7 @@ describe('addPropsConfig', () => {
 			...legoState,
 			undo: [],
 			propsConfigSheet: {},
-			componentConfigs: { [ROOT]: { componentName: 'a' } },
+			pageConfig: { [ROOT]: { componentName: 'a' } },
 			selectedInfo,
 		};
 		const payload: AddPropsConfigPayload = {
@@ -244,7 +244,7 @@ describe('deletePropsConfig', () => {
 			parentKey: ROOT,
 			propsConfig: {},
 		};
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: {
 				componentName: 'a',
 				childNodes: ['1'],
@@ -260,7 +260,7 @@ describe('deletePropsConfig', () => {
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			propsConfigSheet,
 			selectedInfo,
 		};
@@ -271,9 +271,9 @@ describe('deletePropsConfig', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ selectedInfo, componentConfigs, propsConfigSheet }],
-			componentConfigs: {
-				...componentConfigs,
+			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
+			pageConfig: {
+				...pageConfig,
 				1: { componentName: 'img', props: {} },
 			},
 			propsConfigSheet: {
@@ -295,7 +295,7 @@ describe('deletePropsConfig', () => {
 			parentKey: '',
 			propsConfig: {},
 		};
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: {
 				componentName: 'img',
 				props: {},
@@ -307,7 +307,7 @@ describe('deletePropsConfig', () => {
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			propsConfigSheet,
 			selectedInfo,
 		};
@@ -318,13 +318,13 @@ describe('deletePropsConfig', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ selectedInfo, componentConfigs, propsConfigSheet }],
+			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
 			propsConfigSheet: {
 				[ROOT]: { a: {} },
 			},
 			selectedInfo: {
 				...selectedInfo,
-				propsConfig: merge(config.AllComponentConfigs['img'].propsConfig, {
+				propsConfig: merge(config.componentSchemasMap['img'].propsConfig, {
 					a: {},
 				}),
 			},
@@ -338,7 +338,7 @@ describe('deletePropsConfig', () => {
 			parentKey: '',
 			propsConfig: {},
 		};
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: {
 				componentName: 'img',
 				props: { a: { b: '1' } },
@@ -350,7 +350,7 @@ describe('deletePropsConfig', () => {
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			propsConfigSheet,
 			selectedInfo,
 		};
@@ -361,8 +361,8 @@ describe('deletePropsConfig', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ selectedInfo, componentConfigs, propsConfigSheet }],
-			componentConfigs: {
+			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
+			pageConfig: {
 				[ROOT]: { componentName: 'img' },
 			},
 			propsConfigSheet: {
@@ -383,13 +383,13 @@ describe('changeProps', () => {
 		expect(reducer(legoState, action)).toEqual(legoState);
 	});
 	it('changeProps and style===undefined', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'img', props: { a: 1 } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [ROOT],
@@ -401,8 +401,8 @@ describe('changeProps', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: { componentName: 'img', props: { b: 2 } },
 			},
 		};
@@ -410,13 +410,13 @@ describe('changeProps', () => {
 		expect(state).toEqual(expectState);
 	});
 	it('changeProps and style', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'img', props: { style: { a: 1 } } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [ROOT],
@@ -428,8 +428,8 @@ describe('changeProps', () => {
 		const state = reducer(prevState, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: { componentName: 'img', props: { b: 2, style: { a: 1 } } },
 			},
 		};
@@ -444,13 +444,13 @@ describe('resetProps', () => {
 		expect(reducer(legoState, action)).toEqual(legoState);
 	});
 	it('selectedInfo!==null and style===undefined', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'img', props: { a: 3 } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [],
@@ -462,21 +462,21 @@ describe('resetProps', () => {
 		const state = reducer(prevState, action);
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: { componentName: 'img', props: { b: 2 } },
 			},
 		};
 		expect(state).toEqual(expectState);
 	});
 	it('selectedInfo!==null and style!==undefined', () => {
-		const componentConfigs: ComponentConfigsType = {
+		const pageConfig: PageConfigType = {
 			[ROOT]: { componentName: 'img', props: { a: 1, style: { c: 3 } } },
 		};
 		const prevState: StateType = {
 			...legoState,
 			undo: [],
-			componentConfigs,
+			pageConfig,
 			selectedInfo: {
 				selectedKey: ROOT,
 				domTreeKeys: [],
@@ -488,8 +488,8 @@ describe('resetProps', () => {
 		const state = reducer(prevState, action);
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ componentConfigs }],
-			componentConfigs: {
+			undo: [{ pageConfig }],
+			pageConfig: {
 				[ROOT]: { componentName: 'img', props: { b: 2, style: { c: 3 } } },
 			},
 		};

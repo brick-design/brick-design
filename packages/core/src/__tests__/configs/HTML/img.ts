@@ -1,6 +1,7 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
+import { ComponentSchemaType, PROPS_TYPES } from '../../../types';
 
-const img: ComponentConfigTypes = {
+const img: ComponentSchemaType = {
+	isNonContainer:true,
 	propsConfig: {
 		alt: {
 			label: '图像的替代文本',

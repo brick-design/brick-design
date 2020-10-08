@@ -1,4 +1,4 @@
-import { CategoryType } from '@brickd/react'
+import { CategoryType } from '@brickd/react-web'
 
 export const htmlContainers: CategoryType = {
 	HTMLTag: {

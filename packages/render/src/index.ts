@@ -4,30 +4,30 @@ import {
 	ROOT,
 	LEGO_BRIDGE,
 	VirtualDOMType,
-	ComponentConfigTypes,
-	 ComponentConfigsType,
+	ComponentSchemaType,
+	 PageConfigType,
 } from '@brickd/core';
 import { each, get, isArray, map, reduce } from 'lodash';
 
-type PluginType=(vDom: VirtualDOMType,componentConfig:ComponentConfigTypes)=>VirtualDOMType
+type PluginType=(vDom: VirtualDOMType,componentSchema:ComponentSchemaType)=>VirtualDOMType
 
 interface BrickRenderType{
-	componentConfigs:ComponentConfigsType
+	pageConfig:PageConfigType
 	createElement: any,
 	plugins?: PluginType[]
 }
 export default function BrickRender(props:BrickRenderType) {
-	const {componentConfigs,createElement,plugins}=props;
+	const {pageConfig,createElement,plugins}=props;
 
 	function handlePlugins(vDom: VirtualDOMType, plugins: any=[]) {
-		const componentConfig=get(LEGO_BRIDGE.config.AllComponentConfigs,vDom.componentName);
-		const newVDom=reduce(plugins, (newVDom, plugin) => plugin(newVDom,componentConfig), vDom);
+		const componentSchema=get(LEGO_BRIDGE.config.componentSchemasMap,vDom.componentName);
+		const newVDom=reduce(plugins, (newVDom, plugin) => plugin(newVDom,componentSchema), vDom);
 		return newVDom.props;
 	}
 
 	function renderArrChildNodes(childNodes: string[]) {
 		return map(childNodes, key => {
-			return renderNode(componentConfigs[key],key);
+			return renderNode(pageConfig[key],key);
 		});
 	}
 
@@ -49,9 +49,9 @@ export default function BrickRender(props:BrickRenderType) {
 
 	function renderNode(vDom:VirtualDOMType,key?:string){
 		const { componentName, childNodes } = vDom;
-		return createElement(get(LEGO_BRIDGE.config.OriginalComponents, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) });
+		return createElement(get(LEGO_BRIDGE.config.componentsMap, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) });
 	}
 
 
-	return renderNode(componentConfigs[ROOT]);
+	return renderNode(pageConfig[ROOT]);
 }

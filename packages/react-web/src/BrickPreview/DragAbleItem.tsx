@@ -41,7 +41,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
 			return componentName;
 		}
 		return createElement(
-			get(LEGO_BRIDGE.config!.OriginalComponents, componentName, componentName),
+			get(LEGO_BRIDGE.config!.componentsMap, componentName, componentName),
 			defaultProps,
 		);
 	}

@@ -1,6 +1,6 @@
-import { ComponentConfigTypes, PROPS_TYPES } from '../../../types';
+import { ComponentSchemaType, PROPS_TYPES } from '../../../types';
 
-const h: ComponentConfigTypes = {
+const h: ComponentSchemaType = {
 	childNodesRule: ['img'],
 	isRequired: true,
 	propsConfig: {

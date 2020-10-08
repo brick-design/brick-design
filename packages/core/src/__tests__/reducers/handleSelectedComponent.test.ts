@@ -18,7 +18,7 @@ describe('selectInfo', () => {
 	test('如果 selectedInfo===null ', () => {
 		const prevState: StateType = {
 			...legoState,
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 					childNodes: {
@@ -39,7 +39,7 @@ describe('selectInfo', () => {
 			...prevState,
 			selectedInfo: {
 				selectedKey: ROOT,
-				propsConfig: config.AllComponentConfigs['span'].propsConfig,
+				propsConfig: config.componentSchemasMap['span'].propsConfig,
 				propName: 'test',
 				domTreeKeys: [ROOT, '0test'],
 				parentKey: '',
@@ -59,7 +59,7 @@ describe('selectInfo', () => {
 			undo: [],
 			selectedInfo,
 			dropTarget: { selectedKey: '', domTreeKeys: [] },
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 					childNodes: {
@@ -85,7 +85,7 @@ describe('selectInfo', () => {
 				parentKey: ROOT,
 				domTreeKeys: [ROOT, '0test', '1'],
 				parentPropName: 'test',
-				propsConfig: config!.AllComponentConfigs['img'].propsConfig,
+				propsConfig: config!.componentSchemasMap['img'].propsConfig,
 			},
 		};
 		expect(state).toEqual(expectState);
@@ -103,7 +103,7 @@ describe('selectInfo', () => {
 			undo: [],
 			selectedInfo,
 			dropTarget: { selectedKey: '', domTreeKeys: [] },
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 					childNodes: {
@@ -129,7 +129,7 @@ describe('selectInfo', () => {
 				domTreeKeys: [ROOT, '0children'],
 				propName: 'children',
 				parentKey: '',
-				propsConfig: LEGO_BRIDGE.config!.AllComponentConfigs['span']
+				propsConfig: LEGO_BRIDGE.config!.componentSchemasMap['span']
 					.propsConfig,
 			},
 		};
@@ -145,7 +145,7 @@ describe('selectInfo', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 				},
@@ -176,7 +176,7 @@ describe('selectInfo', () => {
 			const prevState: StateType = {
 				...legoState,
 				selectedInfo,
-				componentConfigs: {
+				pageConfig: {
 					[ROOT]: {
 						componentName: 'span',
 						childNodes: {
@@ -213,7 +213,7 @@ describe('selectInfo', () => {
 		const prevState: StateType = {
 			...legoState,
 			selectedInfo,
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 					childNodes: {
@@ -259,7 +259,7 @@ describe('清除选中', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'span',
 				},
@@ -277,7 +277,7 @@ describe('清除选中', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'h',
 				},
@@ -295,7 +295,7 @@ describe('清除选中', () => {
 				parentKey: '',
 				propsConfig: {},
 			},
-			componentConfigs: {
+			pageConfig: {
 				[ROOT]: {
 					componentName: 'img',
 				},

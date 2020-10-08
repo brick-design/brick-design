@@ -41,7 +41,7 @@ jest.mock('../../store', () => ({
 
 describe('actions test', () => {
 	test('test actions', () => {
-		// componentConfig
+		// componentSchema
 		expect(addComponent()).toEqual({ type: ACTION_TYPES.addComponent });
 		expect(copyComponent()).toEqual({ type: ACTION_TYPES.copyComponent });
 		const payload: LayoutSortPayload = { sortKeys: [], parentKey: '' };

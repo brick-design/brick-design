@@ -86,14 +86,14 @@ function onKeyDown(keyEvent: any, enabled: string[]) {
 function ToolBar() {
 	const {
 		selectedInfo,
-		componentConfigs,
+		pageConfig,
 		undo,
 		redo,
 		styleSetting,
 		platformInfo,
 	} = useSelector([
 		'selectedInfo',
-		'componentConfigs',
+		'pageConfig',
 		'undo',
 		'redo',
 		'styleSetting',
@@ -122,7 +122,7 @@ function ToolBar() {
 	if (!isEmpty(redo)) enabled.push(REDO)
 	if (isEmpty(selectedInfo)) {
 		enabled.push(...ENABLED.must)
-	} else if (!isEmpty(componentConfigs)) {
+	} else if (!isEmpty(pageConfig)) {
 		enabled.push(...ENABLED.must, ...ENABLED.selected)
 	}
 
@@ -131,10 +131,10 @@ function ToolBar() {
 	 *
 	 */
 	const generateTemplate = useCallback(() => {
-		// if (handleRequiredHasChild(selectedInfo!, componentConfigs!)) return;
+		// if (handleRequiredHasChild(selectedInfo!, pageConfig!)) return;
 		setVisible(true)
 		setIsShowTemplate(true)
-	}, [selectedInfo, componentConfigs])
+	}, [])
 
 	/**
 	 *  本方式是生成复合组件事件
@@ -144,7 +144,7 @@ function ToolBar() {
 	const addTemplateInfo = useCallback(
 		(data: any) => {
 			const { templateName, srcImg } = data
-			const currentComponentInfo = get(componentConfigs, location!, {})
+			const currentComponentInfo = get(pageConfig, location!, {})
 			if (!isEmpty(currentComponentInfo)) {
 				// dispatch!({
 				//   type: ACTION_TYPES.addTemplateInfo,
@@ -157,7 +157,7 @@ function ToolBar() {
 			}
 			setVisible(false)
 		},
-		[location, componentConfigs],
+		[location, pageConfig],
 	)
 
 	/**
@@ -166,10 +166,10 @@ function ToolBar() {
 	 */
 
 	const preview = useCallback(() => {
-		// if (handleRequiredHasChild(selectedInfo!, componentConfigs!)) return;
+		// if (handleRequiredHasChild(selectedInfo!, pageConfig!)) return;
 		setVisible(true)
 		setIsShowTemplate(false)
-	}, [selectedInfo, componentConfigs])
+	}, [])
 
 	const funMap: { [funName: string]: () => any } = {
 		preview,
@@ -212,7 +212,7 @@ function ToolBar() {
 								map(menus, (content: any, key: string) =>
 									renderGroup(content, key, enabled, funMap, style),
 								),
-							[enabled, style],
+							[enabled, funMap, style],
 						)}
 					</Row>
 				</Col>
@@ -222,7 +222,7 @@ function ToolBar() {
 				{/*  {...modalConfig}*/}
 				{/*>*/}
 				{/*  {isShowTemplate ? <GenerateTemplate uploadFile={addTemplateInfo}/> :*/}
-				{/*    <PreviewAndCode componentConfigs={componentConfigs!}*/}
+				{/*    <PreviewAndCode pageConfig={pageConfig!}*/}
 				{/*                    controlModal={() => setVisible(false)}*/}
 				{/*                    visible={visible}*/}
 				{/*                    platformInfo={platformInfo}*/}
