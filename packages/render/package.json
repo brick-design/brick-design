@@ -1,6 +1,6 @@
 {
   "name": "@brickd/render",
-  "version": "1.0.0-alpha.15",
+  "version": "1.0.0-alpha.16",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -12,13 +12,12 @@
     "build": "tsc && rollup -c rollup.config.js",
     "clean": "../../scripts/clean_package.sh",
     "dev": "tsc -w && rollup -c rollup.config.js -w"
-
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@brickd/core": "^1.0.0-alpha.15",
+    "@brickd/core": "^1.0.0-alpha.16",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
