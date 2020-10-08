@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const Checkbox: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',
@@ -37,6 +39,8 @@ const Checkbox: ComponentConfigTypes = {
 }
 
 const Group: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		defaultValue: {
 			label: '默认选中的选项',

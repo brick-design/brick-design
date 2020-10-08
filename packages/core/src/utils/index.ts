@@ -243,12 +243,7 @@ export function getComponentConfig(
 }
 
 export function isContainer(componentName: string) {
-	const containers = get(LEGO_BRIDGE, ['config', 'containers']);
-	if (!containers) {
-		error(`Please configure the container category of the components`);
-	} else {
-		return containers.includes(componentName);
-	}
+	return  !get(LEGO_BRIDGE, ['config', 'AllComponentConfigs',componentName,'isNonContainer']);
 }
 
 export function error(msg: string) {

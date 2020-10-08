@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const Icon: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		type: {
 			label: '图标类型',

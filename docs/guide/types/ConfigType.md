@@ -15,7 +15,9 @@ interface ConfigType {
 	warn?: (msg: string) => void
 }
 ```
-### OriginalComponentsType
+### OriginalComponents
+所有React原始组件集合，主要供预览与页面编辑区识别并获取组件
+##### OriginalComponentsType
 定义
 ```ts
 interface OriginalComponentsType {
@@ -23,15 +25,17 @@ interface OriginalComponentsType {
 }
 ```
 所有拖拽组件的集合。
-
-### AllComponentConfigsType
+### AllComponentConfigs
 所有拖拽组件的配置信息集合
 
+##### AllComponentConfigsType
+定义
 ```ts
 type AllComponentConfigsType = {
 	[componentName: string]: ComponentConfigTypes
 }
 ```
+[ComponentConfigTypes](./component-config-types)
 ### containers
 所有容器组件名的数组集合
 

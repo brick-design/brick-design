@@ -21,8 +21,6 @@ export enum NODE_PROPS_TYPES {
 	functionReactNode = 'functionReactNode',
 }
 
-export type ALL_TYPE = PROPS_TYPES | NODE_PROPS_TYPES
-
 /**
  * 全局配置类型定义
  */
@@ -38,6 +36,5 @@ export interface ConfigType {
 	OriginalComponents: OriginalComponentsType //所有的React原始组件
 	//所有的组件配置汇总
 	AllComponentConfigs: AllComponentConfigsType
-	containers: string[]
 	warn?: (msg: string) => void
 }

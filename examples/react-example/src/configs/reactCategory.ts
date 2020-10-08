@@ -271,7 +271,6 @@ export const reactContainers: CategoryType = {
 }
 
 export const reactNonContainers: CategoryType = {
-	DemoChart: null,
 	Typography: {
 		components: {
 			'Typography.Text': null,

@@ -129,6 +129,8 @@ const Group: ComponentConfigTypes = {
 	},
 }
 const Search: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	nodePropsConfig: {
 		enterButton: {
 			type: NODE_PROPS_TYPES.reactNode,
@@ -153,6 +155,8 @@ const Search: ComponentConfigTypes = {
 	},
 }
 const TextArea: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		autoSize: {
 			label: '自适应内容高度',
@@ -180,6 +184,8 @@ const TextArea: ComponentConfigTypes = {
 	},
 }
 const Password: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		visibilityToggle: {
 			label: '是否显示切换按钮',

@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const InputNumber: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		autoFocus: {
 			label: '是否自动获取焦点',

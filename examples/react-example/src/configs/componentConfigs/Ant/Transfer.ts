@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const Transfer: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		render: {
 			label: '行元素渲染',

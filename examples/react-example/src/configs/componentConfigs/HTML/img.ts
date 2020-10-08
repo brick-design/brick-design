@@ -1,6 +1,7 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const img: ComponentConfigTypes = {
+	isNonContainer:true,
 	propsConfig: {
 		alt: {
 			label: '图像的替代文本',

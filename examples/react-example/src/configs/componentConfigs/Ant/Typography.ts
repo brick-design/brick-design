@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const Text: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',
@@ -77,6 +79,8 @@ const Text: ComponentConfigTypes = {
 	},
 }
 const Title: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',
@@ -171,6 +175,8 @@ const Title: ComponentConfigTypes = {
 	},
 }
 const Paragraph: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',
@@ -184,10 +190,6 @@ const Paragraph: ComponentConfigTypes = {
 				text: {
 					label: 'text',
 					type: PROPS_TYPES.string,
-					onCopy: {
-						label: 'onCopy',
-						type: PROPS_TYPES.function,
-					},
 				},
 			},
 		},

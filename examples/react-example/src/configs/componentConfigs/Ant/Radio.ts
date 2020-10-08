@@ -5,6 +5,8 @@ import {
 } from '@brickd/react'
 
 const Radio: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',
@@ -33,6 +35,8 @@ const Radio: ComponentConfigTypes = {
 }
 
 const Button: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		children: {
 			label: '内容',

@@ -26,7 +26,6 @@ export const NON_CONTAINER_CATEGORY = {
 const config: ConfigType = {
 	OriginalComponents: Ants,
 	AllComponentConfigs,
-	containers: flattenDeepArray(CONTAINER_CATEGORY),
 	warn: (msg: string) => {
 		message.warning(msg)
 	},

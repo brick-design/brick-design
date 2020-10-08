@@ -5,6 +5,8 @@ import {
 } from '@brickd/react'
 
 const Rate: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	nodePropsConfig: {
 		character: {
 			type: NODE_PROPS_TYPES.reactNode,

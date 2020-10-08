@@ -104,6 +104,7 @@ export interface ComponentConfigTypes
 	extends Omit<NodeProps, 'type' | 'tip' | 'params' | 'label'> {
 	//父组件约束，许多组件只能作为特定组件的子组件，这些组件需要设置，父组件约束放置放错，导致错误显示或者报错，
 	//注意要明确约束到父组件的节点属性
+	isNonContainer?:boolean
 	fatherNodesRule?: string[]
 	nodePropsConfig?: NodePropsConfigType
 	mirrorModalField?: MirrorModalFieldType

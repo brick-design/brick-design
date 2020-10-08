@@ -1,6 +1,8 @@
 import { ComponentConfigTypes, PROPS_TYPES } from '@brickd/react'
 
 const Slider: ComponentConfigTypes = {
+	isNonContainer:true,
+
 	propsConfig: {
 		allowClear: {
 			label: '支持清除',
