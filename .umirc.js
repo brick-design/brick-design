@@ -7,7 +7,7 @@ export default defineConfig({
 	menus:{
 		'/guide': [
 			{
-				title: '介绍',
+				title: '简介',
 				children: ['guide/index', 'guide/getting-started'],
 			},
 			{

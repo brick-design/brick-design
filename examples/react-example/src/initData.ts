@@ -371,6 +371,7 @@ export default {
 	},
 	'48': {
 		componentName: 'Layout.Content',
+		childNodes:['55'],
 		props: {
 			style: {
 				paddingTop: '24px',
@@ -393,7 +394,7 @@ export default {
 		componentName: 'Avatar',
 		props: {
 			src:
-				'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1409542008,2775622124&fm=111&gp=0.jpg',
+				'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2584019613,1728895621&fm=26&gp=0.jpg',
 			size: 100,
 		},
 	},
@@ -412,4 +413,53 @@ export default {
 	'54': {
 		componentName: 'Steps.Step',
 	},
+	"55":{
+		componentName: 'Carousel',
+		props:{
+			autoplay:true
+		},
+		childNodes:['56','58','60']
+	},
+	"56":{
+		componentName: 'div',
+		childNodes:['57']
+	},
+	"57":{
+		componentName: 'img',
+		props:{
+			style:{
+				width:'100%',
+				height:'200px'
+			},
+			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2346282507,2171850944&fm=26&gp=0.jpg'
+		}
+	},
+	"58":{
+		componentName: 'div',
+		childNodes:['59']
+	},
+	"59":{
+		componentName: 'img',
+		props:{
+			style:{
+				width:'100%',
+				height:'200px'
+			},
+			src: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=364397611,3916868751&fm=26&gp=0.jpg'
+		}
+	},
+	"60":{
+		componentName: 'div',
+		childNodes:['61']
+	},
+	"61":{
+		componentName: 'img',
+		props:{
+			style:{
+				width:'100%',
+				height:'200px'
+			},
+			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3672347654,250980527&fm=26&gp=0.jpg'
+		}
+	}
 }
