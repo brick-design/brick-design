@@ -14,6 +14,6 @@
   "scripts": {
     "build": "tsc && rollup -c rollup.config.js",
     "clean": "../../scripts/clean_package.sh",
-    "dev": "tsc -w && rollup -c rollup.config.js -w"
+    "dev": "tsc -w & rollup -c rollup.config.js -w"
   }
 }
