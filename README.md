@@ -25,9 +25,28 @@ npm install @brickd/react @brickd/react-web @brickd/render
 ## Usage
 ```jsx
 import { createElement } from 'react';
-import { BrickDesign, BrickTree, BrickProvider, useSelector, createActions } from '@brickd/react';
+import { BrickDesign, BrickTree, BrickProvider, useSelector, createActions,PROPS_TYPES } from '@brickd/react';
 import { BrickPreview } from '@brickd/react-web';
 import BrickRender from '@brickd/render';
+import * as Ants from 'antd/es';
+const divSchemas= {
+   propsConfig:{
+      children:{
+         label: '文本内容',
+         type: PROPS_TYPES.string,
+      },
+      ...
+   }
+}
+const componentSchemasMap = {
+	'div':divSchemas,
+     ...
+}
+ 
+const config = {
+   componentsMap:Ants,
+   componentSchemasMap
+}
 const plugins = [(vDom, componentConfig) => vDom];
 const customReducer = (state, action) => {
   const { type, payload } = action
@@ -39,13 +58,14 @@ const customReducer = (state, action) => {
   }
 }
 const App = () => {
-  const { componentConfigs } = useSelector(['componentConfigs'])
+  const { pageConfig } = useSelector(['pageConfig'])
 
-  return (<BrickProvider initState={{}} customReducer={customReducer} config={{ ...componentConfigs }}>
-    <div onClick={() => createActions({ type: "customReducer", payload: { ...componentConfigs } })}> 出发action</div>
+  return (<BrickProvider initState={{...}} customReducer={customReducer} config={config} warn={(msg) => message.warning(msg)}
+  >
+    <div onClick={() => createActions({ type: "customReducer", payload: { ... } })}> 出发action</div>
     <BrickPreview />
     <BrickDesign />
-    <BrickRender componentConfigs={componentConfigs} createElement={createElement} plugins={plugins} />
+    <BrickRender pageConfig={pageConfig} createElement={createElement} plugins={plugins} />
     <BrickTree />
   </BrickProvider>);
 }
