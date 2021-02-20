@@ -6,7 +6,6 @@ import {
 	useMemo,
 	useState,
 } from 'react';
-import { merge } from 'lodash';
 import {
 	ChildNodesType,
 	clearDropTarget,
@@ -20,9 +19,8 @@ import {
 import { useSelector } from '@brickd/redux-bridge';
 import { dataMapping, } from '@brickd/utils';
 import {
-	formatSpecialProps,
 	generateRequiredProps,
-	getComponent, isRenderComponent,
+	getComponent, isHiddenComponent,
 } from '../utils';
 
 import {
@@ -55,26 +53,26 @@ function Container(allProps: CommonPropsType, ref: any) {
 		...rest
 	} = allProps;
 
-	const { pageConfig: PageDom, propsConfigSheet } = useSelector<
+	const { pageConfig: PageDom } = useSelector<
 		HookState,
 		STATE_PROPS
 	>(stateSelector, (prevState, nextState) =>
 		controlUpdate(prevState, nextState, key),
 	);
-	const { dragSource, dropTarget, isHidden } = useDragDrop(key);
+	const { dragSource, dropTarget,isInvisible } = useDragDrop(key);
 	const { dragKey, parentKey, vDOMCollection } = dragSource || {};
 	const { selectedKey } = dropTarget || {};
 
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
 
-	const { props:prevProps, childNodes, componentName,state,api,isRender} = pageConfig[key] || {};
+	const { props:prevProps, childNodes, componentName,state,api,isHidden} = pageConfig[key] || {};
 	useService(key,api);
 	useComponentState(key,state);
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(
 		childNodes,
 	);
-	const { mirrorModalField, propsConfig, nodePropsConfig } = useMemo(
+	const { mirrorModalField, nodePropsConfig } = useMemo(
 		() => getComponentConfig(componentName),
 		[],
 	);
@@ -140,7 +138,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		setChildren(childNodes);
 	}
 
-	if (!componentName||isRenderComponent(isRender,pageState)) return null;
+	if (!isSelected&&(!componentName||isHiddenComponent(isHidden,pageState))) return null;
 
 	let modalProps: any = {};
 	if (mirrorModalField) {
@@ -156,7 +154,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		...restProps,
 		className: handlePropsClassName(
 			key,
-			isHidden && !isDragAddChild,
+			isInvisible && !isDragAddChild,
 			dragKey === key,
 			className,
 			animateClass,
@@ -177,12 +175,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 			childNodes !== children,
 			isDragAddChild,
 		),
-		...formatSpecialProps(
-			props,
-			produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, propsConfigSheet[key]);
-			}),
-		),
+		...props,
 		draggable: true,
 		/**
 		 * 设置组件id方便抓取图片

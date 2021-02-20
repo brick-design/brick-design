@@ -7,7 +7,6 @@ import {
 	isContainer,
 	MirrorModalFieldType,
 	PROPS_TYPES,
-	PropsConfigSheetType,
 	PropsNodeType,
 	SelectedInfoBaseType,
 	STATE_PROPS,
@@ -238,7 +237,6 @@ export function handleEvents(
 
 export type HookState = {
 	pageConfig: PageConfigType
-	propsConfigSheet: PropsConfigSheetType
 }
 
 export const stateSelector: STATE_PROPS[] = [
@@ -257,7 +255,6 @@ export function controlUpdate(
 export interface CommonPropsType extends AllHTMLAttributes<any> {
 	specialProps: SelectedInfoBaseType
 	isDragAddChild?: boolean
-
 	[propsName: string]: any
 }
 

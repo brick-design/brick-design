@@ -31,7 +31,7 @@ export interface VirtualDOMType {
 	childNodes?: ChildNodesType
 	api?:ApiType
 	state?:PlainObjectType
-	isRender?:string
+	isHidden?:string
 	[custom: string]: any
 }
 

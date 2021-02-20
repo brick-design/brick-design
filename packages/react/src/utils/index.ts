@@ -2,52 +2,17 @@ import { useEffect, useRef } from 'react';
 import {
 	each,
 	get,
-	isEmpty,
-	isEqual,
-	isObject,
-	isUndefined,
-	keys,
 } from 'lodash';
 import {
 	PageConfigType,
 	getComponentConfig,
 	LEGO_BRIDGE,
-	PROPS_TYPES,
 } from '@brickd/core';
 import { evalExpression,  tokenize } from '@brickd/utils';
 import { selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
 	null: null,
-};
-
-export const formatSpecialProps = (props: any, propsConfig: any) => {
-	const nextProps = props;
-	each(props, (v, k) => {
-		if (get(propsConfig, k)) {
-			if (!isObject(v)) {
-				if (SPECIAL_STRING_CONSTANTS[v] !== undefined) {
-					nextProps[k] = SPECIAL_STRING_CONSTANTS[v];
-				} else if (propsConfig[k].type === PROPS_TYPES.function) {
-					const funcTemplate = get(propsConfig, `${k}.placeholder`);
-					if (funcTemplate) {
-						nextProps[k] = () => eval(funcTemplate);
-					} else {
-						nextProps[k] = () => void 0;
-					}
-				}
-			} else if (
-				isObject(v) &&
-				!isEmpty(propsConfig[k].childPropsConfig) &&
-				isEqual(keys(v), keys(propsConfig[k].childPropsConfig))
-			) {
-				formatSpecialProps(v, propsConfig[k].childPropsConfig);
-			}
-		} else if (isUndefined(v)) {
-			delete nextProps[k];
-		}
-	});
-	return nextProps;
 };
 
 export function usePrevious<T>(value: any) {
@@ -174,6 +139,6 @@ export function generateRequiredProps(componentName: string) {
 	return requiredProps;
 }
 
-export const isRenderComponent=(isRender?:string,pageState?:any)=>
-	isRender&&isRender.includes('$')?tokenize(isRender,pageState):evalExpression(isRender,pageState);
+export const isHiddenComponent=(isHidden?:string,pageState?:any)=>
+	isHidden&&isHidden.includes('$')?tokenize(isHidden,pageState):evalExpression(isHidden,pageState);
 

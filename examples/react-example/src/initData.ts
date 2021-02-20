@@ -422,7 +422,8 @@ export default {
 		props:{
 			autoplay:true
 		},
-		childNodes:['56','58','60']
+		childNodes:['56','58','60'],
+		isHidden:'${v}'
 	},
 	"56":{
 		componentName: 'div',

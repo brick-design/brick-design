@@ -7,7 +7,7 @@ export interface DragDropTypes {
 }
 
 export interface DragDropStateType extends DragDropTypes {
-	isHidden: boolean
+	isInvisible: boolean
 }
 
 function dragDropUpdate(
@@ -61,12 +61,12 @@ export function useDragDrop(key: string): DragDropStateType {
 	);
 	const { selectedKey, domTreeKeys } = dropTarget || {};
 	const { parentKey, dragKey } = dragSource || {};
-	const isHidden =
+	const isInvisible =
 		dragKey === key &&
 		!!parentKey &&
 		!!domTreeKeys &&
 		parentKey !== selectedKey &&
 		!domTreeKeys.includes(parentKey);
 
-	return { dragSource, dropTarget, isHidden };
+	return { dragSource, dropTarget, isInvisible };
 }

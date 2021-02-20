@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@brickd/core": "^1.0.0-alpha.16",
+    "@brickd/utils": "^1.0.0-alpha.16",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
