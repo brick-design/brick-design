@@ -10,7 +10,8 @@ import {
 	qsstringify,
 	string2regExp
 } from './helper';
-import {  Enginer } from './tpl';
+import { createStr2Function, Enginer, evalExpression } from './tpl';
+import { ActionType } from './types';
 
  type PlainObject={
  	[key:string]:any
@@ -744,6 +745,12 @@ function resolveMapping(
 			: value;
 }
 
+export function handleAction(action:ActionType|string,data:PlainObject){
+	if(typeof action==='string'){
+		return createStr2Function(action,data);
+	}
+}
+
 export function dataMapping(
 	to: any,
 	from: PlainObject,
@@ -771,7 +778,7 @@ export function dataMapping(
 			};
 		}else if(key!=='$'&&key.includes('$')){
 			//todo
-			// ret[key.substring(1)]=()=>{};
+			ret[key.substring(1)]=handleAction(value,from);
 		}else if (key === '&') {
 			const v =
 				isPlainObject(value) &&
@@ -802,15 +809,17 @@ export function dataMapping(
 				};
 			}
 		} else if (value === '$$') {
-			(ret as PlainObject)[key] = from;
+			ret[key] = from;
 		} else if (value && value[0] === '$') {
 			const v = resolveMapping(value, from);
-			(ret as PlainObject)[key] = v;
+			ret[key] = v;
 
 			if (v === '__undefined') {
 				delete (ret as PlainObject)[key];
 			}
-		} else if (
+		}else if(value&&value[0]==='&'){
+			ret[key]=evalExpression(/\&{([^}{]+)}/g.exec(value)[1],from);
+		}else if (
 			isPlainObject(value) &&
 			(keys = Object.keys(value)) &&
 			keys.length === 1 &&
@@ -820,23 +829,23 @@ export function dataMapping(
 			const arr = from[keys[0].substring(1)];
 			const mapping = value[keys[0]];
 
-			(ret as PlainObject)[key] = arr.map((raw: object) =>
+			ret[key] = arr.map((raw: object) =>
 				dataMapping(mapping, createObject(from, raw), ignoreFunction)
 			);
 		} else if (isPlainObject(value)) {
-			(ret as PlainObject)[key] = dataMapping(value, from, ignoreFunction);
+			ret[key] = dataMapping(value, from, ignoreFunction);
 		} else if (Array.isArray(value)) {
-			(ret as PlainObject)[key] = value.map((value: any) =>
+			ret[key] = value.map((value: any) =>
 				isPlainObject(value)
 					? dataMapping(value, from, ignoreFunction)
 					: resolveMapping(value, from)
 			);
 		} else if (typeof value == 'string' && value.includes('$')) {
-			(ret as PlainObject)[key] = resolveMapping(value, from);
+			ret[key] = resolveMapping(value, from);
 		} else if (typeof value === 'function' && ignoreFunction !== true) {
-			(ret as PlainObject)[key] = value(from);
+			ret[key] = value(from);
 		} else {
-			(ret as PlainObject)[key] = value;
+			ret[key] = value;
 
 			if (value === '__undefined') {
 				delete (ret as PlainObject)[key];

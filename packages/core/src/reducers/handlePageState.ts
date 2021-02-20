@@ -6,7 +6,7 @@ export function setState(state: StateType, payload: StatePayload): StateType{
 	const {pageState}=state;
 	return {
 		...state,
-		pageState:merge(pageState,payload),
+		pageState:merge({},pageState,payload),
 	};
 }
 

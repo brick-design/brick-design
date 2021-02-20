@@ -371,7 +371,7 @@ export default {
 	},
 	'48': {
 		componentName: 'Layout.Content',
-		childNodes:['55'],
+		childNodes:['55',"62"],
 		props: {
 			style: {
 				paddingTop: '24px',
@@ -385,14 +385,16 @@ export default {
 	},
 	'49': {
 		componentName: 'Drawer',
+		props:{
+			visible:'${v}',
+			$onClose:'this.v=!this.v'
+		},
 		childNodes: {
 			title: ['50'],
 			children: ['51'],
 		},
 	},
 	'50': {
-		state:{a:true},
-		isRender:'${a}',
 		componentName: 'Avatar',
 		props: {
 			src:
@@ -464,4 +466,12 @@ export default {
 			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3672347654,250980527&fm=26&gp=0.jpg'
 		}
 	},
+	"62":{
+		componentName:'Button',
+		props:{
+			$onClick:'this.v=!this.v',
+			children:'点我',
+			type:'primary'
+		}
+	}
 }

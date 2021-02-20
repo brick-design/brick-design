@@ -223,8 +223,13 @@ export function handleEvents(
 		propName = Object.keys(childNodes as PropsNodeType)[0];
 	}
 	return {
-		onClick: (e: Event) =>
+		onDoubleClick: (e: Event) =>
 			handleSelectedStatus(e, isSelected, specialProps, propName),
+		onClick:(e: Event)=>{
+			if(isSelected){
+				handleSelectedStatus(e, isSelected, specialProps, propName);
+			}
+		},
 		onMouseOver: (e: Event) => onMouseOver(e, key, isSelected),
 		onDragStart: (e: Event) => onDragStart(e, key, parentKey!, parentPropName),
 		onDragEnd: () => clearDragSource(),
