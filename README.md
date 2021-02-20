@@ -29,7 +29,7 @@ import { BrickDesign, BrickTree, BrickProvider, useSelector, createActions,PROPS
 import { BrickPreview } from '@brickd/react-web';
 import BrickRender from '@brickd/render';
 import * as Ants from 'antd/es';
-const divSchemas= {
+const divSchema = {
    propsConfig:{
       children:{
          label: '文本内容',
@@ -39,7 +39,7 @@ const divSchemas= {
    }
 }
 const componentSchemasMap = {
-	'div':divSchemas,
+	'div':divSchema,
      ...
 }
  
@@ -47,7 +47,7 @@ const config = {
    componentsMap:Ants,
    componentSchemasMap
 }
-const plugins = [(vDom, componentConfig) => vDom];
+const plugins = [(vDom, componentSchema) => vDom];
 const customReducer = (state, action) => {
   const { type, payload } = action
   switch (type) {
@@ -60,7 +60,7 @@ const customReducer = (state, action) => {
 const App = () => {
   const { pageConfig } = useSelector(['pageConfig'])
 
-  return (<BrickProvider initState={{...}} customReducer={customReducer} config={config} warn={(msg) => message.warning(msg)}
+  return (<BrickProvider initState={{...}} customReducer={customReducer} config={config} warn={(msg) =>console.warning(msg)}
   >
     <div onClick={() => createActions({ type: "customReducer", payload: { ... } })}> 出发action</div>
     <BrickPreview />
