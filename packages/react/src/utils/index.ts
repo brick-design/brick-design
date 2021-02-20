@@ -14,6 +14,7 @@ import {
 	LEGO_BRIDGE,
 	PROPS_TYPES,
 } from '@brickd/core';
+import { evalExpression,  tokenize } from '@brickd/utils';
 import { selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
@@ -172,3 +173,7 @@ export function generateRequiredProps(componentName: string) {
 
 	return requiredProps;
 }
+
+export const isRenderComponent=(isRender?:string,pageState?:any)=>
+	isRender&&isRender.includes('$')?tokenize(isRender,pageState):evalExpression(isRender,pageState);
+

@@ -17,41 +17,54 @@ npm install @brickd/react @brickd/react-web @brickd/render
 @brickd/render是一个渲染库，主要是将编辑操作完的也页面配置使用原始组件重新渲染，你可以不依赖这两个库，实现自己的功能库。
 ### 在项目中使用
 ```jsx | pure
-import {createElement} from 'react';
-import {BrickDesign,BrickTree,BrickProvider,useSelector,createActions} from '@brickd/react';
-import {BrickPreview} from '@brickd/react-web';
+import { createElement } from 'react';
+import { BrickDesign, BrickTree, BrickProvider, useSelector, createActions,PROPS_TYPES } from '@brickd/react';
+import { BrickPreview } from '@brickd/react-web';
 import BrickRender from '@brickd/render';
+import * as Ants from 'antd/es';
+// 组件属性配置信息
+const divSchemas= {
+   propsConfig:{
+      children:{
+         label: '文本内容',
+         type: PROPS_TYPES.string,
+      },
+      ...
+   }
+}
+// 组件配置信息集
+const componentSchemasMap = {
+	'div':divSchemas,
+     ...
+}
+ 
+//全局配置
+const config = {
+   componentsMap:Ants,
+   componentSchemasMap
+}
 
-
-const customReducer=(state,action)=>{
-  const {type,payload}=action
-  switch (type){
+// 渲染库支持的自定义函数处理集
+const plugins = [(vDom, componentConfig) => vDom];
+const customReducer = (state, action) => {
+  const { type, payload } = action
+  switch (type) {
     case 'customReducer':
-      return {...state}
+      return { ...state }
     default:
       return state
   }
 }
 const App = () => {
-  return(
-    <BrickProvider initState={{}} customReducer={customReducer} config={{...}} warn={(message)=>console.log(message)}>
-    <div onClick={()=>createActions({type:"customReducer",payload:{...}})}> 出发action</div>
-    <BrickPreview/>
-    <BrickDesign/>
-    <BrickTree/>
-    <RenderPage/>
-  </BrickProvider>
-  );
+  const { pageConfig } = useSelector(['pageConfig'])
+
+  return (<BrickProvider initState={{...}} customReducer={customReducer} config={config} warn={(msg) => message.warning(msg)}
+  >
+    <div onClick={() => createActions({ type: "customReducer", payload: { ... } })}> 出发action</div>
+    <BrickPreview />
+    <BrickDesign />
+    <BrickRender pageConfig={pageConfig} createElement={createElement} plugins={plugins} />
+    <BrickTree />
+  </BrickProvider>);
 }
-
-const plugins=[(vDom,componentSchema)=>vDom];
-
-const RenderPage = () => {
-  const { pageConfig } = useSelector(['pageConfig']);
-  return <BrickRender
-    pageConfig={pageConfig}
-    createElement={createElement}
-    plugins={plugins}
-         />;
-};
 ```

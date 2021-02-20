@@ -1,3 +1,4 @@
+import {FetcherType } from '@brickd/utils';
 import { ComponentSchemaType } from './ComponentSchemaTypes';
 
 /**
@@ -36,4 +37,5 @@ export interface ConfigType {
 	componentsMap: ComponentsMapType //所有的React原始组件
 	//所有的组件配置汇总
 	componentSchemasMap: ComponentSchemasMapType
+	fetcher?:FetcherType;
 }

@@ -18,10 +18,11 @@ import {
 	STATE_PROPS,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
+import { dataMapping, } from '@brickd/utils';
 import {
 	formatSpecialProps,
 	generateRequiredProps,
-	getComponent,
+	getComponent, isRenderComponent,
 } from '../utils';
 
 import {
@@ -39,6 +40,9 @@ import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
+import { useGetState } from '../hooks/useGetState';
+import { useComponentState } from '../hooks/useComponetState';
+import { useService } from '../hooks/useService';
 
 /**
  * 所有的容器组件名称
@@ -63,8 +67,9 @@ function Container(allProps: CommonPropsType, ref: any) {
 
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
 
-	const { props, childNodes, componentName } = pageConfig[key] || {};
-
+	const { props:prevProps, childNodes, componentName,state,api,isRender} = pageConfig[key] || {};
+	useService(key,api);
+	useComponentState(key,state);
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(
 		childNodes,
@@ -73,6 +78,8 @@ function Container(allProps: CommonPropsType, ref: any) {
 		() => getComponentConfig(componentName),
 		[],
 	);
+	const pageState=useGetState(key);
+	const props=useMemo(()=>dataMapping(prevProps,pageState),[pageState]);
 	const { selectedDomKeys, isSelected } = useSelect(
 		specialProps,
 		!!mirrorModalField,
@@ -133,16 +140,15 @@ function Container(allProps: CommonPropsType, ref: any) {
 		setChildren(childNodes);
 	}
 
-	if (!componentName) return null;
+	if (!componentName||isRenderComponent(isRender,pageState)) return null;
 
 	let modalProps: any = {};
 	if (mirrorModalField) {
 		const { displayPropName, mountedProps } = handleModalTypeContainer(
 			mirrorModalField,
 		);
-		const isVisible =
-			isSelected || (selectedDomKeys && selectedDomKeys.includes(key));
-		modalProps = { [displayPropName]: isVisible, ...mountedProps };
+		const isVisible = isSelected || (selectedDomKeys && selectedDomKeys.includes(key));
+		modalProps =isVisible? { [displayPropName]: isVisible, ...mountedProps }:mountedProps;
 	}
 
 	const { className, animateClass, ...restProps } = props || {};

@@ -8,6 +8,7 @@ import {
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
 import { merge } from 'lodash';
+import { dataMapping} from '@brickd/utils';
 import {
 	CommonPropsType,
 	controlUpdate,
@@ -20,10 +21,13 @@ import {
 import {
 	formatSpecialProps,
 	generateRequiredProps,
-	getComponent,
+	getComponent, isRenderComponent,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
+import { useGetState } from '../hooks/useGetState';
+import { useService } from '../hooks/useService';
+import { useComponentState } from '../hooks/useComponetState';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const {
@@ -38,14 +42,18 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	>(stateSelector, (prevState, nextState) =>
 		controlUpdate(prevState, nextState, key),
 	);
+
 	const { isSelected } = useSelect(specialProps);
 	const { dragSource, isHidden } = useDragDrop(key);
 	const { dragKey, vDOMCollection } = dragSource || {};
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
-	const { props, componentName } = pageConfig[key] || {};
+	const { props:prevProps, componentName,state,api,isRender } = pageConfig[key] || {};
+	useService(key,api);
+	useComponentState(key,state);
 	const { propsConfig } = useMemo(() => getComponentConfig(componentName), []);
-
-	if (!componentName) return null;
+	const pageState=useGetState(key);
+	const props=useMemo(()=>dataMapping(prevProps,pageState),[pageState]);
+	if (!componentName||isRenderComponent(isRender,pageState)) return null;
 
 	const onDragEnter = (e: Event) => {
 		e.stopPropagation();

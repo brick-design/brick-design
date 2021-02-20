@@ -29,4 +29,10 @@ export default {
 	resetStyles: 'resetStyles',
 	clearDropTarget: 'clearDropTarget',
 	clearDragSource: 'clearDragSource',
+	setState:'setState',
+	removeState:'removeState',
+	setApi:'setApi',
+	setComponentState:'setComponentState',
+	setPageState:'setPageState',
+	setPageApi:'setPageApi'
 };

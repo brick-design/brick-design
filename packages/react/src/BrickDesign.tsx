@@ -12,7 +12,7 @@ import {
 	DragSourceType,
 	isContainer,
 	ROOT,
-	STATE_PROPS,
+	STATE_PROPS, PageStateConfigType, setState,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { LegoProvider, useSelector } from '@brickd/redux-bridge';
@@ -23,6 +23,7 @@ import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
+import { useService } from './hooks/useService';
 
 const onIframeLoad = (
 	divContainer: any,
@@ -81,28 +82,30 @@ interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	onLoadEnd?: () => void
 }
 
-const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource'];
+const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource','pageStateConfig'];
 
 type BrickdHookState = {
 	pageConfig: PageConfigType
 	dragSource: DragSourceType
+	pageStateConfig:PageStateConfigType
 }
 
 const controlUpdate = (
 	prevState: BrickdHookState,
 	nextState: BrickdHookState,
 ) => {
-	const { pageConfig: prevComponentConfigs } = prevState;
-	const { pageConfig } = nextState;
+	const { pageConfig: prevPageConfig,pageStateConfig:prevPageStateConfig } = prevState;
+	const { pageConfig,pageStateConfig } = nextState;
 
 	return (
 		!pageConfig[ROOT] ||
-		pageConfig[ROOT] !== prevComponentConfigs[ROOT]
+		pageConfig[ROOT] !== prevPageConfig[ROOT]
+		||prevPageStateConfig!==pageStateConfig
 	);
 };
 
 function BrickDesign(props: BrickDesignProps) {
-	const { pageConfig, dragSource } = useSelector<
+	const { pageConfig, dragSource,pageStateConfig} = useSelector<
 		BrickdHookState,
 		STATE_PROPS
 	>(stateSelector, controlUpdate);
@@ -113,6 +116,13 @@ function BrickDesign(props: BrickDesignProps) {
 	}, [pageConfig]);
 
 	const divContainer = useRef(null);
+	const {state,api}=pageStateConfig;
+
+	useEffect(()=>{
+		setState({state});
+	},[state]);
+
+	useService('state',api);
 
 	useEffect(() => {
 		iframeRef.current = getIframe();

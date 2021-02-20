@@ -391,6 +391,8 @@ export default {
 		},
 	},
 	'50': {
+		state:{a:true},
+		isRender:'${a}',
 		componentName: 'Avatar',
 		props: {
 			src:
@@ -461,5 +463,5 @@ export default {
 			},
 			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3672347654,250980527&fm=26&gp=0.jpg'
 		}
-	}
+	},
 }

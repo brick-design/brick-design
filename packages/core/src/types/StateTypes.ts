@@ -1,9 +1,12 @@
 import { Action } from 'redux';
+import { ActionType, Api } from '@brickd/utils';
 import { PropInfoType, PropsConfigType } from './ComponentSchemaTypes';
 
 export type PropsNodeType = {
 	[propName: string]: string[] | undefined
 }
+
+export type PlainObjectType={[key:string]:any}
 
 export type ChildNodesType = string[] | PropsNodeType
 
@@ -12,12 +15,23 @@ export interface ParentNodeInfo {
 	parentPropName?: string
 }
 
+
+
+export type ApiType=Api[]|Api
+
+
+
+export type PropsType={
+	[propName:string]:ActionType|any
+}
+
 export interface VirtualDOMType {
 	componentName: string
-	props?: any
-	addPropsConfig?: string
+	props?: PropsType
 	childNodes?: ChildNodesType
-
+	api?:ApiType
+	state?:PlainObjectType
+	isRender?:string
 	[custom: string]: any
 }
 
@@ -75,7 +89,13 @@ export interface BrickAction extends Action<string> {
 
 export type UndoRedoType = Partial<Omit<StateType, 'undo' | 'redo'>>
 
+export type PageStateConfigType={
+	state?:PlainObjectType
+	api?:ApiType
+}
+
 export interface StateType {
+	pageState:PlainObjectType
 	pageConfig: PageConfigType
 	selectedInfo: SelectedInfoType | null
 	undo: UndoRedoType[]
@@ -85,6 +105,7 @@ export interface StateType {
 	dropTarget: null | DropTargetType
 	platformInfo: PlatformInfoType
 	propsConfigSheet: PropsConfigSheetType
+	pageStateConfig:PageStateConfigType
 }
 
 export type STATE_PROPS = keyof StateType

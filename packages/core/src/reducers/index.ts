@@ -23,6 +23,11 @@ import {
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
+import { setState, removeState } from './handlePageState';
+import { setComponentState } from './handleComponetState';
+import { setApi } from './handleApi';
+import {setPageApi,setPageState} from './handlePageStateConfig';
+
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, StateType } from '../types';
 
@@ -77,6 +82,18 @@ export const reducer: ReducerType = (prevState, action) => {
 			return resizeChange(state, payload);
 		case ACTION_TYPES.clearDragSource:
 			return clearDragSource(state);
+		case ACTION_TYPES.setState:
+			return setState(state,payload);
+		case ACTION_TYPES.removeState:
+			return removeState(state,payload);
+		case ACTION_TYPES.setComponentState:
+			return setComponentState(state,payload);
+		case ACTION_TYPES.setApi:
+			return setApi(state,payload);
+		case ACTION_TYPES.setPageApi:
+			return setPageApi(state,payload);
+		case ACTION_TYPES.setPageState:
+			return setPageState(state,payload);
 		default:
 			return state;
 	}

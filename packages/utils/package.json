@@ -1,0 +1,23 @@
+{
+  "name": "@brickd/utils",
+  "version": "1.0.0-alpha.16",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "qs": "^6.9.6"
+  },
+  "scripts": {
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh"
+  }
+}

@@ -27,6 +27,12 @@
       ],
       "@brickd/render/*": [
         "packages/render/src/*"
+      ],
+      "@brickd/utils": [
+        "packages/utils/src/index"
+      ],
+      "@brickd/utils/*": [
+        "packages/utils/src/*"
       ]
     }
   },

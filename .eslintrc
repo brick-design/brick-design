@@ -50,6 +50,8 @@
         "pathGroupsExcludedImportTypes": ["builtin"],
         "groups": ["external", "builtin", "internal", "sibling", "parent"]
       }
-    ]
+    ],
+    "no-useless-escape": 0,
+    "no-template-curly-in-string": 0
   }
 }
