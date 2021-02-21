@@ -24,7 +24,7 @@ describe('useDragDrop', () => {
 		const expectState: DragDropStateType = {
 			dragSource: null,
 			dropTarget: null,
-			isHidden: false,
+			isInvisible: false,
 		};
 		expect(result.current).toEqual(expectState);
 	});
@@ -49,7 +49,7 @@ describe('useDragDrop', () => {
 			expect(result.current).toEqual({
 				dragSource: null,
 				dropTarget: null,
-				isHidden: false,
+				isInvisible: false,
 			});
 		});
 
@@ -71,7 +71,7 @@ describe('useDragDrop', () => {
 			expect(result.current).toEqual({
 				dragSource: null,
 				dropTarget: null,
-				isHidden: false,
+				isInvisible: false,
 			});
 		});
 	});
@@ -93,7 +93,7 @@ describe('useDragDrop', () => {
 			expect(result.current).toEqual({
 				dragSource: null,
 				dropTarget: null,
-				isHidden: false,
+				isInvisible: false,
 			});
 		});
 		it('当拖拽组件drop的目标不是其父组件时', () => {
@@ -111,7 +111,7 @@ describe('useDragDrop', () => {
 			/**
 			 * drop目标是父组件时
 			 */
-			expect(result.current).toEqual({ ...initState, isHidden: false });
+			expect(result.current).toEqual({ ...initState, isInvisible: false });
 			/**
 			 * 更改drop目标为其他组件不是drag组件的父组件 并且domTreeKeys不包含parentKey
 			 */
@@ -122,7 +122,7 @@ describe('useDragDrop', () => {
 			expect(result.current).toEqual({
 				...initState,
 				dropTarget: dropTarget2,
-				isHidden: true,
+				isInvisible: true,
 			});
 			/**
 			 * 更改drop目标为其他组件不是drag组件的父组件 但是domTreeKeys包含parentKey
@@ -134,7 +134,7 @@ describe('useDragDrop', () => {
 			expect(result.current).toEqual({
 				...initState,
 				dropTarget: dropTarget1,
-				isHidden: false,
+				isInvisible: false,
 			});
 		});
 	});
