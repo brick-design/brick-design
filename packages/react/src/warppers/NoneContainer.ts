@@ -2,7 +2,7 @@ import { createElement, forwardRef, memo } from 'react';
 import {
 	clearDropTarget,
 	ROOT,
-	STATE_PROPS,
+	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
 import {
@@ -20,10 +20,8 @@ import {
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
-import { useService } from '../hooks/useService';
-import { useComponentState } from '../hooks/useComponentState';
-import { useComponentProps } from '../hooks/useComponentProps';
-import { useHiddenComponent } from '../hooks/useHiddenComponent';
+import { useCommon } from '../hooks/useCommon';
+
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const {
@@ -43,11 +41,9 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const { dragSource,isInvisible} = useDragDrop(key);
 	const { dragKey, vDOMCollection } = dragSource || {};
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
-	const { props:prevProps, componentName,state,api,isHidden } = pageConfig[key] || {};
-	useService(key,api);
-	useComponentState(key,state);
-	const props=useComponentProps(prevProps,key);
-	const hidden=useHiddenComponent(key,isHidden);
+	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
+	const {componentName} = vNode;
+	const{props,hidden}=useCommon(key,vNode);
 	if (!isSelected&&(!componentName||hidden)) return null;
 
 	const onDragEnter = (e: Event) => {

@@ -14,7 +14,7 @@ import {
 	produce,
 	PropsNodeType,
 	ROOT,
-	STATE_PROPS,
+	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
 import {
@@ -37,10 +37,7 @@ import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
-import { useComponentState } from '../hooks/useComponentState';
-import { useService } from '../hooks/useService';
-import { useComponentProps } from '../hooks/useComponentProps';
-import { useHiddenComponent } from '../hooks/useHiddenComponent';
+import { useCommon } from '../hooks/useCommon';
 
 /**
  * 所有的容器组件名称
@@ -64,10 +61,9 @@ function Container(allProps: CommonPropsType, ref: any) {
 	const { selectedKey } = dropTarget || {};
 
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
-
-	const { props:prevProps, childNodes, componentName,state,api,isHidden} = pageConfig[key] || {};
-	useService(key,api);
-	useComponentState(key,state);
+	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
+	const { childNodes, componentName} = vNode;
+	const{props,hidden}=useCommon(key,vNode);
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(
 		childNodes,
@@ -76,7 +72,6 @@ function Container(allProps: CommonPropsType, ref: any) {
 		() => getComponentConfig(componentName),
 		[],
 	);
-	const props=useComponentProps(prevProps,key);
 	const { selectedDomKeys, isSelected } = useSelect(
 		specialProps,
 		!!mirrorModalField,
@@ -132,7 +127,6 @@ function Container(allProps: CommonPropsType, ref: any) {
 	useEffect(() => {
 		setChildren(childNodes);
 	}, [childNodes]);
-	const hidden=useHiddenComponent(key,isHidden);
 	if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
 		setChildren(childNodes);
 	}

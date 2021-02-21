@@ -24,6 +24,7 @@
     "@brickd/core": "^1.0.0-alpha.16",
     "@brickd/redux-bridge": "^1.0.0-alpha.16",
     "@brickd/utils": "^1.0.0-alpha.16",
+    "@brickd/hooks": "^1.0.0-alpha.16",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",
     "react": "^16.8.0",

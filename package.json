@@ -113,6 +113,7 @@
       "^@brickd/redux-bridge$": "redux-bridge/src",
       "^@brickd/render$": "render/src",
       "^@brickd/utils": "utils/src",
+      "^@brickd/hooks": "hooks/src",
       "\\.less$": "identity-obj-proxy"
     },
     "collectCoverageFrom": [
@@ -131,8 +132,8 @@
       "<rootDir>/packages/react-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/redux-bridge/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/render/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
-      "<rootDir>/packages/utils/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
-
+      "<rootDir>/packages/utils/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
+      "<rootDir>/packages/hooks/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest",

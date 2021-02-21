@@ -1,8 +1,6 @@
 import {  evalExpression, tokenize } from '@brickd/utils';
-import { useGetState } from './useGetState';
 
-export function useHiddenComponent(key:string,isHidden?:string){
-	const pageState=useGetState(key);
+export function useHiddenComponent(pageState:any,isHidden?:string){
 	return isHidden&&isHidden.includes('$')?tokenize(isHidden,pageState):evalExpression(isHidden,pageState);
 
 }

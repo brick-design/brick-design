@@ -16,6 +16,7 @@ import {
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { LegoProvider, useSelector } from '@brickd/redux-bridge';
+import { useService } from '@brickd/hooks';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
@@ -23,7 +24,6 @@ import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
-import { useService } from './hooks/useService';
 
 const onIframeLoad = (
 	divContainer: any,
@@ -121,8 +121,8 @@ function BrickDesign(props: BrickDesignProps) {
 	useEffect(()=>{
 		setState({state});
 	},[state]);
-
-	useService('state',api);
+	const {state:pageState}=useSelector(['pageState'],undefined,'state');
+	useService('state',pageState,setState,api);
 
 	useEffect(() => {
 		iframeRef.current = getIframe();

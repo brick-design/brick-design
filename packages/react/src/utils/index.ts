@@ -140,9 +140,3 @@ export function generateRequiredProps(componentName: string) {
 
 	return requiredProps;
 }
-
-export  const defaultFetcher=async (api:any)=>{
-	const {url,...rest}=api;
-	const result=await fetch(url,rest);
-	return result.json();
-};

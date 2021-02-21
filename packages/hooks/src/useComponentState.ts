@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { PlainObjectType, setState } from '@brickd/core';
 import {isEqual} from 'lodash';
+import { PlainObject } from '@brickd/utils';
+import { SetStateType } from './types';
 
-export function useComponentState(key:string,props:any,state?: PlainObjectType){
+export function useComponentState(key:string,setState:SetStateType,state?:PlainObject){
 	const prevState= useRef(state);
 	useEffect(()=>{
 		if(!isEqual(state,prevState.current)){

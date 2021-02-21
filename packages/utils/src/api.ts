@@ -198,9 +198,14 @@ function responseAdaptor(ret: any, api: ApiObject) {
   }
   return payload;
 }
+export  const defaultFetcher=async (api:any)=>{
+  const {url,...rest}=api;
+  const result=await fetch(url,rest);
+  return result.json();
+};
 
 export function wrapFetcher(
-  fn: FetcherType
+  fn: FetcherType=defaultFetcher
 ): (api: Api, data: object, options?: object) => Promise<Payload | void> {
   return async function (api, data, options) {
     api = buildApi(api, data, options) as ApiObject;
@@ -371,9 +376,7 @@ export const handleResponseState=(response:Payload,key:string)=>{
   return state;
 };
 
-export const fetchData= async(fetcher:FetcherType,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,key:string,isFirst?:boolean,options?: object)=>{
-  console.log('Api>>>>>>1',nextApi);
-
+export const fetchData= async(fetcher:FetcherType|undefined,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,key:string,isFirst?:boolean,options?: object)=>{
   if(fetcher&&nextApi){
     if(isArray(nextApi)){
       const stateArr=await Promise.allSettled(map(nextApi,(api,i)=>{
@@ -389,7 +392,6 @@ export const fetchData= async(fetcher:FetcherType,prevApi:ApiType|undefined,next
     }else{
       if(isApiOutdated(prevApi as Api,nextApi,prevData,nextData,isFirst)){
         const result=await wrapFetcher(fetcher)(nextApi,nextData,options);
-        console.log('result>>>>>>>11',result);
         if(result){
           return handleResponseState(result,key);
         }
