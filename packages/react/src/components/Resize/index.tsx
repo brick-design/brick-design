@@ -288,23 +288,23 @@ function Resize() {
 		],
 	);
 
-	const changeWidth = useCallback(() => {
-		widthRef.current.contentEditable = 'true';
-	}, [widthRef.current]);
-	const changeHeight = useCallback(() => {
-		heightRef.current.contentEditable = 'true';
-	}, [heightRef.current]);
+	// const changeWidth = useCallback(() => {
+	// 	widthRef.current.contentEditable = 'true';
+	// }, [widthRef.current]);
+	// const changeHeight = useCallback(() => {
+	// 	heightRef.current.contentEditable = 'true';
+	// }, [heightRef.current]);
 
-	/**
-	 * 更新组件宽高
-	 */
-	const updateSize = useCallback(() => {
-		const width = widthRef.current.innerHTML;
-		const height = heightRef.current.innerHTML;
-		resizeChange({ width, height });
-		widthRef.current.contentEditable = 'false';
-		heightRef.current.contentEditable = 'false';
-	}, [widthRef.current, heightRef.current]);
+	// /**
+	//  * 更新组件宽高
+	//  */
+	// const updateSize = useCallback(() => {
+	// 	const width = widthRef.current.innerHTML;
+	// 	const height = heightRef.current.innerHTML;
+	// 	resizeChange({ width, height });
+	// 	widthRef.current.contentEditable = 'false';
+	// 	heightRef.current.contentEditable = 'false';
+	// }, [widthRef.current, heightRef.current]);
 
 	setSelectedBorder();
 
@@ -326,8 +326,8 @@ function Resize() {
 				<div
 					className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']}
 					ref={widthRef}
-					onDoubleClick={updateSize}
-					onClick={changeWidth}
+					// onDoubleClick={updateSize}
+					// onClick={changeWidth}
 				>
 					{width}
 				</div>
@@ -336,8 +336,8 @@ function Resize() {
 						hoverKey ? styles['tip-hidden'] : styles['size-tip-height']
 					}
 					ref={heightRef}
-					onDoubleClick={updateSize}
-					onClick={changeHeight}
+					// onDoubleClick={updateSize}
+					// onClick={changeHeight}
 				>
 					{height}
 				</div>
