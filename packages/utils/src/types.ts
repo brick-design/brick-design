@@ -82,36 +82,13 @@ export interface ApiObject extends SchemaApiObject {
 	};
 	body?: PlainObject;
 	query?: PlainObject;
-	adaptor?: (payload: object, response: FetcherResult, api: ApiObject) => any;
+	adaptor?: (response: any, api: ApiObject) => any;
 	requestAdaptor?: (api: ApiObject) => ApiObject;
+	isNotState?:boolean;
+	isPageState?:boolean;
 }
 
 export type Api = string | ApiObject;
-
-export interface FetcherResult {
-	data?: {
-		data: object;
-		status: number;
-		msg: string;
-		msgTimeout?: number;
-		errors?: {
-			[propName: string]: string;
-		};
-	};
-	status: number;
-	headers: object;
-}
-
-export interface FetcherResult {
-	method?: 'get' | 'post' | 'put' | 'patch' | 'delete';
-	successMessage?: string;
-	errorMessage?: string;
-	autoAppend?: boolean;
-	beforeSend?: (data: any) => any;
-	onSuccess?: (json: Payload) => any;
-	silent?: boolean;
-	[propName: string]: any;
-}
 
 export interface Payload {
 	ok: boolean;
@@ -122,33 +99,15 @@ export interface Payload {
 	errors?: {
 		[propName: string]: string;
 	};
+	isPageState?:boolean;
+	isNotState?:boolean
 }
+
+export type ApiType=Api[]|Api
 
 
 export interface ActionType{
-	actionType?:
-		| 'submit'
-		| 'copy'
-		| 'reload'
-		| 'ajax'
-		| 'dialog'
-		| 'drawer'
-		| 'jump'
-		| 'link'
-		| 'url'
-		| 'close'
-		| 'confirm'
-		| 'add'
-		| 'remove'
-		| 'delete'
-		| 'edit'
-		| 'cancel'
-		| 'next'
-		| 'prev'
-		| 'reset'
-		| 'reset-and-submit'
-		| 'clear'
-		| 'clear-and-submit';
+	actionType?:string;
 	api?: Api;
 	asyncApi?: Api;
 	payload?: any;
@@ -198,4 +157,4 @@ export interface FetcherConfig {
 	config?: any;
 }
 
-export type FetcherType=(config: FetcherConfig) => Promise<FetcherResult>
+export type FetcherType=(config: FetcherConfig) => Promise<any>

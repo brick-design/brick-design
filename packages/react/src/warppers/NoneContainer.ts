@@ -1,11 +1,10 @@
-import { createElement, forwardRef, memo, useMemo } from 'react';
+import { createElement, forwardRef, memo } from 'react';
 import {
 	clearDropTarget,
 	ROOT,
 	STATE_PROPS,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
-import { dataMapping} from '@brickd/utils';
 import {
 	CommonPropsType,
 	controlUpdate,
@@ -17,13 +16,14 @@ import {
 } from '../common/handleFuns';
 import {
 	generateRequiredProps,
-	getComponent, isHiddenComponent,
+	getComponent,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
-import { useGetState } from '../hooks/useGetState';
 import { useService } from '../hooks/useService';
-import { useComponentState } from '../hooks/useComponetState';
+import { useComponentState } from '../hooks/useComponentState';
+import { useComponentProps } from '../hooks/useComponentProps';
+import { useHiddenComponent } from '../hooks/useHiddenComponent';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const {
@@ -46,9 +46,9 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const { props:prevProps, componentName,state,api,isHidden } = pageConfig[key] || {};
 	useService(key,api);
 	useComponentState(key,state);
-	const pageState=useGetState(key);
-	const props=useMemo(()=>dataMapping(prevProps,pageState),[pageState]);
-	if (!componentName||isHiddenComponent(isHidden,pageState)) return null;
+	const props=useComponentProps(prevProps,key);
+	const hidden=useHiddenComponent(key,isHidden);
+	if (!isSelected&&(!componentName||hidden)) return null;
 
 	const onDragEnter = (e: Event) => {
 		e.stopPropagation();

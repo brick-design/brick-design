@@ -118,7 +118,7 @@ export function createStr2Function(js:string,data:object):any{
       `with(data) {${js};}`
     );
     data = data || {};
-    return fn.bind(data, data, getFilters());
+    return fn.bind(data, data);
   } catch (e) {
     console.warn(js, e);
     return undefined;

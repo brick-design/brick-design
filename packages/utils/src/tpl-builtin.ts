@@ -745,9 +745,17 @@ function resolveMapping(
 			: value;
 }
 
+export const actionMap={};
+
 export function handleAction(action:ActionType|string,data:PlainObject){
 	if(typeof action==='string'){
 		return createStr2Function(action,data);
+	}else {
+		if(action.actionType){
+			return actionMap[action.actionType];
+		}else if(action.api){
+			return;
+		}
 	}
 }
 

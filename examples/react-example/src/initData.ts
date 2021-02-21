@@ -8,6 +8,7 @@ export default {
 			},
 		},
 		childNodes: ['2', '8', '1', '49'],
+		api:'https://api.apiopen.top/getJoke'
 	},
 	'1': {
 		componentName: 'Layout.Footer',
@@ -371,7 +372,7 @@ export default {
 	},
 	'48': {
 		componentName: 'Layout.Content',
-		childNodes:['55',"62"],
+		childNodes:['55',"62","64","63","65"],
 		props: {
 			style: {
 				paddingTop: '24px',
@@ -474,5 +475,28 @@ export default {
 			children:'点我',
 			type:'primary'
 		}
-	}
+	},
+	"63":{
+		componentName:'Button',
+		props:{
+			$onClick:'this.n++',
+			children:'累加',
+			type:'primary'
+		}
+	},
+	"64":{
+		componentName:'Typography.Title',
+		props:{
+			children:'${n}',
+		}
+	},
+	"65":{
+		componentName:'Button',
+		props:{
+			$onClick:'this.n--',
+			children:'累减',
+			type:'danger',
+			style:{marginLeft:20}
+		}
+	},
 }

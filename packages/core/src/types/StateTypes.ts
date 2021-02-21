@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ActionType, Api } from '@brickd/utils';
+import { ActionType, ApiType } from '@brickd/utils';
 import { PropInfoType, PropsConfigType } from './ComponentSchemaTypes';
 
 export type PropsNodeType = {
@@ -14,11 +14,6 @@ export interface ParentNodeInfo {
 	parentKey: string
 	parentPropName?: string
 }
-
-
-
-export type ApiType=Api[]|Api
-
 
 
 export type PropsType={

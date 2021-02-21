@@ -1,6 +1,6 @@
+import { ApiType } from '@brickd/utils';
 import ACTION_TYPES from '../actionTypes';
 import { createActions } from '../../store';
-import { ApiType } from '../../types';
 
 export type ApiPayload = {
 	api:ApiType

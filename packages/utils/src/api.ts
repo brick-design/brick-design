@@ -3,7 +3,7 @@
  * https://github.com/baidu/amis
  */
 import qs from 'qs';
-import {isObject,has} from 'lodash';
+import { isObject, has, merge, isArray, map, get } from 'lodash';
 import {tokenize, dataMapping} from './tpl-builtin';
 import {evalExpression} from './tpl';
 import {
@@ -14,14 +14,14 @@ import {
   cloneObject,
   createObject
 } from './helper';
-import { Api, ApiObject, FetcherResult, Payload, FetcherType } from './types';
+import { Api, ApiObject, Payload, FetcherType, ApiType } from './types';
 
 
 
 const rSchema = /(?:^|raw\:)(get|post|put|delete|patch|options|head):/i;
 
 interface ApiCacheConfig extends ApiObject {
-  cachedPromise: Promise<any>;
+  result: any;
   requestTime: number;
 }
 
@@ -31,14 +31,9 @@ export function normalizeApi(api: Api, defaultMethod?: string): ApiObject {
   if (typeof api === 'string') {
     const method = rSchema.test(api) ? RegExp.$1 : '';
     method && (api = api.replace(method + ':', ''));
-
     api = {
       method: (method || defaultMethod) as any,
       url: api
-    };
-  } else {
-    api = {
-      ...api
     };
   }
   return api;
@@ -72,7 +67,7 @@ export function buildApi(
     return api;
   }
 
-  const raw = (api.url = api.url || '');
+  const raw =  api.url || '';
   const idx = api.url.indexOf('?');
 
   if (~idx) {
@@ -100,12 +95,12 @@ export function buildApi(
 
   // get 类请求，把 data 附带到 url 上。
   if (api.method === 'get') {
-    if (!~raw.indexOf('$') && !api.data && autoAppend) {
+    if (!raw.includes('$') && !api.data && autoAppend) {
       api.query = api.data = data;
     } else if (
       api.attachDataToQuery === false &&
       api.data &&
-      !~raw.indexOf('$') &&
+      !raw.includes('$') &&
       autoAppend
     ) {
       const idx = api.url.indexOf('?');
@@ -170,53 +165,46 @@ function str2function(
   }
 }
 
-function responseAdaptor(ret: FetcherResult, api: ApiObject) {
-  const data = ret.data;
+function responseAdaptor(ret: any, api: ApiObject) {
   let hasStatusField = true;
-
-  if (!data) {
+  if (!ret) {
     throw new Error('Response is empty!');
-  } else if (!has(data,'status')) {
+  } else if (!has(ret,'status')) {
     hasStatusField = false;
   }
-
+  const result=ret.data||ret.result;
   const payload: Payload = {
-    ok: hasStatusField === false || data.status == 0,
-    status: hasStatusField === false ? 0 : data.status,
-    msg: data.msg,
-    msgTimeout: data.msgTimeout,
-    data: !data.data && !hasStatusField ? data : data.data // 兼容直接返回数据的情况
+    ok: hasStatusField === false || ret.status == 0,
+    status: hasStatusField === false ? 0 : ret.status,
+    msg: ret.msg||ret.message,
+    msgTimeout: ret.msgTimeout,
+    data: Array.isArray(result)?{items:result}:result, // 兼容直接返回数据的情况
+    isNotState:api.isNotState,
+    isPageState:api.isPageState
   };
 
   if (payload.status == 422) {
-    payload.errors = data.errors;
+    payload.errors = ret.errors;
   }
 
   if (payload.ok && api.responseData) {
     payload.data = dataMapping(
       api.responseData,
-
       createObject(
         {api},
-        (Array.isArray(payload.data)
-          ? {
-              items: payload.data
-            }
-          : payload.data) || {}
+        payload.data||{}
       )
     );
   }
-
   return payload;
 }
 
 export function wrapFetcher(
   fn: FetcherType
 ): (api: Api, data: object, options?: object) => Promise<Payload | void> {
-  return function (api, data, options) {
+  return async function (api, data, options) {
     api = buildApi(api, data, options) as ApiObject;
-
-    api.requestAdaptor && (api = api.requestAdaptor(api) || api);
+    api.requestAdaptor && (api = api.requestAdaptor(api));
 
     if (api.data && (hasFile(api.data) || api.dataType === 'form-data')) {
       api.data = object2formData(api.data, api.qsOptions);
@@ -238,53 +226,41 @@ export function wrapFetcher(
       api.headers['Content-Type'] = 'application/json';
     }
 
+    const result= await fn(api);
     if (typeof api.cache === 'number' && api.cache > 0) {
       const apiCache = getApiCache(api);
       return wrapAdaptor(
         apiCache
-          ? (apiCache as ApiCacheConfig).cachedPromise
-          : setApiCache(api, fn(api)),
+          ? (apiCache as ApiCacheConfig).result
+          : setApiCache(api, result),
         api
       );
     }
-    return wrapAdaptor(fn(api), api);
+    return wrapAdaptor(result, api);
   };
 }
 
-export function wrapAdaptor(promise: Promise<FetcherResult>, api: ApiObject) {
+export async function wrapAdaptor(result:any, api: ApiObject) {
   const adaptor = api.adaptor;
-  return adaptor
-    ? promise
-        .then(async response => {
-          let result = adaptor((response as any).data, response, api);
-
-          if (result&&result.then) {
-            result = await result;
-          }
-
-          return {
-            ...response,
-            data: result
-          };
-        })
-        .then(ret => responseAdaptor(ret, api))
-    : promise.then(ret => responseAdaptor(ret, api));
+  return responseAdaptor(adaptor?adaptor(result, api):result, api);
 }
 
 export function isApiOutdated(
   prevApi: Api | undefined,
   nextApi: Api | undefined,
   prevData: any,
-  nextData: any
+  nextData: any,
+  isFirst?:boolean
 ): nextApi is Api {
-  const url: string =
-    (nextApi && (nextApi as ApiObject).url) || (nextApi as string);
+  const nextUrl:string =get(nextApi,'url',nextApi);
+  const prevUrl:string=get(prevApi,'url',prevApi);
 
-  if (nextApi && (nextApi as ApiObject).autoRefresh === false) {
+  if(nextUrl!==prevUrl&&isValidApi(nextUrl)) return  true;
+  if (!isFirst&&get(nextApi,'autoRefresh') === false) {
     return false;
   }
 
-  if (url && typeof url === 'string' && ~url.indexOf('$')) {
+  if (typeof nextUrl === 'string' && nextUrl.includes('$')) {
     prevApi = buildApi(prevApi as Api, prevData as object, {ignoreData: true});
     nextApi = buildApi(nextApi as Api, nextData as object, {ignoreData: true});
 
@@ -372,16 +348,55 @@ export function getApiCache(api: ApiObject): ApiCacheConfig | undefined {
 
 export function setApiCache(
   api: ApiObject,
-  promise: Promise<any>
-): Promise<any> {
+  result: any
+) {
   apiCaches.push({
     ...api,
-    cachedPromise: promise,
+    result,
     requestTime: Date.now()
   });
-  return promise;
+  return result;
 }
 
+export const handleResponseState=(response:Payload,key:string)=>{
+  const state={};
+  const {isPageState,isNotState,data,status}=response;
+  if(!isNotState&&status===0){
+    if(isPageState){
+      merge(state,{state:data});
+    }else {
+      merge(state,{[key]:data});
+    }
+  }
+  return state;
+};
+
+export const fetchData= async(fetcher:FetcherType,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,key:string,isFirst?:boolean,options?: object)=>{
+  console.log('Api>>>>>>1',nextApi);
+
+  if(fetcher&&nextApi){
+    if(isArray(nextApi)){
+      const stateArr=await Promise.allSettled(map(nextApi,(api,i)=>{
+        if(isApiOutdated(get(prevApi,i),api,prevData,nextData,isFirst)){
+          return 	wrapFetcher(fetcher)(api,nextData,options);
+        }
+      }));
+      for(const result of stateArr ){
+        if(get(result,'value')){
+          return handleResponseState(get(result,'value'),key);
+        }
+      }
+    }else{
+      if(isApiOutdated(prevApi as Api,nextApi,prevData,nextData,isFirst)){
+        const result=await wrapFetcher(fetcher)(nextApi,nextData,options);
+        console.log('result>>>>>>>11',result);
+        if(result){
+          return handleResponseState(result,key);
+        }
+      }
+    }
+  }
+};
 export function clearApiCache() {
   apiCaches.splice(0, apiCaches.length);
 }

@@ -1,27 +1,30 @@
-import { useEffect } from 'react';
-import { setState, LEGO_BRIDGE,ApiType } from '@brickd/core';
-import {get,isArray,map} from 'lodash';
-import {  wrapFetcher } from '@brickd/utils';
+import { useEffect, useRef } from 'react';
+import { setState, LEGO_BRIDGE, } from '@brickd/core';
+import {get,isEmpty} from 'lodash';
+import { ApiType, fetchData } from '@brickd/utils';
 import { useGetState } from './useGetState';
+import { defaultFetcher } from '../utils';
 
-export function useService(key:string,api?:ApiType){
+const getFetchData= async(prevApi:ApiType|undefined,nextApi:ApiType|undefined, prevData: any, nextData: any, key: string, isFirst?: boolean, options?: object)=>{
+	const fetcher=get(LEGO_BRIDGE,'config.fetcher')||defaultFetcher;
+	if(!nextApi) return;
+	const result= await fetchData(fetcher,prevApi,nextApi,prevData,nextData,key,isFirst,options);
+	console.log('result>>>>>>>',result);
+	if(!isEmpty(result)){
+		setState(result);
+	}
+};
+export function useService(key:string,api?:ApiType, options?: object){
 const state=useGetState(key);
+const prevState=useRef(state);
+const prevApi=useRef(api);
 	useEffect(()=>{
-		const fetchData= async()=>{
-			const fetcher=get(LEGO_BRIDGE,'config.fetcher');
-			if(fetcher&&api){
-				let newState;
-				if(isArray(api)){
-					const stateArr=await Promise.allSettled(map(api,(param)=>{
-						return 	wrapFetcher(fetcher)(param,state);
-					}));
-					newState= stateArr.reduce((a,b)=>({...a,...b}));
-				}else{
-					newState= await wrapFetcher(fetcher)(api,state);
-				}
-				setState({[key]:newState});
-			}
-		};
-		fetchData();
-	},[state,api]);
+		getFetchData(undefined,api,undefined,state,key,true,options);
+	},[]);
+
+	useEffect(()=>{
+		if(prevState.current){
+			getFetchData(prevApi.current,api,prevState.current,state,key,false,options);
+		}
+	},[prevApi,api,prevState,state]);
 }

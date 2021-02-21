@@ -8,7 +8,7 @@ import {
 	getComponentConfig,
 	LEGO_BRIDGE,
 } from '@brickd/core';
-import { evalExpression,  tokenize } from '@brickd/utils';
+
 import { selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
@@ -128,6 +128,8 @@ export function setPosition(nodes: any[], isModal?: boolean) {
 	}
 }
 
+
+
 export function generateRequiredProps(componentName: string) {
 	const { propsConfig } = getComponentConfig(componentName);
 	const requiredProps: any = {};
@@ -139,6 +141,8 @@ export function generateRequiredProps(componentName: string) {
 	return requiredProps;
 }
 
-export const isHiddenComponent=(isHidden?:string,pageState?:any)=>
-	isHidden&&isHidden.includes('$')?tokenize(isHidden,pageState):evalExpression(isHidden,pageState);
-
+export  const defaultFetcher=async (api:any)=>{
+	const {url,...rest}=api;
+	const result=await fetch(url,rest);
+	return result.json();
+};

@@ -17,10 +17,9 @@ import {
 	STATE_PROPS,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
-import { dataMapping, } from '@brickd/utils';
 import {
 	generateRequiredProps,
-	getComponent, isHiddenComponent,
+	getComponent,
 } from '../utils';
 
 import {
@@ -38,9 +37,10 @@ import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
-import { useGetState } from '../hooks/useGetState';
-import { useComponentState } from '../hooks/useComponetState';
+import { useComponentState } from '../hooks/useComponentState';
 import { useService } from '../hooks/useService';
+import { useComponentProps } from '../hooks/useComponentProps';
+import { useHiddenComponent } from '../hooks/useHiddenComponent';
 
 /**
  * 所有的容器组件名称
@@ -76,8 +76,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		() => getComponentConfig(componentName),
 		[],
 	);
-	const pageState=useGetState(key);
-	const props=useMemo(()=>dataMapping(prevProps,pageState),[pageState]);
+	const props=useComponentProps(prevProps,key);
 	const { selectedDomKeys, isSelected } = useSelect(
 		specialProps,
 		!!mirrorModalField,
@@ -133,12 +132,11 @@ function Container(allProps: CommonPropsType, ref: any) {
 	useEffect(() => {
 		setChildren(childNodes);
 	}, [childNodes]);
-
+	const hidden=useHiddenComponent(key,isHidden);
 	if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
 		setChildren(childNodes);
 	}
-
-	if (!isSelected&&(!componentName||isHiddenComponent(isHidden,pageState))) return null;
+	if (!isSelected&&(!componentName||hidden)) return null;
 
 	let modalProps: any = {};
 	if (mirrorModalField) {
