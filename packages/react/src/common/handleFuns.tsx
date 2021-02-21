@@ -18,6 +18,7 @@ import { selectClassTarget } from './constants';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import { generateRequiredProps, getComponent, getIframe } from '../utils';
+import { FunParamContextProvider } from '../components/FunParamContext';
 
 /**
  * 处理样式
@@ -164,22 +165,40 @@ export function handleChildNodes(
 		);
 	} else {
 		each(children, (nodes, propName: string) => {
-			const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![
-				propName
-			];
-			if (isEmpty(nodes))
+			console.log('nodePropsConfig>>>>>',propName,nodePropsConfig);
+			const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![propName];
+			if (isEmpty(nodes)){
 				return (
 					isRequired &&
 					(nodeProps[propName] = renderRequiredChildNodes(childNodesRule))
 				);
-			nodeProps[propName] = renderNodes(
-				nodes,
-				specialProps,
-				pageConfig,
-				dragAddStatus,
-				propName,
-				isOnlyNode,
-			);
+			}
+
+			if(propName.includes('#')){
+				const realPropName=propName.substring(1);
+				// eslint-disable-next-line react/display-name
+				nodeProps[realPropName]= (...funParams)=>{
+					return(<FunParamContextProvider value={{funParams}}>
+						{renderNodes(
+						nodes,
+						specialProps,
+						pageConfig,
+						dragAddStatus,
+						propName,
+						isOnlyNode,
+					)}</FunParamContextProvider>) ;
+				};
+			}else {
+				nodeProps[propName] = renderNodes(
+					nodes,
+					specialProps,
+					pageConfig,
+					dragAddStatus,
+					propName,
+					isOnlyNode,
+				);
+			}
+
 		});
 	}
 

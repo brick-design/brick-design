@@ -14,8 +14,9 @@ export const LEGO_BRIDGE: LegoBridgeType = {
 	store: null
 };
 
+
 export const legoState: StateType = {
-	pageState:{state:{v:false,n:0}},
+	pageState:{},
 	pageStateConfig:{},
 	pageConfig: {}, // 所有组件信息
 	selectedInfo: null, // 选中组件的信息

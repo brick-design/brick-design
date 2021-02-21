@@ -32,6 +32,8 @@
     "react/jsx-indent-props": 0,
     "react/jsx-uses-react": 1,
     "react/prop-types": 0,
+    "no-useless-escape": 0,
+    "no-template-curly-in-string": 0,
     "semi": [2, "always"],
     "import/no-self-import": [2],
     "import/no-cycle": [2],
@@ -51,7 +53,5 @@
         "groups": ["external", "builtin", "internal", "sibling", "parent"]
       }
     ],
-    "no-useless-escape": 0,
-    "no-template-curly-in-string": 0
   }
 }

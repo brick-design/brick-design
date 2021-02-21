@@ -14,11 +14,10 @@ const List: ComponentSchemaType = {
 			type: NODE_PROPS_TYPES.reactNode,
 			label: '底部',
 		},
-
 		loadMore: {
 			type: NODE_PROPS_TYPES.reactNode,
 		},
-		renderItem: {
+		'#renderItem': {
 			type: NODE_PROPS_TYPES.functionReactNode,
 			params: ['item'],
 			isOnlyNode: true,
@@ -93,6 +92,9 @@ const Item: ComponentSchemaType = {
 		extra: {
 			type: NODE_PROPS_TYPES.reactNode,
 		},
+		children: {
+			type: NODE_PROPS_TYPES.reactNode,
+		},
 	},
 	propsConfig: {
 		children: {
@@ -115,6 +117,9 @@ const Meta: ComponentSchemaType = {
 			type: NODE_PROPS_TYPES.reactNode,
 		},
 		title: {
+			type: NODE_PROPS_TYPES.reactNode,
+		},
+		children: {
 			type: NODE_PROPS_TYPES.reactNode,
 		},
 	},

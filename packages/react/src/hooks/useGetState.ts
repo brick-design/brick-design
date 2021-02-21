@@ -2,11 +2,11 @@ import { useEffect, useMemo } from 'react';
 import { useSelector } from '@brickd/redux-bridge';
 import { removeState, setState } from '@brickd/core';
 
-export function useGetState(key:string){
+export function useGetState(key:string,funParams?:any){
 	const selectState=useSelector(['pageState'],()=>true,key);
 	const componentState=selectState[key]||{};
 	const {state={}}=useSelector(['pageState'],()=>true,'state');
-	const resultState= useMemo(()=>new Proxy({...state,...componentState},{
+	const resultState= useMemo(()=>new Proxy({...state,...componentState,funParams},{
 		get: function (target, propKey, receiver) {
 			return Reflect.get(target, propKey, receiver);
 		},

@@ -98,7 +98,7 @@ export default {
 			theme: 'light',
 		},
 		childNodes: {
-			children: ['10'],
+			children: ['10',"62","64","63","65"],
 		},
 	},
 	'10': {
@@ -372,7 +372,7 @@ export default {
 	},
 	'48': {
 		componentName: 'Layout.Content',
-		childNodes:['55',"62","64","63","65"],
+		childNodes:["66"],
 		props: {
 			style: {
 				paddingTop: '24px',
@@ -418,62 +418,13 @@ export default {
 	'54': {
 		componentName: 'Steps.Step',
 	},
-	"55":{
-		componentName: 'Carousel',
-		props:{
-			autoplay:true
-		},
-		childNodes:['56','58','60'],
-		isHidden:'${v}'
-	},
-	"56":{
-		componentName: 'div',
-		childNodes:['57']
-	},
-	"57":{
-		componentName: 'img',
-		props:{
-			style:{
-				width:'100%',
-				height:'200px'
-			},
-			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2346282507,2171850944&fm=26&gp=0.jpg'
-		}
-	},
-	"58":{
-		componentName: 'div',
-		childNodes:['59']
-	},
-	"59":{
-		componentName: 'img',
-		props:{
-			style:{
-				width:'100%',
-				height:'200px'
-			},
-			src: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=364397611,3916868751&fm=26&gp=0.jpg'
-		}
-	},
-	"60":{
-		componentName: 'div',
-		childNodes:['61']
-	},
-	"61":{
-		componentName: 'img',
-		props:{
-			style:{
-				width:'100%',
-				height:'200px'
-			},
-			src: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3672347654,250980527&fm=26&gp=0.jpg'
-		}
-	},
 	"62":{
 		componentName:'Button',
 		props:{
 			$onClick:'this.v=!this.v',
 			children:'点我',
-			type:'primary'
+			type:'primary',
+			style:{marginLeft: 20}
 		}
 	},
 	"63":{
@@ -481,13 +432,17 @@ export default {
 		props:{
 			$onClick:'this.n++',
 			children:'累加',
-			type:'primary'
+			type:'primary',
+			style:{marginLeft: 20}
+
 		}
 	},
 	"64":{
 		componentName:'Typography.Title',
 		props:{
 			children:'${n}',
+			style:{marginLeft: 20}
+
 		}
 	},
 	"65":{
@@ -499,4 +454,102 @@ export default {
 			style:{marginLeft:20}
 		}
 	},
+	"66":{
+		componentName:"List",
+		childNodes:{
+			'#renderItem':["67"]
+		},
+		props:{
+			itemLayout:"vertical",
+			size:'large',
+			pagination:{
+				pageSize: 2,
+			},
+			dataSource:'${items}',
+
+		}
+	},
+	"67":{
+		componentName:"List.Item",
+		childNodes:{
+			actions:['68','71','74',],
+			extra:["77"],
+			children:["78",'81'],
+		},
+		props:{
+			key:'${funParams.0.title}'
+		}
+	},
+	"68":{
+		componentName:'span',
+		childNodes:["69","70"]
+	},
+	"69":{
+		componentName:'Icon',
+		props:{type:"star-o",key:"list-vertical-star-o"}
+	},
+	"70":{
+		componentName:'span',
+		props:{
+			children:'156'
+		}
+	},
+	"71":{
+		componentName:'span',
+		childNodes:["72","73"]
+	},
+	"72":{
+		componentName:'Icon',
+		props:{type:"like-o",key:"list-vertical-like-o"}
+	},
+	"73":{
+		componentName:'span',
+		props:{
+			children:'156'
+		}
+	},
+	"74":{
+		componentName:'span',
+		childNodes:["75","76"]
+	},
+	"75":{
+		componentName:'Icon',
+		props:{type:"message",key:"list-vertical-message"}
+	},
+	"76":{
+		componentName:'span',
+		props:{
+			children:'2'
+		}
+	},
+	"77":{
+		componentName:'img',
+		props:{width:272,
+		alt:'logo',
+		src:"${funParams.0.image}"
+		},
+	},
+	"78":{
+		componentName:'List.Item.Meta',
+		props:{description:'${funParams.0.description}'},
+		childNodes:{
+			avatar:['79'],
+			title:['80'],
+			children:['81']
+		}
+	},
+	"79":{
+		componentName:'Avatar',
+		props:{src:'${funParams.0.avatar}'},
+
+	},
+	"80":{
+		componentName:'a',
+		props:{children:'${funParams.0.title}'},
+	},
+	"81":{
+		componentName:'span',
+		props:{children:'${funParams.0.content}'}
+	}
+
 }

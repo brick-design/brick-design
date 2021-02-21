@@ -24,6 +24,7 @@ import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
+import { FunParamContextProvider } from './components/FunParamContext';
 
 const onIframeLoad = (
 	divContainer: any,
@@ -40,12 +41,14 @@ const onIframeLoad = (
 
 const componentMount = (designPage: any, divContainer: any) => {
 	ReactDOM.render(
+		<FunParamContextProvider>
   <LegoProvider>
     {designPage}
     <Guidelines />
     <Distances />
     <Resize />
-  </LegoProvider>,
+  </LegoProvider>
+		</FunParamContextProvider>,
 		divContainer.current,
 	);
 };
