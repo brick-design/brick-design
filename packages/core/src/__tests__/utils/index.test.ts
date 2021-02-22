@@ -1,5 +1,4 @@
-import { getComponentConfig, isContainer } from '../../utils';
-import { LEGO_BRIDGE } from '../../store';
+import { getComponentConfig, isContainer, setBrickdConfig } from '../../utils';
 import config from '../configs';
 
 describe('getComponentConfig', () => {
@@ -9,7 +8,7 @@ describe('getComponentConfig', () => {
 	});
 
 	it('未找到指定组件的配置信息', () => {
-		LEGO_BRIDGE.config = config;
+		setBrickdConfig(config) ;
 		console.warn = jest.fn();
 		getComponentConfig('table');
 		expect(console.warn).toBeCalled();
@@ -19,7 +18,7 @@ describe('getComponentConfig', () => {
 describe('isContainer', () => {
 
 	it('未找到指定组件的配置信息', () => {
-		LEGO_BRIDGE.config = config;
+		setBrickdConfig(config) ;
 		expect(isContainer('a')).toBeTruthy();
 	});
 });

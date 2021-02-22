@@ -20,13 +20,11 @@ interface FrameworkType {
 interface ReduxBridgeType {
 	framework: FrameworkType | null
 	context: ContextType | null
-	store: any
 }
 
 export const REDUX_BRIDGE: ReduxBridgeType = {
 	framework: null,
 	context: null,
-	store: null,
 };
 export const initFramework = (framework: FrameworkType) =>
 	(REDUX_BRIDGE.framework = framework);

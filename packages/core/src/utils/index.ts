@@ -7,10 +7,12 @@ import {
 	PropsConfigSheetType,
 	PropsNodeType,
 	SelectedInfoType,
-	StateType,
+	StateType, BrickDesignStateType, ConfigType,
+
 } from '../types';
-import { LEGO_BRIDGE } from '../store';
 import { ReducerType } from '../reducers';
+import { BrickdStoreType } from '../store';
+import { legoState } from '../reducers/handlePageBrickdState';
 
 /**
  * 根节点key
@@ -228,8 +230,7 @@ export function deleteChildNodesKey(
 export function getComponentConfig(
 	componentName: string,
 ): ComponentSchemaType {
-	const componentSchemasMap = get(LEGO_BRIDGE, [
-		'config',
+	const componentSchemasMap = get(getBrickdConfig(), [
 		'componentSchemasMap',
 	]);
 	if (!componentSchemasMap) {
@@ -243,7 +244,7 @@ export function getComponentConfig(
 }
 
 export function isContainer(componentName: string) {
-	return  !get(LEGO_BRIDGE, ['config', 'componentSchemasMap',componentName,'isNonContainer']);
+	return  !get(getBrickdConfig(), ['componentSchemasMap',componentName,'isNonContainer']);
 }
 
 export function error(msg: string) {
@@ -252,7 +253,7 @@ export function error(msg: string) {
 }
 
 export function warn(msg: string) {
-	const warn = get(LEGO_BRIDGE, ['warn']);
+	const warn = getWarn();
 	if (warn) {
 		warn(msg);
 	} else {
@@ -328,7 +329,7 @@ export function combineReducers(
 	brickReducer: ReducerType,
 	customReducer?: ReducerType,
 ): ReducerType {
-	return (state: StateType | undefined, action: BrickAction): StateType => {
+	return (state: BrickDesignStateType | undefined, action: BrickAction): BrickDesignStateType => {
 		const newState = brickReducer(state, action);
 		if (customReducer) {
 			return customReducer(newState, action);
@@ -392,3 +393,36 @@ export function createTemplate(state: StateType) {
 	}
 	return { templateConfigs, templatePropsConfigSheet };
 }
+
+export function createActions(action: BrickAction) {
+	return getStore().dispatch(action);
+}
+
+let CURRENT_PAGE_NAME:null|string=null;
+export const setPageName=(pageName:null|string)=>CURRENT_PAGE_NAME=pageName;
+export const getPageName=()=>CURRENT_PAGE_NAME;
+
+let STORE:BrickdStoreType<BrickDesignStateType,BrickAction> | null=null;
+export const setStore=(store:BrickdStoreType<BrickDesignStateType,BrickAction> | null)=>STORE=store;
+export const getStore=()=>STORE;
+
+let BRICKD_CONFIG:ConfigType|null=null;
+export const getBrickdConfig=()=>BRICKD_CONFIG;
+export const setBrickdConfig=(config:ConfigType|null)=>BRICKD_CONFIG=config;
+
+export type WarnType=(msg: string) => void
+let WARN:WarnType|null=null;
+
+export const getWarn=()=>WARN;
+export const setWarn=(warn:WarnType|null)=>WARN=warn;
+
+export function getPageState(){
+	const pageName=getPageName();
+	return get(getStore().getState(),pageName,legoState);
+};
+export const cleanStateCache=()=>{
+	setBrickdConfig(null);
+	setWarn(null);
+	setStore(null);
+	setPageName(null);
+};

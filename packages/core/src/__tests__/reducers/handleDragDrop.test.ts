@@ -1,33 +1,35 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
 import { DragSourcePayload } from '../../actions';
-import { LEGO_BRIDGE, legoState } from '../../store';
+import {  legoState } from '../../reducers/handlePageBrickdState';
 import config from '../configs';
-import { ROOT } from '../../utils';
+import { ROOT, setBrickdConfig, setPageName } from '../../utils';
 import { PageConfigType, DropTargetType, StateType } from '../../types';
 
 beforeAll(() => {
-	LEGO_BRIDGE.config = config;
+	setBrickdConfig(config);
+	setPageName('initPage');
 });
 
 afterAll(() => {
-	LEGO_BRIDGE.config = undefined;
+	setBrickdConfig(null);
+	setPageName(null);
 });
 
 describe('drag', () => {
 	const action = { type: ACTION_TYPES.getDragSource };
 	it('当componentConfigs没有root节点拖拽容器组件', () => {
 		const payload: DragSourcePayload = { componentName: 'a' };
-		const state = reducer(legoState, { ...action, payload });
-		expect(state.dragSource).toEqual({
+		const state = reducer({initPage:legoState}, { ...action, payload });
+		expect((state.initPage as StateType).dragSource).toEqual({
 			dragKey: ROOT,
 			vDOMCollection: { [ROOT]: { componentName: 'a' } },
 		});
 	});
 	it('当componentConfigs没有root节点拖拽非容器组件', () => {
 		const payload: DragSourcePayload = { componentName: 'img' };
-		const state = reducer(legoState, { ...action, payload });
-		expect(state.dragSource).toEqual({
+		const state = reducer({initPage:legoState}, { ...action, payload });
+		expect((state.initPage as StateType).dragSource).toEqual({
 			dragKey: ROOT,
 			vDOMCollection: { [ROOT]: { componentName: 'img' } },
 		});
@@ -39,9 +41,9 @@ describe('drag', () => {
 		};
 		const prevState: StateType = { ...legoState, pageConfig };
 
-		const state = reducer(prevState, { ...action, payload });
-		expect(state.dragSource?.dragKey).not.toBeUndefined();
-		expect(state.undo).toEqual([{ pageConfig, propsConfigSheet: {} }]);
+		const state = reducer({initPage:prevState}, { ...action, payload });
+		expect((state.initPage as StateType).dragSource?.dragKey).not.toBeUndefined();
+		expect((state.initPage as StateType).undo).toEqual([{ pageConfig, propsConfigSheet: {} }]);
 	});
 
 	it('拖拽设计面板中的组建', () => {
@@ -53,8 +55,8 @@ describe('drag', () => {
 			},
 		};
 		const payload: DragSourcePayload = { dragKey: '1', parentKey: ROOT };
-		const nextState = reducer(prevState, { ...action, payload });
-		expect(nextState.dragSource?.dragKey).toBe('1');
+		const nextState = reducer({initPage:prevState}, { ...action, payload });
+		expect((nextState.initPage as StateType).dragSource?.dragKey).toBe('1');
 	});
 	it('拖拽添加模板配置信息带有属性配置表', () => {
 		const prevState: StateType = {
@@ -81,10 +83,10 @@ describe('drag', () => {
 				4: {},
 			},
 		};
-		const state = reducer(prevState, { ...action, payload });
-		expect(Object.keys(state.pageConfig).length).toBe(6);
-		expect(Object.keys(state.pageConfig)).toEqual(
-			expect.arrayContaining(Object.keys(state.propsConfigSheet)),
+		const state = reducer({initPage:prevState}, { ...action, payload });
+		expect(Object.keys((state.initPage as StateType).pageConfig).length).toBe(6);
+		expect(Object.keys((state.initPage as StateType).pageConfig)).toEqual(
+			expect.arrayContaining(Object.keys((state.initPage as StateType).propsConfigSheet)),
 		);
 	});
 	it('拖拽添加模板配置信息不带属性配置表', () => {
@@ -109,7 +111,7 @@ describe('drag', () => {
 		const payload: DragSourcePayload = {
 			vDOMCollection,
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig, propsConfigSheet: {} }],
@@ -126,7 +128,7 @@ describe('drag', () => {
 			},
 			dragSource: { vDOMCollection, dragKey: '1' },
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
@@ -157,8 +159,9 @@ describe('getDropTarget', () => {
 				propsConfig: {},
 			},
 		};
-		const nextState = reducer(prevState, action);
-		expect(nextState).toBe(prevState);
+		const brickdState={initPage:prevState};
+		const nextState = reducer(brickdState, action);
+		expect(nextState).toBe(brickdState);
 	});
 
 	// it('当drop组件为非容器组件', () => {
@@ -169,12 +172,12 @@ describe('getDropTarget', () => {
 
 	it('当drop组件为容器组件', () => {
 		const payload: DropTargetType = { selectedKey: '1', domTreeKeys: [ROOT] };
-		const nextState = reducer(legoState, { ...action, payload });
-		expect(nextState).toEqual({
+		const nextState = reducer({initPage:legoState}, { ...action, payload });
+		expect(nextState).toEqual({initPage:{
 			...legoState,
 			dropTarget: payload,
 			hoverKey: '1',
-		});
+		}});
 	});
 	it('当selectedInfo!=null 获取dropTarget', () => {
 		const payload: DropTargetType = { selectedKey: ROOT, domTreeKeys: [ROOT] };
@@ -187,13 +190,13 @@ describe('getDropTarget', () => {
 				parentKey: '',
 			},
 		};
-		const nextState = reducer(prevState, { ...action, payload });
+		const nextState = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			dropTarget: { selectedKey: ROOT, domTreeKeys: [ROOT] },
 			hoverKey: ROOT,
 		};
-		expect(nextState).toEqual(expectState);
+		expect(nextState).toEqual({initPage:expectState});
 	});
 });
 
@@ -204,8 +207,8 @@ describe('clearDropTarget', () => {
 			...legoState,
 			dropTarget: { selectedKey: ROOT, domTreeKeys: [] },
 		};
-		const state = reducer(prevState, action);
-		expect(state).toEqual(legoState);
+		const state = reducer({initPage:prevState}, action);
+		expect(state).toEqual({initPage:legoState});
 	});
 });
 
@@ -216,11 +219,11 @@ describe('clearDragSource', () => {
 			...legoState,
 			dragSource: { dragKey: ROOT, parentKey: '' },
 		};
-		const state = reducer(prevState, action);
-		expect(state).toEqual(legoState);
+		const state = reducer({initPage:prevState}, action);
+		expect(state).toEqual({initPage:legoState});
 	});
 	it('dragSource===null清除dragSource', () => {
-		const state = reducer(legoState, action);
-		expect(state).toEqual(legoState);
+		const state = reducer({initPage:legoState}, action);
+		expect(state).toEqual({initPage:legoState});
 	});
 });

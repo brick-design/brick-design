@@ -1,6 +1,6 @@
 import ACTION_TYPES from '../actionTypes';
 import { DragSourceType, DropTargetType } from '../../types';
-import { createActions } from '../../store';
+import { createActions } from '../../utils';
 
 export type DragSourcePayload = Partial<DragSourceType> & {
 	componentName?: string

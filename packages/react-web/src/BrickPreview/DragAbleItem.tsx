@@ -1,6 +1,6 @@
 import React, { createElement, memo, useRef } from 'react';
 import get from 'lodash/get';
-import { getDragSource, LEGO_BRIDGE } from '@brickd/react';
+import { getDragSource,getBrickdConfig } from '@brickd/react';
 import styles from './index.less';
 
 interface DragAbleItemPropsType {
@@ -41,7 +41,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
 			return componentName;
 		}
 		return createElement(
-			get(LEGO_BRIDGE.config!.componentsMap, componentName, componentName),
+			get(getBrickdConfig().componentsMap, componentName, componentName),
 			defaultProps,
 		);
 	}

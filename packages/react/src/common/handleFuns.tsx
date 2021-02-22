@@ -165,7 +165,6 @@ export function handleChildNodes(
 		);
 	} else {
 		each(children, (nodes, propName: string) => {
-			console.log('nodePropsConfig>>>>>',propName,nodePropsConfig);
 			const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![propName];
 			if (isEmpty(nodes)){
 				return (

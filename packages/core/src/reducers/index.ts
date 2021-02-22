@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import {get} from 'lodash';
 import {
 	addComponent,
 	clearChildNodes,
@@ -27,74 +28,114 @@ import { setState, removeState } from './handlePageState';
 import { setComponentState } from './handleComponetState';
 import { setApi } from './handleApi';
 import {setPageApi,setPageState} from './handlePageStateConfig';
-
+import { initPageBrickdState, legoState, removePageBrickdState } from './handlePageBrickdState';
 import ACTION_TYPES from '../actions/actionTypes';
-import { BrickAction, StateType } from '../types';
+import { BrickAction, BrickDesignStateType, StateType } from '../types';
+import { getPageName } from '../utils';
 
-export type ReducerType = Reducer<StateType, BrickAction>
+export type ReducerType = Reducer<BrickDesignStateType, BrickAction>
 export const reducer: ReducerType = (prevState, action) => {
-	const state = prevState as StateType;
+	const pageName=getPageName();
+	const state = get(prevState,pageName,legoState) as StateType;
+	let newState:StateType;
 	const { type, payload } = action;
 	switch (type) {
 		case ACTION_TYPES.addComponent:
-			return addComponent(state);
+			newState= addComponent(state);
+			break;
 		case ACTION_TYPES.clearChildNodes:
-			return clearChildNodes(state);
+			newState= clearChildNodes(state);
+			break;
 		case ACTION_TYPES.onLayoutSortChange:
-			return onLayoutSortChange(state, payload);
+			newState= onLayoutSortChange(state, payload);
+			break;
 		case ACTION_TYPES.deleteComponent:
-			return deleteComponent(state);
+			newState= deleteComponent(state);
+			break;
 		case ACTION_TYPES.copyComponent:
-			return copyComponent(state);
+			newState= copyComponent(state);
+			break;
 		case ACTION_TYPES.getDragSource:
-			return getDragSource(state, payload);
+			newState= getDragSource(state, payload);
+			break;
 		case ACTION_TYPES.getDropTarget:
-			return getDropTarget(state, payload);
+			newState= getDropTarget(state, payload);
+			break;
 		case ACTION_TYPES.clearHovered:
-			return clearHovered(state);
+			newState= clearHovered(state);
+			break;
 		case ACTION_TYPES.overTarget:
-			return overTarget(state, payload);
+			newState= overTarget(state, payload);
+			break;
 		case ACTION_TYPES.changePlatform:
-			return changePlatform(state, payload);
+			newState= changePlatform(state, payload);
+			break;
 		case ACTION_TYPES.addPropsConfig:
-			return addPropsConfig(state, payload);
+			newState= addPropsConfig(state, payload);
+			break;
 		case ACTION_TYPES.deletePropsConfig:
-			return deletePropsConfig(state, payload);
+			newState= deletePropsConfig(state, payload);
+			break;
 		case ACTION_TYPES.changeProps:
-			return changeProps(state, payload);
+			newState= changeProps(state, payload);
+			break;
 		case ACTION_TYPES.selectComponent:
-			return selectComponent(state, payload);
+			newState= selectComponent(state, payload);
+			break;
 		case ACTION_TYPES.clearSelectedStatus:
-			return clearSelectedStatus(state);
+			newState= clearSelectedStatus(state);
+			break;
 		case ACTION_TYPES.changeStyles:
-			return changeStyles(state, payload);
+			newState= changeStyles(state, payload);
+			break;
 		case ACTION_TYPES.undo:
-			return undo(state);
+			newState= undo(state);
+			break;
 		case ACTION_TYPES.redo:
-			return redo(state);
+			newState= redo(state);
+			break;
 		case ACTION_TYPES.resetProps:
-			return resetProps(state);
+			newState= resetProps(state);
+			break;
 		case ACTION_TYPES.resetStyles:
-			return resetStyles(state);
+			newState= resetStyles(state);
+			break;
 		case ACTION_TYPES.clearDropTarget:
-			return clearDropTarget(state);
+			newState= clearDropTarget(state);
+			break;
 		case ACTION_TYPES.resizeChange:
-			return resizeChange(state, payload);
+			newState= resizeChange(state, payload);
+			break;
 		case ACTION_TYPES.clearDragSource:
-			return clearDragSource(state);
+			newState= clearDragSource(state);
+			break;
 		case ACTION_TYPES.setState:
-			return setState(state,payload);
+			newState= setState(state,payload);
+			break;
 		case ACTION_TYPES.removeState:
-			return removeState(state,payload);
+			newState= removeState(state,payload);
+			break;
 		case ACTION_TYPES.setComponentState:
-			return setComponentState(state,payload);
+			newState= setComponentState(state,payload);
+			break;
 		case ACTION_TYPES.setApi:
-			return setApi(state,payload);
+			newState= setApi(state,payload);
+			break;
 		case ACTION_TYPES.setPageApi:
-			return setPageApi(state,payload);
+			newState= setPageApi(state,payload);
+			break;
 		case ACTION_TYPES.setPageState:
-			return setPageState(state,payload);
+			newState= setPageState(state,payload);
+			break;
+		case ACTION_TYPES.initPageBrickdState:
+			newState=initPageBrickdState(state,payload);
+			break;
+		case ACTION_TYPES.removePageBrickdState:
+			newState=removePageBrickdState();
+			break;
 		default:
-			return state;
+			return prevState;
 	}
+	if(newState===state) return prevState;
+	return {...prevState,[pageName]:newState};
 };

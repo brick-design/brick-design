@@ -10,3 +10,4 @@ export * from './produceActions/pageState';
 export * from './produceActions/componentState';
 export * from './produceActions/api';
 export * from './produceActions/pageStateConfig';
+export * from './produceActions/pageBrickdState';

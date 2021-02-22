@@ -2,10 +2,9 @@ import {
 	ChildNodesType,
 	PropsNodeType,
 	ROOT,
-	LEGO_BRIDGE,
 	VirtualDOMType,
 	ComponentSchemaType,
-	 PageConfigType,
+	PageConfigType, getBrickdConfig,
 } from '@brickd/core';
 import { each, get, isArray, map, reduce } from 'lodash';
 
@@ -20,7 +19,7 @@ export default function BrickRender(props:BrickRenderType) {
 	const {pageConfig,createElement,plugins}=props;
 
 	function handlePlugins(vDom: VirtualDOMType, plugins: any=[]) {
-		const componentSchema=get(LEGO_BRIDGE.config.componentSchemasMap,vDom.componentName);
+		const componentSchema=get(getBrickdConfig().componentSchemasMap,vDom.componentName);
 		const newVDom=reduce(plugins, (newVDom, plugin) => plugin(newVDom,componentSchema), vDom);
 		return newVDom.props;
 	}
@@ -49,7 +48,7 @@ export default function BrickRender(props:BrickRenderType) {
 
 	function renderNode(vDom:VirtualDOMType,key?:string){
 		const { componentName, childNodes } = vDom;
-		return createElement(get(LEGO_BRIDGE.config.componentsMap, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) });
+		return createElement(get(getBrickdConfig().componentsMap, componentName, componentName), {key, ...handlePlugins(vDom, plugins), ...renderChildNodes(childNodes) });
 	}
 
 

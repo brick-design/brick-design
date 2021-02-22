@@ -34,5 +34,7 @@ export default {
 	setApi:'setApi',
 	setComponentState:'setComponentState',
 	setPageState:'setPageState',
-	setPageApi:'setPageApi'
+	setPageApi:'setPageApi',
+	initPageBrickdState:"initPageBrickdState",
+	removePageBrickdState:'removePageBrickdState'
 };

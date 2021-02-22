@@ -35,7 +35,7 @@ import {
 import ACTION_TYPES from '../../actions/actionTypes';
 import { BrickAction, DropTargetType, PlatformInfoType } from '../../types';
 
-jest.mock('../../store', () => ({
+jest.mock('../../utils', () => ({
 	createActions: (action: BrickAction) => action,
 }));
 

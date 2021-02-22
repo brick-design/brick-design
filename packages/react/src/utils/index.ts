@@ -5,8 +5,7 @@ import {
 } from 'lodash';
 import {
 	PageConfigType,
-	getComponentConfig,
-	LEGO_BRIDGE,
+	getComponentConfig, getBrickdConfig,
 } from '@brickd/core';
 
 import { selectClassTarget } from '../common/constants';
@@ -42,7 +41,7 @@ export const getIframe = (): HTMLIFrameElement => {
 };
 
 export const getComponent = (componentName: string) =>
-	get(LEGO_BRIDGE.config!.componentsMap, componentName, componentName);
+	get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
 	if (target) {

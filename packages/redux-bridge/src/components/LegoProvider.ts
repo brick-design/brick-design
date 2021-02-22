@@ -1,10 +1,11 @@
 import { REDUX_BRIDGE } from '../configs';
 
-export interface LegoProviderProps {
+export interface LegoProviderProps{
 	children?: any
+	value?:any
 }
 
-export function LegoProvider({ children }: LegoProviderProps = {}) {
+export function LegoProvider({ children,...rest }: LegoProviderProps = {}) {
 	if (!REDUX_BRIDGE.framework) {
 		throw Error('未初始化Framework');
 	}
@@ -15,7 +16,7 @@ export function LegoProvider({ children }: LegoProviderProps = {}) {
 	}
 	return createElement(
 		REDUX_BRIDGE.context.Provider,
-		{ value: REDUX_BRIDGE.store },
+		rest,
 		children,
 	);
 }

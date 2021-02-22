@@ -1,5 +1,5 @@
 import ACTION_TYPES from '../actionTypes';
-import { createActions } from '../../store';
+import { createActions } from '../../utils';
 
 export type stylePayload = { style: any }
 export const changeStyles = (payload: stylePayload) =>

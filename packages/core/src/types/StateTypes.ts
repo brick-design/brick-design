@@ -89,7 +89,7 @@ export type PageStateConfigType={
 	api?:ApiType
 }
 
-export interface StateType {
+export type StateType={
 	pageState:PlainObjectType
 	pageConfig: PageConfigType
 	selectedInfo: SelectedInfoType | null
@@ -103,4 +103,7 @@ export interface StateType {
 	pageStateConfig:PageStateConfigType
 }
 
+export interface BrickDesignStateType{
+	[pageName:string]:StateType|string
+}
 export type STATE_PROPS = keyof StateType

@@ -1,5 +1,5 @@
 import ACTION_TYPES from '../actionTypes';
-import { createActions } from '../../store';
+import { createActions } from '../../utils';
 import { PROPS_TYPES, PropsConfigType } from '../../types';
 
 export type AddPropsConfigPayload = {

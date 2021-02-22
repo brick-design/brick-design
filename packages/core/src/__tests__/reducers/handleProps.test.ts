@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 import { reducer } from '../../reducers';
-import { LEGO_BRIDGE, legoState } from '../../store';
+import {  legoState } from '../../reducers/handlePageBrickdState';
 import ACTION_TYPES from '../../actions/actionTypes';
 import config from '../configs';
 
@@ -16,16 +16,23 @@ import {
 	ChangePropsPayload,
 	DeletePropsConfigPayload,
 } from '../../actions';
-import { getComponentConfig, ROOT } from '../../utils';
+import { getComponentConfig, ROOT, setBrickdConfig, setPageName } from '../../utils';
 
 beforeAll(() => {
-	LEGO_BRIDGE.config = config;
+	setBrickdConfig(config);
+	setPageName('initPage');
 	console.warn = jest.fn();
 });
+
+afterAll(() => {
+	setBrickdConfig(null);
+	setPageName(null);
+});
+
 describe('addPropsConfig', () => {
 	const action = { type: ACTION_TYPES.addPropsConfig };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toEqual(legoState);
+		expect(reducer({initPage:legoState}, action)).toEqual({initPage:legoState});
 	});
 
 	it('添加object属性配置', () => {
@@ -51,7 +58,7 @@ describe('addPropsConfig', () => {
 			propType: PROPS_TYPES.number,
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const { propsConfig } = getComponentConfig('a');
 		const newA = {
 			a: {
@@ -78,7 +85,7 @@ describe('addPropsConfig', () => {
 				[ROOT]: newA,
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('添加object重复属性配置', () => {
 		const propsConfigSheet: PropsConfigSheetType = {
@@ -110,8 +117,8 @@ describe('addPropsConfig', () => {
 			propType: PROPS_TYPES.object,
 		};
 
-		const state = reducer(prevState, { ...action, payload });
-		expect(state).toEqual(prevState);
+		const state = reducer({initPage:prevState}, { ...action, payload });
+		expect(state).toEqual({initPage:prevState});
 	});
 	it('属性根中添加任意属性配置', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -132,7 +139,7 @@ describe('addPropsConfig', () => {
 			propType: PROPS_TYPES.object,
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const { propsConfig } = getComponentConfig('a');
 		const newA = { type: PROPS_TYPES.object, isAdd: true };
 		const expectState: StateType = {
@@ -148,7 +155,7 @@ describe('addPropsConfig', () => {
 				propsConfig: { ...propsConfig, a: newA },
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('属性根中添加重复属性配置', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -168,9 +175,9 @@ describe('addPropsConfig', () => {
 			propType: PROPS_TYPES.object,
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 
-		expect(state).toEqual(prevState);
+		expect(state).toEqual({initPage:prevState});
 	});
 	it('添加objectArray属性配置', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -198,7 +205,7 @@ describe('addPropsConfig', () => {
 			],
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const newA = {
 			a: {
 				childPropsConfig: {
@@ -227,14 +234,14 @@ describe('addPropsConfig', () => {
 				[ROOT]: newA,
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
 describe('deletePropsConfig', () => {
 	const action = { type: ACTION_TYPES.deletePropsConfig };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toEqual(legoState);
+		expect(reducer({initPage:legoState}, action)).toEqual({initPage:legoState});
 	});
 
 	it('props有值，删除属性配置', () => {
@@ -268,7 +275,7 @@ describe('deletePropsConfig', () => {
 			fatherFieldLocation: 'a.childPropsConfig',
 			field: 'b',
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
@@ -286,7 +293,7 @@ describe('deletePropsConfig', () => {
 				}),
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('props没有值，删除属性配置', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -315,7 +322,7 @@ describe('deletePropsConfig', () => {
 			fatherFieldLocation: 'a.childPropsConfig',
 			field: 'b',
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
@@ -329,7 +336,7 @@ describe('deletePropsConfig', () => {
 				}),
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('删除props根的属性配置', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -358,7 +365,7 @@ describe('deletePropsConfig', () => {
 			fatherFieldLocation: '',
 			field: 'a',
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ selectedInfo, pageConfig, propsConfigSheet }],
@@ -373,14 +380,14 @@ describe('deletePropsConfig', () => {
 				propsConfig: getComponentConfig('img').propsConfig,
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
 describe('changeProps', () => {
 	const action = { type: ACTION_TYPES.changeProps };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toEqual(legoState);
+		expect(reducer({initPage:legoState}, action)).toEqual({initPage:legoState});
 	});
 	it('changeProps and style===undefined', () => {
 		const pageConfig: PageConfigType = {
@@ -398,7 +405,7 @@ describe('changeProps', () => {
 			},
 		};
 		const payload: ChangePropsPayload = { props: { b: 2 } };
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -407,7 +414,7 @@ describe('changeProps', () => {
 			},
 		};
 
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('changeProps and style', () => {
 		const pageConfig: PageConfigType = {
@@ -425,7 +432,7 @@ describe('changeProps', () => {
 			},
 		};
 		const payload: ChangePropsPayload = { props: { b: 2 } };
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -434,14 +441,14 @@ describe('changeProps', () => {
 			},
 		};
 
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
 describe('resetProps', () => {
 	const action = { type: ACTION_TYPES.resetProps };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toEqual(legoState);
+		expect(reducer({initPage:legoState}, action)).toEqual({initPage:legoState});
 	});
 	it('selectedInfo!==null and style===undefined', () => {
 		const pageConfig: PageConfigType = {
@@ -459,7 +466,7 @@ describe('resetProps', () => {
 				props: { b: 2 },
 			},
 		};
-		const state = reducer(prevState, action);
+		const state = reducer({initPage:prevState}, action);
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -467,7 +474,7 @@ describe('resetProps', () => {
 				[ROOT]: { componentName: 'img', props: { b: 2 } },
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('selectedInfo!==null and style!==undefined', () => {
 		const pageConfig: PageConfigType = {
@@ -485,7 +492,7 @@ describe('resetProps', () => {
 				props: { b: 2 },
 			},
 		};
-		const state = reducer(prevState, action);
+		const state = reducer({initPage:prevState}, action);
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -493,6 +500,6 @@ describe('resetProps', () => {
 				[ROOT]: { componentName: 'img', props: { b: 2, style: { c: 3 } } },
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });

@@ -1,17 +1,20 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
-import { LEGO_BRIDGE, legoState } from '../../store';
+import {  legoState } from '../../reducers/handlePageBrickdState';
 import { SelectedInfoType, StateType } from '../../types';
 import config from '../configs';
 import { SelectComponentPayload } from '../../actions';
-import { ROOT } from '../../utils';
+import { getBrickdConfig, ROOT, setBrickdConfig, setPageName } from '../../utils';
 
 jest.resetModules();
 beforeAll(() => {
-	LEGO_BRIDGE.config = config;
+	setBrickdConfig(config) ;
+	setPageName('initPage');
 });
 afterAll(() => {
-	LEGO_BRIDGE.config = undefined;
+	setBrickdConfig(null);
+	setPageName(null);
+
 });
 describe('selectInfo', () => {
 	const action = { type: ACTION_TYPES.selectComponent };
@@ -34,7 +37,7 @@ describe('selectInfo', () => {
 			propName: 'test',
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			selectedInfo: {
@@ -45,7 +48,7 @@ describe('selectInfo', () => {
 				parentKey: '',
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	test('选中没有属性节点的组件组件', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -75,7 +78,7 @@ describe('selectInfo', () => {
 			domTreeKeys: [ROOT, '0test', '1'],
 			parentPropName: 'test',
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ selectedInfo }],
@@ -88,7 +91,7 @@ describe('selectInfo', () => {
 				propsConfig: config!.componentSchemasMap['img'].propsConfig,
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 
 	test('选中有属性节点的组件', () => {
@@ -119,7 +122,7 @@ describe('selectInfo', () => {
 			domTreeKeys: [ROOT],
 			propName: 'children',
 		};
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ selectedInfo }],
@@ -129,11 +132,11 @@ describe('selectInfo', () => {
 				domTreeKeys: [ROOT, '0children'],
 				propName: 'children',
 				parentKey: '',
-				propsConfig: LEGO_BRIDGE.config!.componentSchemasMap['span']
+				propsConfig: getBrickdConfig().componentSchemasMap['span']
 					.propsConfig,
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	test('如果 selectedInfo.selectedKey===key propName非空 ', () => {
 		const prevState: StateType = {
@@ -157,9 +160,9 @@ describe('selectInfo', () => {
 			domTreeKeys: [ROOT],
 			propName: 'test',
 		};
-
-		const state = reducer(prevState, { ...action, payload });
-		expect(state).toBe(prevState);
+		const brickdState={initPage:prevState};
+		const state = reducer(brickdState, { ...action, payload });
+		expect(state).toBe(brickdState);
 	});
 	test(
 		'如果 selectedInfo.selectedKey===key selectedInfo.propName!==undefined ' +
@@ -191,7 +194,7 @@ describe('selectInfo', () => {
 				domTreeKeys: [ROOT],
 			};
 
-			const state = reducer(prevState, { ...action, payload });
+			const state = reducer({initPage:prevState}, { ...action, payload });
 			const expectState: StateType = {
 				...prevState,
 				selectedInfo: {
@@ -199,7 +202,7 @@ describe('selectInfo', () => {
 					parentKey: 'testKey',
 				},
 			};
-			expect(state).toEqual(expectState);
+			expect(state).toEqual({initPage:expectState});
 		},
 	);
 	test('如果 selectedInfo.selectedKey===key 并且属性节点不同', () => {
@@ -229,7 +232,7 @@ describe('selectInfo', () => {
 			propName: 'test',
 		};
 
-		const state = reducer(prevState, { ...action, payload });
+		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
 			selectedInfo: {
@@ -238,15 +241,15 @@ describe('selectInfo', () => {
 				domTreeKeys: [ROOT, '0test'],
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
 describe('清除选中', () => {
 	const action = { type: ACTION_TYPES.clearSelectedStatus };
 	test('当没有选中组件时', () => {
-		const state = reducer(legoState, action);
-		expect(state).toEqual(legoState);
+		const state = reducer({initPage:legoState}, action);
+		expect(state).toEqual({initPage:legoState});
 	});
 
 	test('当选中组件的属性节点为必填非空组件时', () => {
@@ -265,8 +268,8 @@ describe('清除选中', () => {
 				},
 			},
 		};
-		const state = reducer(prevState, action);
-		expect(state).toEqual(prevState);
+		const state = reducer({initPage:prevState}, action);
+		expect(state).toEqual({initPage:prevState});
 	});
 	test('当选中组件的children为必填非空组件时', () => {
 		const prevState: StateType = {
@@ -283,8 +286,8 @@ describe('清除选中', () => {
 				},
 			},
 		};
-		const state = reducer(prevState, action);
-		expect(state).toEqual(prevState);
+		const state = reducer({initPage:prevState}, action);
+		expect(state).toEqual({initPage:prevState});
 	});
 	test('正常清除', () => {
 		const prevState: StateType = {
@@ -301,7 +304,7 @@ describe('清除选中', () => {
 				},
 			},
 		};
-		const state = reducer(prevState, action);
-		expect(state.selectedInfo).toBeNull();
+		const state = reducer({initPage:prevState}, action);
+		expect((state.initPage as StateType).selectedInfo).toBeNull();
 	});
 });

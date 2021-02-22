@@ -37,7 +37,7 @@ function useSelectorWithStore<T>(
 	const prevSelector = useRef([]);
 	const prevStoreState = useRef();
 	const prevSelectedState = useRef({});
-	const storeState = store.getState();
+	const storeState = store.getPageState();
 	let selectedState: any;
 	if (storeState !== prevStoreState.current) {
 		selectedState = handleState(selector, storeState,stateDeep);
@@ -53,7 +53,7 @@ function useSelectorWithStore<T>(
 
 	useLayoutEffect(() => {
 		function checkForUpdates() {
-			const storeState = store.getState();
+			const storeState = store.getPageState();
 			const nextSelectedState = handleState(prevSelector.current, storeState,stateDeep);
 			if (
 				shallowEqual(nextSelectedState, prevSelectedState.current) ||

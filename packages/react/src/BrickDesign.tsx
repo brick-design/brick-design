@@ -12,7 +12,14 @@ import {
 	DragSourceType,
 	isContainer,
 	ROOT,
-	STATE_PROPS, PageStateConfigType, setState,
+	STATE_PROPS,
+	PageStateConfigType,
+	setState,
+	getStore,
+	StateType,
+	initPageBrickdState,
+	setPageName,
+	removePageBrickdState,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { LegoProvider, useSelector } from '@brickd/redux-bridge';
@@ -42,7 +49,7 @@ const onIframeLoad = (
 const componentMount = (designPage: any, divContainer: any) => {
 	ReactDOM.render(
 		<FunParamContextProvider>
-  <LegoProvider>
+  <LegoProvider value={getStore()}>
     {designPage}
     <Guidelines />
     <Distances />
@@ -83,6 +90,8 @@ const renderComponent = (pageConfig: PageConfigType) => {
  */
 interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	onLoadEnd?: () => void
+	initState?:Partial<StateType>
+	pageName:string
 }
 
 const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource','pageStateConfig'];
@@ -108,6 +117,7 @@ const controlUpdate = (
 };
 
 function BrickDesign(props: BrickDesignProps) {
+	const { onLoadEnd,pageName,initState } = props;
 	const { pageConfig, dragSource,pageStateConfig} = useSelector<
 		BrickdHookState,
 		STATE_PROPS
@@ -132,9 +142,12 @@ function BrickDesign(props: BrickDesignProps) {
 		const contentWindow = iframeRef.current.contentWindow!;
 		contentWindow.addEventListener('dragover', onDragover);
 		contentWindow.addEventListener('drop', onDrop);
+		setPageName(pageName);
+		initPageBrickdState(initState);
 		return () => {
 			contentWindow.removeEventListener('dragover', onDragover);
 			contentWindow.removeEventListener('drop', onDrop);
+			removePageBrickdState();
 		};
 	}, []);
 
@@ -157,7 +170,6 @@ function BrickDesign(props: BrickDesignProps) {
 		}
 	}, [divContainer.current, designPage]);
 
-	const { onLoadEnd } = props;
 	return (
   <iframe
     id="dnd-iframe"

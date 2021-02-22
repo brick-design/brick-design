@@ -1,17 +1,25 @@
 import { reducer } from '../../reducers';
 import ACTION_TYPES from '../../actions/actionTypes';
-import { legoState } from '../../store';
+import {  legoState } from '../../reducers/handlePageBrickdState';
 import { PageConfigType, SelectedInfoType, StateType } from '../../types';
-import { ROOT } from '../../utils';
+import { ROOT, setPageName } from '../../utils';
 
+beforeAll(() => {
+	setPageName('initPage');
+});
+
+afterAll(() => {
+	setPageName(null);
+});
 describe('changeStyle', () => {
 	const action = { type: ACTION_TYPES.changeStyles };
 	test('selectedInfo=null', () => {
-		const state = reducer(legoState, {
+		const brickdState={initPage:legoState};
+		const state = reducer(brickdState, {
 			...action,
 			payload: { style: {} },
 		});
-		expect(state).toBe(legoState);
+		expect(state).toBe(brickdState);
 	});
 	test('props===undefined', () => {
 		const prevState: StateType = {
@@ -28,11 +36,11 @@ describe('changeStyle', () => {
 				},
 			},
 		};
-		const state = reducer(prevState, {
+		const state = reducer({initPage:prevState}, {
 			...action,
 			payload: { style: {} },
 		});
-		expect(state.pageConfig[ROOT].props).toEqual({ style: {} });
+		expect((state.initPage as StateType).pageConfig[ROOT].props).toEqual({ style: {} });
 	});
 	test('props!==undefined', () => {
 		const prevState: StateType = {
@@ -50,17 +58,18 @@ describe('changeStyle', () => {
 				},
 			},
 		};
-		const state = reducer(prevState, {
+		const state = reducer({initPage:prevState}, {
 			...action,
 			payload: { style: {} },
 		});
-		expect(state.pageConfig[ROOT].props).toEqual({ style: {} });
+		expect((state.initPage as StateType).pageConfig[ROOT].props).toEqual({ style: {} });
 	});
 });
 describe('resetStyle', () => {
 	const action = { type: ACTION_TYPES.resetStyles };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toBe(legoState);
+		const brickdState={initPage:legoState};
+		expect(reducer(brickdState, action)).toBe(brickdState);
 	});
 	it('重置样式 props===undefined', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -78,7 +87,7 @@ describe('resetStyle', () => {
 			selectedInfo,
 			pageConfig,
 		};
-		const state = reducer(prevState, action);
+		const state = reducer({initPage:prevState}, action);
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -88,7 +97,7 @@ describe('resetStyle', () => {
 				},
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('重置样式 prop!==undefined', () => {
 		const selectedInfo: SelectedInfoType = {
@@ -107,7 +116,7 @@ describe('resetStyle', () => {
 			selectedInfo,
 			pageConfig,
 		};
-		const state = reducer(prevState, action);
+		const state = reducer({initPage:prevState}, action);
 		const expectState: StateType = {
 			...prevState,
 			undo: [{ pageConfig }],
@@ -118,14 +127,16 @@ describe('resetStyle', () => {
 				},
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 });
 
 describe('resizeChange', () => {
 	const action = { type: ACTION_TYPES.resizeChange };
 	it('selectedInfo===null', () => {
-		expect(reducer(legoState, action)).toBe(legoState);
+		const brickdState={initPage:legoState};
+
+		expect(reducer(brickdState, action)).toBe(brickdState);
 	});
 	it('更改组件宽高有宽和高', () => {
 		const pageConfig: PageConfigType = {
@@ -143,7 +154,7 @@ describe('resizeChange', () => {
 				propsConfig: {},
 			},
 		};
-		const state = reducer(prevState, {
+		const state = reducer({initPage:prevState}, {
 			...action,
 			payload: { width: 12, height: 13 },
 		});
@@ -157,7 +168,7 @@ describe('resizeChange', () => {
 				},
 			},
 		};
-		expect(state).toEqual(expectState);
+		expect(state).toEqual({initPage:expectState});
 	});
 	it('更改组件宽高没有宽和高', () => {
 		const pageConfig: PageConfigType = {
@@ -175,8 +186,8 @@ describe('resizeChange', () => {
 				propsConfig: {},
 			},
 		};
-		const state = reducer(prevState, { ...action, payload: {} });
+		const state = reducer({initPage:prevState}, { ...action, payload: {} });
 
-		expect(state).toEqual(state);
+		expect(state).toEqual({initPage:prevState});
 	});
 });
