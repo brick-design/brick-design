@@ -24,10 +24,8 @@ import {
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
-import { setState, removeState } from './handlePageState';
-import { setComponentState } from './handleComponetState';
-import { setApi } from './handleApi';
-import {setPageApi,setPageState} from './handlePageStateConfig';
+import { setApi, setComponentState } from './handleComponetStateApi';
+import {setPageApi,setPageState} from './handlePageStateApi';
 import { initPageBrickdState, legoState, removePageBrickdState } from './handlePageBrickdState';
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, BrickDesignStateType, StateType } from '../types';
@@ -109,12 +107,7 @@ export const reducer: ReducerType = (prevState, action) => {
 		case ACTION_TYPES.clearDragSource:
 			newState= clearDragSource(state);
 			break;
-		case ACTION_TYPES.setState:
-			newState= setState(state,payload);
-			break;
-		case ACTION_TYPES.removeState:
-			newState= removeState(state,payload);
-			break;
+
 		case ACTION_TYPES.setComponentState:
 			newState= setComponentState(state,payload);
 			break;
@@ -136,6 +129,6 @@ export const reducer: ReducerType = (prevState, action) => {
 		default:
 			return prevState;
 	}
-	if(newState===state) return prevState;
+	if(newState===state||pageName===null) return prevState;
 	return {...prevState,[pageName]:newState};
 };

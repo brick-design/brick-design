@@ -5,6 +5,7 @@ import {
 	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
+import { useCommon } from '@brickd/hooks';
 import {
 	CommonPropsType,
 	controlUpdate,
@@ -20,7 +21,6 @@ import {
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
-import { useCommon } from '../hooks/useCommon';
 
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
@@ -43,7 +43,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
 	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
 	const {componentName} = vNode;
-	const{props,hidden}=useCommon(key,vNode);
+	const{props,hidden}=useCommon(vNode,rest);
 	if (!isSelected&&(!componentName||hidden)) return null;
 
 	const onDragEnter = (e: Event) => {

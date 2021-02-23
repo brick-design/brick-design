@@ -17,11 +17,13 @@
     "access": "public"
   },
   "dependencies": {
-    "@brickd/core": "^1.0.0-alpha.16",
+    "@brickd/hooks": "^1.0.0-alpha.16",
     "@brickd/utils": "^1.0.0-alpha.16",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "react": "^16.8.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149"
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^16.9.35"
   }
 }

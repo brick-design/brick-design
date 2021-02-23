@@ -90,7 +90,6 @@ export type PageStateConfigType={
 }
 
 export type StateType={
-	pageState:PlainObjectType
 	pageConfig: PageConfigType
 	selectedInfo: SelectedInfoType | null
 	undo: UndoRedoType[]

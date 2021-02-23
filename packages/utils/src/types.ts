@@ -1,3 +1,4 @@
+
 export interface SchemaApiObject {
 	/**
 	 * API 发送类型
@@ -158,3 +159,31 @@ export interface FetcherConfig {
 }
 
 export type FetcherType=(config: FetcherConfig) => Promise<any>
+export type PropsNodeType = {
+	[propName: string]: string[] | undefined
+}
+
+
+export type ChildNodesType = string[] | PropsNodeType
+
+export type PropsType={
+	[propName:string]:ActionType|any
+}
+export interface VirtualDOMType {
+	componentName: string
+	props?: PropsType
+	childNodes?: ChildNodesType
+	api?:ApiType
+	state?:PlainObject
+	isHidden?:string
+	[custom: string]: any
+}
+
+export interface PageConfigType{
+	[key:string]:VirtualDOMType
+}
+
+export type CommonPropsType={
+	renderKey:string;
+	[propName:string]:any
+}

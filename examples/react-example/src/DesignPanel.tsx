@@ -48,7 +48,7 @@ export default function DesignPanel() {
 			style={style}
 			className={`${styles['browser-mockup']} ${styles['with-url']}`}
 		>
-			<BrickDesign pageName={'test'} initState={{ pageConfig: initData,pageState:{state:{v:false,n:0,items:listData}} }} />
+			<BrickDesign pageName={'test'} initState={{ pageConfig: initData,pageStateConfig:{state:{v:false,n:0,items:listData}} }} />
 		</div>
 	)
 }

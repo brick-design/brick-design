@@ -10,20 +10,23 @@ import {
 	clearHovered,
 	PageConfigType,
 	DragSourceType,
-	isContainer,
-	ROOT,
 	STATE_PROPS,
 	PageStateConfigType,
-	setState,
 	getStore,
 	StateType,
 	initPageBrickdState,
 	setPageName,
-	removePageBrickdState,
+	 ROOT, isContainer,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { LegoProvider, useSelector } from '@brickd/redux-bridge';
-import { useService } from '@brickd/hooks';
+import {
+	useService,
+	FunParamContextProvider,
+	useBrickdState,
+	StaticContextProvider,
+	BrickdContextProvider,
+} from '@brickd/hooks';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
@@ -31,59 +34,6 @@ import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
-import { FunParamContextProvider } from './components/FunParamContext';
-
-const onIframeLoad = (
-	divContainer: any,
-	designPage: any,
-	iframe: HTMLIFrameElement,
-) => {
-	const head = document.head.cloneNode(true);
-	const contentDocument = iframe.contentDocument!;
-	contentDocument.head.remove();
-	contentDocument.documentElement.insertBefore(head, contentDocument.body);
-	divContainer.current = contentDocument.getElementById('dnd-container');
-	componentMount(designPage, divContainer);
-};
-
-const componentMount = (designPage: any, divContainer: any) => {
-	ReactDOM.render(
-		<FunParamContextProvider>
-  <LegoProvider value={getStore()}>
-    {designPage}
-    <Guidelines />
-    <Distances />
-    <Resize />
-  </LegoProvider>
-		</FunParamContextProvider>,
-		divContainer.current,
-	);
-};
-const onDragEnter = (dragSource: DragSourceType, divContainer: any) => {
-	const { vDOMCollection } = dragSource;
-	componentMount(renderComponent(vDOMCollection!), divContainer);
-};
-const onDragLeave = (divContainer: any) => {
-	ReactDOM.unmountComponentAtNode(divContainer.current);
-};
-
-const renderComponent = (pageConfig: PageConfigType) => {
-	const {
-		[ROOT]: { componentName },
-	} = pageConfig;
-	const props = {
-		specialProps: {
-			domTreeKeys: [ROOT],
-			key: ROOT,
-			parentKey: '',
-		},
-	};
-	return isContainer(componentName) ? (
-  <Container onMouseLeave={clearHovered} {...props} />
-	) : (
-  <NoneContainer onMouseLeave={clearHovered} {...props} />
-	);
-};
 
 /**
  * 鼠标离开设计区域清除hover状态
@@ -91,7 +41,8 @@ const renderComponent = (pageConfig: PageConfigType) => {
 interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	onLoadEnd?: () => void
 	initState?:Partial<StateType>
-	pageName:string
+	pageName:string,
+	[propName:string]:any
 }
 
 const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource','pageStateConfig'];
@@ -108,77 +59,117 @@ const controlUpdate = (
 ) => {
 	const { pageConfig: prevPageConfig,pageStateConfig:prevPageStateConfig } = prevState;
 	const { pageConfig,pageStateConfig } = nextState;
-
+	const nextRootComponent=pageConfig[ROOT];
+	const prevRootComponent=prevPageConfig[ROOT];
 	return (
-		!pageConfig[ROOT] ||
-		pageConfig[ROOT] !== prevPageConfig[ROOT]
+		!nextRootComponent ||
+		nextRootComponent !== prevRootComponent
 		||prevPageStateConfig!==pageStateConfig
 	);
 };
 
-function BrickDesign(props: BrickDesignProps) {
-	const { onLoadEnd,pageName,initState } = props;
-	const { pageConfig, dragSource,pageStateConfig} = useSelector<
-		BrickdHookState,
-		STATE_PROPS
-	>(stateSelector, controlUpdate);
+function BrickDesign(brickdProps: BrickDesignProps) {
+	const { onLoadEnd,pageName,initState,options,...props } = brickdProps;
+	const { pageConfig={}, dragSource={},pageStateConfig={}} = useSelector<
+		BrickdHookState, STATE_PROPS>(stateSelector, controlUpdate);
 	const iframeRef = useRef<HTMLIFrameElement>();
-	const designPage: any = useMemo(() => {
-		if (!pageConfig[ROOT]) return null;
-		return renderComponent(pageConfig);
-	}, [pageConfig]);
-
-	const divContainer = useRef(null);
+	const rootComponent=pageConfig[ROOT];
 	const {state,api}=pageStateConfig;
+	const {state:brickdState}= useBrickdState(state,true);
+	const staticState=useMemo(()=>({pageConfig,props,options}),[pageConfig,props,options]);
+
+	const renderComponent = useCallback((pageConfig: PageConfigType) => {
+		const rootComponent=pageConfig[ROOT];
+		if (!rootComponent) return null;
+		const specialProps={domTreeKeys:[ROOT],key:ROOT,parentKey:''};
+		return isContainer(rootComponent.componentName) ? (
+			<Container onMouseLeave={clearHovered} specialProps={specialProps}/>
+		) : (
+			<NoneContainer onMouseLeave={clearHovered} specialProps={specialProps}/>
+		);
+	},[]);
+
+	const designPage= useMemo(()=>renderComponent(pageConfig),[pageConfig]);
+	const divContainer = useRef(null);
+	const componentMount = useCallback((divContainer,designPage) => {
+		ReactDOM.render(
+			<BrickdContextProvider value={brickdState}>
+				<FunParamContextProvider value={undefined}>
+					<StaticContextProvider value={staticState}>
+						<LegoProvider value={getStore()}>
+							{designPage}
+							<Guidelines />
+							<Distances />
+							<Resize />
+						</LegoProvider>
+					</StaticContextProvider>
+				</FunParamContextProvider>
+			</BrickdContextProvider>,
+			divContainer.current,
+		);
+	},[brickdState,staticState]);
+
+	const onDragEnter = useCallback(() => {
+		const { vDOMCollection } = dragSource;
+		componentMount(divContainer,renderComponent(vDOMCollection!));
+	},[dragSource,componentMount,divContainer]);
+
+	const onDragLeave = useCallback(() => {
+		ReactDOM.unmountComponentAtNode(divContainer.current);
+	},[divContainer.current]);
+
+	useService(brickdState,api);
+
+	const onIframeLoad = useCallback(() => {
+		const head = document.head.cloneNode(true);
+		const contentDocument = iframeRef.current.contentDocument!;
+		contentDocument.head.remove();
+		contentDocument.documentElement.insertBefore(head, contentDocument.body);
+		divContainer.current = contentDocument.getElementById('dnd-container');
+		componentMount(divContainer,designPage);
+		onLoadEnd && onLoadEnd();
+	},[divContainer.current,iframeRef.current,designPage,onLoadEnd]);
 
 	useEffect(()=>{
-		setState({state});
-	},[state]);
-	const {state:pageState}=useSelector(['pageState'],undefined,'state');
-	useService('state',pageState,setState,api);
+		setPageName(pageName);
+		initPageBrickdState(initState);
+	},[pageName]);
 
 	useEffect(() => {
 		iframeRef.current = getIframe();
 		const contentWindow = iframeRef.current.contentWindow!;
 		contentWindow.addEventListener('dragover', onDragover);
 		contentWindow.addEventListener('drop', onDrop);
-		setPageName(pageName);
-		initPageBrickdState(initState);
 		return () => {
 			contentWindow.removeEventListener('dragover', onDragover);
 			contentWindow.removeEventListener('drop', onDrop);
-			removePageBrickdState();
 		};
 	}, []);
 
 	useEffect(() => {
-		if (pageConfig[ROOT]) return;
+		if (rootComponent) return;
 		const contentWindow = getIframe()!.contentWindow!;
-		const dragEnter = () => onDragEnter(dragSource, divContainer);
-		const dragLeave = () => onDragLeave(divContainer);
-		contentWindow.addEventListener('dragenter', dragEnter);
-		contentWindow.addEventListener('dragleave', dragLeave);
+
+		contentWindow.addEventListener('dragenter', onDragEnter);
+		contentWindow.addEventListener('dragleave', onDragLeave);
 		return () => {
-			contentWindow.removeEventListener('dragenter', dragEnter);
-			contentWindow.removeEventListener('dragleave', dragLeave);
+			contentWindow.removeEventListener('dragenter', onDragEnter);
+			contentWindow.removeEventListener('dragleave', onDragLeave);
 		};
-	}, [pageConfig, dragSource, divContainer, iframeRef]);
+	}, [rootComponent,onDragEnter,onDragLeave]);
 
 	useEffect(() => {
 		if (divContainer.current) {
-			componentMount(designPage, divContainer);
+			componentMount(divContainer,designPage);
 		}
-	}, [divContainer.current, designPage]);
+	}, [divContainer.current,componentMount,designPage]);
 
 	return (
   <iframe
     id="dnd-iframe"
     style={{ border: 0, width: '100%', height: '100%' }}
     srcDoc={iframeSrcDoc}
-    onLoad={useCallback(() => {
-				onIframeLoad(divContainer, designPage, iframeRef.current!);
-				onLoadEnd && onLoadEnd();
-			}, [iframeRef.current])}
+    onLoad={onIframeLoad}
     {...props}
 		/>
 	);

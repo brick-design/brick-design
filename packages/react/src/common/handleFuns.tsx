@@ -12,13 +12,13 @@ import {
 	STATE_PROPS,
 } from '@brickd/core';
 import { each, isEmpty, isEqual, map } from 'lodash';
+import { FunParamContextProvider } from '@brickd/hooks';
 import styles from './style.less';
 import { handleSelectedStatus, onDragStart, onMouseOver } from './events';
 import { selectClassTarget } from './constants';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import { generateRequiredProps, getComponent, getIframe } from '../utils';
-import { FunParamContextProvider } from '../components/FunParamContext';
 
 /**
  * 处理样式
@@ -177,7 +177,7 @@ export function handleChildNodes(
 				const realPropName=propName.substring(1);
 				// eslint-disable-next-line react/display-name
 				nodeProps[realPropName]= (...funParams)=>{
-					return(<FunParamContextProvider value={{funParams}}>
+					return(<FunParamContextProvider value={funParams}>
 						{renderNodes(
 						nodes,
 						specialProps,
@@ -197,7 +197,6 @@ export function handleChildNodes(
 					isOnlyNode,
 				);
 			}
-
 		});
 	}
 

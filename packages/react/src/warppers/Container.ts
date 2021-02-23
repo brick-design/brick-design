@@ -17,6 +17,7 @@ import {
 	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
 import { useSelector } from '@brickd/redux-bridge';
+import { useCommon } from '@brickd/hooks';
 import {
 	generateRequiredProps,
 	getComponent,
@@ -37,7 +38,6 @@ import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
-import { useCommon } from '../hooks/useCommon';
 
 /**
  * 所有的容器组件名称
@@ -63,7 +63,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
 	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
 	const { childNodes, componentName} = vNode;
-	const{props,hidden}=useCommon(key,vNode);
+	const{props,hidden}=useCommon(vNode,rest);
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(
 		childNodes,
@@ -173,7 +173,6 @@ function Container(allProps: CommonPropsType, ref: any) {
 		 * 设置组件id方便抓取图片
 		 */
 		ref,
-		...rest,
 		...modalProps,
 	});
 }

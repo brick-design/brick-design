@@ -2,7 +2,6 @@ import {merge} from 'lodash';
 import { StateType } from '../types';
 
 export const legoState: StateType = {
-	pageState:{},
 	pageStateConfig:{},
 	pageConfig: {}, // 所有组件信息
 	selectedInfo: null, // 选中组件的信息
@@ -19,5 +18,5 @@ export function initPageBrickdState(state: StateType,payload:Partial<StateType>)
 }
 
 export function removePageBrickdState(): StateType{
-	return null;
+	return undefined;
 }

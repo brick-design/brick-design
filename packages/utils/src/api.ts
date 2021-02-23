@@ -363,20 +363,20 @@ export function setApiCache(
   return result;
 }
 
-export const handleResponseState=(response:Payload,key:string)=>{
+export const handleResponseState=(response:Payload)=>{
   const state={};
   const {isPageState,isNotState,data,status}=response;
   if(!isNotState&&status===0){
     if(isPageState){
-      merge(state,{state:data});
+      merge(state,{pageState:data});
     }else {
-      merge(state,{[key]:data});
+      merge(state,{state:data});
     }
   }
   return state;
 };
 
-export const fetchData= async(fetcher:FetcherType|undefined,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,key:string,isFirst?:boolean,options?: object)=>{
+export const fetchData= async(fetcher:FetcherType|undefined,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,isFirst?:boolean,options?: object)=>{
   if(fetcher&&nextApi){
     if(isArray(nextApi)){
       const stateArr=await Promise.allSettled(map(nextApi,(api,i)=>{
@@ -386,14 +386,14 @@ export const fetchData= async(fetcher:FetcherType|undefined,prevApi:ApiType|unde
       }));
       for(const result of stateArr ){
         if(get(result,'value')){
-          return handleResponseState(get(result,'value'),key);
+          return handleResponseState(get(result,'value'));
         }
       }
     }else{
       if(isApiOutdated(prevApi as Api,nextApi,prevData,nextData,isFirst)){
         const result=await wrapFetcher(fetcher)(nextApi,nextData,options);
         if(result){
-          return handleResponseState(result,key);
+          return handleResponseState(result);
         }
       }
     }

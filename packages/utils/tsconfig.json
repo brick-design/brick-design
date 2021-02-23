@@ -6,6 +6,5 @@
   },
   "include": [
     "./src/index.ts",
-    "../../node_modules/eslint-plugin-react/lib/types.d.ts"
   ]
 }
