@@ -15,7 +15,7 @@ import NoneContainer from './NoneContainer';
 
 
 
-function Container(vProps:CommonPropsType) {
+function Container(vProps:CommonPropsType,ref: any) {
 	const {renderKey,...rest}=vProps;
 	const {pageConfig,componentsMap}=useContext(StaticContext);
 	const vNode=pageConfig[renderKey];
@@ -53,7 +53,7 @@ const nodeProps=	useMemo(()=>{
 		}
 	return nodeProps;
 },[pageConfig,childNodes,renderArrChild]);
-const propsResult=useMemo(()=>({...props,...nodeProps}),[props,nodeProps]);
+const propsResult=useMemo(()=>({...props,...nodeProps,ref}),[props,nodeProps,ref]);
 	if(hidden) return null;
 	return createElement(get(componentsMap,componentName,componentName),propsResult);
 }

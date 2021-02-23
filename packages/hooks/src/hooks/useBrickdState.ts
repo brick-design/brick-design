@@ -7,17 +7,13 @@ export function useBrickdState(propsState:any,isRoot?:boolean){
 	const prevPropsState= useRef(propsState);
 
 	useEffect(()=>{
-		if(!isEqual(propsState,prevPropsState.current)){
+		if(propsState&&!isEqual(propsState,prevPropsState.current)){
 			prevPropsState.current=propsState;
-			setBrickdState(state);
+			setBrickdState(propsState);
 		}
 	},[propsState,prevPropsState.current,setBrickdState]);
 
 	const setState=useCallback((newState)=>setBrickdState({...brickdState,...newState}),[brickdState,setBrickdState]);
-	const state=useMemo(()=>{
-		if (isRoot) return {...brickdState,setPageState:setState};
-		return {...brickdState,setState};
-	},[brickdState,setState]);
-
+	const state=useMemo(()=>isRoot?{...brickdState,setPageState:setState}:{...brickdState,setState},[setState,brickdState]);
 	return {state,setState};
 }

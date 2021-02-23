@@ -76,6 +76,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	const rootComponent=pageConfig[ROOT];
 	const {state,api}=pageStateConfig;
 	const {state:brickdState}= useBrickdState(state,true);
+
 	const staticState=useMemo(()=>({pageConfig,props,options}),[pageConfig,props,options]);
 
 	const renderComponent = useCallback((pageConfig: PageConfigType) => {
@@ -128,7 +129,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 		divContainer.current = contentDocument.getElementById('dnd-container');
 		componentMount(divContainer,designPage);
 		onLoadEnd && onLoadEnd();
-	},[divContainer.current,iframeRef.current,designPage,onLoadEnd]);
+	},[divContainer.current,iframeRef.current,designPage,onLoadEnd,componentMount]);
 
 	useEffect(()=>{
 		setPageName(pageName);
