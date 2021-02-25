@@ -16,7 +16,6 @@ import {
 	ROOT,
 	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import { useCommon } from '@brickd/hooks';
 import {
 	generateRequiredProps,
@@ -38,6 +37,8 @@ import { getDropTargetInfo } from '../common/events';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
 import { useChildNodes } from '../hooks/useChildNodes';
+import { useSelector } from '../hooks/useSelector';
+
 
 /**
  * 所有的容器组件名称

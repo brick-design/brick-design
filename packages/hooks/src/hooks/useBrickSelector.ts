@@ -1,4 +1,6 @@
-import { REDUX_BRIDGE } from '../configs';
+import {useLayoutEffect, useReducer, useRef,useContext} from 'react';
+import {isEmpty} from 'lodash';
+import { BrickStoreContext } from '../components/BrickStoreContext';
 
 export function get<T>(obj: any, path: string): T {
 	return path
@@ -24,7 +26,7 @@ const handleState = (selector: string[], storeState: any,stateDeep?:string) =>
 		return states;
 	}, {});
 
-type ControlUpdate<T> = (prevState: T, nextState: T) => boolean
+export type ControlUpdate<T> = (prevState: T, nextState: T) => boolean
 
 function useSelectorWithStore<T>(
 	selector: string[],
@@ -32,11 +34,10 @@ function useSelectorWithStore<T>(
 	controlUpdate?: ControlUpdate<T>,
 	stateDeep?: string
 ): T {
-	const { useLayoutEffect, useReducer, useRef } = REDUX_BRIDGE.framework;
 	const [, forceRender] = useReducer((s) => s + 1, 0);
 	const prevSelector = useRef([]);
 	const prevStoreState = useRef();
-	const prevSelectedState = useRef({});
+	const prevSelectedState = useRef({} as any);
 	const storeState = store.getPageState();
 	let selectedState: any;
 	if (storeState !== prevStoreState.current) {
@@ -57,8 +58,7 @@ function useSelectorWithStore<T>(
 			const nextSelectedState = handleState(prevSelector.current, storeState,stateDeep);
 			if (
 				shallowEqual(nextSelectedState, prevSelectedState.current) ||
-				(controlUpdate &&
-					!controlUpdate(prevSelectedState.current, nextSelectedState))
+				(controlUpdate && !controlUpdate(prevSelectedState.current, nextSelectedState))
 			) {
 				return;
 			}
@@ -72,15 +72,15 @@ function useSelectorWithStore<T>(
 		return unsubscribe;
 	}, [store]);
 
-	return selectedState;
+	return store.isPageStore&&!isEmpty(selectedState)?{...selectedState,setPageState:store.setPageState}:selectedState;
 }
 
-export function useSelector<T, U extends string>(
+export function useBrickSelector<T, U extends string>(
 	selector: U[],
 	controlUpdate?: ControlUpdate<T>,
-	stateDeep?: string
+	stateDeep?: string,
+  context:any=BrickStoreContext
 ): T {
-	const { useContext } = REDUX_BRIDGE.framework;
-	const store = useContext(REDUX_BRIDGE.context);
+	const store = useContext(context);
 	return useSelectorWithStore<T>(selector, store!, controlUpdate,stateDeep);
 }

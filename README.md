@@ -96,7 +96,10 @@ npm run start:example
     - [x] 父子组件约束
     - [x] 组件对象(vDom)扩展
     - [x] 自定义reducer处理页面状态
-    - [ ] 组件逻辑判断
+    - [x] 组件逻辑渲染
+    - [x] 方法节点
+    - [x] 网络数据获取
+    - [x] 网络数据获取
     - [x] React
     - [ ] rax
     

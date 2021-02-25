@@ -784,7 +784,7 @@ export function dataMapping(
 				...ret,
 				...from
 			};
-		}else if(key!=='$'&&key.includes('$')){
+		}else if(key.includes('$')&&typeof value==='string'){
 			//todo
 			ret[key.substring(1)]=handleAction(value,from);
 		}else if (key === '&') {

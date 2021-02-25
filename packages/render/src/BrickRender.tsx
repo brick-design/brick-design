@@ -5,10 +5,9 @@ import React, {
 
 import {
 	useService,
-	BrickdContextProvider,
+	BrickStoreProvider,
 	StaticContextProvider,
-	useBrickdState,
-	FunParamContextProvider,
+	FunParamContextProvider, useRedux,
 } from '@brickd/hooks';
 import {get} from 'lodash';
 import Container from './warppers/Container';
@@ -27,18 +26,18 @@ function BrickRender(brickdProps: BrickRenderProps) {
 	const ROOT_KEY='0';
 	const {componentsMap,pageConfig,pageStateConfig,options,...props} = brickdProps;
 	const {state,api}=pageStateConfig||{};
-	const {state:brickdState}=useBrickdState(state,true);
+	const brickdStore=useRedux(state);
 	const staticState=useMemo(()=>({pageConfig,componentsMap,props,options}),[pageConfig,componentsMap,props,options]);
-	const rootComponent=get(pageConfig,[ROOT_KEY]);
-	useService(brickdState,api);
+	const rootComponent=get(pageConfig,ROOT_KEY);
+	useService(brickdStore.getPageState(),api);
 	if(!rootComponent) return null;
-	return (<BrickdContextProvider value={brickdState}>
+	return (<BrickStoreProvider value={brickdStore}>
 		<FunParamContextProvider value={undefined}>
 		<StaticContextProvider value={staticState}>
 		{rootComponent.childNodes?<Container renderKey={ROOT_KEY}/>:<NoneContainer renderKey={ROOT_KEY}/>}
 		</StaticContextProvider>
 			</FunParamContextProvider>
-	</BrickdContextProvider>);
+	</BrickStoreProvider>);
 }
 
 export default memo(BrickRender);

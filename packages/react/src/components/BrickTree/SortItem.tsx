@@ -12,11 +12,11 @@ import {
 	SelectedInfoType,
 	STATE_PROPS,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import Collapse, { Panel } from 'rc-collapse';
 import SortTree from './SortTree';
 import styles from './index.less';
 import Header from './components/Header';
+import { useSelector } from '../../hooks/useSelector';
 import { isEqualKey, usePrevious } from '../../utils';
 
 import { getDropTargetInfo } from '../../common/events';

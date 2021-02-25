@@ -1,16 +1,13 @@
 import * as React from 'react';
-import { useEffect } from 'react';
-import { initFramework, LegoProvider } from '@brickd/redux-bridge';
+import { useEffect,createContext } from 'react';
 import {
 	ConfigType,
-	createLegStore,
+	createLegoStore,
 	ReducerType,
 	 getStore,
  WarnType,
-	cleanStateCache} from '@brickd/core';
-
-
-initFramework(React);
+	cleanStateCache
+} from '@brickd/core';
 
 interface BrickProviderType{
 	config: ConfigType
@@ -19,16 +16,20 @@ interface BrickProviderType{
 	warn?:WarnType;
 }
 
+export const BrickContext=createContext(null);
 function BrickProvider(props: BrickProviderType) {
 	const {config, customReducer, children,warn } = props;
 	useEffect(()=>{
-		return ()=>cleanStateCache();
+		return ()=>{
+			console.log('卸载》》》》》》');
+			 cleanStateCache();
+		};
 	},[]);
 	if (!getStore()) {
-		createLegStore(config, customReducer,warn);
+		createLegoStore(config, customReducer,warn);
 
 	}
-	return <LegoProvider value={getStore()}>{children}</LegoProvider>;
+	return <BrickContext.Provider value={getStore()}>{children}</BrickContext.Provider>;
 }
 
 export default React.memo(BrickProvider);

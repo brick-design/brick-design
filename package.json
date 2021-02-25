@@ -110,7 +110,6 @@
       "^@brickd/core$": "core/src",
       "^@brickd/react$": "react/src",
       "^@brickd/react-web$": "react-web/src",
-      "^@brickd/redux-bridge$": "redux-bridge/src",
       "^@brickd/render$": "render/src",
       "^@brickd/utils": "utils/src",
       "^@brickd/hooks": "hooks/src",
@@ -130,7 +129,6 @@
       "<rootDir>/packages/core/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/react/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/react-web/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
-      "<rootDir>/packages/redux-bridge/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/render/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/utils/src/**/__tests__/**/?(*.)(spec|test).ts(x|)",
       "<rootDir>/packages/hooks/src/**/__tests__/**/?(*.)(spec|test).ts(x|)"

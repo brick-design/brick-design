@@ -4,7 +4,7 @@ import {
 	SelectedInfoType,
 	STATE_PROPS,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
+import { useSelector } from './useSelector';
 import { handleSelectedStatus } from '../common/events';
 import { isEqualKey } from '../utils';
 

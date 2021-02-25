@@ -1,21 +1,19 @@
 import React, {
 	createElement,
-	forwardRef,
 	memo, useCallback, useContext, useMemo,
 } from 'react';
 import { each, get } from 'lodash';
-import { CommonPropsType } from '@brickd/utils';
 import { FunParamContextProvider,useCommon,StaticContext } from '@brickd/hooks';
 import NoneContainer from './NoneContainer';
-
 
 /**
  * 所有的容器组件名称
  */
-
-
-
-function Container(vProps:CommonPropsType,ref: any) {
+export type CommonPropsType={
+	renderKey:string;
+	[propName:string]:any
+}
+function Container(vProps:CommonPropsType) {
 	const {renderKey,...rest}=vProps;
 	const {pageConfig,componentsMap}=useContext(StaticContext);
 	const vNode=pageConfig[renderKey];
@@ -53,9 +51,9 @@ const nodeProps=	useMemo(()=>{
 		}
 	return nodeProps;
 },[pageConfig,childNodes,renderArrChild]);
-const propsResult=useMemo(()=>({...props,...nodeProps,ref}),[props,nodeProps,ref]);
+const propsResult=useMemo(()=>({...props,...nodeProps}),[props,nodeProps]);
 	if(hidden) return null;
 	return createElement(get(componentsMap,componentName,componentName),propsResult);
 }
 
-export default memo<CommonPropsType>(forwardRef(Container));
+export default memo<CommonPropsType>(Container);

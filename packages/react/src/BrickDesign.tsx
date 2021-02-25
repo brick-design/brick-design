@@ -19,14 +19,14 @@ import {
 	 ROOT, isContainer,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
-import { LegoProvider, useSelector } from '@brickd/redux-bridge';
 import {
 	useService,
+	useRedux,
 	FunParamContextProvider,
-	useBrickdState,
 	StaticContextProvider,
-	BrickdContextProvider,
+	BrickStoreProvider,
 } from '@brickd/hooks';
+import { BrickContext } from 'components/BrickProvider';
 import Container from './warppers/Container';
 import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
@@ -34,6 +34,7 @@ import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
+import {useSelector} from './hooks/useSelector';
 
 /**
  * 鼠标离开设计区域清除hover状态
@@ -75,8 +76,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	const iframeRef = useRef<HTMLIFrameElement>();
 	const rootComponent=pageConfig[ROOT];
 	const {state,api}=pageStateConfig;
-	const {state:brickdState}= useBrickdState(state,true);
-
+	const brickdStore= useRedux(state);
 	const staticState=useMemo(()=>({pageConfig,props,options}),[pageConfig,props,options]);
 
 	const renderComponent = useCallback((pageConfig: PageConfigType) => {
@@ -94,21 +94,21 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	const divContainer = useRef(null);
 	const componentMount = useCallback((divContainer,designPage) => {
 		ReactDOM.render(
-			<BrickdContextProvider value={brickdState}>
+			<BrickStoreProvider value={brickdStore}>
 				<FunParamContextProvider value={undefined}>
 					<StaticContextProvider value={staticState}>
-						<LegoProvider value={getStore()}>
+						<BrickContext.Provider value={getStore()}>
 							{designPage}
 							<Guidelines />
 							<Distances />
 							<Resize />
-						</LegoProvider>
+						</BrickContext.Provider>
 					</StaticContextProvider>
 				</FunParamContextProvider>
-			</BrickdContextProvider>,
+			</BrickStoreProvider>,
 			divContainer.current,
 		);
-	},[brickdState,staticState]);
+	},[brickdStore,staticState]);
 
 	const onDragEnter = useCallback(() => {
 		const { vDOMCollection } = dragSource;
@@ -118,8 +118,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	const onDragLeave = useCallback(() => {
 		ReactDOM.unmountComponentAtNode(divContainer.current);
 	},[divContainer.current]);
-
-	useService(brickdState,api);
+	useService(brickdStore.getPageState(),api);
 
 	const onIframeLoad = useCallback(() => {
 		const head = document.head.cloneNode(true);

@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, ProviderProps } from 'react';
 
-export const FunParamContext=createContext(undefined);
-export const FunParamContextProvider=({ children,value})=><FunParamContext.Provider value={value}>{children}</FunParamContext.Provider>;
+export const FunParamContext=createContext(null);
+export const FunParamContextProvider=(props:ProviderProps<any>)=><FunParamContext.Provider {...props}/>;

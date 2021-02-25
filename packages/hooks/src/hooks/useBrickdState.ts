@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isEqual } from 'lodash';
 
-export function useBrickdState(propsState:any,isRoot?:boolean){
+export function useBrickdState(propsState:any){
 
 	const [brickdState,setBrickdState]=useState(propsState);
 	const prevPropsState= useRef(propsState);
@@ -14,6 +14,6 @@ export function useBrickdState(propsState:any,isRoot?:boolean){
 	},[propsState,prevPropsState.current,setBrickdState]);
 
 	const setState=useCallback((newState)=>setBrickdState({...brickdState,...newState}),[brickdState,setBrickdState]);
-	const state=useMemo(()=>isRoot?{...brickdState,setPageState:setState}:{...brickdState,setState},[setState,brickdState]);
+	const state=useMemo(()=>({...brickdState,setState}),[setState,brickdState]);
 	return {state,setState};
 }

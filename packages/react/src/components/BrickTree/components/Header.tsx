@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
 import { SelectedInfoBaseType } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import { LayoutIcon, RowIcon, TriangleIcon } from './Icons';
+import { useSelector } from '../../../hooks/useSelector';
+
 import { handleSelectedStatus, onMouseOver } from '../../../common/events';
 import styles from '../index.less';
 import { isEqualKey } from '../../../utils';

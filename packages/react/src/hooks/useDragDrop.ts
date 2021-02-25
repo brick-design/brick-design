@@ -1,5 +1,5 @@
 import { DragSourceType, DropTargetType, STATE_PROPS } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
+import { useSelector } from './useSelector';
 
 export interface DragDropTypes {
 	dragSource: DragSourceType | null

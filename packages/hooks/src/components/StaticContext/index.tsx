@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, ProviderProps } from 'react';
 
 export const StaticContext=createContext({pageConfig:{},componentsMap:{},props:{},options:undefined});
-export const StaticContextProvider=({ children,value})=><StaticContext.Provider value={value}>{children}</StaticContext.Provider>;
+export const StaticContextProvider=(props:ProviderProps<any>)=><StaticContext.Provider {...props}/>;

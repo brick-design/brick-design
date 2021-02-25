@@ -6,8 +6,8 @@ import {
 	SelectedInfoType,
 	STATE_PROPS,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import styles from './index.less';
+import { useSelector } from '../../hooks/useSelector';
 import {
 	generateCSS,
 	getElementInfo,

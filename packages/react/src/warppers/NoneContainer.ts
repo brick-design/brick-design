@@ -4,7 +4,6 @@ import {
 	ROOT,
 	STATE_PROPS, VirtualDOMType,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import { useCommon } from '@brickd/hooks';
 import {
 	CommonPropsType,
@@ -21,6 +20,7 @@ import {
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
+import { useSelector } from '../hooks/useSelector';
 
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {

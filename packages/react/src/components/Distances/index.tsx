@@ -6,8 +6,8 @@ import {
 	STATE_PROPS,
 } from '@brickd/core';
 import { each } from 'lodash';
-import { useSelector } from '@brickd/redux-bridge';
 import styles from './index.less';
+import { useSelector } from '../../hooks/useSelector';
 import {
 	generateCSS,
 	getElementInfo,

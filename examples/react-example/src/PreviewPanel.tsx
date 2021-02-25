@@ -6,8 +6,8 @@ import config from './configs'
 
 export default function PreviewPanel() {
 	const { platformInfo,pageConfig,pageStateConfig } = useSelector(['platformInfo','pageConfig','pageStateConfig'])
-	const { size } = platformInfo
 	console.log('pageConfig>>>>>>',pageConfig)
+	const { size } = platformInfo
 	const style = { width: size[0], maxHeight: size[1], transition: 'all 700ms' }
 	return (
 		<div

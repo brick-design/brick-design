@@ -5,10 +5,10 @@ import {
 	ROOT,
 	STATE_PROPS,
 } from '@brickd/core';
-import { useSelector } from '@brickd/redux-bridge';
 import SortTree from './SortTree';
 import styles from './index.less';
 import { onDragover, onDrop } from '../../common/events';
+import { useSelector } from '../../hooks/useSelector';
 
 interface BrickTreeProps {
 	className?: string

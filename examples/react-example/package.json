@@ -2,6 +2,7 @@
   "name": "brickd-example",
   "version": "1.0.0-alpha.16",
   "private": true,
+  "homepage": "https://github.com/brick-design/brick-design",
   "dependencies": {
     "@brickd/react": "^1.0.0-alpha.16",
     "@brickd/react-web": "^1.0.0-alpha.16",
@@ -74,7 +75,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "site": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "predeploy": "npm run site",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
