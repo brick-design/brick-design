@@ -32,7 +32,7 @@ export function addComponent(state: StateType): StateType {
 	/**
 	 * 如果没有拖拽的组件不做添加动作, 如果没有
 	 */
-	if (!dragSource) return state;
+	if (!dragSource||!dropTarget&&pageConfig[ROOT]) return {...state,dragSource:null};
 	const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
 	/**
 	 * 如果没有root根节点，新添加的组件添加到root
@@ -49,9 +49,9 @@ export function addComponent(state: StateType): StateType {
 			redo,
 		};
 	}
-	const { selectedKey, propName, domTreeKeys } =
-		dropTarget || selectedInfo || {};
-
+	// eslint-disable-next-line prefer-const
+	let { selectedKey, propName, domTreeKeys } = dropTarget;
+	selectedInfo&&(propName=selectedInfo.propName);
 	/**
 	 * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
 	 * 添加之前的页面配置

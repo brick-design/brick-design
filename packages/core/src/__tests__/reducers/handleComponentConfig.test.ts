@@ -55,16 +55,8 @@ describe('addComponent', () => {
 			dropTarget: null,
 		};
 		const state = reducer({initPage:prevState}, action);
-		const expectState = {
-			...prevState,
-			pageConfig: {
-				[ROOT]: {
-					componentName: 'img',
-				},
-			},
-			dragSource: null,
-		};
-		expect(state).toEqual({initPage:expectState});
+
+		expect(state).toEqual(state);
 	});
 	test('parentKey===selectedKey拖拽的组件是drop目标的子组件', () => {
 		const prevState: StateType = {

@@ -12,39 +12,39 @@ interface ItemProps {
 
 const positionStyles: { [key: string]: React.CSSProperties } = {
 	top: {
-		top: '-4px',
+		top: '-3px',
 		cursor: 'row-resize',
 	},
 	right: {
-		right: '-4px',
+		right: '-3px',
 		cursor: 'col-resize',
 	},
 	bottom: {
-		bottom: '-4px',
+		bottom: '-3px',
 		cursor: 'row-resize',
 	},
 	left: {
-		left: '-4px',
+		left: '-3px',
 		cursor: 'col-resize',
 	},
 	topRight: {
-		right: '-4px',
-		top: '-4px',
+		right: '-3px',
+		top: '-3px',
 		cursor: 'ne-resize',
 	},
 	bottomRight: {
-		right: '-4px',
-		bottom: '-4px',
+		right: '-3px',
+		bottom: '-3px',
 		cursor: 'se-resize',
 	},
 	bottomLeft: {
-		left: '-4px',
-		bottom: '-4px',
+		left: '-3px',
+		bottom: '-3px',
 		cursor: 'sw-resize',
 	},
 	topLeft: {
-		left: '-4px',
-		top: '-4px',
+		left: '-3px',
+		top: '-3px',
 		cursor: 'nw-resize',
 	},
 };
