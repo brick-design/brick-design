@@ -1,5 +1,6 @@
 import {useLayoutEffect, useReducer, useRef,useContext} from 'react';
 import {isEmpty} from 'lodash';
+import { ALL_PROPS } from '@brickd/utils';
 import { BrickStoreContext } from '../components/BrickStoreContext';
 
 export function get<T>(obj: any, path: string): T {
@@ -15,8 +16,11 @@ export function shallowEqual(objA: any, objB: any) {
 	return true;
 }
 
-const handleState = (selector: string[], storeState: any,stateDeep?:string) =>
-	selector.reduce((states: any, key: string) => {
+const handleState = (selector: string[], storeState: any,stateDeep?:string) =>{
+	if(selector.includes(ALL_PROPS)){
+		return  storeState;
+	}
+	return selector.reduce((states: any, key: string) => {
 		let  selectedState= storeState[key];
 		if(stateDeep){
 			key=stateDeep.split('.').pop();
@@ -25,6 +29,8 @@ const handleState = (selector: string[], storeState: any,stateDeep?:string) =>
 		states[key] = selectedState;
 		return states;
 	}, {});
+};
+
 
 export type ControlUpdate<T> = (prevState: T, nextState: T) => boolean
 

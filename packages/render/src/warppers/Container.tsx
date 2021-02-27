@@ -5,6 +5,7 @@ import React, {
 import { each, get } from 'lodash';
 import { FunParamContextProvider,useCommon,StaticContext } from '@brickd/hooks';
 import NoneContainer from './NoneContainer';
+import StateDomainWarpper from './StateDomainWarpper';
 
 /**
  * 所有的容器组件名称
@@ -23,7 +24,9 @@ function Container(vProps:CommonPropsType) {
 	const renderArrChild=useCallback((childNodes:string[])=>{
 
 		return childNodes.map((nodeKey)=>{
-			if(pageConfig[nodeKey].childNodes) {
+			const {childNodes,isStateDomain}=pageConfig[nodeKey];
+			if(isStateDomain) return <StateDomainWarpper renderKey={nodeKey} key={nodeKey}/>;
+			if(childNodes) {
 				return <Container renderKey={nodeKey} key={nodeKey} />;
 			}else {
 				return <NoneContainer renderKey={nodeKey} key={nodeKey}/>;

@@ -6,11 +6,10 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import cloneDeep from 'lodash/cloneDeep';
-import { addPropsConfig, PROPS_TYPES, PropsConfigType } from '@brickd/react';
+import {PROPS_TYPES, PropsConfigType } from '@brickd/react';
 import SortComponent from './SortComponent';
 import ObjectComponent from '../ObjectComponent/ObjectComponent';
 import styles from '../../index.less';
-import { formatPropsFieldConfigLocation } from '../../utils';
 import { confirmModal } from '../index';
 
 interface ObjectArrayPropsType {
@@ -62,14 +61,6 @@ function ObjectArrayComponent(props: ObjectArrayPropsType) {
 			childPropsConfigRef.current = map(panes, (pane) => pane.childPropsConfig);
 		}
 		const timer = setTimeout(() => {
-			addPropsConfig({
-				childPropsConfig: childPropsConfigRef.current,
-				fatherFieldLocation: formatPropsFieldConfigLocation(
-					type,
-					field,
-					fatherFieldLocation,
-				),
-			});
 			onChange && onChange(resultData);
 		}, 500);
 		return () => clearTimeout(timer);

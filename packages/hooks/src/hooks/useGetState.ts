@@ -2,14 +2,14 @@ import {  useContext, useMemo} from 'react';
 import { useBrickdState } from './useBrickdState';
 import { useBrickSelector } from './useBrickSelector';
 import { FunParamContext } from '../components/FunParamContext';
-import { StaticContext } from '../components/StaticContext';
+import { PropsContext } from '../components/PropsContext';
 
 
 export function useGetState(propsState:any,selector:string[]){
 const {state}=useBrickdState(propsState);
 const brickdState =useBrickSelector<any,string>(selector);
 
-const {props}=useContext(StaticContext);
+const props=useContext(PropsContext);
 const funParams=useContext(FunParamContext);
 	return useMemo(()=>new Proxy({...brickdState,...state,funParams,props},{
 		get: function (target, propKey, receiver) {

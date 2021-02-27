@@ -14,13 +14,13 @@ export function getDragSource(
 	payload: DragSourcePayload,
 ): StateType {
 	// eslint-disable-next-line prefer-const
-	let { pageConfig, undo, propsConfigSheet } = state;
+	let { pageConfig, undo } = state;
 	// eslint-disable-next-line prefer-const
 	let {
 		vDOMCollection,
 		dragKey,
 	} = payload;
-	const {componentName,defaultProps,propsConfigCollection,parentKey,parentPropName, }=payload;
+	const {componentName,defaultProps,parentKey,parentPropName }=payload;
 	/**
 	 * componentName有值说明为新添加的组件，为其生成vDom
 	 */
@@ -39,25 +39,18 @@ export function getDragSource(
 	 * vDom合并到componentConfigs，为实时拖拽预览做准备
 	 */
 	if (pageConfig[ROOT] && vDOMCollection) {
-		undo.push({ pageConfig, propsConfigSheet });
+		undo.push({ pageConfig });
 		const newKey = getNewKey(pageConfig);
 		dragKey = `${newKey}`;
-		const { newPropsConfigCollection, newVDOMCollection } = generateNewKey(
-			{
+		const newVDOMCollection = generateNewKey(
 				vDOMCollection,
-				propsConfigCollection,
-			},
 			newKey,
 		);
 		pageConfig = produce(pageConfig, (oldConfigs) => {
 			//为虚拟dom集合生成新的key与引用，防止多次添加同一模板造成vDom顶替
 			Object.assign(oldConfigs, newVDOMCollection);
 		});
-		propsConfigSheet = produce(propsConfigSheet, (oldPropsConfig) => {
-			if (newPropsConfigCollection) {
-				Object.assign(oldPropsConfig, newPropsConfigCollection);
-			}
-		});
+
 	}
 	return {
 		...state,
@@ -68,7 +61,6 @@ export function getDragSource(
 			parentPropName,
 		},
 		pageConfig,
-		propsConfigSheet,
 		undo,
 	};
 }

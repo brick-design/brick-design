@@ -1,5 +1,3 @@
-import { merge } from 'lodash';
-import produce from 'immer';
 import { StateType } from '../types';
 import { SelectComponentPayload } from '../actions';
 import { getComponentConfig, handleRequiredHasChild } from '../utils';
@@ -15,7 +13,7 @@ export function selectComponent(
 	state: StateType,
 	payload: SelectComponentPayload,
 ): StateType {
-	const { undo, redo, selectedInfo, propsConfigSheet, pageConfig } = state;
+	const { undo, redo, selectedInfo, pageConfig } = state;
 	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
 	if (selectedInfo) {
 		const { selectedKey, propName: selectedPropName } = selectedInfo;
@@ -63,9 +61,7 @@ export function selectComponent(
 			parentKey,
 			parentPropName,
 			props,
-			propsConfig: produce(propsConfig, (oldPropsConfig) => {
-				merge(oldPropsConfig, propsConfigSheet[key]);
-			}),
+			propsConfig,
 		},
 		undo,
 		redo,

@@ -16,16 +16,14 @@ import {
 import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import {
-	addPropsConfig,
 	changeProps,
-	deletePropsConfig,
 	resetProps,
 } from './handleProps';
 import { clearSelectedStatus, selectComponent } from './handleSelectedComponent';
 import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import { setApi, setComponentState } from './handleComponetStateApi';
-import {setPageApi,setPageState} from './handlePageStateApi';
+import {setStateDomain,restStateDomain} from './handleStateDomain';
 import { initPageBrickdState, legoState, removePageBrickdState } from './handlePageBrickdState';
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, BrickDesignStateType, StateType } from '../types';
@@ -68,12 +66,6 @@ export const reducer: ReducerType = (prevState, action) => {
 		case ACTION_TYPES.changePlatform:
 			newState= changePlatform(state, payload);
 			break;
-		case ACTION_TYPES.addPropsConfig:
-			newState= addPropsConfig(state, payload);
-			break;
-		case ACTION_TYPES.deletePropsConfig:
-			newState= deletePropsConfig(state, payload);
-			break;
 		case ACTION_TYPES.changeProps:
 			newState= changeProps(state, payload);
 			break;
@@ -114,11 +106,11 @@ export const reducer: ReducerType = (prevState, action) => {
 		case ACTION_TYPES.setApi:
 			newState= setApi(state,payload);
 			break;
-		case ACTION_TYPES.setPageApi:
-			newState= setPageApi(state,payload);
+		case ACTION_TYPES.setStateDomain:
+			newState= setStateDomain(state,payload);
 			break;
-		case ACTION_TYPES.setPageState:
-			newState= setPageState(state,payload);
+		case ACTION_TYPES.restStateDomain:
+			newState= restStateDomain(state,payload);
 			break;
 		case ACTION_TYPES.initPageBrickdState:
 			newState=initPageBrickdState(state,payload);

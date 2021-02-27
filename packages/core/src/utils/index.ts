@@ -4,7 +4,6 @@ import {
 	ChildNodesType,
 	PageConfigType,
 	ComponentSchemaType,
-	PropsConfigSheetType,
 	PropsNodeType,
 	SelectedInfoType,
 	StateType, BrickDesignStateType, ConfigType,
@@ -25,20 +24,13 @@ export const ROOT = '0';
  * @param selectedKey
  * @param newKey
  */
-export interface HandleInfoType {
-	pageConfig: PageConfigType
-	propsConfigSheet: PropsConfigSheetType
-}
+
 
 export const copyConfig = (
-	handleInfo: HandleInfoType,
+	pageConfig: PageConfigType,
 	selectedKey: string,
 	newKey: number,
 ) => {
-	const { pageConfig, propsConfigSheet } = handleInfo;
-	if (propsConfigSheet[selectedKey]) {
-		propsConfigSheet[newKey] = propsConfigSheet[selectedKey];
-	}
 	const vDom = pageConfig[selectedKey];
 	const childNodes = vDom.childNodes;
 	if (!childNodes) {
@@ -47,57 +39,55 @@ export const copyConfig = (
 		const newVDom = { ...vDom };
 		pageConfig[newKey] = newVDom;
 		if (Array.isArray(childNodes)) {
-			newVDom.childNodes = copyChildNodes(handleInfo, childNodes);
+			newVDom.childNodes = copyChildNodes(pageConfig, childNodes);
 		} else {
 			const newChildNodes: PropsNodeType = {};
 			each(childNodes, (nodes, propName) => {
-				newChildNodes[propName] = copyChildNodes(handleInfo, nodes!);
+				newChildNodes[propName] = copyChildNodes(pageConfig, nodes!);
 			});
 			newVDom.childNodes = newChildNodes;
 		}
 	}
 };
 
-function copyChildNodes(handleInfo: HandleInfoType, childNodes: string[]) {
-	const { pageConfig } = handleInfo;
+function copyChildNodes(pageConfig: PageConfigType, childNodes: string[]) {
 	const newChildKeys: string[] = [];
 	for (const oldKey of childNodes) {
 		const newChildKey = getNewKey(pageConfig);
 		newChildKeys.push(`${newChildKey}`);
-		copyConfig(handleInfo, oldKey, newChildKey);
+		copyConfig(pageConfig, oldKey, newChildKey);
 	}
 	return newChildKeys;
 }
 
 export function deleteChildNodes(
-	handleInfo: HandleInfoType,
+	pageConfig: PageConfigType,
 	childNodes: ChildNodesType,
 	propName?: string,
 ) {
 	if (Array.isArray(childNodes)) {
-		deleteArrChild(handleInfo, childNodes);
+		deleteArrChild(pageConfig, childNodes);
 	} else {
 		each(childNodes, (propChildNodes, key) => {
 			if (propName) {
 				if (key === propName) {
-					deleteArrChild(handleInfo, propChildNodes!);
+					deleteArrChild(pageConfig, propChildNodes!);
 				}
 			} else {
-				deleteArrChild(handleInfo, propChildNodes!);
+				deleteArrChild(pageConfig, propChildNodes!);
 			}
 		});
 	}
 }
 
-function deleteArrChild(handleInfo: HandleInfoType, childNodes: string[]) {
+function deleteArrChild(pageConfig: PageConfigType, childNodes: string[]) {
 	for (const key of childNodes) {
-		const childNodesInfo = handleInfo.pageConfig[key].childNodes;
+		const childNodesInfo = pageConfig[key].childNodes;
 		if (childNodesInfo) {
-			deleteChildNodes(handleInfo, childNodesInfo);
+			deleteChildNodes(pageConfig, childNodesInfo);
 		}
 
-		delete handleInfo.pageConfig[key];
-		delete handleInfo.propsConfigSheet[key];
+		delete pageConfig[key];
 	}
 }
 
@@ -109,15 +99,6 @@ export function getLocation(key: string, propName?: string): string[] {
 	return propName ? [...basePath, propName] : basePath;
 }
 
-export interface VDOMAndPropsConfigType {
-	pageConfig: PageConfigType
-	propsConfigSheet: PropsConfigSheetType
-}
-
-export interface DragVDomAndPropsConfigType {
-	vDOMCollection: PageConfigType
-	propsConfigCollection?: PropsConfigSheetType
-}
 
 /**
  * 生成新的Key
@@ -125,13 +106,11 @@ export interface DragVDomAndPropsConfigType {
  * @param rootKey
  */
 export const generateNewKey = (
-	dragVDOMAndPropsConfig: DragVDomAndPropsConfigType,
+	vDOMCollection:PageConfigType,
 	rootKey: number,
 ) => {
-	const { vDOMCollection, propsConfigCollection } = dragVDOMAndPropsConfig;
 	const keyMap: { [key: string]: string } = {};
 	const newVDOMCollection: PageConfigType = {};
-	let newPropsConfigCollection: PropsConfigSheetType | undefined;
 	let newKey = rootKey;
 	each(vDOMCollection, (vDom, key) => {
 		++newKey;
@@ -155,14 +134,9 @@ export const generateNewKey = (
 			vDom.childNodes = newChildNodes;
 		}
 	});
-	if (propsConfigCollection) {
-		newPropsConfigCollection = {};
-		each(propsConfigCollection, (v, k) => {
-			newPropsConfigCollection![keyMap[k]] = v;
-		});
-	}
 
-	return { newVDOMCollection, newPropsConfigCollection };
+
+	return newVDOMCollection;
 };
 
 /**
@@ -341,24 +315,18 @@ export function combineReducers(
 
 export function createTemplateConfigs(
 	templateConfigs: PageConfigType,
-	templatePropsConfigSheet: PropsConfigSheetType,
 	pageConfig: PageConfigType,
-	propsConfigSheet: PropsConfigSheetType,
 	childNodes: ChildNodesType,
 ) {
 	if (Array.isArray(childNodes)) {
 		for (const key of childNodes) {
 			templateConfigs[key] = pageConfig[key];
-			if (propsConfigSheet[key]) {
-				templatePropsConfigSheet[key] = propsConfigSheet[key];
-			}
+
 			const { childNodes } = templateConfigs[key];
 			if (childNodes)
 				createTemplateConfigs(
 					templateConfigs,
-					templatePropsConfigSheet,
 					pageConfig,
-					propsConfigSheet,
 					childNodes,
 				);
 		}
@@ -367,9 +335,7 @@ export function createTemplateConfigs(
 			if (!isEmpty(childKeys))
 				createTemplateConfigs(
 					templateConfigs,
-					templatePropsConfigSheet,
 					pageConfig,
-					propsConfigSheet,
 					childKeys,
 				);
 		});
@@ -377,21 +343,18 @@ export function createTemplateConfigs(
 }
 
 export function createTemplate(state: StateType) {
-	const { selectedInfo, pageConfig, propsConfigSheet } = state;
+	const { selectedInfo, pageConfig } = state;
 	const { selectedKey } = selectedInfo;
 	const templateConfigs = { [ROOT]: pageConfig[selectedKey] };
-	const templatePropsConfigSheet = { [ROOT]: propsConfigSheet[selectedKey] };
 	const { childNodes } = pageConfig[selectedKey];
 	if (!isEmpty(childNodes)) {
 		createTemplateConfigs(
 			templateConfigs,
-			templatePropsConfigSheet,
 			pageConfig,
-			propsConfigSheet,
 			childNodes,
 		);
 	}
-	return { templateConfigs, templatePropsConfigSheet };
+	return templateConfigs;
 }
 
 export function createActions(action: BrickAction) {

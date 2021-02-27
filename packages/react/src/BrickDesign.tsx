@@ -11,30 +11,26 @@ import {
 	PageConfigType,
 	DragSourceType,
 	STATE_PROPS,
-	PageStateConfigType,
 	getStore,
 	StateType,
 	initPageBrickdState,
 	setPageName,
-	 ROOT, isContainer,
+	 ROOT,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import {
-	useService,
-	useRedux,
-	FunParamContextProvider,
 	StaticContextProvider,
-	BrickStoreProvider,
 } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import Container from './warppers/Container';
-import NoneContainer from './warppers/NoneContainer';
 import { getIframe, iframeSrcDoc } from './utils';
 import { onDragover, onDrop } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
 import {useSelector} from './hooks/useSelector';
+import StateDomainWarpper from './warppers/StateDomainWarpper';
+
+
 
 /**
  * 鼠标离开设计区域清除hover状态
@@ -46,56 +42,46 @@ interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	[propName:string]:any
 }
 
-const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource','pageStateConfig'];
+const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource'];
 
 type BrickdHookState = {
 	pageConfig: PageConfigType
 	dragSource: DragSourceType
-	pageStateConfig:PageStateConfigType
 }
 
 const controlUpdate = (
 	prevState: BrickdHookState,
 	nextState: BrickdHookState,
 ) => {
-	const { pageConfig: prevPageConfig,pageStateConfig:prevPageStateConfig } = prevState;
-	const { pageConfig,pageStateConfig } = nextState;
+	const { pageConfig: prevPageConfig } = prevState;
+	const { pageConfig} = nextState;
 	const nextRootComponent=pageConfig[ROOT];
 	const prevRootComponent=prevPageConfig[ROOT];
 	return (
 		!nextRootComponent ||
 		nextRootComponent !== prevRootComponent
-		||prevPageStateConfig!==pageStateConfig
 	);
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {
 	const { onLoadEnd,pageName,initState,options,...props } = brickdProps;
-	const { pageConfig={}, dragSource={},pageStateConfig={}} = useSelector<
+	const { pageConfig={}, dragSource={}} = useSelector<
 		BrickdHookState, STATE_PROPS>(stateSelector, controlUpdate);
 	const iframeRef = useRef<HTMLIFrameElement>();
 	const rootComponent=pageConfig[ROOT];
-	const {state,api}=pageStateConfig;
-	const brickdStore= useRedux(state);
-	const staticState=useMemo(()=>({pageConfig,props,options}),[pageConfig,props,options]);
+	const staticState=useMemo(()=>({pageConfig,options}),[pageConfig,options]);
 
 	const renderComponent = useCallback((pageConfig: PageConfigType) => {
 		const rootComponent=pageConfig[ROOT];
 		if (!rootComponent) return null;
 		const specialProps={domTreeKeys:[ROOT],key:ROOT,parentKey:''};
-		return isContainer(rootComponent.componentName) ? (
-			<Container onMouseLeave={clearHovered} specialProps={specialProps}/>
-		) : (
-			<NoneContainer onMouseLeave={clearHovered} specialProps={specialProps}/>
-		);
+		return <StateDomainWarpper {...props} onMouseLeave={clearHovered} specialProps={specialProps}/>;
 	},[]);
 
 	const designPage= useMemo(()=>renderComponent(pageConfig),[pageConfig]);
 	const divContainer = useRef(null);
 	const componentMount = useCallback((divContainer,designPage) => {
 		ReactDOM.render(
-			<BrickStoreProvider value={brickdStore}>
-				<FunParamContextProvider value={undefined}>
 					<StaticContextProvider value={staticState}>
 						<BrickContext.Provider value={getStore()}>
 							{designPage}
@@ -103,12 +89,10 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 							<Distances />
 							<Resize />
 						</BrickContext.Provider>
-					</StaticContextProvider>
-				</FunParamContextProvider>
-			</BrickStoreProvider>,
+					</StaticContextProvider>,
 			divContainer.current,
 		);
-	},[brickdStore,staticState]);
+	},[staticState]);
 
 	const onDragEnter = useCallback(() => {
 		const { vDOMCollection } = dragSource;
@@ -118,7 +102,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	const onDragLeave = useCallback(() => {
 		ReactDOM.unmountComponentAtNode(divContainer.current);
 	},[divContainer.current]);
-	useService(brickdStore.getPageState(),api);
 
 	const onIframeLoad = useCallback(() => {
 		const head = document.head.cloneNode(true);

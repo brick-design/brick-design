@@ -4,7 +4,7 @@
   "author": "anye931123 <1278998669@qq.com> (https://github.com/anye931123)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brick-design/react-visual-editor.git"
+    "url": "https://github.com/brick-design/brick-design.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"

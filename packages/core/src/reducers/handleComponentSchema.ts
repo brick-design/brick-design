@@ -7,7 +7,6 @@ import {
 	deleteChildNodesKey,
 	getLocation,
 	getNewKey,
-	HandleInfoType,
 	handleRules,
 	restObject,
 	ROOT,
@@ -109,7 +108,7 @@ export function addComponent(state: StateType): StateType {
  * @returns {{pageConfig: *}}
  */
 export function copyComponent(state: StateType): StateType {
-	const { undo, redo, pageConfig, selectedInfo, propsConfigSheet } = state;
+	const { undo, redo, pageConfig, selectedInfo } = state;
 	/**
 	 * 未选中组件不做任何操作
 	 */
@@ -122,15 +121,14 @@ export function copyComponent(state: StateType): StateType {
 		return state;
 	}
 	const { selectedKey, parentPropName, parentKey } = selectedInfo;
-	const handleState: HandleInfoType = { pageConfig, propsConfigSheet };
-	undo.push({ pageConfig, propsConfigSheet });
+	undo.push({ pageConfig });
 	redo.length = 0;
 	const newKey = getNewKey(pageConfig);
 	return {
 		...state,
-		...produce(handleState, (oldState) => {
+		pageConfig:produce(pageConfig, (oldState) => {
 			update(
-				oldState.pageConfig,
+				oldState,
 				getLocation(parentKey!, parentPropName),
 				(childNodes) => [...childNodes, `${newKey}`],
 			);
@@ -180,7 +178,7 @@ export function onLayoutSortChange(
  * @returns {{propsSetting: *, pageConfig: *, selectedInfo: *}}
  */
 export function deleteComponent(state: StateType): StateType {
-	const { undo, redo, pageConfig, selectedInfo, propsConfigSheet } = state;
+	const { undo, redo, pageConfig, selectedInfo } = state;
 	/**
 	 * 未选中组件将不做任何操作
 	 */
@@ -189,36 +187,33 @@ export function deleteComponent(state: StateType): StateType {
 		return state;
 	}
 	const { selectedKey, parentKey, parentPropName } = selectedInfo;
-	undo.push({ pageConfig, selectedInfo, propsConfigSheet });
-	const handleState: HandleInfoType = { pageConfig, propsConfigSheet };
+	undo.push({ pageConfig, selectedInfo });
 
 	redo.length = 0;
 	return {
 		...state,
-		...produce(handleState, (oldState) => {
+		pageConfig:produce(pageConfig, (oldState) => {
 			/**
 			 * 如果选中的是根节点说明要删除整个页面
 			 */
 			if (selectedKey === ROOT) {
-				oldState.pageConfig = {};
-				oldState.propsConfigSheet = {};
+				return  {};
 			} else {
 				// 删除选中组件在其父组件中的引用
 				update(
-					oldState.pageConfig,
+					oldState,
 					getLocation(parentKey),
 					(childNodes) =>
 						deleteChildNodesKey(childNodes, selectedKey, parentPropName),
 				);
-				const childNodes = oldState.pageConfig[selectedKey].childNodes;
+				const childNodes = oldState[selectedKey].childNodes;
 				/**
 				 * 如果childNodes有值，就遍历childNodes删除其中的子节点
 				 */
 				if (childNodes) {
 					deleteChildNodes(oldState, childNodes);
 				}
-				delete oldState.pageConfig[selectedKey];
-				delete oldState.propsConfigSheet[selectedKey];
+				delete oldState[selectedKey];
 			}
 		}),
 		selectedInfo: null,
@@ -234,7 +229,7 @@ export function deleteComponent(state: StateType): StateType {
  */
 
 export function clearChildNodes(state: StateType): StateType {
-	const { pageConfig, selectedInfo, undo, redo, propsConfigSheet } = state;
+	const { pageConfig, selectedInfo, undo, redo } = state;
 	if (!selectedInfo) {
 		warn(
 			'Please select the component or property you want to clear the child nodes',
@@ -244,16 +239,15 @@ export function clearChildNodes(state: StateType): StateType {
 	const { selectedKey, propName } = selectedInfo;
 	const childNodes = get(pageConfig, getLocation(selectedKey));
 	if (!childNodes) return state;
-	undo.push({ pageConfig, propsConfigSheet });
-	const handleState: HandleInfoType = { pageConfig, propsConfigSheet };
+	undo.push({ pageConfig });
 
 	redo.length = 0;
 	return {
 		...state,
-		...produce(handleState, (oldState) => {
+		pageConfig:produce(pageConfig, (oldState) => {
 			deleteChildNodes(oldState, childNodes, propName);
 			update(
-				oldState.pageConfig,
+				oldState,
 				getLocation(selectedKey),
 				(childNodes) => {
 					/**

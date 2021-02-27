@@ -43,7 +43,7 @@ describe('drag', () => {
 
 		const state = reducer({initPage:prevState}, { ...action, payload });
 		expect((state.initPage as StateType).dragSource?.dragKey).not.toBeUndefined();
-		expect((state.initPage as StateType).undo).toEqual([{ pageConfig, propsConfigSheet: {} }]);
+		expect((state.initPage as StateType).undo).toEqual([{ pageConfig}]);
 	});
 
 	it('拖拽设计面板中的组建', () => {
@@ -58,37 +58,7 @@ describe('drag', () => {
 		const nextState = reducer({initPage:prevState}, { ...action, payload });
 		expect((nextState.initPage as StateType).dragSource?.dragKey).toBe('1');
 	});
-	it('拖拽添加模板配置信息带有属性配置表', () => {
-		const prevState: StateType = {
-			...legoState,
-			pageConfig: {
-				[ROOT]: { componentName: 'a' },
-			},
-		};
-		const payload: DragSourcePayload = {
-			vDOMCollection: {
-				[ROOT]: { componentName: 'a', childNodes: ['1'] },
-				1: {
-					componentName: 'span',
-					childNodes: { children: ['2'], test: ['3'] },
-				},
-				2: { componentName: 'img' },
-				3: { componentName: 'a', childNodes: ['4'] },
-				4: { componentName: 'img' },
-			},
-			propsConfigCollection: {
-				[ROOT]: {},
-				2: {},
-				3: {},
-				4: {},
-			},
-		};
-		const state = reducer({initPage:prevState}, { ...action, payload });
-		expect(Object.keys((state.initPage as StateType).pageConfig).length).toBe(6);
-		expect(Object.keys((state.initPage as StateType).pageConfig)).toEqual(
-			expect.arrayContaining(Object.keys((state.initPage as StateType).propsConfigSheet)),
-		);
-	});
+
 	it('拖拽添加模板配置信息不带属性配置表', () => {
 		const pageConfig = {
 			[ROOT]: { componentName: 'a' },
@@ -114,7 +84,7 @@ describe('drag', () => {
 		const state = reducer({initPage:prevState}, { ...action, payload });
 		const expectState: StateType = {
 			...prevState,
-			undo: [{ pageConfig, propsConfigSheet: {} }],
+			undo: [{ pageConfig }],
 			pageConfig: {
 				[ROOT]: { componentName: 'a' },
 				1: { componentName: 'a', childNodes: ['2'] },

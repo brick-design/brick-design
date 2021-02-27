@@ -6,7 +6,6 @@ import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
 import each from 'lodash/each';
 import {
-	deletePropsConfig,
 	PropInfoType,
 	PROPS_TYPES,
 	PropsConfigType,
@@ -16,7 +15,7 @@ import SelectAddProps from './SelectAddProps';
 import { filterProps, formatPropsFieldConfigLocation } from '../../utils';
 import styles from '../../index.less';
 import SwitchMultiTypes from '../SwitchMultiTypes';
-import { confirmModal, TYPES_TO_COMPONENT } from '../../index';
+import {  TYPES_TO_COMPONENT } from '../../index';
 
 interface ObjectComponentPropsType extends FormComponentProps {
 	childPropsConfig: PropsConfigType
@@ -51,28 +50,10 @@ function ObjectComponent(props: ObjectComponentPropsType,ref:any) {
 					<Icon
 						type="delete"
 						style={{ paddingLeft: '7px' }}
-						onClick={() => deletePropsConf(field)}
+						// onClick={() => deletePropsConf(field)}
 					/>
 				)}
 			</span>
-		);
-	}
-
-	/**
-	 * 删除字段
-	 * @param field
-	 */
-	function deletePropsConf(field: string) {
-		confirmModal(() =>
-			deletePropsConfig({
-				field,
-				fatherFieldLocation: formatPropsFieldConfigLocation(
-					type,
-					props.field,
-					fatherFieldLocation,
-					tabIndex,
-				),
-			}),
 		);
 	}
 

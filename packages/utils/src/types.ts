@@ -176,6 +176,8 @@ export interface VirtualDOMType {
 	api?:ApiType
 	state?:PlainObject
 	isHidden?:string
+	isStateDomain?:boolean
+	propFields?:string[]
 	[custom: string]: any
 }
 

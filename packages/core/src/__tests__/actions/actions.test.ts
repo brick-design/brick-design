@@ -79,21 +79,6 @@ describe('actions test', () => {
 			payload: changePlatformPayload,
 		});
 		//props
-		const addPropsConfigPayload: AddPropsConfigPayload = {
-			fatherFieldLocation: '',
-		};
-		expect(addPropsConfig(addPropsConfigPayload)).toEqual({
-			type: ACTION_TYPES.addPropsConfig,
-			payload: addPropsConfigPayload,
-		});
-		const deletePropsConfigPayload: DeletePropsConfigPayload = {
-			fatherFieldLocation: '',
-			field: '',
-		};
-		expect(deletePropsConfig(deletePropsConfigPayload)).toEqual({
-			type: ACTION_TYPES.deletePropsConfig,
-			payload: deletePropsConfigPayload,
-		});
 		const changePropsPayload: ChangePropsPayload = { props: {} };
 		expect(changeProps(changePropsPayload)).toEqual({
 			type: ACTION_TYPES.changeProps,

@@ -19,6 +19,7 @@ import { selectClassTarget } from './constants';
 import Container from '../warppers/Container';
 import NoneContainer from '../warppers/NoneContainer';
 import { generateRequiredProps, getComponent, getIframe } from '../utils';
+import StateDomainWarpper from '../warppers/StateDomainWarpper';
 
 /**
  * 处理样式
@@ -71,26 +72,25 @@ function renderNodes(
 		domTreeKeys = [...domTreeKeys, `${parentKey}${parentPropName}`];
 	}
 	const resultChildNodes = map(childNodes, (key) => {
-		const { componentName } = pageConfig[key] || {};
+		const { componentName,isStateDomain } = pageConfig[key] || {};
 		if (!componentName) return null;
 		/** 根据组件类型处理属性 */
-		const props = {
-			specialProps: {
+		const specialProps={
 				key,
 				domTreeKeys: [...domTreeKeys, key],
 				parentKey,
 				parentPropName,
-			},
-		};
+			};
+		if(isStateDomain) return  <StateDomainWarpper key={key} specialProps={specialProps} isDragAddChild={isDragAddChild || (dragKey === key && isDragAdd)}/>;
 		return isContainer(componentName) ? (
 			<Container
-				{...props}
+				specialProps={specialProps}
 				isDragAddChild={isDragAddChild || (dragKey === key && isDragAdd)}
 				key={key}
 			/>
 		) : (
 			<NoneContainer
-				{...props}
+				specialProps={specialProps}
 				isDragAddChild={isDragAddChild || (dragKey === key && isDragAdd)}
 				key={key}
 			/>
@@ -258,7 +258,6 @@ export type HookState = {
 
 export const stateSelector: STATE_PROPS[] = [
 	'pageConfig',
-	'propsConfigSheet',
 ];
 
 export function controlUpdate(

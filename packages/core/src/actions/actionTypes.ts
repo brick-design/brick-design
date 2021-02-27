@@ -13,8 +13,6 @@ export default {
 	selectComponent: `selectComponent`,
 	clearChildNodes: `clearChildNodes`,
 	deleteComponent: `deleteComponent`,
-	addPropsConfig: `addPropsConfig`,
-	deletePropsConfig: `deletePropsConfig`,
 	changeStyles: `changeStyles`,
 	resizeChange: 'resizeChange',
 	changeProps: `changeProps`,
@@ -32,8 +30,8 @@ export default {
 	removeState:'removeState',
 	setApi:'setApi',
 	setComponentState:'setComponentState',
-	setPageState:'setPageState',
-	setPageApi:'setPageApi',
+	setStateDomain:'setStateDomain',
+	restStateDomain:'restStateDomain',
 	initPageBrickdState:"initPageBrickdState",
 	removePageBrickdState:'removePageBrickdState'
 };

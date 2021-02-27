@@ -9,12 +9,12 @@ import {
 	ObjectComponent,
 	StringArray,
 	StringComponent,
-} from './PropComponent';
+} from './PropComponents';
 
 export * from './BrickPreview/CategoryTypes';
 
 export { default as BrickPreview } from './BrickPreview';
-export * from './PropComponent';
+export * from './PropComponents';
 
 export const TYPES_TO_COMPONENT: any = {
 	[PROPS_TYPES.object]: ObjectComponent,

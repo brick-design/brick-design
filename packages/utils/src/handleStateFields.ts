@@ -1,6 +1,6 @@
 import { each,isPlainObject } from 'lodash';
 
-
+export const ALL_PROPS='$all';
 export function getStateFields(data:any,fieldsRet?:string[]){
 	const ret=fieldsRet||[];
 	if (Array.isArray(data)) {
@@ -10,7 +10,7 @@ export function getStateFields(data:any,fieldsRet?:string[]){
 	}
 	each(data,(value,key)=>{
 		if(value === '$$'||value==='&'){
-			ret.push('$all');
+			ret.push(ALL_PROPS);
 		}else if(key!=='$'&&key.includes('$')){
 			//todo 字符串方法体
 			resolveFieldFromExpression(value,ret);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Select, Tooltip } from 'antd';
 import map from 'lodash/map';
-import { addPropsConfig, PROPS_TYPES } from '@brickd/react';
+import { PROPS_TYPES } from '@brickd/react';
 import { TYPES_TO_COMPONENT } from '../../index';
 
 const { Option } = Select;
@@ -15,13 +15,7 @@ function SelectAddProps(props: SelectAddPropsType) {
 	const [propType, setPropType] = useState(PROPS_TYPES.string);
 
 	function addParam() {
-		const { fatherFieldLocation } = props;
 		if (/^[0-9a-zA-Z$_][0-9a-zA-Z\d_]*$/.test(newPropField)) {
-			addPropsConfig({
-				newPropField,
-				propType,
-				fatherFieldLocation,
-			});
 
 			setNewPropField('');
 		}

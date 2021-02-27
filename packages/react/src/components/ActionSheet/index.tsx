@@ -12,7 +12,7 @@ function ActionSheet(props: ActionSheetProps) {
 	const { isOut, isRoot, hasChildNodes } = props;
 
 	return (
-		<div className={styles['container']} style={{ top: isOut ? -13 : 0 }}>
+		<div className={styles['container']} style={{ top: isOut ? -9 : 0 }}>
 			{configs.map((config) => {
 				const { icon, action, type } = config;
 				if (isRoot && type === ACTIONS.copy) return null;

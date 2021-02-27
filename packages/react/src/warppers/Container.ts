@@ -14,9 +14,10 @@ import {
 	produce,
 	PropsNodeType,
 	ROOT,
-	STATE_PROPS, VirtualDOMType,
+	STATE_PROPS,
 } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
+import { VirtualDOMType } from '@brickd/utils';
 import {
 	generateRequiredProps,
 	getComponent,
