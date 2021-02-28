@@ -1,4 +1,5 @@
 import produce from 'immer';
+import {isEqual} from 'lodash';
 import { generateNewKey, getNewKey, ROOT } from '../utils';
 import { DropTargetType, StateType } from '../types';
 import { DragSourcePayload } from '../actions';
@@ -81,6 +82,7 @@ export function getDropTarget(
 	const { selectedInfo, dropTarget } = state;
 	const { selectedKey, domTreeKeys } = payload;
 	let dropTargetResult = payload;
+	if(isEqual(dropTargetResult,dropTarget))  return  state;
 	if (selectedInfo) {
 		const { selectedKey, propName } = selectedInfo;
 		if (domTreeKeys.includes(selectedKey) && !dropTarget) {

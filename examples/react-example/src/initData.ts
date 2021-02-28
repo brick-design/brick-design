@@ -572,7 +572,6 @@ export default {
 		childNodes:{
 			avatar:['79'],
 			title:['80'],
-			children:['81']
 		}
 	},
 	"79":{

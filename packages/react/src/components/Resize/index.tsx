@@ -86,7 +86,9 @@ function Resize() {
 	const selectNodeRef = useRef<HTMLElement>();
 	const [isOut, setIsOut] = useState<boolean>(true);
 	const { props, childNodes } = pageConfig[selectedKey] || {};
-	const { width = 'auto', height = 'auto' } = get(props, 'style', {});
+	let { width, height } = get(props, 'style', {});
+	 width=width||'auto';
+	height =height|| 'auto';
 	const isModal = useMemo(
 		() => getIsModalChild(pageConfig, domTreeKeys),
 		[domTreeKeys, pageConfig],

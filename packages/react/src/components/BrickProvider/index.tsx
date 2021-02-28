@@ -20,10 +20,7 @@ export const BrickContext=createContext(null);
 function BrickProvider(props: BrickProviderType) {
 	const {config, customReducer, children,warn } = props;
 	useEffect(()=>{
-		return ()=>{
-			console.log('卸载》》》》》》');
-			 cleanStateCache();
-		};
+		return ()=>cleanStateCache;
 	},[]);
 	if (!getStore()) {
 		createLegoStore(config, customReducer,warn);
