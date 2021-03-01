@@ -37,7 +37,7 @@ export function handlePropsClassName(
 	className: any,
 	animateClass: string,
 ) {
-	return `${selectClassTarget + key} ${className} ${animateClass} ${
+	return `${selectClassTarget + key} ${className} ${animateClass} ${styles['drag-transitionEnd']} ${
 		isDragTarget ? styles['forbid-event'] : styles['allow-event']
 	} ${isHidden && styles['hidden-component']}`;
 }
@@ -164,6 +164,7 @@ export function handleChildNodes(
 			isOnlyNode,
 		);
 	} else {
+		console.log('children>>>>>>.',children);
 		each(children, (nodes, propName: string) => {
 			const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![propName];
 			if (isEmpty(nodes)){

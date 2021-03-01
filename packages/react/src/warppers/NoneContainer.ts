@@ -1,8 +1,8 @@
-import { createElement, forwardRef, memo } from 'react';
+import { createElement, forwardRef, memo, useCallback, useEffect } from 'react';
 import {
-	clearDropTarget,
+	clearDropTarget, getDragSource,
 	ROOT,
-	STATE_PROPS
+	STATE_PROPS,
 } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
@@ -17,7 +17,7 @@ import {
 } from '../common/handleFuns';
 import {
 	generateRequiredProps,
-	getComponent,
+	getComponent, getIframe, getSelectedNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useDragDrop } from '../hooks/useDragDrop';
@@ -27,7 +27,7 @@ import { useSelector } from '../hooks/useSelector';
 function NoneContainer(allProps: CommonPropsType, ref: any) {
 	const {
 		specialProps,
-		specialProps: { key, domTreeKeys },
+		specialProps: { key, domTreeKeys,parentKey,parentPropName },
 		isDragAddChild,
 		...rest
 	} = allProps;
@@ -53,6 +53,39 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 			clearDropTarget();
 		}
 	};
+
+
+	const onDragStart=useCallback((event: DragEvent)=> {
+		event.stopPropagation();
+		const img = document.createElement('img');
+		img.src = 'http://path/to/img';
+		event.dataTransfer.setDragImage(img,0,0);
+		setTimeout(() => {
+			getDragSource({
+				dragKey:key,
+				parentKey,
+				parentPropName,
+			});
+		}, 0);
+	},[parentKey,parentPropName,key]);
+
+	useEffect(()=>{
+		const iframe=getIframe();
+		const node=getSelectedNode(key,iframe);
+		if(node){
+			if(dragKey) {
+				node.style.pointerEvents='none';
+			}else {
+				node.style.pointerEvents='auto';
+			}
+			node.addEventListener('dragstart',onDragStart);
+		}
+
+		return ()=>{
+			if(node){
+				node.removeEventListener('dragstart',onDragStart);
+			}};
+	});
 
 	const { className, animateClass, ...restProps } = props || {};
 	return createElement(getComponent(componentName), {

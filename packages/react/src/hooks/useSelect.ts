@@ -65,6 +65,7 @@ function controlUpdate(
 interface UseSelectType {
 	isSelected: boolean
 	selectedDomKeys?: string[]
+	propName?:string
 }
 
 export function useSelect(
@@ -76,12 +77,12 @@ export function useSelect(
 		['selectedInfo'],
 		(prevState, nextState) => controlUpdate(prevState, nextState, key, isModal),
 	);
-	const { selectedKey, domTreeKeys: selectedDomKeys } = selectedInfo || {};
+	const { selectedKey, domTreeKeys: selectedDomKeys,propName } = selectedInfo || {};
 	const isSelected = isEqualKey(key, selectedKey);
 	useEffect(() => {
 		if (isSelected) {
 			handleSelectedStatus(null, false, specialProps);
 		}
 	}, []);
-	return { selectedDomKeys, isSelected };
+	return { selectedDomKeys, isSelected,propName };
 }

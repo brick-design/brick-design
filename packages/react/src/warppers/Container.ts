@@ -1,26 +1,29 @@
 import {
 	createElement,
 	forwardRef,
-	memo,
+	memo, useCallback,
 	useEffect,
-	useMemo,
+	useMemo, useRef,
 	useState,
 } from 'react';
 import {
 	ChildNodesType,
-	clearDropTarget,
-	getComponentConfig,
-	handleRules,
-	produce,
-	PropsNodeType,
+	getComponentConfig, getDragSource,
+	// handleRules,
 	ROOT,
 	STATE_PROPS,
 } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
 import {
+	isEmpty,
+	isEqual,
+	isObject,
+get} from 'lodash';
+import {
 	generateRequiredProps,
-	getComponent,
+	getComponent, getIframe, getSelectedNode, getChildRects, cloneChildNodes, dragSort, isHorizontal,
+	// isHorizontal,
 } from '../utils';
 
 import {
@@ -47,7 +50,7 @@ import { useSelector } from '../hooks/useSelector';
 function Container(allProps: CommonPropsType, ref: any) {
 	const {
 		specialProps,
-		specialProps: { key, domTreeKeys },
+		specialProps: { key, domTreeKeys ,parentKey,parentPropName},
 		isDragAddChild,
 		...rest
 	} = allProps;
@@ -59,77 +62,119 @@ function Container(allProps: CommonPropsType, ref: any) {
 		controlUpdate(prevState, nextState, key),
 	);
 	const { dragSource, dropTarget,isInvisible } = useDragDrop(key);
-	const { dragKey, parentKey, vDOMCollection } = dragSource || {};
+	const { dragKey, vDOMCollection } = dragSource || {};
 	const { selectedKey } = dropTarget || {};
-
-	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection || {};
-	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
+	const pageConfig = PageDom[ROOT] ? PageDom : vDOMCollection||{} ;
+	const vNode=get(pageConfig,key,{}) as VirtualDOMType;
 	const { childNodes, componentName} = vNode;
 	const{props,hidden}=useCommon(vNode,rest);
 	useChildNodes({ childNodes, componentName, specialProps });
-	const [children, setChildren] = useState<ChildNodesType | undefined>(
-		childNodes,
-	);
+	const [children, setChildren] = useState<ChildNodesType | undefined>(childNodes);
 	const { mirrorModalField, nodePropsConfig } = useMemo(
 		() => getComponentConfig(componentName),
 		[],
 	);
-	const { selectedDomKeys, isSelected } = useSelect(
+	const nodePropNameRef=useRef(childNodes&&!Array.isArray(childNodes)?Object.keys(childNodes)[0]:isObject(nodePropsConfig)?Object.keys(nodePropsConfig)[0]:undefined);
+	const { selectedDomKeys, isSelected,propName } = useSelect(
 		specialProps,
 		!!mirrorModalField,
 	);
 
-	const onDragEnter = (e: Event) => {
-		e.stopPropagation();
-		let propName;
-		//判断当前组件是否为拖拽组件的父组件或者是否为子孙组件或者它自己
-		if (
-			parentKey !== key &&
-			dragKey &&
-			dragKey !== key &&
-			!domTreeKeys.includes(dragKey) &&
-			(!selectedDomKeys || !selectedDomKeys.includes(dragKey))
-		) {
-			if (childNodes) {
-				if (Array.isArray(childNodes)) {
-					if (!handleRules(pageConfig, dragKey, key, undefined, true)) {
-						setChildren([...childNodes, dragKey]);
-					}
-				} else {
-					setChildren(
-						produce(childNodes as PropsNodeType, (oldChild) => {
-							propName = Object.keys(oldChild!)[0];
-							if (
-								!handleRules(pageConfig, dragKey, key, propName, true)
-							) {
-								oldChild![propName] = [...oldChild[propName]!, dragKey];
-							}
-						}),
-					);
-				}
-			} else {
-				if (!nodePropsConfig) {
-					setChildren([dragKey]);
-				} else {
-					const keys = Object.keys(nodePropsConfig);
-					propName = keys[0];
-					setChildren({ [propName]: [dragKey] });
-				}
+	if(propName&&isSelected&&nodePropNameRef.current!==propName){
+		nodePropNameRef.current=propName;
+	}
+
+	const onDragStart=useCallback((event: DragEvent)=> {
+		const img = document.createElement('img');
+		img.src = 'http://path/to/img';
+		event.dataTransfer.setDragImage(img,0,0);
+		setTimeout(() => {
+			getDragSource({
+				dragKey:key,
+				parentKey,
+				parentPropName,
+			});
+		}, 0);
+	},[parentKey,parentPropName,key]);
+
+	useEffect(()=>{
+		const iframe=getIframe();
+		const node=getSelectedNode(key,iframe);
+		if(!node||isDragAddChild) return;
+		if(dragKey===key) {
+			node.style.pointerEvents = 'none';
+			return;
+		}else {
+			node.style.pointerEvents = 'auto';
+		}
+		let childRects=[];
+		let compareChildren=[];
+		if(!isEmpty(children)){
+			if(Array.isArray(children)){
+				compareChildren=[...children];
+				childRects=getChildRects(compareChildren,iframe);
+			}else {
+				compareChildren=[...children[nodePropNameRef.current]];
+				childRects=getChildRects(compareChildren,iframe);
 			}
 		}
-		getDropTargetInfo(e, domTreeKeys, key, propName);
+		const parentRect=node.getBoundingClientRect();
+
+		const isHor=isHorizontal(childRects,parentRect);
+		const dragOver=(event:DragEvent)=>{
+			event.preventDefault();
+			if(selectedKey!==key||dragKey===key) return ;
+			setTimeout(()=>{
+					const dragIndex=compareChildren.indexOf(dragKey);
+					if(dragIndex>=0){
+						compareChildren.splice(dragIndex,1);
+						childRects.splice(dragIndex,1);
+					}
+				const newChildren=dragSort(compareChildren,dragKey,childRects,parentRect as DOMRect,event,isHor);
+					let renderChildren=cloneChildNodes(children);
+					if(nodePropNameRef.current){
+						if(!renderChildren||Array.isArray(renderChildren)){
+							renderChildren={[nodePropNameRef.current]:newChildren};
+						}else {
+							renderChildren[nodePropNameRef.current]=newChildren;
+						}
+					}else {
+						renderChildren=newChildren;
+					}
+					if(!isEqual(renderChildren,children)){
+						console.log('renderChildren>>>>>',renderChildren,children);
+						setChildren(renderChildren);
+					}
+
+			},200);
+		};
+
+		if(node){
+			node.addEventListener('dragover',dragOver);
+			node.addEventListener('dragstart',onDragStart);
+
+		}
+		return ()=>{
+			if(node){
+				node.removeEventListener('dragover',dragOver);
+				node.removeEventListener('dragstart',onDragStart);
+
+
+			}
+		};
+	});
+
+	const onDragEnter = (e: Event) => {
+		e.stopPropagation();
+		if(key===dragKey) return;
+		getDropTargetInfo(e, domTreeKeys, key, nodePropNameRef.current);
 	};
 	const onDragLeave = (e: Event) => {
 		e.stopPropagation();
-		if (isSelected) {
-			clearDropTarget();
-		}
+		// clearDropTarget();
 	};
 
-	useEffect(() => {
-		setChildren(childNodes);
-	}, [childNodes]);
-	if ((!selectedKey || selectedKey !== key) && children !== childNodes) {
+	if ((!selectedKey || selectedKey !== key) && !isEqual(childNodes,children)) {
 		setChildren(childNodes);
 	}
 	if (!isSelected&&(!componentName||hidden)) return null;
@@ -166,7 +211,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 			pageConfig,
 			children!,
 			dragKey,
-			childNodes !== children,
+			!isEqual(childNodes,children),
 			isDragAddChild,
 		),
 		...props,

@@ -5,7 +5,7 @@ import {
 } from 'lodash';
 import {
 	PageConfigType,
-	getComponentConfig, getBrickdConfig,
+	getComponentConfig, getBrickdConfig, ChildNodesType,
 } from '@brickd/core';
 
 import { selectClassTarget } from '../common/constants';
@@ -139,3 +139,122 @@ export function generateRequiredProps(componentName: string) {
 
 	return requiredProps;
 }
+
+export function getChildRects(childNodes:string[],iframe:any){
+	return childNodes.map((nodeKey)=>{
+		const node=getSelectedNode(nodeKey,iframe);
+		return node&&node.getBoundingClientRect()||nodeKey;
+	});
+}
+
+export function isHorizontal(childRects:any[],parentRect){
+	const {top:parentTop}=parentRect;
+	let tempHeight=0;
+	let tempTop=0;
+	for (const rect of childRects){
+		if(typeof rect!=='string'){
+			const {bottom,height}=rect;
+			tempHeight+=height;
+			tempTop=parentTop-bottom;
+		}
+	}
+	if(tempTop>=tempHeight) return false;
+
+	return true;
+}
+
+
+export const cloneChildNodes=(childNodes?:ChildNodesType)=>{
+	if(!childNodes) return undefined;
+	if(Array.isArray(childNodes)) return [...childNodes];
+	const propNames=Object.keys(childNodes);
+	return propNames.reduce((a,b)=>a[b]=[...childNodes[b]],{});
+
+};
+
+export const dragSort=(compareChildren:string[],
+											 dragKey:string,
+											 childRects:DOMRect|string[],
+											 parentRect:DOMRect,
+											 dragOffset:DragEvent,
+											 isHorizontal?:boolean)=>{
+	const {left:parentLeft,top:parentTop,width:parentWidth,height:parentHeight}=parentRect;
+	const {offsetX,offsetY}=dragOffset;
+	const newChildren=[];
+	for(let index=0;index<compareChildren.length;index++){
+		const compareKey=compareChildren[index];
+		if(compareKey===dragKey) continue;
+		if(typeof childRects[index]!=='string'){
+			const {left,top,width,height}=childRects[index];
+			const offsetLeft=offsetX-(left-parentLeft);
+			const offsetTop=offsetY-(parentTop-top);
+		const offsetW =	parentWidth-width;
+		const offsetH = parentHeight-height;
+		if(isHorizontal){
+			if(offsetW>=5){
+				if(offsetLeft>0){
+					if(offsetLeft<=width*0.5){
+						newChildren.push(dragKey,...compareChildren.slice(index));
+						break;
+					}else if(offsetLeft<width){
+						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
+						break;
+					}else {
+						newChildren.push(compareKey);
+					}
+				}else {
+					newChildren.push(dragKey,...compareChildren.slice(index));
+				}
+			}else {
+				if(offsetTop>0){
+					if(offsetTop<height*0.5){
+						newChildren.push(dragKey,...compareChildren.slice(index));
+					}else if(offsetTop<height){
+						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
+						break;
+					}else{
+						newChildren.push(compareKey);
+					}
+				}else {
+					newChildren.push(dragKey,...compareChildren.slice(index));
+				}
+			}
+		}else {
+			if(offsetH>=5){
+				if(offsetTop>0){
+					if(offsetTop<=height*0.5){
+						newChildren.push(dragKey,...compareChildren.slice(index));
+						break;
+					}else if(offsetTop<height){
+						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
+						break;
+					}else {
+						newChildren.push(compareKey);
+					}
+				}else {
+					newChildren.push(dragKey,...compareChildren.slice(index));
+				}
+			}else {
+				if(offsetLeft>0){
+					if(offsetLeft<width*0.5){
+						newChildren.push(dragKey,...compareChildren.slice(index));
+					}else if(offsetLeft<width){
+						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
+						break;
+					}else{
+						newChildren.push(compareKey);
+					}
+				}else {
+					newChildren.push(dragKey,...compareChildren.slice(index));
+				}
+			}
+		}
+
+		}
+	}
+	if(!newChildren.includes(dragKey)){
+		newChildren.push(dragKey);
+	}
+	return [...new Set(newChildren)];
+};
+
