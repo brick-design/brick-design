@@ -48,7 +48,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 			parentRootNode.current = getSelectedNode(key, iframe);
 			isSelected&&setSelectedNode(parentRootNode.current);
 		}
-		},[]);
+		});
 
 
 	if (!isSelected&&(!componentName||hidden)) return null;
