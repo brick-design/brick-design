@@ -1,33 +1,29 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import {
-	PageConfigType,
 	DragSourceType,
 	DropTargetType,
 	SelectedInfoType,
 	STATE_PROPS,
 } from '@brickd/core';
+import {get} from 'lodash';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
 	generateCSS,
 	getElementInfo,
 	getIframe,
-	getIsModalChild,
 	getSelectedNode,
 	setPosition,
 } from '../../utils';
+import { useOperate } from '../../hooks/useOperate';
+import { OperateStateType } from '../OperateProvider';
 
 type SelectState = {
 	hoverKey: string | null
 	dropTarget: DropTargetType | null
 	selectedInfo: SelectedInfoType | null
 	dragSource: DragSourceType | null
-	pageConfig: PageConfigType
 }
-
-const controlUpdate = () => {
-	return true;
-};
 
 function Guidelines() {
 	const topRef = useRef<any>();
@@ -35,33 +31,43 @@ function Guidelines() {
 	const leftRef = useRef<any>();
 	const rightRef = useRef<any>();
 	const hoverNodeRef = useRef<any>();
+	const iframe = useMemo(()=>getIframe(),[topRef]);
+
 	const {
-		hoverKey,
+		hoverKey:selectHoverKey,
 		dropTarget,
-		dragSource,
-		selectedInfo,
-		pageConfig,
-	} = useSelector<SelectState, STATE_PROPS>(
+		selectedInfo} = useSelector<SelectState, STATE_PROPS>(
 		[
 			'hoverKey',
 			'dropTarget',
-			'dragSource',
 			'selectedInfo',
-			'pageConfig',
-		],
-		controlUpdate,
-	);
-	const { domTreeKeys } = selectedInfo || {};
-	const isModal = getIsModalChild(pageConfig, domTreeKeys);
-	const guidControl =
-		hoverKey && (!selectedInfo || (selectedInfo && !dragSource));
+		]);
+
+	const {getOperateState,setSubscribe,setOperateState}=useOperate();
+	const { selectedKey } = selectedInfo || {};
+	const dropKey=get(dropTarget,'selectedKey');
+	const hoverKey=dropKey ||selectHoverKey;
+	const {operateHoverKey,operateSelectedKey}=getOperateState<OperateStateType>();
+	if(selectHoverKey!==operateHoverKey){
+		const hoverNode = getSelectedNode(hoverKey, iframe);
+		setOperateState({hoverNode,operateHoverKey:selectHoverKey});
+	}
+
+	if(selectedKey!==operateSelectedKey){
+		const selectedNode = getSelectedNode(selectedKey, iframe);
+		setOperateState({selectedNode,operateSelectedKey:selectedKey});
+	}
+	const guidControl = hoverKey && (!selectedInfo ||selectedKey&&selectedKey!==dropKey);
+
+
+
 	useEffect(() => {
 		const iframe = getIframe();
-		if(!iframe) return;
 		const { contentWindow,contentDocument } = iframe;
 		const renderGuideLines = () => {
-			const node = getSelectedNode(hoverKey!, iframe);
-			if (guidControl && node) {
+			const {hoverNode,dropNode,isModal}=getOperateState<OperateStateType>();
+			const node=dropNode||hoverNode;
+			if (node) {
 				const { left, top, bottom, right, width, height } = getElementInfo(
 					node,
 					iframe,
@@ -94,27 +100,32 @@ function Guidelines() {
 					isModal,
 				);
 			}
+			if(dropNode){
+				setTimeout(renderGuideLines,100);
+			}
 		};
-		renderGuideLines();
+		const unSubscribe= setSubscribe(renderGuideLines);
 		const onScroll = () => {
 			setTimeout(renderGuideLines, 66);
 		};
 		contentWindow.addEventListener('scroll', onScroll);
 		return () => {
+			unSubscribe();
 			contentWindow.removeEventListener('scroll', onScroll);
 		};
-	});
+
+	},[hoverNodeRef.current,leftRef.current,rightRef.current,bottomRef.current,topRef.current]);
 
 	const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
 	const guidV = guidControl ? styles['guide-v'] : styles['guide-hidden'];
-	const hoverNode = guidControl
+	const hoverNodeClass = guidControl
 		? dropTarget
 			? styles['drop-node']
 			: styles['hover-node']
 		: styles['guide-hidden'];
 	return (
 		<>
-			<div ref={hoverNodeRef} className={hoverNode} />
+			<div ref={hoverNodeRef} className={hoverNodeClass} />
 			<div ref={leftRef} className={guidV} />
 			<div ref={rightRef} className={guidV} />
 			<div ref={topRef} className={guidH} />

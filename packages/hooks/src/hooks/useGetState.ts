@@ -16,7 +16,6 @@ const funParams=useContext(FunParamContext);
 			return Reflect.get(target, propKey, receiver);
 		},
 		set: function (target, propKey, value, receiver) {
-			console.log('parmam>>>>>>>>',propKey,value);
 			if(propKey in brickdState){
 				brickdState.setPageState({[propKey]:value});
 			}else {

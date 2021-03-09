@@ -68,7 +68,6 @@ export const resolveVariableAndFilterField = (
 
 	const paths = finalKey.split(/\s*\|\s*/g);
 	finalKey = paths.shift() as string;
-	console.log('filed2>>>>',finalKey);
 
 	fieldsRet.push(finalKey.split('.').shift());
 
@@ -101,7 +100,6 @@ export const resolveVariableAndFilterField = (
 					 each(params,(param)=>{
 						const filed= getStrOrField(param);
 						if(filed) {
-							console.log('filed1>>>>',filed);
 							fieldsRet.push(filed.split('.').shift());
 						}
 					 });

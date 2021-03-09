@@ -2,7 +2,7 @@
 @hoverColor: #388bfe;
 @transparent: #00000000;
 @translucent: rgba(0, 0, 0, 0.1);
-@dropColor: rgba(256, 0, 0, 0.2);
+@dropColor: rgba(256, 0, 0, 0.1);
 .animate {
 	transition: all 50ms;
 }
@@ -26,4 +26,10 @@
 
 .rotate90 {
 	transform: rotate(90deg);
+}
+
+.hidden-drag{
+	width: 0;
+	height: 0;
+	transition: all 500ms;
 }

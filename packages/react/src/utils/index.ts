@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react';
+import {  useEffect, useRef } from 'react';
 import {
 	each,
-	get,
+	get
 } from 'lodash';
 import {
 	PageConfigType,
-	getComponentConfig, getBrickdConfig, ChildNodesType,
+	getComponentConfig, getBrickdConfig, ChildNodesType, PropsNodeType, getSelector,
 } from '@brickd/core';
 
 import { selectClassTarget } from '../common/constants';
+
 
 export const SPECIAL_STRING_CONSTANTS: any = {
 	null: null,
@@ -57,11 +58,12 @@ export function formatUnit(target: string | null) {
 export const getSelectedNode = (
 	key?: string | null,
 	iframe?: HTMLIFrameElement,
+	propName?:string
 ): HTMLElement | undefined => {
 	if (iframe && key) {
 		const { contentDocument } = iframe;
 		return contentDocument!.getElementsByClassName(
-			selectClassTarget + parseInt(key),
+			selectClassTarget + parseInt(key)+(propName?propName:''),
 		)[0] as HTMLElement;
 	}
 };
@@ -140,41 +142,67 @@ export function generateRequiredProps(componentName: string) {
 	return requiredProps;
 }
 
-export function getChildRects(childNodes:string[],iframe:any){
-	return childNodes.map((nodeKey)=>{
-		const node=getSelectedNode(nodeKey,iframe);
-		return node&&node.getBoundingClientRect()||nodeKey;
-	});
+
+
+
+export function getNodesRects(nodeRectsMapRef:any,childNodes?:ChildNodesType,isRest?:boolean){
+	if(!childNodes) return;
+	const iframe=getIframe();
+	const nodeRectsMap=nodeRectsMapRef.current;
+	function keys2Rects(nodeKeys){
+		each(nodeKeys,(key)=>{
+			if(!nodeRectsMap[key]){
+				const node=getSelectedNode(key,iframe);
+				nodeRectsMap[key]=node?node.getBoundingClientRect():key;
+			}else if(isRest){
+				const node=getSelectedNode(key,iframe);
+				nodeRectsMap[key]=node?node.getBoundingClientRect():key;
+			}
+		});
+	}
+	if(Array.isArray(childNodes)){
+		keys2Rects(childNodes);
+	}else {
+		each(childNodes,(nodes)=>{
+			keys2Rects(nodes);
+		});
+	}
+
+
+	nodeRectsMapRef.current=nodeRectsMap as NodeRectsMapType;
 }
 
-export function isHorizontal(childRects:any[],parentRect){
-	const {top:parentTop}=parentRect;
-	let tempHeight=0;
-	let tempTop=0;
+export function isHorizontal(childRects:(string|DOMRect)[]){
+	let tempBottom=0;
 	for (const rect of childRects){
-		if(typeof rect!=='string'){
+		if(rect&&typeof rect!=='string'){
 			const {bottom,height}=rect;
-			tempHeight+=height;
-			tempTop=parentTop-bottom;
+			if(bottom-tempBottom<height){
+				return true;
+			}
+			tempBottom=bottom;
 		}
 	}
-	if(tempTop>=tempHeight) return false;
 
-	return true;
+	return false;
 }
 
 
 export const cloneChildNodes=(childNodes?:ChildNodesType)=>{
 	if(!childNodes) return undefined;
 	if(Array.isArray(childNodes)) return [...childNodes];
-	const propNames=Object.keys(childNodes);
-	return propNames.reduce((a,b)=>a[b]=[...childNodes[b]],{});
+	 const newChildNodes={};
+	 for(const propName of Object.keys(childNodes)){
+		 newChildNodes[propName]=[...childNodes[propName]];
+	 }
+	return newChildNodes;
 
 };
 
-export const dragSort=(compareChildren:string[],
-											 dragKey:string,
-											 childRects:DOMRect|string[],
+export type NodeRectsMapType={[key:string]:string|DOMRect}
+export const dragSort=(dragKey:string,
+											 compareChildren:string[]=[],
+											 childRects:(string|DOMRect)[],
 											 parentRect:DOMRect,
 											 dragOffset:DragEvent,
 											 isHorizontal?:boolean)=>{
@@ -183,24 +211,30 @@ export const dragSort=(compareChildren:string[],
 	const newChildren=[];
 	for(let index=0;index<compareChildren.length;index++){
 		const compareKey=compareChildren[index];
-		if(compareKey===dragKey) continue;
-		if(typeof childRects[index]!=='string'){
-			const {left,top,width,height}=childRects[index];
+		if(typeof childRects[index]!=='string'&&childRects[index]){
+			const {left,top,width,height,bottom,right}=childRects[index] as DOMRect;
 			const offsetLeft=offsetX-(left-parentLeft);
-			const offsetTop=offsetY-(parentTop-top);
+			const offsetTop=offsetY-(top-parentTop);
 		const offsetW =	parentWidth-width;
 		const offsetH = parentHeight-height;
 		if(isHorizontal){
+			if(offsetY<top||offsetY>bottom){
+				newChildren.push(compareChildren[index]);
+				continue;
+			}
+			if(compareKey===dragKey) continue;
 			if(offsetW>=5){
 				if(offsetLeft>0){
 					if(offsetLeft<=width*0.5){
 						newChildren.push(dragKey,...compareChildren.slice(index));
 						break;
 					}else if(offsetLeft<width){
+
 						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
 						break;
 					}else {
 						newChildren.push(compareKey);
+
 					}
 				}else {
 					newChildren.push(dragKey,...compareChildren.slice(index));
@@ -220,6 +254,12 @@ export const dragSort=(compareChildren:string[],
 				}
 			}
 		}else {
+			if(offsetX<left||offsetX>right){
+				newChildren.push(compareChildren[index]);
+				continue;
+			}
+			if(compareKey===dragKey) continue;
+
 			if(offsetH>=5){
 				if(offsetTop>0){
 					if(offsetTop<=height*0.5){
@@ -257,4 +297,25 @@ export const dragSort=(compareChildren:string[],
 	}
 	return [...new Set(newChildren)];
 };
+
+
+export const getParentNodes=(childNodes:PropsNodeType,parentNodes:any,parentKey:string)=>{
+	const iframe=getIframe();
+	each(childNodes,(nodes,propName)=>{
+		if(!parentNodes[propName]){
+			for(const key  of nodes){
+				const node=getSelectedNode(key,iframe);
+				if(node){
+					const parentNode=node.parentElement;
+					parentNode.className+=` `+selectClassTarget+parentKey+propName;
+					parentNodes[propName]=parentNode;
+					break;
+				}
+			}
+		}
+	});
+	return parentNodes;
+};
+
+export const getDragKey=()=>get(getSelector(['dragSource']),['dragSource','dragKey']);
 

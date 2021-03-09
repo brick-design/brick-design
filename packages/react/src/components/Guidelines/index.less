@@ -29,11 +29,13 @@
 	.guide-common();
 	border: 1px solid @hoverColor;
 	pointer-events: none;
-	background-color: @translucent;
+	background-color:@translucent ;
+	transition: all 100ms;
 }
 
 .drop-node {
 	.hover-node();
 	border-color: red;
-	background-color: @transparent;
+	background-color:@dropColor;
+
 }

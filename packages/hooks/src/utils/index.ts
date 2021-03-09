@@ -2,15 +2,15 @@ import {each} from 'lodash';
 
 type ListenerType=() => void
 
-export class BrickStore{
-	constructor(propState:any) {
+export class BrickStore<T>{
+	constructor(propState?:T) {
 		this.state=propState?propState:{};
 	}
 	isPageStore=true;
-	state={};
+	state;
 	listeners=[];
-	getPageState=()=>this.state;
-	setPageState=(newState,isReplace?:boolean)=>{
+	getPageState=<T>():T=>this.state;
+	setPageState=<T>(newState:T,isReplace?:boolean)=>{
 		if(isReplace){
 			this.state=newState;
 		}else {

@@ -53,7 +53,6 @@ export function selectComponent(
 	redo.length = 0;
 	return {
 		...state,
-		dropTarget: null,
 		selectedInfo: {
 			selectedKey: key,
 			propName,
@@ -65,7 +64,6 @@ export function selectComponent(
 		},
 		undo,
 		redo,
-		hoverKey: null,
 	};
 }
 
@@ -83,7 +81,6 @@ export function clearSelectedStatus(state: StateType) {
 	redo.length = 0;
 	return {
 		...state,
-		dropTarget: null,
 		selectedInfo: null,
 		undo,
 		redo,

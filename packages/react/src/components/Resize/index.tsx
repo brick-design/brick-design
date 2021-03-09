@@ -2,7 +2,6 @@ import React, {
 	memo,
 	useCallback,
 	useEffect,
-	useMemo,
 	useRef,
 	useState,
 } from 'react';
@@ -24,11 +23,11 @@ import {
 	generateCSS,
 	getElementInfo,
 	getIframe,
-	getIsModalChild,
-	getSelectedNode,
 	setPosition,
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
+import { useOperate } from '../../hooks/useOperate';
+import { OperateStateType } from '../OperateProvider';
 
 type ResizeState = {
 	selectedInfo: SelectedInfoType
@@ -76,27 +75,25 @@ function Resize() {
 		ResizeState,
 		STATE_PROPS
 	>(['selectedInfo', 'pageConfig', 'hoverKey'], controlUpdate);
-	const { selectedKey, domTreeKeys, propName } = selectedInfo || {};
+	const {getOperateState,setSubscribe}=useOperate();
+	const { selectedKey,  propName } = selectedInfo || {};
 	const resizeRef = useRef<any>();
 	const originSizeRef = useRef<OriginSizeType>();
 	const sizeResultRef = useRef<ResizePayload>({});
 	const widthRef = useRef<any>();
 	const heightRef = useRef<any>();
 	const baseboardRef = useRef<HTMLDivElement | any>();
-	const selectNodeRef = useRef<HTMLElement>();
 	const [isOut, setIsOut] = useState<boolean>(true);
 	const { props, childNodes } = pageConfig[selectedKey] || {};
 	let { width, height } = get(props, 'style', {});
 	 width=width||'auto';
 	height =height|| 'auto';
-	const isModal = useMemo(
-		() => getIsModalChild(pageConfig, domTreeKeys),
-		[domTreeKeys, pageConfig],
-	);
-	selectNodeRef.current = useMemo(() => getSelectedNode(selectedKey, iframe), [
-		iframe,
-		selectedKey,
-	]);
+
+
+	useEffect(()=>{
+		const unSubscribe=setSubscribe(setSelectedBorder);
+		return unSubscribe;
+	},[]);
 
 	useEffect(() => {
 		const contentWindow = iframe!.contentWindow!;
@@ -113,18 +110,7 @@ function Resize() {
 			contentWindow.removeEventListener('resize', changeSize);
 			contentWindow.removeEventListener('animationend', changeSize);
 		};
-	}, [isModal]);
-
-	useEffect(() => {
-		if (selectedKey) {
-			if (selectNodeRef.current) {
-				selectNodeRef.current = getSelectedNode(selectedKey, iframe);
-				setSelectedBorder();
-			} else {
-				setSelectedBorder();
-			}
-		}
-	}, [selectedKey, selectNodeRef.current, iframe, pageConfig]);
+	}, []);
 
 	if (!selectedKey && resizeRef.current) {
 		resizeRef.current.style.display = 'none';
@@ -156,9 +142,11 @@ function Resize() {
     height:${scrollHeight}px
     `;
 	};
+
 	const onMouseMove = useCallback(
 		(event: MouseEvent) => {
 			event.stopPropagation();
+			const {selectedNode}=getOperateState<OperateStateType>();
 			if (originSizeRef.current) {
 				const { clientX, clientY } = event;
 				const { x, y, direction, height, width } = originSizeRef.current;
@@ -208,7 +196,7 @@ function Resize() {
 					(maxWidth === null || widthResult <= maxWidth)
 				) {
 					sizeResultRef.current.width = `${widthResult}px`;
-					selectNodeRef.current!.style.width = `${widthResult}px`;
+					selectedNode!.style.width = `${widthResult}px`;
 				}
 				if (
 					offsetY !== 0 &&
@@ -216,14 +204,14 @@ function Resize() {
 					(maxHeight === null || heightResult <= maxHeight)
 				) {
 					sizeResultRef.current.height = `${heightResult}px`;
-					selectNodeRef.current!.style.height = `${heightResult}px`;
+					selectedNode.style.height = `${heightResult}px`;
 				}
 				showSize(sizeResultRef.current.width, sizeResultRef.current.height);
 				setSelectedBorder('pointer-events: auto; transition:none;');
 				changeBaseboard();
 			}
 		},
-		[originSizeRef.current, sizeResultRef.current, selectNodeRef.current],
+		[originSizeRef.current, sizeResultRef.current],
 	);
 
 	const showSize = useCallback(
@@ -239,12 +227,16 @@ function Resize() {
 	);
 
 	const setSelectedBorder = (css = '') => {
-		if (selectNodeRef.current) {
+		const {selectedNode,isModal}=getOperateState<OperateStateType>();
+		if (selectedNode) {
+			console.log('selectedNode>>>>>>',selectedNode.getBoundingClientRect());
+
 			const { left, top, width, height } = getElementInfo(
-				selectNodeRef.current,
+				selectedNode,
 				iframe,
 				isModal,
 			);
+
 			if (top <= 14 && isOut) {
 				setIsOut(false);
 			} else if (top > 14 && !isOut) {
@@ -257,6 +249,7 @@ function Resize() {
 	};
 	const onResizeStart = useCallback(
 		function (event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {
+			const {selectedNode}=getOperateState<OperateStateType>();
 			if (event.nativeEvent && iframe) {
 				const { contentWindow } = iframe!;
 				const {
@@ -266,7 +259,7 @@ function Resize() {
 					minHeight,
 					maxWidth,
 					maxHeight,
-				} = contentWindow!.getComputedStyle(selectNodeRef.current!);
+				} = contentWindow!.getComputedStyle(selectedNode);
 				originSizeRef.current = {
 					x: event.nativeEvent.clientX,
 					y: event.nativeEvent.clientY,
@@ -283,32 +276,11 @@ function Resize() {
 		},
 		[
 			iframe,
-			selectNodeRef.current,
 			resizeRef.current,
 			baseboardRef.current,
 			originSizeRef.current,
 		],
 	);
-
-	// const changeWidth = useCallback(() => {
-	// 	widthRef.current.contentEditable = 'true';
-	// }, [widthRef.current]);
-	// const changeHeight = useCallback(() => {
-	// 	heightRef.current.contentEditable = 'true';
-	// }, [heightRef.current]);
-
-	// /**
-	//  * 更新组件宽高
-	//  */
-	// const updateSize = useCallback(() => {
-	// 	const width = widthRef.current.innerHTML;
-	// 	const height = heightRef.current.innerHTML;
-	// 	resizeChange({ width, height });
-	// 	widthRef.current.contentEditable = 'false';
-	// 	heightRef.current.contentEditable = 'false';
-	// }, [widthRef.current, heightRef.current]);
-
-	setSelectedBorder();
 
 	return (
 		<>
@@ -328,8 +300,6 @@ function Resize() {
 				<div
 					className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']}
 					ref={widthRef}
-					// onDoubleClick={updateSize}
-					// onClick={changeWidth}
 				>
 					{width}
 				</div>
@@ -338,8 +308,6 @@ function Resize() {
 						hoverKey ? styles['tip-hidden'] : styles['size-tip-height']
 					}
 					ref={heightRef}
-					// onDoubleClick={updateSize}
-					// onClick={changeHeight}
 				>
 					{height}
 				</div>

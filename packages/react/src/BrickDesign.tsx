@@ -15,20 +15,22 @@ import {
 	StateType,
 	initPageBrickdState,
 	setPageName,
-	 ROOT,
+	ROOT, addComponent,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import {
+	BrickStore,
 	StaticContextProvider,
 } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import { getIframe, iframeSrcDoc } from './utils';
-import { onDragover, onDrop } from './common/events';
+import {  getIframe, iframeSrcDoc } from './utils';
+import { onDragover } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
 import {useSelector} from './hooks/useSelector';
-import StateDomainWarpper from './warppers/StateDomainWarpper';
+import StateDomainWarpper from './wrappers/StateDomainWrapper';
+import { OperateProvider, OperateStateType } from './components/OperateProvider';
 
 
 
@@ -69,26 +71,28 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 		BrickdHookState, STATE_PROPS>(stateSelector, controlUpdate);
 	const iframeRef = useRef<HTMLIFrameElement>();
 	const rootComponent=pageConfig[ROOT];
-	const staticState=useMemo(()=>({pageConfig,options}),[pageConfig,options]);
-
+	const staticState=useMemo(()=>({options,pageName}),[pageName,options]);
 	const renderComponent = useCallback((pageConfig: PageConfigType) => {
 		const rootComponent=pageConfig[ROOT];
 		if (!rootComponent) return null;
 		const specialProps={domTreeKeys:[ROOT],key:ROOT,parentKey:''};
-		return <StateDomainWarpper {...props} onMouseLeave={clearHovered} specialProps={specialProps}/>;
+		return <StateDomainWarpper {...props} onMouseLeave={onMouseLeave} specialProps={specialProps}/>;
 	},[]);
 
 	const designPage= useMemo(()=>renderComponent(pageConfig),[pageConfig]);
 	const divContainer = useRef(null);
+	const operateStore=useRef<BrickStore<OperateStateType>>(new BrickStore<OperateStateType>());
 	const componentMount = useCallback((divContainer,designPage) => {
 		ReactDOM.render(
 					<StaticContextProvider value={staticState}>
+						<OperateProvider value={operateStore.current}>
 						<BrickContext.Provider value={getStore()}>
 							{designPage}
 							<Guidelines />
 							<Distances />
 							<Resize />
 						</BrickContext.Provider>
+						</OperateProvider>
 					</StaticContextProvider>,
 			divContainer.current,
 		);
@@ -118,16 +122,37 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 		initPageBrickdState(initState);
 	},[pageName]);
 
+	const onDrop=useCallback((e: DragEvent)=> {
+		e.stopPropagation();
+		addComponent();
+		operateStore.current.setPageState({dropNode:null});
+	},[]);
+
+	const onMouseLeave=useCallback((event:Event)=>{
+		event.stopPropagation();
+		clearHovered();
+		operateStore.current.setPageState<OperateStateType>({
+			hoverNode:null,
+			operateHoverKey:null,
+		});
+	},[]);
+
+
 	useEffect(() => {
 		iframeRef.current = getIframe();
 		const contentWindow = iframeRef.current.contentWindow!;
 		contentWindow.addEventListener('dragover', onDragover);
+		window.addEventListener('dragover', onDragover);
 		contentWindow.addEventListener('drop', onDrop);
+		window.addEventListener('drop', onDrop);
 		return () => {
 			contentWindow.removeEventListener('dragover', onDragover);
 			contentWindow.removeEventListener('drop', onDrop);
+			window.removeEventListener('dragover', onDragover);
+			window.removeEventListener('drop', onDrop);
 		};
 	}, []);
+
 
 	useEffect(() => {
 		if (rootComponent) return;

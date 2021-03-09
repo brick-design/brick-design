@@ -7,7 +7,7 @@ import {
 	StaticContextProvider,
 } from '@brickd/hooks';
 import {get} from 'lodash';
-import StateDomainWarpper from './warppers/StateDomainWarpper';
+import StateDomainWarpper from './wrappers/StateDomainWarpper';
 
 interface BrickRenderProps  {
 	componentsMap:any,

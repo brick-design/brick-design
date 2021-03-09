@@ -6,7 +6,7 @@ import {
 	ComponentSchemaType,
 	PropsNodeType,
 	SelectedInfoType,
-	StateType, BrickDesignStateType, ConfigType,
+	StateType, BrickDesignStateType, ConfigType, STATE_PROPS,
 
 } from '../types';
 import { ReducerType } from '../reducers';
@@ -164,8 +164,7 @@ export const handleRequiredHasChild = (
 	const { componentName, childNodes } = pageConfig[selectedKey];
 	const { nodePropsConfig, isRequired } = getComponentConfig(componentName);
 	return (
-		(selectedPropName &&
-			nodePropsConfig![selectedPropName].isRequired &&
+		(get(nodePropsConfig,[selectedPropName,'isRequired']) &&
 			!get(childNodes, selectedPropName)) ||
 		(isRequired && !childNodes)
 	);
@@ -270,7 +269,7 @@ export function handleRules(
 	 * 子组件约束限制，减少不必要的组件错误嵌套
 	 */
 	const childRules = propName
-		? nodePropsConfig![propName].childNodesRule
+		? get(nodePropsConfig,[propName,'childNodesRule'])
 		: childNodesRule;
 	if (childRules && !childRules.includes(dragComponentName)) {
 		!isForbid &&
@@ -383,6 +382,14 @@ export function getPageState(){
 	const pageName=getPageName();
 	return get(getStore().getState(),pageName,legoState);
 };
+
+export function getSelector(selector:STATE_PROPS[]){
+	const states=getPageState();
+	const resultState={};
+	each(selector,(stateName)=>resultState[stateName]=states[stateName]);
+	return resultState;
+}
+
 export const cleanStateCache=()=>{
 	setBrickdConfig(null);
 	setWarn(null);

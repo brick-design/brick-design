@@ -1,5 +1,6 @@
-import {merge} from 'lodash';
+import {merge,isEmpty} from 'lodash';
 import { StateType } from '../types';
+
 
 export const legoState: StateType = {
 	pageConfig: {}, // 所有组件信息
@@ -12,7 +13,8 @@ export const legoState: StateType = {
 	platformInfo: { isMobile: false, size: ['100%', '100%'] },
 };
 export function initPageBrickdState(state: StateType,payload:Partial<StateType>): StateType {
-	return merge({},legoState,state,payload);
+	if(!isEmpty(state.pageConfig)) return state;
+	return merge({},state,payload);
 }
 
 export function removePageBrickdState(): StateType{

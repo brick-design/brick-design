@@ -1,28 +1,16 @@
-import React, { memo, useMemo, useRef } from 'react';
-import {
-	PageConfigType,
-	DragSourceType,
-	SelectedInfoType,
-	STATE_PROPS,
-} from '@brickd/core';
+import React, { memo, useEffect, useRef } from 'react';
+
 import { each } from 'lodash';
 import styles from './index.less';
-import { useSelector } from '../../hooks/useSelector';
 import {
 	generateCSS,
 	getElementInfo,
 	getIframe,
-	getIsModalChild,
-	getSelectedNode,
 	setPosition,
 } from '../../utils';
+import { useOperate } from '../../hooks/useOperate';
+import { OperateStateType } from '../OperateProvider';
 
-interface DistancesState {
-	hoverKey: string | null
-	selectedInfo: SelectedInfoType | null
-	dragSource: DragSourceType | null
-	pageConfig: PageConfigType
-}
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
 	const {
@@ -190,89 +178,89 @@ function Distances() {
 	const rightRef = useRef<any>();
 	const iframe = getIframe();
 
-	const { hoverKey, selectedInfo, dragSource, pageConfig } = useSelector<
-		DistancesState,
-		STATE_PROPS
-	>(['hoverKey', 'selectedInfo', 'dragSource', 'pageConfig']);
-	const { selectedKey, domTreeKeys } = selectedInfo || {};
-	const isModal = getIsModalChild(pageConfig, domTreeKeys);
 
-	const hoverNode = getSelectedNode(hoverKey, iframe);
-	const selectNode = useMemo(() => getSelectedNode(selectedKey, iframe), [
-		selectedKey,
-		iframe,
-	]);
+	const {getOperateState, setSubscribe}=useOperate();
 
-	if (!dragSource && hoverNode && selectNode) {
-		const selectRect: ClientRect = getElementInfo(selectNode, iframe, isModal);
-		const { width, height, top, left } = selectRect;
-		const hoverRect: ClientRect = getElementInfo(hoverNode, iframe, isModal);
-		const {
-			leftGuide,
-			leftDistance,
-			rightDistance,
-			rightGuide,
-			topDistance,
-			topGuide,
-			bottomGuide,
-			bottomDistance,
-		} = handleDistances(selectRect, hoverRect);
+	useEffect(()=>{
+		const renderDistances=()=>{
+			const {selectedNode,hoverNode,isModal}=getOperateState<OperateStateType>();
+			if (hoverNode && selectedNode) {
+				const selectRect: ClientRect = getElementInfo(selectedNode, iframe, isModal);
+				const { width, height, top, left } = selectRect;
+				const hoverRect: ClientRect = getElementInfo(hoverNode, iframe, isModal);
+				const {
+					leftGuide,
+					leftDistance,
+					rightDistance,
+					rightGuide,
+					topDistance,
+					topGuide,
+					bottomGuide,
+					bottomDistance,
+				} = handleDistances(selectRect, hoverRect);
 
-		if (leftDistance !== 0) {
-			leftRef.current.style.cssText = generateCSS(
-				leftGuide,
-				top + height / 2,
-				leftDistance,
-			);
-			leftRef.current.dataset.distance = `${leftDistance}px`;
-		} else {
-			leftRef.current.style.display = 'none';
-		}
+				if (leftDistance !== 0) {
+					leftRef.current.style.cssText = generateCSS(
+						leftGuide,
+						top + height / 2,
+						leftDistance,
+					);
+					leftRef.current.dataset.distance = `${leftDistance}px`;
+				} else {
+					leftRef.current.style.display = 'none';
+				}
 
-		if (rightDistance !== 0) {
-			rightRef.current.style.cssText = generateCSS(
-				rightGuide,
-				top + height / 2,
-				rightDistance,
-			);
-			rightRef.current.dataset.distance = `${rightDistance}px`;
-		} else {
-			rightRef.current.style.display = 'none';
-		}
+				if (rightDistance !== 0) {
+					rightRef.current.style.cssText = generateCSS(
+						rightGuide,
+						top + height / 2,
+						rightDistance,
+					);
+					rightRef.current.dataset.distance = `${rightDistance}px`;
+				} else {
+					rightRef.current.style.display = 'none';
+				}
 
-		if (topDistance !== 0) {
-			topRef.current.style.cssText = generateCSS(
-				left + width / 2,
-				topGuide,
-				undefined,
-				topDistance,
-			);
-			topRef.current.dataset.distance = `${topDistance}px`;
-		} else {
-			topRef.current.style.display = 'none';
-		}
+				if (topDistance !== 0) {
+					topRef.current.style.cssText = generateCSS(
+						left + width / 2,
+						topGuide,
+						undefined,
+						topDistance,
+					);
+					topRef.current.dataset.distance = `${topDistance}px`;
+				} else {
+					topRef.current.style.display = 'none';
+				}
 
-		if (bottomDistance !== 0) {
-			bottomRef.current.style.cssText = generateCSS(
-				left + width / 2,
-				bottomGuide,
-				undefined,
-				bottomDistance,
-			);
-			bottomRef.current.dataset.distance = `${bottomDistance}px`;
-		} else {
-			bottomRef.current.style.display = 'none';
-		}
-		setPosition(
-			[leftRef.current, rightRef.current, topRef.current, bottomRef.current],
-			isModal,
-		);
-	} else if (leftRef.current) {
-		leftRef.current.style.display = 'none';
-		rightRef.current.style.display = 'none';
-		topRef.current.style.display = 'none';
-		bottomRef.current.style.display = 'none';
-	}
+				if (bottomDistance !== 0) {
+					bottomRef.current.style.cssText = generateCSS(
+						left + width / 2,
+						bottomGuide,
+						undefined,
+						bottomDistance,
+					);
+					bottomRef.current.dataset.distance = `${bottomDistance}px`;
+				} else {
+					bottomRef.current.style.display = 'none';
+				}
+				setPosition(
+					[leftRef.current, rightRef.current, topRef.current, bottomRef.current],
+					isModal,
+				);
+			} else{
+				leftRef.current.style.display = 'none';
+				rightRef.current.style.display = 'none';
+				topRef.current.style.display = 'none';
+				bottomRef.current.style.display = 'none';
+			}
+		};
+
+		const unSubscribe=setSubscribe(renderDistances);
+		return unSubscribe;
+	},[leftRef.current,rightRef.current,	topRef.current,bottomRef.current]);
+
+
 
 	return (
 		<>

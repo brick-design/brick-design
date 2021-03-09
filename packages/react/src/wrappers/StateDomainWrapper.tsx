@@ -1,5 +1,5 @@
 import React, {
-	memo,
+	memo, useMemo,
 } from 'react';
 
 import {
@@ -15,8 +15,8 @@ import NoneContainer from './NoneContainer';
 import {  useSelector } from '../hooks/useSelector';
 import { controlUpdate, HookState, stateSelector } from '../common/handleFuns';
 
-function StateDomainWarpper(props:any) {
-	const {onMouseLeave,specialProps,isDragAddChild,...rest}=props;
+function StateDomainWrapper(props:any) {
+	const {onMouseLeave,specialProps,...rest}=props;
 	const { pageConfig } = useSelector<
 		HookState,
 		STATE_PROPS
@@ -24,17 +24,18 @@ function StateDomainWarpper(props:any) {
 		controlUpdate(prevState, nextState, specialProps.key),
 	);
 	const {state,api,propFields,componentName}=pageConfig[specialProps.key];
+	const isContainerNode=useMemo(()=>isContainer(componentName),[]);
 	const brickdStore=useRedux(state);
 	const childProps=useGetProps(propFields,brickdStore.getPageState())||rest;
 	useService(brickdStore.getPageState(),api);
 	return <PropsProvider value={childProps}>
 		<BrickStoreProvider value={brickdStore}>
-			{isContainer(componentName) ?
-				<Container onMouseLeave={onMouseLeave} isDragAddChild={isDragAddChild} specialProps={specialProps} />
-				:<NoneContainer onMouseLeave={onMouseLeave} isDragAddChild={isDragAddChild} specialProps={specialProps}/>
+			{isContainerNode ?
+				<Container onMouseLeave={onMouseLeave} specialProps={specialProps} />
+				:<NoneContainer onMouseLeave={onMouseLeave}  specialProps={specialProps}/>
 			}
 			</BrickStoreProvider>
 		</PropsProvider>;
 }
 
-export default memo(StateDomainWarpper);
+export default memo(StateDomainWrapper);

@@ -92,4 +92,5 @@ export function onDragover(e: any) {
 export function onDrop(e: any) {
 	e.stopPropagation();
 	addComponent();
+	// eslint-disable-next-line no-undef
 }

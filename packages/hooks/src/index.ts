@@ -11,5 +11,6 @@ export * from './components/StaticContext';
 export * from './components/FunParamContext';
 export * from './components/BrickStoreContext';
 export * from './components/PropsContext';
+export * from './utils';
 export * from './types';
 
