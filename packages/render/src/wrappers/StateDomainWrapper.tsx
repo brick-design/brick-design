@@ -12,7 +12,7 @@ import {
 import Container from './Container';
 import NoneContainer from './NoneContainer';
 
-function StateDomainWarpper(props:any) {
+function StateDomainWrapper(props:any) {
 	const {renderKey,...rest}=props;
 	const {pageConfig}=useContext(StaticContext);
 
@@ -27,4 +27,4 @@ function StateDomainWarpper(props:any) {
 		</PropsProvider>;
 }
 
-export default memo(StateDomainWarpper);
+export default memo(StateDomainWrapper);

@@ -14,6 +14,7 @@ import Container from './Container';
 import NoneContainer from './NoneContainer';
 import {  useSelector } from '../hooks/useSelector';
 import { controlUpdate, HookState, stateSelector } from '../common/handleFuns';
+import { getDragSourceVDom } from '../utils';
 
 function StateDomainWrapper(props:any) {
 	const {onMouseLeave,specialProps,...rest}=props;
@@ -23,7 +24,7 @@ function StateDomainWrapper(props:any) {
 		>(stateSelector, (prevState, nextState) =>
 		controlUpdate(prevState, nextState, specialProps.key),
 	);
-	const {state,api,propFields,componentName}=pageConfig[specialProps.key];
+	const {state,api,propFields,componentName}=pageConfig[specialProps.key]|| getDragSourceVDom()[specialProps.key];
 	const isContainerNode=useMemo(()=>isContainer(componentName),[]);
 	const brickdStore=useRedux(state);
 	const childProps=useGetProps(propFields,brickdStore.getPageState())||rest;

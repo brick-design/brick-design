@@ -229,14 +229,11 @@ function Resize() {
 	const setSelectedBorder = (css = '') => {
 		const {selectedNode,isModal}=getOperateState<OperateStateType>();
 		if (selectedNode) {
-			console.log('selectedNode>>>>>>',selectedNode.getBoundingClientRect());
-
 			const { left, top, width, height } = getElementInfo(
 				selectedNode,
 				iframe,
 				isModal,
 			);
-
 			if (top <= 14 && isOut) {
 				setIsOut(false);
 			} else if (top > 14 && !isOut) {

@@ -5,10 +5,11 @@ import {
 } from 'lodash';
 import {
 	PageConfigType,
-	getComponentConfig, getBrickdConfig, ChildNodesType, PropsNodeType, getSelector,
+	getComponentConfig, getBrickdConfig, ChildNodesType, getSelector,
 } from '@brickd/core';
 
-import { selectClassTarget } from '../common/constants';
+import { Edge,IE11OrLess } from '@brickd/utils';
+import { defaultPropName, selectClassTarget } from '../common/constants';
 
 
 export const SPECIAL_STRING_CONSTANTS: any = {
@@ -143,28 +144,33 @@ export function generateRequiredProps(componentName: string) {
 }
 
 
+export type PropParentNodes={[propName:string]:HTMLElement}
 
 
-export function getNodesRects(nodeRectsMapRef:any,childNodes?:ChildNodesType,isRest?:boolean){
+export function getChildNodesRects(nodeRectsMapRef:any,childNodes:ChildNodesType,propParentNodes:PropParentNodes,isRest?:boolean){
 	if(!childNodes) return;
-	const iframe=getIframe();
 	const nodeRectsMap=nodeRectsMapRef.current;
-	function keys2Rects(nodeKeys){
-		each(nodeKeys,(key)=>{
+	function keys2Rects(nodeKeys,propName){
+		const parentNodes=propParentNodes[propName];
+		if(!parentNodes) return;
+		const childNodes=parentNodes.children;
+		each(nodeKeys,(key,index)=>{
+			if(!childNodes.item(Number.parseInt(index))) return;
 			if(!nodeRectsMap[key]){
-				const node=getSelectedNode(key,iframe);
-				nodeRectsMap[key]=node?node.getBoundingClientRect():key;
+				// const elCss=css(childNodes.item(Number.parseInt(index)));
+				// const rect=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
+
+				nodeRectsMap[key]=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
 			}else if(isRest){
-				const node=getSelectedNode(key,iframe);
-				nodeRectsMap[key]=node?node.getBoundingClientRect():key;
+				nodeRectsMap[key]=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
 			}
 		});
 	}
 	if(Array.isArray(childNodes)){
-		keys2Rects(childNodes);
+		keys2Rects(childNodes,defaultPropName);
 	}else {
-		each(childNodes,(nodes)=>{
-			keys2Rects(nodes);
+		each(childNodes,(nodes,propName)=>{
+			keys2Rects(nodes,propName);
 		});
 	}
 
@@ -172,20 +178,7 @@ export function getNodesRects(nodeRectsMapRef:any,childNodes?:ChildNodesType,isR
 	nodeRectsMapRef.current=nodeRectsMap as NodeRectsMapType;
 }
 
-export function isHorizontal(childRects:(string|DOMRect)[]){
-	let tempBottom=0;
-	for (const rect of childRects){
-		if(rect&&typeof rect!=='string'){
-			const {bottom,height}=rect;
-			if(bottom-tempBottom<height){
-				return true;
-			}
-			tempBottom=bottom;
-		}
-	}
 
-	return false;
-}
 
 
 export const cloneChildNodes=(childNodes?:ChildNodesType)=>{
@@ -199,10 +192,10 @@ export const cloneChildNodes=(childNodes?:ChildNodesType)=>{
 
 };
 
-export type NodeRectsMapType={[key:string]:string|DOMRect}
+export type NodeRectsMapType={[key:string]:DOMRect}
 export const dragSort=(dragKey:string,
 											 compareChildren:string[]=[],
-											 childRects:(string|DOMRect)[],
+											 childRects:DOMRect[],
 											 parentRect:DOMRect,
 											 dragOffset:DragEvent,
 											 isHorizontal?:boolean)=>{
@@ -211,8 +204,8 @@ export const dragSort=(dragKey:string,
 	const newChildren=[];
 	for(let index=0;index<compareChildren.length;index++){
 		const compareKey=compareChildren[index];
-		if(typeof childRects[index]!=='string'&&childRects[index]){
-			const {left,top,width,height,bottom,right}=childRects[index] as DOMRect;
+			if(childRects[index]){
+				const {left,top,width,height,bottom,right}=childRects[index] as DOMRect;
 			const offsetLeft=offsetX-(left-parentLeft);
 			const offsetTop=offsetY-(top-parentTop);
 		const offsetW =	parentWidth-width;
@@ -299,23 +292,128 @@ export const dragSort=(dragKey:string,
 };
 
 
-export const getParentNodes=(childNodes:PropsNodeType,parentNodes:any,parentKey:string)=>{
+export const getPropParentNodes=(childNodes:ChildNodesType,parentNodes:PropParentNodes,parentKey:string)=>{
 	const iframe=getIframe();
-	each(childNodes,(nodes,propName)=>{
-		if(!parentNodes[propName]){
-			for(const key  of nodes){
-				const node=getSelectedNode(key,iframe);
-				if(node){
-					const parentNode=node.parentElement;
-					parentNode.className+=` `+selectClassTarget+parentKey+propName;
-					parentNodes[propName]=parentNode;
-					break;
-				}
+	if(Array.isArray(childNodes)){
+		for(const childKey of childNodes){
+			const node=getSelectedNode(childKey,iframe);
+			if(node){
+				const parentNode=node.parentElement;
+				parentNode.className+=` `+selectClassTarget+parentKey+defaultPropName;
+				parentNodes[defaultPropName]=parentNode;
+				break;
 			}
 		}
-	});
+	}else {
+		each(childNodes,(nodes,propName)=>{
+			if(!parentNodes[propName]){
+				for(const key  of nodes){
+					const node=getSelectedNode(key,iframe);
+					if(node){
+						const parentNode=node.parentElement;
+						parentNode.className+=` `+selectClassTarget+parentKey+propName;
+						parentNodes[propName]=parentNode;
+						break;
+					}
+				}
+			}
+		});
+	}
+
 	return parentNodes;
 };
 
 export const getDragKey=()=>get(getSelector(['dragSource']),['dragSource','dragKey']);
+export const getDragSourceVDom=()=>get(getSelector(['dragSource']),['dragSource','vDOMCollection'],{});
 
+
+export function css(el) {
+	const style = el && el.style;
+	const iframe=getIframe();
+	const {contentWindow}=iframe;
+	if (style) {
+		let cssResult;
+			if (contentWindow.getComputedStyle) {
+				cssResult = contentWindow.getComputedStyle(el, "");
+			} else if (el.currentStyle) {
+				cssResult = el.currentStyle;
+			}
+			return cssResult;
+		}
+}
+
+
+function getChild(el, childNum) {
+	let currentChild = 0, i = 0;
+	const  children = el.children;
+	while (i < children.length) {
+		if (children[i].style.display !== "none") {
+			if (currentChild === childNum) {
+				return children[i];
+			}
+			currentChild++;
+		}
+
+		i++;
+	}
+	return null;
+}
+
+
+export const CSSFloatProperty = Edge || IE11OrLess ? "cssFloat" : "float";
+
+
+export  function  isVertical(el) {
+	const elCSS = css(el),
+		elWidth =
+			parseInt(elCSS.width) -
+			parseInt(elCSS.paddingLeft) -
+			parseInt(elCSS.paddingRight) -
+			parseInt(elCSS.borderLeftWidth) -
+			parseInt(elCSS.borderRightWidth),
+		child1 = getChild(el, 0),
+		child2 = getChild(el, 1),
+		firstChildCSS = child1 && css(child1),
+		secondChildCSS = child2 && css(child2),
+		firstChildWidth =
+			firstChildCSS &&
+			parseInt(firstChildCSS.marginLeft) +
+			parseInt(firstChildCSS.marginRight) +
+			child1.getBoundingClientRect().width,
+		secondChildWidth =
+			secondChildCSS &&
+			parseInt(secondChildCSS.marginLeft) +
+			parseInt(secondChildCSS.marginRight) +
+			child2.getBoundingClientRect().width;
+
+	if (elCSS.display === "flex") {
+		return elCSS.flexDirection === "column" ||
+		elCSS.flexDirection === "column-reverse";
+
+	}
+
+	if (elCSS.display === "grid") {
+		return elCSS.gridTemplateColumns.split(" ").length <= 1;
+
+	}
+
+	if (child1 && get(firstChildCSS,'float') !== "none") {
+		const touchingSideChild2 =
+			firstChildCSS.float === "left" ? "left" : "right";
+
+		return child2 &&
+		(secondChildCSS.clear === "both" ||
+			secondChildCSS.clear === touchingSideChild2);
+
+	}
+
+	return child1 &&
+	(firstChildCSS.display === "block" ||
+		firstChildCSS.display === "flex" ||
+		firstChildCSS.display === "table" ||
+		firstChildCSS.display === "grid" ||
+		(firstChildWidth >= elWidth && elCSS[CSSFloatProperty] === "none") ||
+		(child2 &&
+			elCSS[CSSFloatProperty] === "none" &&
+			firstChildWidth + secondChildWidth > elWidth));
+}

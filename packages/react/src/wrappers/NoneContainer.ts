@@ -15,7 +15,7 @@ import {
 } from '../common/handleFuns';
 import {
 	generateRequiredProps,
-	getComponent, getDragKey, getIframe, getSelectedNode,
+	getComponent, getDragKey, getDragSourceVDom, getIframe, getSelectedNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useSelector } from '../hooks/useSelector';
@@ -35,7 +35,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 		controlUpdate(prevState, nextState, key),
 	);
 	const { isSelected,lockedKey} = useSelect(specialProps);
-	const pageConfig = PageDom[ROOT] ? PageDom : {};
+	const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom();
 	const vNode=(pageConfig[key] || {}) as VirtualDOMType;
 	const {componentName} = vNode;
 	const{props,hidden}=useCommon(vNode,rest);

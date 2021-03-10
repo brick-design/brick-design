@@ -23,7 +23,7 @@ import {
 	StaticContextProvider,
 } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import {  getIframe, iframeSrcDoc } from './utils';
+import { getDragSourceVDom, getIframe, iframeSrcDoc } from './utils';
 import { onDragover } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
@@ -44,7 +44,7 @@ interface BrickDesignProps extends IframeHTMLAttributes<any> {
 	[propName:string]:any
 }
 
-const stateSelector: STATE_PROPS[] = ['pageConfig', 'dragSource'];
+const stateSelector: STATE_PROPS[] = ['pageConfig'];
 
 type BrickdHookState = {
 	pageConfig: PageConfigType
@@ -67,11 +67,22 @@ const controlUpdate = (
 
 function BrickDesign(brickdProps: BrickDesignProps) {
 	const { onLoadEnd,pageName,initState,options,...props } = brickdProps;
-	const { pageConfig={}, dragSource={}} = useSelector<
+	const { pageConfig={}} = useSelector<
 		BrickdHookState, STATE_PROPS>(stateSelector, controlUpdate);
 	const iframeRef = useRef<HTMLIFrameElement>();
 	const rootComponent=pageConfig[ROOT];
 	const staticState=useMemo(()=>({options,pageName}),[pageName,options]);
+
+
+	const onMouseLeave=useCallback((event:Event)=>{
+		event.stopPropagation();
+		clearHovered();
+		operateStore.current.setPageState<OperateStateType>({
+			hoverNode:null,
+			operateHoverKey:null,
+		});
+	},[]);
+
 	const renderComponent = useCallback((pageConfig: PageConfigType) => {
 		const rootComponent=pageConfig[ROOT];
 		if (!rootComponent) return null;
@@ -99,9 +110,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 	},[staticState]);
 
 	const onDragEnter = useCallback(() => {
-		const { vDOMCollection } = dragSource;
-		componentMount(divContainer,renderComponent(vDOMCollection!));
-	},[dragSource,componentMount,divContainer]);
+		componentMount(divContainer,renderComponent(getDragSourceVDom()));
+	},[componentMount,divContainer]);
 
 	const onDragLeave = useCallback(() => {
 		ReactDOM.unmountComponentAtNode(divContainer.current);
@@ -127,16 +137,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 		addComponent();
 		operateStore.current.setPageState({dropNode:null});
 	},[]);
-
-	const onMouseLeave=useCallback((event:Event)=>{
-		event.stopPropagation();
-		clearHovered();
-		operateStore.current.setPageState<OperateStateType>({
-			hoverNode:null,
-			operateHoverKey:null,
-		});
-	},[]);
-
 
 	useEffect(() => {
 		iframeRef.current = getIframe();
