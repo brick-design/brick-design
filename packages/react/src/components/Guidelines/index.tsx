@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import {
 	DragSourceType,
 	DropTargetType,
@@ -31,7 +31,6 @@ function Guidelines() {
 	const leftRef = useRef<any>();
 	const rightRef = useRef<any>();
 	const hoverNodeRef = useRef<any>();
-	const iframe = useMemo(()=>getIframe(),[topRef]);
 
 	const {
 		hoverKey:selectHoverKey,
@@ -48,15 +47,18 @@ function Guidelines() {
 	const dropKey=get(dropTarget,'selectedKey');
 	const hoverKey=dropKey ||selectHoverKey;
 	const {operateHoverKey,operateSelectedKey}=getOperateState<OperateStateType>();
-	if(selectHoverKey!==operateHoverKey){
-		const hoverNode = getSelectedNode(hoverKey, iframe);
-		setOperateState({hoverNode,operateHoverKey:selectHoverKey});
-	}
 
-	if(selectedKey!==operateSelectedKey){
-		const selectedNode = getSelectedNode(selectedKey, iframe);
-		setOperateState({selectedNode,operateSelectedKey:selectedKey});
-	}
+		if(selectHoverKey!==operateHoverKey){
+			const hoverNode = getSelectedNode(hoverKey, getIframe());
+			setOperateState({hoverNode,operateHoverKey:selectHoverKey});
+		}
+
+		if(selectedKey!==operateSelectedKey){
+			const selectedNode = getSelectedNode(selectedKey, getIframe());
+			setOperateState({selectedNode,operateSelectedKey:selectedKey});
+		}
+
+
 	const guidControl = hoverKey && (!selectedInfo ||selectedKey&&selectedKey!==dropKey);
 
 

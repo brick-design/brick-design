@@ -90,7 +90,7 @@ export function getElementInfo(
 	isModal?: boolean,
 ) {
 	const { contentWindow } = iframe;
-	const { scrollX, scrollY } = contentWindow;
+	const { scrollX=0, scrollY=0 } = contentWindow||{};
 	const { width, height, left, top } = element.getBoundingClientRect();
 	let newLeft = left;
 	let newTop = top;
