@@ -1,5 +1,4 @@
 import {useLayoutEffect, useReducer, useRef,useContext} from 'react';
-import {isEmpty} from 'lodash';
 import { ALL_PROPS } from '@brickd/utils';
 import { BrickStoreContext } from '../components/BrickStoreContext';
 
@@ -78,7 +77,7 @@ function useSelectorWithStore<T>(
 		return unsubscribe;
 	}, [store]);
 
-	return store.isPageStore&&!isEmpty(selectedState)?{...selectedState,setPageState:store.setPageState}:selectedState;
+	return store.isPageStore?{...selectedState,setPageState:store.setPageState,getPageState:store.getPageState}:selectedState;
 }
 
 export function useBrickSelector<T, U extends string>(

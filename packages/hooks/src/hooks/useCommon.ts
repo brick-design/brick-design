@@ -14,5 +14,5 @@ export function useCommon(vNode:VirtualDOMType,rest:any){
 	useService(pageState,api);
 	const props=useComponentProps(prevProps,pageState,rest);
 	const hidden=useHiddenComponent(pageState,isHidden);
-	return {props,hidden};
+	return {props,hidden,pageState};
 }

@@ -10,8 +10,9 @@ import {
 	STATE_PROPS,
 } from '@brickd/core';
 import { each, isEmpty, isEqual, map } from 'lodash';
-import { FunParamContextProvider } from '@brickd/hooks';
+import { FunParamContextProvider,MapNodeContextProvider} from '@brickd/hooks';
 
+import { resolveMapping,isPureVariable } from '@brickd/utils';
 import styles from './style.less';
 import { selectClassTarget } from './constants';
 import Container from '../wrappers/Container';
@@ -42,7 +43,8 @@ function renderNodes(
 	childNodes: string[],
 	specialProps: SelectedInfoBaseType,
 	pageConfig: PageConfigType,
-	parentPropName?: string,
+	getPageState:()=>any,
+parentPropName?: string,
 	isOnlyNode?: boolean,
 ) {
 	let { domTreeKeys } = specialProps;
@@ -51,7 +53,7 @@ function renderNodes(
 		domTreeKeys = [...domTreeKeys, `${parentKey}${parentPropName}`];
 	}
 	const resultChildNodes = map(childNodes, (key) => {
-		const { componentName,isStateDomain } = pageConfig[key] || {};
+		const { componentName,isStateDomain,loop } = pageConfig[key] || {};
 		if (!componentName) return null;
 		/** 根据组件类型处理属性 */
 		const specialProps={
@@ -61,7 +63,8 @@ function renderNodes(
 				parentPropName,
 			};
 		if(isStateDomain) return  <StateDomainWrapper key={key} specialProps={specialProps}/>;
-		return isContainer(componentName) ? (
+
+		const node=isContainer(componentName) ? (
 			<Container
 				specialProps={specialProps}
 				key={key}
@@ -72,6 +75,15 @@ function renderNodes(
 				key={key}
 			/>
 		);
+		if(isPureVariable(loop)){
+			const state= getPageState() ;
+			return  map(resolveMapping(loop,state),(item,index)=>{
+				return <MapNodeContextProvider key={item.id||index} value={item}>
+					{node}
+				</MapNodeContextProvider>;
+			});
+		}
+		return node;
 	});
 	/** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
 	if (isOnlyNode) {
@@ -114,6 +126,7 @@ function handleRequiredChildNodes(componentName: string) {
 export function handleChildNodes(
 	specialProps: SelectedInfoBaseType,
 	pageConfig: PageConfigType,
+	getPageState:()=>any,
 	children?: ChildNodesType,
 ) {
 	const nodeProps: any = {};
@@ -128,8 +141,10 @@ export function handleChildNodes(
 			children,
 			specialProps,
 			pageConfig,
+			getPageState,
 			undefined,
 			isOnlyNode,
+
 		);
 	} else {
 		each(children, (nodes, propName: string) => {
@@ -150,8 +165,10 @@ export function handleChildNodes(
 						nodes,
 						specialProps,
 						pageConfig,
+							getPageState,
 						propName,
 						isOnlyNode,
+
 					)}</FunParamContextProvider>) ;
 				};
 			}else {
@@ -159,6 +176,7 @@ export function handleChildNodes(
 					nodes,
 					specialProps,
 					pageConfig,
+					getPageState,
 					propName,
 					isOnlyNode,
 				);

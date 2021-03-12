@@ -32,3 +32,4 @@ export class BrickStore<T>{
 		};
 	};
 }
+

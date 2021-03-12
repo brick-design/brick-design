@@ -3,6 +3,7 @@ import { useBrickdState } from './useBrickdState';
 import { useBrickSelector } from './useBrickSelector';
 import { FunParamContext } from '../components/FunParamContext';
 import { PropsContext } from '../components/PropsContext';
+import { MapNodeContext } from '../components/MapNodeContext';
 
 
 export function useGetState(propsState:any,selector:string[]){
@@ -11,7 +12,8 @@ const brickdState =useBrickSelector<any,string>(selector);
 
 const props=useContext(PropsContext);
 const funParams=useContext(FunParamContext);
-	return useMemo(()=>new Proxy({...brickdState,...state,funParams,props},{
+const item=useContext(MapNodeContext);
+	return useMemo(()=>new Proxy({...brickdState,...state,funParams,props,item},{
 		get: function (target, propKey, receiver) {
 			return Reflect.get(target, propKey, receiver);
 		},

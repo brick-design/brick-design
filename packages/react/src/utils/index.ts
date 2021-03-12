@@ -147,6 +147,36 @@ export function generateRequiredProps(componentName: string) {
 export type PropParentNodes={[propName:string]:HTMLElement}
 
 
+
+export const  getNodeRealRect=(element:Element)=>{
+	const eleCSS= css(element);
+	const {left,right,top,bottom,height,width}=element.getBoundingClientRect();
+	const realWidth=parseInt(eleCSS.marginLeft) +
+		parseInt(eleCSS.marginRight) +
+		width;
+	const realHeight=parseInt(eleCSS.marginTop)+
+		parseInt(eleCSS.marginBottom)+height;
+
+	return {left,right,top,bottom,height,width,realWidth,realHeight};
+};
+
+export const getParentNodeRealRect=(parent:Element)=>{
+	const eleCSS= css(parent);
+	const {left,right,top,bottom,height,width}=parent.getBoundingClientRect();
+	const realWidth=parseInt(eleCSS.width) -
+		parseInt(eleCSS.paddingLeft) -
+		parseInt(eleCSS.paddingRight) -
+		parseInt(eleCSS.borderLeftWidth) -
+		parseInt(eleCSS.borderRightWidth);
+	const realHeight=parseInt(eleCSS.height) -
+		parseInt(eleCSS.paddingTop) -
+		parseInt(eleCSS.paddingBottom) -
+		parseInt(eleCSS.borderTopWidth) -
+		parseInt(eleCSS.borderBottomWidth);
+
+	return {left,right,top,bottom,height,width,realHeight,realWidth};
+};
+
 export function getChildNodesRects(nodeRectsMapRef:any,childNodes:ChildNodesType,propParentNodes:PropParentNodes,isRest?:boolean){
 	if(!childNodes) return;
 	const nodeRectsMap=nodeRectsMapRef.current;
@@ -157,12 +187,9 @@ export function getChildNodesRects(nodeRectsMapRef:any,childNodes:ChildNodesType
 		each(nodeKeys,(key,index)=>{
 			if(!childNodes.item(Number.parseInt(index))) return;
 			if(!nodeRectsMap[key]){
-				// const elCss=css(childNodes.item(Number.parseInt(index)));
-				// const rect=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
-
-				nodeRectsMap[key]=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
+				nodeRectsMap[key]=getNodeRealRect(childNodes.item(Number.parseInt(index)));
 			}else if(isRest){
-				nodeRectsMap[key]=childNodes.item(Number.parseInt(index)).getBoundingClientRect();
+				nodeRectsMap[key]=getNodeRealRect(childNodes.item(Number.parseInt(index)));
 			}
 		});
 	}
@@ -192,42 +219,51 @@ export const cloneChildNodes=(childNodes?:ChildNodesType)=>{
 
 };
 
-export type NodeRectsMapType={[key:string]:DOMRect}
+export interface RealRect{
+	realWidth:number
+	realHeight:number
+	left:number
+	right:number
+	top:number
+	bottom:number
+	height:number
+	width:number
+}
+
+export type NodeRectsMapType={[key:string]:RealRect}
 export const dragSort=(dragKey:string,
 											 compareChildren:string[]=[],
-											 childRects:DOMRect[],
-											 parentRect:DOMRect,
+											 nodeRectsMap:NodeRectsMapType,
 											 dragOffset:DragEvent,
-											 isHorizontal?:boolean)=>{
-	const {left:parentLeft,top:parentTop,width:parentWidth,height:parentHeight}=parentRect;
+											 propName:string,
+											 isVertical?:boolean)=>{
+	const {left:parentLeft,top:parentTop,realWidth:parentWidth,realHeight:parentHeight}=nodeRectsMap[propName];
 	const {offsetX,offsetY}=dragOffset;
 	const newChildren=[];
+	const {realWidth:dragWidth=2,realHeight:dragHeight=2}=nodeRectsMap[dragKey]||{};
 	for(let index=0;index<compareChildren.length;index++){
 		const compareKey=compareChildren[index];
-			if(childRects[index]){
-				const {left,top,width,height,bottom,right}=childRects[index] as DOMRect;
+			if(nodeRectsMap[compareKey]){
+				if(compareKey===dragKey) continue;
+				const {left,top,realWidth,realHeight,width,height}=nodeRectsMap[compareKey];
 			const offsetLeft=offsetX-(left-parentLeft);
 			const offsetTop=offsetY-(top-parentTop);
-		const offsetW =	parentWidth-width;
-		const offsetH = parentHeight-height;
-		if(isHorizontal){
-			if(offsetY<top||offsetY>bottom){
-				newChildren.push(compareChildren[index]);
-				continue;
-			}
-			if(compareKey===dragKey) continue;
-			if(offsetW>=5){
+		const offsetW =	parentWidth-realWidth;
+		const offsetH = parentHeight-realHeight;
+				console.log('offsetW11>>>>>>',isVertical,offsetW,dragWidth,offsetLeft);
+
+				if(!isVertical){
+					console.log('offsetW>>>>>>',offsetW,dragWidth,offsetLeft);
+			if(offsetW>=dragWidth){
 				if(offsetLeft>0){
 					if(offsetLeft<=width*0.5){
 						newChildren.push(dragKey,...compareChildren.slice(index));
 						break;
 					}else if(offsetLeft<width){
-
 						newChildren.push(compareKey,dragKey,...compareChildren.slice(index+1));
 						break;
 					}else {
 						newChildren.push(compareKey);
-
 					}
 				}else {
 					newChildren.push(dragKey,...compareChildren.slice(index));
@@ -247,13 +283,7 @@ export const dragSort=(dragKey:string,
 				}
 			}
 		}else {
-			if(offsetX<left||offsetX>right){
-				newChildren.push(compareChildren[index]);
-				continue;
-			}
-			if(compareKey===dragKey) continue;
-
-			if(offsetH>=5){
+			if(offsetH>=dragHeight){
 				if(offsetTop>0){
 					if(offsetTop<=height*0.5){
 						newChildren.push(dragKey,...compareChildren.slice(index));

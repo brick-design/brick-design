@@ -19,7 +19,6 @@ import {
 	get,
 	each,
 	keys,
-	map,
 	isEmpty
 } from 'lodash';
 import { defaultPropName } from 'common/constants';
@@ -29,7 +28,7 @@ import {
 	getPropParentNodes,
 	NodeRectsMapType,
 	getDragKey, getIsModalChild, getChildNodesRects, PropParentNodes,
-	isVertical, getDragSourceVDom,
+	isVertical, getDragSourceVDom, getParentNodeRealRect,
 } from '../utils';
 
 import {
@@ -74,7 +73,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 	const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom() ;
 	const vNode=get(pageConfig,key,{}) as VirtualDOMType;
 	const { childNodes, componentName} = vNode;
-	const{props,hidden}=useCommon(vNode,rest);
+	const{props,hidden,pageState}=useCommon(vNode,rest);
 	useChildNodes({ childNodes, componentName, specialProps });
 	const [children, setChildren] = useState<ChildNodesType | undefined>(childNodes);
 
@@ -148,36 +147,43 @@ function Container(allProps: CommonPropsType, ref: any) {
 			parentRootNode.current=getSelectedNode(key,iframe);
 			isSelected&&setSelectedNode(parentRootNode.current);
 		}
-		const parentRect= parentRootNode.current?parentRootNode.current.getBoundingClientRect():null;
+		const parentRect= parentRootNode.current?getParentNodeRealRect(parentRootNode.current):null;
 		if(!nodeRectsMap.current[parentNodeRect]&&parentRect){
 			nodeRectsMap.current[parentNodeRect]=parentRect;
 		}
-		const isRest=!isEqual(nodeRectsMap.current[parentNodeRect],parentRect);
+		const isRest=!isEqual(nodeRectsMap.current[parentNodeRect],parentRect)||!isEqual(children,childNodes)&&!nodeRectsMap.current[getDragKey()];
 		if(childNodes){
 			getPropParentNodes(childNodes,propParentNodes.current,key);
 		}
+		each(propParentNodes.current,(node,propName)=>{
+			if(isRest){
+				nodeRectsMap.current[propName]=getParentNodeRealRect(node);
+			}else if(!nodeRectsMap[propName]){
+				nodeRectsMap.current[propName]=getParentNodeRealRect(node);
+			}
+
+		});
+
 		getChildNodesRects(nodeRectsMap,childNodes,propParentNodes.current,isRest);
 	});
 
 	useEffect(()=>{
-		if(!isSelected||isEmpty(propParentNodes.current[defaultPropName])||nodePropsConfig) return ;
-		const tempChildNodes=children as string[];
-		const childRects=map(tempChildNodes,(key)=>nodeRectsMap.current[key]);
+		if(isEmpty(propParentNodes.current[defaultPropName])||nodePropsConfig) return ;
 		const isV=isVertical(propParentNodes.current[defaultPropName]);
 		const dragOver=(event:DragEvent)=>{
 			event.preventDefault();
+			if(!isSelected) return;
 			setTimeout(()=>{
-				const newChildren=dragSort(getDragKey(),tempChildNodes,childRects,nodeRectsMap.current[parentNodeRect] as DOMRect,event,isV);
+				const newChildren=dragSort(getDragKey(),children as string[],nodeRectsMap.current ,event,defaultPropName,isV);
 					if(!isEqual(newChildren,children)){
 						setChildren(newChildren);
 					}
 			},100);
 		};
 
-		parentRootNode.current.addEventListener('dragover',dragOver);
+		propParentNodes.current[defaultPropName].addEventListener('dragover',dragOver);
 		return ()=>{
-			parentRootNode.current.removeEventListener('dragover',dragOver);
-
+			propParentNodes.current[defaultPropName].removeEventListener('dragover',dragOver);
 		};
 	});
 
@@ -258,9 +264,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 	}
 	const { className, animateClass, ...restProps } = props || {};
 
-
 	const dragKey=getDragKey();
-
 	return createElement(getComponent(componentName), {
 		...restProps,
 		className: handlePropsClassName(key,dragKey===key||dragKey&&!isSelected&&domTreeKeys.includes(lockedKey),className,animateClass),
@@ -271,7 +275,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 		onClick,
 		onDragEnd:clearDragSource,
 		...generateRequiredProps(componentName),
-		...handleChildNodes(specialProps,pageConfig,children),
+		...handleChildNodes(specialProps,pageConfig,pageState.getPageState,children),
 		...props,
 		draggable: true,
 		/**

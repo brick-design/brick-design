@@ -54,7 +54,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 	if (!isSelected&&(!componentName||hidden)) return null;
 	const { className, animateClass, ...restProps } = props || {};
 	const dragKey=getDragKey();
-
+	console.log('dragKey>>>>>>',dragKey,key);
 	return createElement(getComponent(componentName), {
 		...restProps,
 		className: handlePropsClassName(key,dragKey===key||dragKey&&!isSelected&&domTreeKeys.includes(lockedKey),className,animateClass),

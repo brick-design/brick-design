@@ -50,11 +50,9 @@ const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
 	const { selectedInfo, pageConfig, hoverKey } = nextState;
 	return (
 		prevState.selectedInfo !== selectedInfo ||
-		(selectedInfo &&
+		selectedInfo &&
 			(prevState.pageConfig !== pageConfig ||
-				(prevState.hoverKey === null && hoverKey !== null) ||
-				(prevState.hoverKey !== null && hoverKey === null)))
-	);
+				prevState.hoverKey !== hoverKey));
 };
 
 type OriginSizeType = {
@@ -90,20 +88,17 @@ function Resize() {
 	height =height|| 'auto';
 
 
-	useEffect(()=>{
-		const unSubscribe=setSubscribe(setSelectedBorder);
-		return unSubscribe;
-	},[]);
-
 	useEffect(() => {
 		const contentWindow = iframe!.contentWindow!;
 		const changeSize = () => setSelectedBorder();
+		const unSubscribe=setSubscribe(setSelectedBorder);
 		contentWindow.addEventListener('mouseup', onMouseUp);
 		contentWindow.addEventListener('mousemove', onMouseMove);
 		contentWindow.addEventListener('mouseleave', onMouseUp);
 		contentWindow.addEventListener('resize', changeSize);
 		contentWindow.addEventListener('animationend', changeSize);
 		return () => {
+			unSubscribe();
 			contentWindow.removeEventListener('mouseup', onMouseUp);
 			contentWindow.removeEventListener('mousemove', onMouseMove);
 			contentWindow.removeEventListener('mousemove', onMouseUp);
@@ -225,6 +220,11 @@ function Resize() {
 		},
 		[heightRef.current, widthRef.current],
 	);
+
+	useEffect(()=>{
+		console.log('setSelectedBorder>>>>>');
+		setSelectedBorder();
+	});
 
 	const setSelectedBorder = (css = '') => {
 		const {selectedNode,isModal}=getOperateState<OperateStateType>();

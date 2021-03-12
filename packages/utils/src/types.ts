@@ -178,6 +178,7 @@ export interface VirtualDOMType {
 	isHidden?:string
 	isStateDomain?:boolean
 	propFields?:string[]
+	loop?:string
 	[custom: string]: any
 }
 

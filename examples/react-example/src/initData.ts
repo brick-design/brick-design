@@ -43,7 +43,7 @@ export default {
 				height: '100%',
 			},
 		},
-		state:{v:false,n:0,items:listData},
+		state:{v:false,n:0,items:listData,listData:['啦啦啦啦','哈哈哈']},
 		childNodes: ['2', '8', '1', '49'],
 		api:'https://api.apiopen.top/getJoke'
 	},
@@ -135,7 +135,7 @@ export default {
 			theme: 'light',
 		},
 		childNodes: {
-			children: ['10',"62","64","63","65"],
+			children: ['10',"62","64","63","65",'82'],
 		},
 	},
 	'10': {
@@ -586,6 +586,10 @@ export default {
 	"81":{
 		componentName:'span',
 		props:{children:'${funParams.0.content}'}
+	},
+	"82":{
+		componentName:'span',
+		props:{children:'${item}'},
+		loop:'${listData}'
 	}
-
 }

@@ -2,8 +2,9 @@ import React, {
 	createElement,
 	memo, useCallback, useContext, useMemo,
 } from 'react';
-import { each, get } from 'lodash';
-import { FunParamContextProvider,useCommon,StaticContext } from '@brickd/hooks';
+import { each, get,map } from 'lodash';
+import { FunParamContextProvider,useCommon,StaticContext,MapNodeContextProvider } from '@brickd/hooks';
+import { isPureVariable,resolveMapping } from '@brickd/utils';
 import NoneContainer from './NoneContainer';
 import StateDomainWrapper from './StateDomainWrapper';
 
@@ -19,20 +20,29 @@ function Container(vProps:CommonPropsType) {
 	const {pageConfig,componentsMap}=useContext(StaticContext);
 	const vNode=pageConfig[renderKey];
 	const {componentName,childNodes}=vNode;
-	const {props,hidden}=useCommon(vNode,rest);
+	const {props,hidden,pageState}=useCommon(vNode,rest);
 
 	const renderArrChild=useCallback((childNodes:string[])=>{
 
 		return childNodes.map((nodeKey)=>{
-			const {childNodes,isStateDomain}=pageConfig[nodeKey];
-			if(isStateDomain) return <StateDomainWrapper renderKey={nodeKey} key={nodeKey}/>;
+			const {childNodes,isStateDomain,loop}=pageConfig[nodeKey];
+			let node=<NoneContainer renderKey={nodeKey} key={nodeKey}/>;
 			if(childNodes) {
-				return <Container renderKey={nodeKey} key={nodeKey} />;
-			}else {
-				return <NoneContainer renderKey={nodeKey} key={nodeKey}/>;
+				node=<Container renderKey={nodeKey} key={nodeKey} />;
 			}
+			if(isStateDomain) return <StateDomainWrapper renderKey={nodeKey} key={nodeKey}/>;
+			if(isPureVariable(loop)) {
+				console.log('isPureVariable>>>>>',loop);
+				return map(resolveMapping(loop,pageState.getPageState()),(item,key)=>{
+					return <MapNodeContextProvider key={item.id||key} value={item}>
+						{node}
+					</MapNodeContextProvider>;
+				});
+			}
+			return  node;
+
 		});
-	},[pageConfig]);
+	},[pageConfig,pageState]);
 
 const nodeProps=	useMemo(()=>{
 	const nodeProps={};
@@ -55,6 +65,7 @@ const nodeProps=	useMemo(()=>{
 	return nodeProps;
 },[pageConfig,childNodes,renderArrChild]);
 const propsResult=useMemo(()=>({...props,...nodeProps}),[props,nodeProps]);
+
 	if(hidden) return null;
 	return createElement(get(componentsMap,componentName,componentName),propsResult);
 }

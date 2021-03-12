@@ -80,11 +80,11 @@ export function useSelect(
 				);
 			}else {
 
-				return propName !== prevPropName||
+				return propName !== prevPropName||prevDragKey===key&&nextDragKey!==key||
 					(!prevDragKey&&nextDragKey||prevDragKey&&!nextDragKey)&&selfDomTreeKeys.includes(selectedKey);
 			}
 		}
-		return prevDragKey===key&&nextDragKey!==key;
+		return  prevDragKey===key&&nextDragKey!==key;
 	}
 	const { selectedKey, domTreeKeys: selectedDomKeys,propName } = selectedInfo || {};
 	const isSelected = isEqualKey(key, selectedKey);
@@ -94,6 +94,5 @@ export function useSelect(
 		}
 	}, []);
 
-	console.log('useSelect>>>>>.',key);
 	return { selectedDomKeys, isSelected,propName,lockedKey:selectedKey };
 }
