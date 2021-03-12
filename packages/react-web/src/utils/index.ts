@@ -7,11 +7,11 @@ import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 
 export function usePrevious<T>(value: any) {
-	const ref = useRef<T>();
-	useEffect(() => {
-		ref.current = value;
-	});
-	return ref.current;
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
 
 /**
@@ -20,12 +20,12 @@ export function usePrevious<T>(value: any) {
  * @returns {Array}
  */
 export function flattenDeepArray(data: any) {
-	return flattenDeep(
-		map(data, (v, k) => {
-			if (v && v.components) return map(v.components, (_, subK) => subK);
-			return k;
-		}),
-	);
+  return flattenDeep(
+    map(data, (v, k) => {
+      if (v && v.components) return map(v.components, (_, subK) => subK);
+      return k;
+    }),
+  );
 }
 
 /**
@@ -37,20 +37,22 @@ export function flattenDeepArray(data: any) {
  * @returns {string|string}
  */
 export const formatPropsFieldConfigLocation = (
-	type: PROPS_TYPES,
-	field: string,
-	fatherFieldLocation: string,
-	tabIndex?: number,
+  type: PROPS_TYPES,
+  field: string,
+  fatherFieldLocation: string,
+  tabIndex?: number,
 ) => {
-	let fieldConfigLocation = fatherFieldLocation ? `${fatherFieldLocation}.` : '';
-	if (type === PROPS_TYPES.object) {
-		fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig`;
-	} else if (type === PROPS_TYPES.objectArray) {
-		fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig${
-			tabIndex !== undefined ? `.[${tabIndex}]` : ''
-		}`;
-	}
-	return fieldConfigLocation;
+  let fieldConfigLocation = fatherFieldLocation
+    ? `${fatherFieldLocation}.`
+    : '';
+  if (type === PROPS_TYPES.object) {
+    fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig`;
+  } else if (type === PROPS_TYPES.objectArray) {
+    fieldConfigLocation = `${fieldConfigLocation}${field}.childPropsConfig${
+      tabIndex !== undefined ? `.[${tabIndex}]` : ''
+    }`;
+  }
+  return fieldConfigLocation;
 };
 /**
  * 过滤掉值为undefined的字段
@@ -58,14 +60,14 @@ export const formatPropsFieldConfigLocation = (
  * @returns {undefined}
  */
 export const filterProps = (value: any) => {
-	const props: any = {};
-	each(value, (v, k) => {
-		if (v !== undefined) {
-			props[k] = v;
-		}
-	});
+  const props: any = {};
+  each(value, (v, k) => {
+    if (v !== undefined) {
+      props[k] = v;
+    }
+  });
 
-	return isEmpty(props) ? undefined : props;
+  return isEmpty(props) ? undefined : props;
 };
 
 /**
@@ -74,4 +76,4 @@ export const filterProps = (value: any) => {
  * @param nextProps
  */
 export const propsAreEqual = (prevProps: any, nextProps: any) =>
-	isEqual(prevProps.value, nextProps.value);
+  isEqual(prevProps.value, nextProps.value);

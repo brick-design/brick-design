@@ -12,9 +12,9 @@ export { default as EnumComponent } from './EnumComponent';
 export { default as SwitchMultiTypes } from './SwitchMultiTypes';
 
 export const confirmModal = (fnBsn: () => void) =>
-	Modal.confirm({
-		title: '你确定要删除此项吗?',
-		onOk() {
-			fnBsn();
-		},
-	});
+  Modal.confirm({
+    title: '你确定要删除此项吗?',
+    onOk() {
+      fnBsn();
+    },
+  });

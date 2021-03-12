@@ -1,26 +1,26 @@
 import {
-	addComponent,
-	clearHovered,
-	clearSelectedStatus,
-	getDragSource,
-	getDropTarget,
-	overTarget,
-	selectComponent,
-	SelectedInfoBaseType,
+  addComponent,
+  clearHovered,
+  clearSelectedStatus,
+  getDragSource,
+  getDropTarget,
+  overTarget,
+  selectComponent,
+  SelectedInfoBaseType,
 } from '@brickd/core';
 
 export function handleSelectedStatus(
-	event: Event | null,
-	isSelected: boolean,
-	specialProps: SelectedInfoBaseType,
-	propName?: string,
+  event: Event | null,
+  isSelected: boolean,
+  specialProps: SelectedInfoBaseType,
+  propName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation();
-	if (isSelected) {
-		clearSelectedStatus();
-	} else {
-		selectComponent({ ...specialProps, propName });
-	}
+  event && event.stopPropagation && event.stopPropagation();
+  if (isSelected) {
+    clearSelectedStatus();
+  } else {
+    selectComponent({ ...specialProps, propName });
+  }
 }
 
 /**
@@ -30,14 +30,14 @@ export function handleSelectedStatus(
  * @param isSelected
  */
 export function onMouseOver(event: Event, key: string, isSelected: boolean) {
-	event && event.stopPropagation && event.stopPropagation();
-	if (isSelected) {
-		clearHovered();
-	} else {
-		overTarget({
-			hoverKey: key,
-		});
-	}
+  event && event.stopPropagation && event.stopPropagation();
+  if (isSelected) {
+    clearHovered();
+  } else {
+    overTarget({
+      hoverKey: key,
+    });
+  }
 }
 
 /**
@@ -48,18 +48,18 @@ export function onMouseOver(event: Event, key: string, isSelected: boolean) {
  * @param propName
  */
 export function getDropTargetInfo(
-	event: Event,
-	domTreeKeys: string[],
-	selectedKey: string,
-	propName?: string,
+  event: Event,
+  domTreeKeys: string[],
+  selectedKey: string,
+  propName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation();
+  event && event.stopPropagation && event.stopPropagation();
 
-	getDropTarget({
-		propName,
-		selectedKey,
-		domTreeKeys,
-	});
+  getDropTarget({
+    propName,
+    selectedKey,
+    domTreeKeys,
+  });
 }
 
 /**
@@ -70,26 +70,26 @@ export function getDropTargetInfo(
  * @param parentPropName
  */
 export function onDragStart(
-	event: Event,
-	dragKey: string,
-	parentKey: string,
-	parentPropName?: string,
+  event: Event,
+  dragKey: string,
+  parentKey: string,
+  parentPropName?: string,
 ) {
-	event && event.stopPropagation && event.stopPropagation();
-	setTimeout(() => {
-		getDragSource({
-			dragKey,
-			parentKey,
-			parentPropName,
-		});
-	}, 0);
+  event && event.stopPropagation && event.stopPropagation();
+  setTimeout(() => {
+    getDragSource({
+      dragKey,
+      parentKey,
+      parentPropName,
+    });
+  }, 0);
 }
 
 export function onDragover(e: any) {
-	e.preventDefault();
+  e.preventDefault();
 }
 
 export function onDrop(e: any) {
-	e.stopPropagation();
-	addComponent();
+  e.stopPropagation();
+  addComponent();
 }

@@ -1,25 +1,23 @@
 import { useEffect, useRef } from 'react';
+import { each, get } from 'lodash';
 import {
-	each,
-	get,
-} from 'lodash';
-import {
-	PageConfigType,
-	getComponentConfig, getBrickdConfig,
+  PageConfigType,
+  getComponentConfig,
+  getBrickdConfig,
 } from '@brickd/core';
 
 import { selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
-	null: null,
+  null: null,
 };
 
 export function usePrevious<T>(value: any) {
-	const ref = useRef<T>();
-	useEffect(() => {
-		ref.current = value;
-	});
-	return ref.current;
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
 
 export const iframeSrcDoc = `<!DOCTYPE html>
@@ -32,47 +30,47 @@ export const iframeSrcDoc = `<!DOCTYPE html>
 `;
 
 export const isEqualKey = (key: string, selectKey?: string | null) => {
-	if (!selectKey) return false;
-	return selectKey.includes(key) && parseInt(selectKey) === parseInt(key);
+  if (!selectKey) return false;
+  return selectKey.includes(key) && parseInt(selectKey) === parseInt(key);
 };
 
 export const getIframe = (): HTMLIFrameElement => {
-	return document.getElementById('dnd-iframe') as HTMLIFrameElement;
+  return document.getElementById('dnd-iframe') as HTMLIFrameElement;
 };
 
 export const getComponent = (componentName: string) =>
-	get(getBrickdConfig().componentsMap, componentName, componentName);
+  get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
-	if (target) {
-		const result = target.match(/\d+/);
-		if (result) {
-			return Number.parseInt(result[0]);
-		}
-	}
+  if (target) {
+    const result = target.match(/\d+/);
+    if (result) {
+      return Number.parseInt(result[0]);
+    }
+  }
 
-	return null;
+  return null;
 }
 
 export const getSelectedNode = (
-	key?: string | null,
-	iframe?: HTMLIFrameElement,
+  key?: string | null,
+  iframe?: HTMLIFrameElement,
 ): HTMLElement | undefined => {
-	if (iframe && key) {
-		const { contentDocument } = iframe;
-		return contentDocument!.getElementsByClassName(
-			selectClassTarget + parseInt(key),
-		)[0] as HTMLElement;
-	}
+  if (iframe && key) {
+    const { contentDocument } = iframe;
+    return contentDocument!.getElementsByClassName(
+      selectClassTarget + parseInt(key),
+    )[0] as HTMLElement;
+  }
 };
 
 export function generateCSS(
-	left: number,
-	top: number,
-	width?: number,
-	height?: number,
+  left: number,
+  top: number,
+  width?: number,
+  height?: number,
 ) {
-	return `
+  return `
     ${width ? `width:${width}px;` : ''}
     ${height ? `height:${height}px;` : ''}
     display:flex;
@@ -82,60 +80,58 @@ export function generateCSS(
 }
 
 export function getElementInfo(
-	element: any,
-	iframe: HTMLIFrameElement,
-	isModal?: boolean,
+  element: any,
+  iframe: HTMLIFrameElement,
+  isModal?: boolean,
 ) {
-	const { contentWindow } = iframe;
-	const { scrollX, scrollY } = contentWindow;
-	const { width, height, left, top } = element.getBoundingClientRect();
-	let newLeft = left;
-	let newTop = top;
-	if (!isModal) {
-		newLeft += scrollX;
-		newTop += scrollY;
-	}
-	return {
-		width,
-		height,
-		left: newLeft,
-		top: newTop,
-		bottom: newTop + height,
-		right: newLeft + width,
-	};
+  const { contentWindow } = iframe;
+  const { scrollX, scrollY } = contentWindow;
+  const { width, height, left, top } = element.getBoundingClientRect();
+  let newLeft = left;
+  let newTop = top;
+  if (!isModal) {
+    newLeft += scrollX;
+    newTop += scrollY;
+  }
+  return {
+    width,
+    height,
+    left: newLeft,
+    top: newTop,
+    bottom: newTop + height,
+    right: newLeft + width,
+  };
 }
 
 export function getIsModalChild(
-	pageConfig: PageConfigType,
-	domTreeKeys?: string[],
+  pageConfig: PageConfigType,
+  domTreeKeys?: string[],
 ) {
-	if (domTreeKeys) {
-		for (const key of domTreeKeys) {
-			const { mirrorModalField } =
-				getComponentConfig(get(pageConfig, [key, 'componentName'])) || {};
-			if (mirrorModalField) return true;
-		}
-	}
-	return false;
+  if (domTreeKeys) {
+    for (const key of domTreeKeys) {
+      const { mirrorModalField } =
+        getComponentConfig(get(pageConfig, [key, 'componentName'])) || {};
+      if (mirrorModalField) return true;
+    }
+  }
+  return false;
 }
 
 export function setPosition(nodes: any[], isModal?: boolean) {
-	if (isModal) {
-		each(nodes, (node) => (node.style.position = 'fixed'));
-	} else {
-		each(nodes, (node) => (node.style.position = 'absolute'));
-	}
+  if (isModal) {
+    each(nodes, (node) => (node.style.position = 'fixed'));
+  } else {
+    each(nodes, (node) => (node.style.position = 'absolute'));
+  }
 }
 
-
-
 export function generateRequiredProps(componentName: string) {
-	const { propsConfig } = getComponentConfig(componentName);
-	const requiredProps: any = {};
-	each(propsConfig, (config, propName) => {
-		const { isRequired, defaultValue } = config;
-		if (isRequired) requiredProps[propName] = defaultValue;
-	});
+  const { propsConfig } = getComponentConfig(componentName);
+  const requiredProps: any = {};
+  each(propsConfig, (config, propName) => {
+    const { isRequired, defaultValue } = config;
+    if (isRequired) requiredProps[propName] = defaultValue;
+  });
 
-	return requiredProps;
+  return requiredProps;
 }

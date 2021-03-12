@@ -1,3 +1,3 @@
 import { PlainObject } from '@brickd/utils';
 
-export type SetStateType=(payload:PlainObject)=>any
+export type SetStateType = (payload: PlainObject) => any;

@@ -6,52 +6,52 @@ import { PaneType } from './ObjectArrayComponent';
 import styles from '../../index.less';
 
 interface SortComponentPropsType {
-	onSortChange: (data: any) => any
-	sortData: any
+  onSortChange: (data: any) => any;
+  sortData: any;
 }
 
 function SortComponent(props: SortComponentPropsType) {
-	const { onSortChange, sortData } = props;
+  const { onSortChange, sortData } = props;
 
-	function renderSortItem({ key }: any) {
-		return (
-			<div className={styles['sort-item']} id={key} key={key}>
-				{key}
-			</div>
-		);
-	}
+  function renderSortItem({ key }: any) {
+    return (
+      <div className={styles['sort-item']} id={key} key={key}>
+        {key}
+      </div>
+    );
+  }
 
-	function onLayoutSortChange(sortKeys = []) {
-		const dataMap: { [key: string]: PaneType } = {};
-		each(sortData, (data) => {
-			dataMap[data.key] = data;
-		});
-		const nextSortData: PaneType[] = [];
-		each(sortKeys, (key) => nextSortData.push(dataMap[key]));
-		onSortChange && onSortChange(nextSortData);
-	}
+  function onLayoutSortChange(sortKeys = []) {
+    const dataMap: { [key: string]: PaneType } = {};
+    each(sortData, (data) => {
+      dataMap[data.key] = data;
+    });
+    const nextSortData: PaneType[] = [];
+    each(sortKeys, (key) => nextSortData.push(dataMap[key]));
+    onSortChange && onSortChange(nextSortData);
+  }
 
-	return (
-		<ReactSortable
-			options={{
-				animation: 200,
-				dataIdAttr: 'id',
-				ghostClass: styles['item-background'],
-				swapThreshold: 0.5,
-				direction: 'horizontal',
-				scroll: true,
-			}}
-			style={{
-				display: 'flex',
-				overflow: 'auto',
-				paddingBottom: 10,
-				paddingTop: 1,
-			}}
-			onChange={onLayoutSortChange}
-		>
-			{map(sortData, renderSortItem)}
-		</ReactSortable>
-	);
+  return (
+    <ReactSortable
+      options={{
+        animation: 200,
+        dataIdAttr: 'id',
+        ghostClass: styles['item-background'],
+        swapThreshold: 0.5,
+        direction: 'horizontal',
+        scroll: true,
+      }}
+      style={{
+        display: 'flex',
+        overflow: 'auto',
+        paddingBottom: 10,
+        paddingTop: 1,
+      }}
+      onChange={onLayoutSortChange}
+    >
+      {map(sortData, renderSortItem)}
+    </ReactSortable>
+  );
 }
 
 export default SortComponent;
