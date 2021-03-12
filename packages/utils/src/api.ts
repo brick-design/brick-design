@@ -4,19 +4,17 @@
  */
 import qs from 'qs';
 import { isObject, has, merge, isArray, map, get } from 'lodash';
-import {tokenize, dataMapping} from './tpl-builtin';
-import {evalExpression} from './tpl';
+import { tokenize, dataMapping } from './tpl-builtin';
+import { evalExpression } from './tpl';
 import {
   isObjectShallowModified,
   hasFile,
   object2formData,
   qsstringify,
   cloneObject,
-  createObject
+  createObject,
 } from './helper';
 import { Api, ApiObject, Payload, FetcherType, ApiType } from './types';
-
-
 
 const rSchema = /(?:^|raw\:)(get|post|put|delete|patch|options|head):/i;
 
@@ -33,7 +31,7 @@ export function normalizeApi(api: Api, defaultMethod?: string): ApiObject {
     method && (api = api.replace(method + ':', ''));
     api = {
       method: (method || defaultMethod) as any,
-      url: api
+      url: api,
     };
   }
   return api;
@@ -46,13 +44,13 @@ export function buildApi(
     autoAppend?: boolean;
     ignoreData?: boolean;
     [propName: string]: any;
-  } = {}
+  } = {},
 ): ApiObject {
   api = normalizeApi(api, options.method);
-  const {autoAppend, ignoreData, ...rest} = options;
+  const { autoAppend, ignoreData, ...rest } = options;
 
   api.config = {
-    ...rest
+    ...rest,
   };
   api.method = (api.method || (options as any).method || 'get').toLowerCase();
 
@@ -67,13 +65,13 @@ export function buildApi(
     return api;
   }
 
-  const raw =  api.url || '';
+  const raw = api.url || '';
   const idx = api.url.indexOf('?');
 
   if (~idx) {
     const hashIdx = api.url.indexOf('#');
     const params = qs.parse(
-      api.url.substring(idx + 1, ~hashIdx ? hashIdx : undefined)
+      api.url.substring(idx + 1, ~hashIdx ? hashIdx : undefined),
     );
     api.url =
       tokenize(api.url.substring(0, idx + 1), data, '| urlEncode') +
@@ -107,7 +105,7 @@ export function buildApi(
       if (~idx) {
         const params = (api.query = {
           ...qs.parse(api.url.substring(idx + 1)),
-          ...data
+          ...data,
         });
         api.url = api.url.substring(0, idx) + '?' + qsstringify(params);
       } else {
@@ -121,7 +119,7 @@ export function buildApi(
       if (~idx) {
         const params = (api.query = {
           ...qs.parse(api.url.substring(idx + 1)),
-          ...api.data
+          ...api.data,
         });
         api.url = api.url.substring(0, idx) + '?' + qsstringify(params);
       } else {
@@ -145,7 +143,7 @@ export function buildApi(
       api.adaptor,
       'payload',
       'response',
-      'api'
+      'api',
     ) as any;
   }
 
@@ -169,18 +167,18 @@ function responseAdaptor(ret: any, api: ApiObject) {
   let hasStatusField = true;
   if (!ret) {
     throw new Error('Response is empty!');
-  } else if (!has(ret,'status')) {
+  } else if (!has(ret, 'status')) {
     hasStatusField = false;
   }
-  const result=ret.data||ret.result;
+  const result = ret.data || ret.result;
   const payload: Payload = {
     ok: hasStatusField === false || ret.status == 0,
     status: hasStatusField === false ? 0 : ret.status,
-    msg: ret.msg||ret.message,
+    msg: ret.msg || ret.message,
     msgTimeout: ret.msgTimeout,
-    data: Array.isArray(result)?{items:result}:result, // 兼容直接返回数据的情况
-    isNotState:api.isNotState,
-    isPageState:api.isPageState
+    data: Array.isArray(result) ? { items: result } : result, // 兼容直接返回数据的情况
+    isNotState: api.isNotState,
+    isPageState: api.isPageState,
   };
 
   if (payload.status == 422) {
@@ -190,22 +188,19 @@ function responseAdaptor(ret: any, api: ApiObject) {
   if (payload.ok && api.responseData) {
     payload.data = dataMapping(
       api.responseData,
-      createObject(
-        {api},
-        payload.data||{}
-      )
+      createObject({ api }, payload.data || {}),
     );
   }
   return payload;
 }
-export  const defaultFetcher=async (api:any)=>{
-  const {url,...rest}=api;
-  const result=await fetch(url,rest);
+export const defaultFetcher = async (api: any) => {
+  const { url, ...rest } = api;
+  const result = await fetch(url, rest);
   return result.json();
 };
 
 export function wrapFetcher(
-  fn: FetcherType=defaultFetcher
+  fn: FetcherType = defaultFetcher,
 ): (api: Api, data: object, options?: object) => Promise<Payload | void> {
   return async function (api, data, options) {
     api = buildApi(api, data, options) as ApiObject;
@@ -231,23 +226,23 @@ export function wrapFetcher(
       api.headers['Content-Type'] = 'application/json';
     }
 
-    const result= await fn(api);
+    const result = await fn(api);
     if (typeof api.cache === 'number' && api.cache > 0) {
       const apiCache = getApiCache(api);
       return wrapAdaptor(
         apiCache
           ? (apiCache as ApiCacheConfig).result
           : setApiCache(api, result),
-        api
+        api,
       );
     }
     return wrapAdaptor(result, api);
   };
 }
 
-export async function wrapAdaptor(result:any, api: ApiObject) {
+export async function wrapAdaptor(result: any, api: ApiObject) {
   const adaptor = api.adaptor;
-  return responseAdaptor(adaptor?adaptor(result, api):result, api);
+  return responseAdaptor(adaptor ? adaptor(result, api) : result, api);
 }
 
 export function isApiOutdated(
@@ -255,19 +250,23 @@ export function isApiOutdated(
   nextApi: Api | undefined,
   prevData: any,
   nextData: any,
-  isFirst?:boolean
+  isFirst?: boolean,
 ): nextApi is Api {
-  const nextUrl:string =get(nextApi,'url',nextApi);
-  const prevUrl:string=get(prevApi,'url',prevApi);
+  const nextUrl: string = get(nextApi, 'url', nextApi);
+  const prevUrl: string = get(prevApi, 'url', prevApi);
 
-  if(nextUrl!==prevUrl&&isValidApi(nextUrl)) return  true;
-  if (!isFirst&&get(nextApi,'autoRefresh') === false) {
+  if (nextUrl !== prevUrl && isValidApi(nextUrl)) return true;
+  if (!isFirst && get(nextApi, 'autoRefresh') === false) {
     return false;
   }
 
   if (typeof nextUrl === 'string' && nextUrl.includes('$')) {
-    prevApi = buildApi(prevApi as Api, prevData as object, {ignoreData: true});
-    nextApi = buildApi(nextApi as Api, nextData as object, {ignoreData: true});
+    prevApi = buildApi(prevApi as Api, prevData as object, {
+      ignoreData: true,
+    });
+    nextApi = buildApi(nextApi as Api, nextData as object, {
+      ignoreData: true,
+    });
 
     return !!(
       prevApi.url !== nextApi.url &&
@@ -290,7 +289,7 @@ export function isEffectiveApi(
   api?: Api,
   data?: any,
   initFetch?: boolean,
-  initFetchOn?: string
+  initFetchOn?: string,
 ): api is Api {
   if (!api) {
     return false;
@@ -318,7 +317,7 @@ export function isEffectiveApi(
 
 export function isSameApi(
   apiA: ApiObject | ApiCacheConfig,
-  apiB: ApiObject | ApiCacheConfig
+  apiB: ApiObject | ApiCacheConfig,
 ): boolean {
   return (
     apiA.method === apiB.method &&
@@ -351,48 +350,57 @@ export function getApiCache(api: ApiObject): ApiCacheConfig | undefined {
   return result;
 }
 
-export function setApiCache(
-  api: ApiObject,
-  result: any
-) {
+export function setApiCache(api: ApiObject, result: any) {
   apiCaches.push({
     ...api,
     result,
-    requestTime: Date.now()
+    requestTime: Date.now(),
   });
   return result;
 }
 
-export const handleResponseState=(response:Payload)=>{
-  const state={};
-  const {isPageState,isNotState,data,status}=response;
-  if(!isNotState&&status===0){
-    if(isPageState){
-      merge(state,{pageState:data});
-    }else {
-      merge(state,{state:data});
+export const handleResponseState = (response: Payload) => {
+  const state = {};
+  const { isPageState, isNotState, data, status } = response;
+  if (!isNotState && status === 0) {
+    if (isPageState) {
+      merge(state, { pageState: data });
+    } else {
+      merge(state, { state: data });
     }
   }
   return state;
 };
 
-export const fetchData= async(fetcher:FetcherType|undefined,prevApi:ApiType|undefined,nextApi:ApiType|undefined,prevData:any,nextData:any,isFirst?:boolean,options?: object)=>{
-  if(fetcher&&nextApi){
-    if(isArray(nextApi)){
-      const stateArr=await Promise.allSettled(map(nextApi,(api,i)=>{
-        if(isApiOutdated(get(prevApi,i),api,prevData,nextData,isFirst)){
-          return 	wrapFetcher(fetcher)(api,nextData,options);
-        }
-      }));
-      for(const result of stateArr ){
-        if(get(result,'value')){
-          return handleResponseState(get(result,'value'));
+export const fetchData = async (
+  fetcher: FetcherType | undefined,
+  prevApi: ApiType | undefined,
+  nextApi: ApiType | undefined,
+  prevData: any,
+  nextData: any,
+  isFirst?: boolean,
+  options?: object,
+) => {
+  if (fetcher && nextApi) {
+    if (isArray(nextApi)) {
+      const stateArr = await Promise.allSettled(
+        map(nextApi, (api, i) => {
+          if (
+            isApiOutdated(get(prevApi, i), api, prevData, nextData, isFirst)
+          ) {
+            return wrapFetcher(fetcher)(api, nextData, options);
+          }
+        }),
+      );
+      for (const result of stateArr) {
+        if (get(result, 'value')) {
+          return handleResponseState(get(result, 'value'));
         }
       }
-    }else{
-      if(isApiOutdated(prevApi as Api,nextApi,prevData,nextData,isFirst)){
-        const result=await wrapFetcher(fetcher)(nextApi,nextData,options);
-        if(result){
+    } else {
+      if (isApiOutdated(prevApi as Api, nextApi, prevData, nextData, isFirst)) {
+        const result = await wrapFetcher(fetcher)(nextApi, nextData, options);
+        if (result) {
           return handleResponseState(result);
         }
       }

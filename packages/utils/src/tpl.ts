@@ -1,5 +1,5 @@
-import {registerBuiltin, getFilters} from './tpl-builtin';
-import {registerLodash} from './tpl-lodash';
+import { registerBuiltin, getFilters } from './tpl-builtin';
+import { registerLodash } from './tpl-lodash';
 
 export interface Enginer {
   test: (tpl: string) => boolean;
@@ -23,7 +23,7 @@ export function filter(
     return '';
   }
 
-  for (const k of Object.keys(enginers) ) {
+  for (const k of Object.keys(enginers)) {
     const enginer = enginers[k];
     if (enginer.test(tpl)) {
       return enginer.compile(tpl, data, ...rest);
@@ -34,11 +34,11 @@ export function filter(
 }
 
 // 缓存一下提升性能
-const EVAL_CACHE: {[key: string]: Function} = {};
+const EVAL_CACHE: { [key: string]: Function } = {};
 
 let customEvalExpressionFn: (expression: string, data?: any) => boolean;
 export function setCustomEvalExpression(
-  fn: (expression: string, data?: any) => boolean
+  fn: (expression: string, data?: any) => boolean,
 ) {
   customEvalExpressionFn = fn;
 }
@@ -70,7 +70,7 @@ export function evalExpression(expression: string, data?: object): boolean {
       fn = new Function(
         'data',
         'utils',
-        `with(data) {${debug ? 'debugger;' : ''}return !!(${expression});}`
+        `with(data) {${debug ? 'debugger;' : ''}return !!(${expression});}`,
       );
       EVAL_CACHE[expression] = fn;
     }
@@ -100,7 +100,7 @@ export function evalJS(js: string, data: object): any {
     const fn = new Function(
       'data',
       'utils',
-      `with(data) {${/^\s*return\b/.test(js) ? '' : 'return '}${js};}`
+      `with(data) {${/^\s*return\b/.test(js) ? '' : 'return '}${js};}`,
     );
     data = data || {};
     return fn.call(data, data, getFilters());
@@ -110,13 +110,9 @@ export function evalJS(js: string, data: object): any {
   }
 }
 
-export function createStr2Function(js:string,data:object):any{
+export function createStr2Function(js: string, data: object): any {
   try {
-    const fn = new Function(
-      'data',
-      'utils',
-      `with(data) {${js};}`
-    );
+    const fn = new Function('data', 'utils', `with(data) {${js};}`);
     data = data || {};
     return fn.bind(data, data);
   } catch (e) {
@@ -125,11 +121,11 @@ export function createStr2Function(js:string,data:object):any{
   }
 }
 
-[registerBuiltin, registerLodash].forEach(fn => {
+[registerBuiltin, registerLodash].forEach((fn) => {
   const info = fn();
 
   registerTplEnginer(info.name, {
     test: info.test,
-    compile: info.compile
+    compile: info.compile,
   });
 });

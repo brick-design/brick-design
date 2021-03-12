@@ -6,11 +6,11 @@ import { PlatformInfoType, StateType } from '../types';
  * @param payload
  */
 export function changePlatform(
-	state: StateType,
-	payload: PlatformInfoType,
+  state: StateType,
+  payload: PlatformInfoType,
 ): StateType {
-	return {
-		...state,
-		platformInfo: payload,
-	};
+  return {
+    ...state,
+    platformInfo: payload,
+  };
 }

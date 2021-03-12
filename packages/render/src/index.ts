@@ -1,1 +1,1 @@
-export {default as BrickRender} from './BrickRender';
+export { default as BrickRender } from './BrickRender';

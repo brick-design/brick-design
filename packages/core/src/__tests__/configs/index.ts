@@ -5,8 +5,8 @@ import * as componentSchemasMap from './HTML';
  * 否则设计面板渲染的页面将是无样式的效果
  */
 const config: any = {
-	componentsMap: {},
-	componentSchemasMap,
+  componentsMap: {},
+  componentSchemasMap,
 };
 
 export default config;

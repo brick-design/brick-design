@@ -37,7 +37,7 @@
     "precommit": "lint-staged",
     "watch": "lerna run --parallel --stream watch",
     "precommit:format": "pretty-quick --staged",
-    "prettify:source": "prettier 'packages/*/src/**/*.ts*'",
+    "prettify:source": "prettier --write 'packages/*/src/**/*.ts*'",
     "start:docs": "dumi dev",
     "start:example": "lerna run build --stream && lerna run start",
     "dev:example": "lerna run dev --stream & lerna run start"
@@ -153,25 +153,17 @@
     ]
   },
   "prettier": {
-    "semi": false,
+    "semi": true,
     "singleQuote": true,
     "trailingComma": "all",
-    "useTabs": true,
-    "overrides": [
-      {
-        "files": "*.md",
-        "options": {
-          "useTabs": false
-        }
-      },
-      {
-        "files": "*.json",
-        "options": {
-          "useTabs": false,
-          "tabWidth": 2
-        }
+    "useTabs": false,
+    "overrides": [{
+      "files": "*.json",
+      "options": {
+        "useTabs": false,
+        "tabWidth": 4
       }
-    ]
+    }]
   },
   "husky": {
     "hooks": {

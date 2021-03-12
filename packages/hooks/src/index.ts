@@ -14,4 +14,3 @@ export * from './components/PropsContext';
 export * from './components/MapNodeContext';
 export * from './utils';
 export * from './types';
-
