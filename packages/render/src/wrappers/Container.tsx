@@ -47,7 +47,7 @@ function Container(vProps: CommonPropsType,ref:any) {
             resolveMapping(loop, {...pageState,...pageState.getPageState()}),
             (item, index) => {
               return (
-                <MapNodesRenderWrapper isContainer={isContainer} renderKey={nodeKey} index={index} key={`${item.key || index}${renderKey}`} item={item}/>
+                <MapNodesRenderWrapper isContainer={isContainer} renderKey={nodeKey} index={index} key={`${item.key||item.id  || index}${renderKey}`} item={item}/>
               );
             },
           );

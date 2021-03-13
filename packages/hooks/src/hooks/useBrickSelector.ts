@@ -1,5 +1,6 @@
-import { useLayoutEffect, useReducer, useRef, useContext } from 'react';
+import { useLayoutEffect, useRef, useContext } from 'react';
 import { ALL_PROPS } from '@brickd/utils';
+import { useForceRender } from './useForceRender';
 import { BrickStoreContext } from '../components/BrickStoreContext';
 
 export function get<T>(obj: any, path: string): T {
@@ -40,7 +41,7 @@ function useSelectorWithStore<T>(
   controlUpdate?: ControlUpdate<T>,
   stateDeep?: string,
 ): T {
-  const [, forceRender] = useReducer((s) => s + 1, 0);
+  const forceRender= useForceRender();
   const prevSelector = useRef([]);
   const prevStoreState = useRef();
   const prevSelectedState = useRef({} as any);

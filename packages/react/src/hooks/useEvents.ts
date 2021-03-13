@@ -27,7 +27,7 @@ export function useEvents(
     pageConfig,
     domTreeKeys,
   ]);
-  const { setOperateState } = useOperate(isModal);
+  const { setOperateState,getOperateState } = useOperate(isModal);
 
   const setSelectedNode = useCallback((selectedNode: HTMLElement) => {
     setOperateState({
@@ -42,7 +42,7 @@ export function useEvents(
       setSelectedNode(nodeRef.current);
       selectComponent({ ...specialProps, propName });
     },
-    [propName],
+    [propName,nodeRef.current],
   );
 
   const onDragStart = useCallback(
@@ -77,8 +77,8 @@ export function useEvents(
         hoverKey: key,
       });
     },
-    [nodeRef.current, key],
+    [nodeRef.current],
   );
 
-  return { onDoubleClick, onClick, onMouseOver, onDragStart, setSelectedNode };
+  return { onDoubleClick, onClick, onMouseOver, onDragStart, setSelectedNode,getOperateState };
 }

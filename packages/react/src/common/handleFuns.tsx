@@ -71,7 +71,7 @@ function renderNodes(
     if (typeof loop==='string'&&isPureVariable(loop)||Array.isArray(loop)) {
       return map(Array.isArray(loop)?loop:resolveMapping(loop, allState), (item, index) => {
         return (
-          <MapNodesRenderWrapper isContainer={isCon} index={index} specialProps={specialProps} key={`${item.key || index}${key}`} item={item}/>
+          <MapNodesRenderWrapper isContainer={isCon} index={index} specialProps={specialProps} key={`${item.key||item.id || index}${index}${key}`} item={item}/>
         );
       });
     }

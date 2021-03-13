@@ -100,7 +100,6 @@ function Container(allProps: CommonPropsType, ref: any) {
     [],
   );
   const nodePropNames = keys(nodePropsConfig);
-  console.log('nodePropNames>>>>',nodePropNames);
   const prevPropName = useRef(
     nodePropNames.includes(defaultPropName) ? defaultPropName : nodePropNames[0],
   );
@@ -182,7 +181,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   });
 
   useEffect(() => {
-    if (!parentRootNode.current && !getDragKey()) {
+    if (!parentRootNode.current && getDragKey()!==key) {
       const iframe = getIframe();
       parentRootNode.current = getSelectedNode(index,key, iframe);
       isSelected && setSelectedNode(parentRootNode.current);
@@ -232,7 +231,6 @@ function Container(allProps: CommonPropsType, ref: any) {
           isV,
         );
         if (!isEqual(newChildren, children)) {
-          console.log('setChildren1>>>>>>',componentName);
           setChildren(newChildren);
         }
       }, 100);
@@ -279,8 +277,6 @@ function Container(allProps: CommonPropsType, ref: any) {
             newChildren[selectedPropName] = [
               ...new Set([dragKey, ...childChildren]),
             ];
-            console.log('setChildren4>>>>>>',componentName);
-
             setChildren(newChildren);
           }
         }

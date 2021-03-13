@@ -47,12 +47,12 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     setSelectedNode,
   } = useEvents(parentRootNode, specialProps, isSelected);
   useEffect(() => {
-    if (!parentRootNode.current && !getDragKey()) {
+    if (!parentRootNode.current && getDragKey()!==key) {
       const iframe = getIframe();
       parentRootNode.current = getSelectedNode(index,key, iframe);
       isSelected && setSelectedNode(parentRootNode.current);
-    }
-  });
+  }});
+
 
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};

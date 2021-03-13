@@ -7,6 +7,7 @@ export * from './hooks/useBrickdState';
 export * from './hooks/useRedux';
 export * from './hooks/useBrickSelector';
 export * from './hooks/useGetProps';
+export * from './hooks/useForceRender';
 export * from './components/StaticContext';
 export * from './components/FunParamContext';
 export * from './components/BrickStoreContext';
