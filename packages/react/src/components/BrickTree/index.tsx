@@ -2,13 +2,11 @@ import React, { memo, useCallback } from 'react';
 import {
   clearHovered,
   PageConfigType,
-  DragSourceType,
   ROOT,
   STATE_PROPS,
 } from '@brickd/core';
 import SortTree from './SortTree';
 import styles from './index.less';
-import { onDragover, onDrop } from '../../common/events';
 import { useSelector } from '../../hooks/useSelector';
 
 interface BrickTreeProps {
@@ -16,19 +14,17 @@ interface BrickTreeProps {
 }
 
 function BrickTree(props: BrickTreeProps) {
-  const { pageConfig, dragSource } = useSelector<
-    { pageConfig: PageConfigType; dragSource: DragSourceType },
+  const { pageConfig } = useSelector<
+    { pageConfig: PageConfigType},
     STATE_PROPS
-  >(['pageConfig', 'dragSource'], (prevState, nextState) => {
+  >(['pageConfig'], (prevState, nextState) => {
     const {
       pageConfig: { [ROOT]: prevRoot },
-      dragSource: prevDragSource,
     } = prevState;
     const {
       pageConfig: { [ROOT]: root },
-      dragSource,
     } = nextState;
-    return !!(!prevRoot && root) || prevDragSource !== dragSource;
+    return !!(!prevRoot && root);
   });
   const onMouseLeave = useCallback((e: any) => {
     e.stopPropagation();
@@ -39,8 +35,6 @@ function BrickTree(props: BrickTreeProps) {
   const { className } = props;
   return (
     <div
-      onDrop={dragSource && onDrop}
-      onDragOver={onDragover}
       onMouseLeave={onMouseLeave}
       className={`${styles['sort-container']} ${className}`}
     >

@@ -2,7 +2,6 @@ import React, { memo, useEffect, useState } from 'react';
 import { get, isArray, isEmpty, isEqual, map } from 'lodash';
 import {
   ChildNodesType,
-  clearDropTarget,
   PageConfigType,
   getComponentConfig,
   isContainer,
@@ -18,8 +17,6 @@ import styles from './index.less';
 import Header from './components/Header';
 import { useSelector } from '../../hooks/useSelector';
 import { isEqualKey, usePrevious } from '../../utils';
-
-import { getDropTargetInfo } from '../../common/events';
 
 interface SortItemPropsType {
   isFold?: boolean;
@@ -99,7 +96,7 @@ export const stateSelector: STATE_PROPS[] = ['selectedInfo', 'pageConfig'];
 function SortItem(props: SortItemPropsType) {
   const {
     specialProps,
-    specialProps: { key, parentPropName, parentKey, domTreeKeys },
+    specialProps: { key, parentPropName, parentKey },
     isFold,
     propName,
     propChildNodes,
@@ -164,16 +161,16 @@ function SortItem(props: SortItemPropsType) {
       data-special={JSON.stringify({ key, parentPropName, parentKey })}
       data-farules={fatherNodesRule && JSON.stringify(fatherNodesRule)}
       data-name={componentName}
-      onDragEnter={(e: any) => {
-        //如果目标组件为非容器组件就重置目标容器信息
-        if (!isContainerComponent) return clearDropTarget();
-        let propNameResult = propName;
-        //如果当前目标是多属性节点容器，获取容器的最后一属性节点作为目标容器
-        if (!propNameResult && nodePropsConfig) {
-          propNameResult = Object.keys(nodePropsConfig).pop();
-        }
-        getDropTargetInfo(e, domTreeKeys, key, propNameResult);
-      }}
+      // onDragEnter={(e: any) => {
+      //   //如果目标组件为非容器组件就重置目标容器信息
+      //   if (!isContainerComponent) return clearDropTarget();
+      //   let propNameResult = propName;
+      //   //如果当前目标是多属性节点容器，获取容器的最后一属性节点作为目标容器
+      //   if (!propNameResult && nodePropsConfig) {
+      //     propNameResult = Object.keys(nodePropsConfig).pop();
+      //   }
+      //   getDropTargetInfo(e, domTreeKeys, key, propNameResult);
+      // }}
     >
       <Header
         isUnfold={isUnfold}

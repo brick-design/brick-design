@@ -34,6 +34,15 @@ for (let i = 0; i < 23; i++) {
 	});
 }
 
+const slidMenuData=[
+	{key:'sub1',icon:'user',title:'subnav 1',subs:[{key:'sub11',name:'option1'},{key:'sub12',name:'option2'},{key:'sub13',name:'option3'},{key:'sub14',name:'option4'}]},
+	{key:'sub2',icon:'laptop',title:'subnav 2',subs:[{key:'sub21',name:'option1'},{key:'sub22',name:'option2'},{key:'sub23',name:'option3'},{key:'sub24',name:'option4'}]},
+	{key:'sub3',icon:'heart',title:'subnav 3',subs:[{key:'sub31',name:'option1'},{key:'sub32',name:'option2'},{key:'sub33',name:'option3'},{key:'sub34',name:'option4'}]},
+	{key:'sub4',icon:'notification',title:'subnav 4',subs:[{key:'sub41',name:'option1'},{key:'sub42',name:'option2'},{key:'sub43',name:'option3'},{key:'sub44',name:'option4'}]}
+]
+
+const stepData=[1,2,3,4]
+
 export default {
 	'0': {
 		componentName: 'Layout',
@@ -43,7 +52,13 @@ export default {
 				height: '100%',
 			},
 		},
-		state:{v:false,n:0,items:listData,listData:['啦啦啦啦','哈哈哈']},
+		state:{
+			v:false,n:0,items:listData,listData:['啦啦啦啦','哈哈哈'],
+			breadcrumbData:['Home','list','App'],
+			menuData:['nav 1','nav 2','nav 3'],
+			slidMenuData,
+			stepData
+		},
 		childNodes: ['2', '8', '1', '49'],
 		api:'https://api.apiopen.top/getJoke'
 	},
@@ -87,38 +102,19 @@ export default {
 			theme: 'dark',
 		},
 		childNodes: {
-			children: ['5', '6', '7'],
+			children: ['5'],
 		},
 	},
 	'5': {
 		componentName: 'Menu.Item',
 		props: {
-			children: 'nav 1',
-			key: '1',
+			children: '${item}',
+			key: '${item}',
 			style: {
 				lineHeight: '64px',
 			},
 		},
-	},
-	'6': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'nav 2',
-			key: '2',
-			style: {
-				lineHeight: '64px',
-			},
-		},
-	},
-	'7': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'nav 3',
-			key: '3',
-			style: {
-				lineHeight: '64px',
-			},
-		},
+		loop:'${menuData}'
 	},
 	'8': {
 		componentName: 'Layout',
@@ -135,13 +131,13 @@ export default {
 			theme: 'light',
 		},
 		childNodes: {
-			children: ['10',"62","64","63","65",'82'],
+			children: ['10',"62","64","63","65"],
 		},
 	},
 	'10': {
 		componentName: 'Menu',
 		childNodes: {
-			children: ['11', '19', '27', '35'],
+			children: ['11'],
 		},
 		props: {
 			mode: 'inline',
@@ -149,40 +145,21 @@ export default {
 	},
 	'11': {
 		componentName: 'Menu.SubMenu',
+		loop:'${slidMenuData}',
 		props: {
-			key: 'sub1',
+			key: '${item.key}',
 		},
 		childNodes: {
-			children: ['12', '13', '14', '15'],
+			children: ['12'],
 			title: ['16'],
 		},
 	},
 	'12': {
 		componentName: 'Menu.Item',
+		loop:'${item.subs}',
 		props: {
-			key: '1',
-			children: 'option1',
-		},
-	},
-	'13': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option2',
-			key: '2',
-		},
-	},
-	'14': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option3',
-			key: '3',
-		},
-	},
-	'15': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option4',
-			key: '4',
+			key: '${item.key}',
+			children: '${item.name}',
 		},
 	},
 	'16': {
@@ -192,175 +169,13 @@ export default {
 	'17': {
 		componentName: 'Icon',
 		props: {
-			type: 'user',
+			type: '${item.icon}',
 		},
 	},
 	'18': {
 		componentName: 'span',
 		props: {
-			children: 'subnav 1',
-		},
-	},
-	'19': {
-		componentName: 'Menu.SubMenu',
-		props: {
-			key: 'sub2',
-		},
-		childNodes: {
-			children: ['20', '21', '22', '23'],
-			title: ['24'],
-		},
-	},
-	'20': {
-		componentName: 'Menu.Item',
-		props: {
-			key: '1',
-			children: 'option1',
-		},
-	},
-	'21': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option2',
-			key: '2',
-		},
-	},
-	'22': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option3',
-			key: '3',
-		},
-	},
-	'23': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option4',
-			key: '4',
-		},
-	},
-	'24': {
-		componentName: 'span',
-		childNodes: ['25', '26'],
-	},
-	'25': {
-		componentName: 'Icon',
-		props: {
-			type: 'laptop',
-		},
-	},
-	'26': {
-		componentName: 'span',
-		props: {
-			children: 'subnav 2',
-		},
-	},
-	'27': {
-		componentName: 'Menu.SubMenu',
-		props: {
-			key: 'sub3',
-		},
-		childNodes: {
-			children: ['28', '29', '30', '31'],
-			title: ['32'],
-		},
-	},
-	'28': {
-		componentName: 'Menu.Item',
-		props: {
-			key: '1',
-			children: 'option1',
-		},
-	},
-	'29': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option2',
-			key: '2',
-		},
-	},
-	'30': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option3',
-			key: '3',
-		},
-	},
-	'31': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option4',
-			key: '4',
-		},
-	},
-	'32': {
-		componentName: 'span',
-		childNodes: ['33', '34'],
-	},
-	'33': {
-		componentName: 'Icon',
-		props: {
-			type: 'heart',
-		},
-	},
-	'34': {
-		componentName: 'span',
-		props: {
-			children: 'subnav 3',
-		},
-	},
-	'35': {
-		componentName: 'Menu.SubMenu',
-		props: {
-			key: 'sub1',
-		},
-		childNodes: {
-			children: ['36', '37', '38', '39'],
-			title: ['40'],
-		},
-	},
-	'36': {
-		componentName: 'Menu.Item',
-		props: {
-			key: '1',
-			children: 'option1',
-		},
-	},
-	'37': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option2',
-			key: '2',
-		},
-	},
-	'38': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option3',
-			key: '3',
-		},
-	},
-	'39': {
-		componentName: 'Menu.Item',
-		props: {
-			children: 'option4',
-			key: '4',
-		},
-	},
-	'40': {
-		componentName: 'span',
-		childNodes: ['41', '42'],
-	},
-	'41': {
-		componentName: 'Icon',
-		props: {
-			type: 'notification',
-		},
-	},
-	'42': {
-		componentName: 'span',
-		props: {
-			children: 'subnav 4',
+			children: '${item.title}',
 		},
 	},
 	'43': {
@@ -380,7 +195,7 @@ export default {
 	'44': {
 		componentName: 'Breadcrumb',
 		childNodes: {
-			children: ['45', '46', '47'],
+			children: ['45'],
 		},
 		props: {
 			style: {
@@ -391,20 +206,9 @@ export default {
 	},
 	'45': {
 		componentName: 'Breadcrumb.Item',
+		loop:'${breadcrumbData}',
 		props: {
-			children: 'Home',
-		},
-	},
-	'46': {
-		componentName: 'Breadcrumb.Item',
-		props: {
-			children: 'List',
-		},
-	},
-	'47': {
-		componentName: 'Breadcrumb.Item',
-		props: {
-			children: 'App',
+			children: '${item}',
 		},
 	},
 	'48': {
@@ -438,21 +242,17 @@ export default {
 			src:
 				'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2584019613,1728895621&fm=26&gp=0.jpg',
 			size: 100,
+			animateClass:'bounceInRight animated'
 		},
 	},
 	'51': {
 		componentName: 'Steps',
 		childNodes: {
-			children: ['52', '53', '54'],
+			children: ['52'],
 		},
 	},
 	'52': {
-		componentName: 'Steps.Step',
-	},
-	'53': {
-		componentName: 'Steps.Step',
-	},
-	'54': {
+		loop:'${stepData}',
 		componentName: 'Steps.Step',
 	},
 	"62":{
@@ -509,7 +309,7 @@ export default {
 	"67":{
 		componentName:"List.Item",
 		childNodes:{
-			actions:['68','71','74',],
+			actions:['68','71','74'],
 			extra:["77"],
 			children:["78",'81'],
 		},
@@ -561,9 +361,11 @@ export default {
 	},
 	"77":{
 		componentName:'img',
-		props:{width:272,
+		props:{
+			width:272,
 		alt:'logo',
-		src:"${funParams.0.image}"
+		src:"${funParams.0.image}",
+			animateClass:'wobble animated'
 		},
 	},
 	"78":{
@@ -576,7 +378,10 @@ export default {
 	},
 	"79":{
 		componentName:'Avatar',
-		props:{src:'${funParams.0.avatar}'},
+		props:{
+			src:'${funParams.0.avatar}',
+			animateClass:'heartBeat animated'
+		},
 
 	},
 	"80":{
@@ -587,9 +392,5 @@ export default {
 		componentName:'span',
 		props:{children:'${funParams.0.content}'}
 	},
-	"82":{
-		componentName:'span',
-		props:{children:'${item}'},
-		loop:'${listData}'
-	}
+
 }

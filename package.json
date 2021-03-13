@@ -111,8 +111,8 @@
       "^@brickd/react$": "react/src",
       "^@brickd/react-web$": "react-web/src",
       "^@brickd/render$": "render/src",
-      "^@brickd/utils": "utils/src",
-      "^@brickd/hooks": "hooks/src",
+      "^@brickd/utils$": "utils/src",
+      "^@brickd/hooks$": "hooks/src",
       "\\.less$": "identity-obj-proxy"
     },
     "collectCoverageFrom": [

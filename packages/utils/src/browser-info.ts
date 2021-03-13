@@ -1,11 +1,11 @@
 function userAgent(pattern) {
-  if (typeof window !== "undefined" && window.navigator) {
+  if (typeof window !== 'undefined' && window.navigator) {
     return !!(/*@__PURE__*/ navigator.userAgent.match(pattern));
   }
 }
 
 export const IE11OrLess = userAgent(
-  /(?:Trident.*rv[ :]?11\.|msie|iemobile|Windows Phone)/i
+  /(?:Trident.*rv[ :]?11\.|msie|iemobile|Windows Phone)/i,
 );
 export const Edge = userAgent(/Edge/i);
 export const FireFox = userAgent(/firefox/i);

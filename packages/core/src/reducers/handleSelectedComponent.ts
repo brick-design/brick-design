@@ -10,61 +10,61 @@ import { getComponentConfig, handleRequiredHasChild } from '../utils';
  */
 
 export function selectComponent(
-	state: StateType,
-	payload: SelectComponentPayload,
+  state: StateType,
+  payload: SelectComponentPayload,
 ): StateType {
-	const { undo, redo, selectedInfo, pageConfig } = state;
-	const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
-	if (selectedInfo) {
-		const { selectedKey, propName: selectedPropName } = selectedInfo;
-		if (
-			(selectedKey === key && selectedPropName == propName) ||
-			handleRequiredHasChild(selectedInfo, pageConfig)
-		)
-			return state;
-		if (selectedKey === key) {
-			if (propName && selectedPropName !== propName) {
-				domTreeKeys.push(`${key}${propName}`);
-				return {
-					...state,
-					selectedInfo: {
-						...selectedInfo,
-						propName,
-						domTreeKeys,
-					},
-				};
-			} else {
-				return {
-					...state,
-					selectedInfo: {
-						...selectedInfo,
-						parentKey,
-						parentPropName,
-					},
-				};
-			}
-		}
-	}
+  const { undo, redo, selectedInfo, pageConfig } = state;
+  const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
+  if (selectedInfo) {
+    const { selectedKey, propName: selectedPropName } = selectedInfo;
+    if (
+      (selectedKey === key && selectedPropName == propName) ||
+      handleRequiredHasChild(selectedInfo, pageConfig)
+    )
+      return state;
+    if (selectedKey === key) {
+      if (propName && selectedPropName !== propName) {
+        domTreeKeys.push(`${key}${propName}`);
+        return {
+          ...state,
+          selectedInfo: {
+            ...selectedInfo,
+            propName,
+            domTreeKeys,
+          },
+        };
+      } else {
+        return {
+          ...state,
+          selectedInfo: {
+            ...selectedInfo,
+            parentKey,
+            parentPropName,
+          },
+        };
+      }
+    }
+  }
 
-	propName && domTreeKeys.push(`${key}${propName}`);
-	const { props, componentName } = pageConfig[key];
-	const { propsConfig } = getComponentConfig(componentName);
-	undo.push({ selectedInfo });
-	redo.length = 0;
-	return {
-		...state,
-		selectedInfo: {
-			selectedKey: key,
-			propName,
-			domTreeKeys,
-			parentKey,
-			parentPropName,
-			props,
-			propsConfig,
-		},
-		undo,
-		redo,
-	};
+  propName && domTreeKeys.push(`${key}${propName}`);
+  const { props, componentName } = pageConfig[key];
+  const { propsConfig } = getComponentConfig(componentName);
+  undo.push({ selectedInfo });
+  redo.length = 0;
+  return {
+    ...state,
+    selectedInfo: {
+      selectedKey: key,
+      propName,
+      domTreeKeys,
+      parentKey,
+      parentPropName,
+      props,
+      propsConfig,
+    },
+    undo,
+    redo,
+  };
 }
 
 /**
@@ -73,16 +73,16 @@ export function selectComponent(
  * @returns {{undo: *, propsSetting: {}, redo: *, selectedInfo: {}}}
  */
 export function clearSelectedStatus(state: StateType) {
-	const { selectedInfo, pageConfig, undo, redo } = state;
-	if (!selectedInfo || handleRequiredHasChild(selectedInfo, pageConfig)) {
-		return state;
-	}
-	undo.push({ selectedInfo });
-	redo.length = 0;
-	return {
-		...state,
-		selectedInfo: null,
-		undo,
-		redo,
-	};
+  const { selectedInfo, pageConfig, undo, redo } = state;
+  if (!selectedInfo || handleRequiredHasChild(selectedInfo, pageConfig)) {
+    return state;
+  }
+  undo.push({ selectedInfo });
+  redo.length = 0;
+  return {
+    ...state,
+    selectedInfo: null,
+    undo,
+    redo,
+  };
 }

@@ -4,6 +4,7 @@ import {
   getComponentConfig,
   SelectedInfoBaseType,
 } from '@brickd/core';
+import {isEmpty} from 'lodash';
 import { handleSelectedStatus } from '../common/events';
 
 export interface UseChildNodeType {
@@ -22,16 +23,15 @@ export function useChildNodes({
     [],
   );
   useEffect(() => {
-    if (!childNodes) return;
-    if (!Array.isArray(childNodes)) {
-      for (const prop of Object.keys(nodePropsConfig!)) {
-        const { isRequired } = nodePropsConfig![prop];
-        if (isRequired && childNodes[prop]!.length === 0) {
+    if (nodePropsConfig) {
+      for (const prop of Object.keys(nodePropsConfig)) {
+        const { isRequired } = nodePropsConfig[prop];
+        if (isRequired && (!childNodes||isEmpty(childNodes[prop]))) {
           handleSelectedStatus(null, false, specialProps, prop);
           break;
         }
       }
-    } else if (isRequired && childNodes.length === 0) {
+    } else if (isRequired&&isEmpty(childNodes)) {
       handleSelectedStatus(null, false, specialProps);
     }
   }, [childNodes]);
