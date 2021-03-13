@@ -181,11 +181,12 @@ function Container(allProps: CommonPropsType, ref: any) {
   });
 
   useEffect(() => {
-    if (!parentRootNode.current && getDragKey()!==key) {
       const iframe = getIframe();
       parentRootNode.current = getSelectedNode(index,key, iframe);
-      isSelected && setSelectedNode(parentRootNode.current);
+    if(!getDragKey()&&isSelected){
+      setSelectedNode(parentRootNode.current);
     }
+
     if(index&&parseInt(index)!==0) return;
     const parentRect = parentRootNode.current
       ? getParentNodeRealRect(parentRootNode.current)
