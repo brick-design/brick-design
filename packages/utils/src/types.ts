@@ -156,8 +156,6 @@ export interface FetcherConfig {
   config?: any;
 }
 
-
-
 export type FetcherType = (config: FetcherConfig) => Promise<any>;
 export type PropsNodeType = {
   [propName: string]: string[] | undefined;
@@ -173,7 +171,7 @@ export interface VirtualDOMType {
   componentName: string;
   props?: PropsType;
   childNodes?: ChildNodesType;
-    api?: ApiType;
+  api?: ApiType;
   state?: PlainObject;
   condition?: string;
   isStateDomain?: boolean;
@@ -181,7 +179,7 @@ export interface VirtualDOMType {
   methods?: {
     [key: string]: Function;
   };
-  loop?: string|any[];
+  loop?: string | any[];
   fileName?: string;
   [custom: string]: any;
 }

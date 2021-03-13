@@ -17,6 +17,7 @@ export function useEvents(
   specialProps: SelectedInfoBaseType,
   isSelected: boolean,
   propName?: string,
+  index?: number,
 ) {
   const { key, domTreeKeys, parentKey, parentPropName } = specialProps;
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
@@ -27,12 +28,13 @@ export function useEvents(
     pageConfig,
     domTreeKeys,
   ]);
-  const { setOperateState,getOperateState } = useOperate(isModal);
+  const { setOperateState, getOperateState } = useOperate(isModal);
 
   const setSelectedNode = useCallback((selectedNode: HTMLElement) => {
     setOperateState({
       selectedNode: selectedNode,
       operateSelectedKey: key,
+      index,
     });
   }, []);
 
@@ -42,7 +44,7 @@ export function useEvents(
       setSelectedNode(nodeRef.current);
       selectComponent({ ...specialProps, propName });
     },
-    [propName,nodeRef.current],
+    [propName, nodeRef.current],
   );
 
   const onDragStart = useCallback(
@@ -80,5 +82,12 @@ export function useEvents(
     [nodeRef.current],
   );
 
-  return { onDoubleClick, onClick, onMouseOver, onDragStart, setSelectedNode,getOperateState };
+  return {
+    onDoubleClick,
+    onClick,
+    onMouseOver,
+    onDragStart,
+    setSelectedNode,
+    getOperateState,
+  };
 }

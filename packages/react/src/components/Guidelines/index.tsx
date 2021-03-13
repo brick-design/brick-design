@@ -44,16 +44,15 @@ function Guidelines() {
     OperateStateType
   >();
 
-  if (!dropKey&&hoverKey !== operateHoverKey) {
-    const hoverNode = getSelectedNode(undefined,hoverKey, getIframe());
+  if (!dropKey && hoverKey !== operateHoverKey) {
+    const hoverNode = getSelectedNode(undefined, hoverKey, getIframe());
     setOperateState({ hoverNode, operateHoverKey: hoverKey });
   }
 
   if (selectedKey !== operateSelectedKey) {
-    const selectedNode = getSelectedNode(undefined,selectedKey, getIframe());
+    const selectedNode = getSelectedNode(undefined, selectedKey, getIframe());
     setOperateState({ selectedNode, operateSelectedKey: selectedKey });
   }
-
 
   useEffect(() => {
     const iframe = getIframe();
@@ -121,15 +120,16 @@ function Guidelines() {
     topRef.current,
   ]);
 
-  const guidControl = !dropKey&&hoverKey;
+  const guidControl = !dropKey && hoverKey;
 
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
   const guidV = guidControl ? styles['guide-v'] : styles['guide-hidden'];
-  const hoverNodeClass = dropKey||hoverKey
-    ? dropKey
-      ? styles['drop-node']
-      : styles['hover-node']
-    : styles['guide-hidden'];
+  const hoverNodeClass =
+    dropKey || hoverKey
+      ? dropKey
+        ? styles['drop-node']
+        : styles['hover-node']
+      : styles['guide-hidden'];
   return (
     <>
       <div ref={hoverNodeRef} className={hoverNodeClass} />

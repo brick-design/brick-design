@@ -26,9 +26,9 @@ export function handlePropsClassName(
   isLockTarget: boolean,
   className: any,
   animateClass: string,
-  index='0'
+  index = '0',
 ) {
-  return `${index+selectClassTarget + key} ${className} ${animateClass} 
+  return `${index + selectClassTarget + key} ${className} ${animateClass} 
   ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}`;
 }
 
@@ -44,7 +44,7 @@ function renderNodes(
   childNodes: string[],
   specialProps: SelectedInfoBaseType,
   pageConfig: PageConfigType,
-  allState:any,
+  allState: any,
   parentPropName?: string,
   isOnlyNode?: boolean,
 ) {
@@ -67,15 +67,33 @@ function renderNodes(
     if (isStateDomain)
       return <StateDomainWrapper key={key} specialProps={specialProps} />;
 
-    const isCon=isContainer(componentName);
-    if (typeof loop==='string'&&isPureVariable(loop)||Array.isArray(loop)) {
-      return map(Array.isArray(loop)?loop:resolveMapping(loop, allState), (item, index) => {
-        return (
-          <MapNodesRenderWrapper isContainer={isCon} index={index} specialProps={specialProps} key={`${item.key||item.id || index}${index}${key}`} item={item}/>
-        );
-      });
+    const isCon = isContainer(componentName);
+    if (
+      (typeof loop === 'string' && isPureVariable(loop)) ||
+      Array.isArray(loop)
+    ) {
+      return map(
+        Array.isArray(loop) ? loop : resolveMapping(loop, allState),
+        (item, index) => {
+          return (
+            <MapNodesRenderWrapper
+              isContainer={isCon}
+              index={index}
+              specialProps={specialProps}
+              key={`${item.key || item.id || index}${index}${key}`}
+              item={item}
+            />
+          );
+        },
+      );
     }
-    return  <ContainerDiffWrapper isContainer={isCon} key={key} specialProps={specialProps} />;
+    return (
+      <ContainerDiffWrapper
+        isContainer={isCon}
+        key={key}
+        specialProps={specialProps}
+      />
+    );
   });
   /** 如果该组件子节点或者属性子节点要求为单组件返回子组件的第一组件*/
   if (isOnlyNode) {
@@ -139,7 +157,7 @@ export function handleChildNodes(
       isOnlyNode,
     );
   } else {
-    each(children, (nodes:string[], propName: string) => {
+    each(children, (nodes: string[], propName: string) => {
       const { isOnlyNode, isRequired, childNodesRule } = nodePropsConfig![
         propName
       ];

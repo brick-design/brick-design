@@ -1,4 +1,11 @@
-import { createElement, forwardRef, memo, useEffect, useRef } from 'react';
+import {
+  createElement,
+  forwardRef,
+  memo,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { clearDragSource, ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
@@ -16,11 +23,14 @@ import {
   getDragKey,
   getDragSourceVDom,
   getIframe,
+  getIsModalChild,
   getSelectedNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useSelector } from '../hooks/useSelector';
 import { useEvents } from '../hooks/useEvents';
+import { OperateStateType } from '../components/OperateProvider';
+import { useOperate } from '../hooks/useOperate';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
   const {
@@ -36,8 +46,8 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom();
   const vNode = (pageConfig[key] || {}) as VirtualDOMType;
   const { componentName } = vNode;
-  const { props, hidden,pageState } = useCommon(vNode, rest);
-  const{index}=pageState;
+  const { props, hidden, pageState } = useCommon(vNode, rest);
+  const { index } = pageState;
   const parentRootNode = useRef<HTMLElement>();
   const {
     onClick,
@@ -46,12 +56,18 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     onDragStart,
     setSelectedNode,
   } = useEvents(parentRootNode, specialProps, isSelected);
+  const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
+    pageConfig,
+    domTreeKeys,
+  ]);
+  const { getOperateState } = useOperate(isModal);
   useEffect(() => {
-      const iframe = getIframe();
-      parentRootNode.current = getSelectedNode(index,key, iframe);
-      if(isSelected&&!getDragKey()){
-        setSelectedNode(parentRootNode.current);
-      }
+    const iframe = getIframe();
+    parentRootNode.current = getSelectedNode(index, key, iframe);
+    const { index: selectedIndex } = getOperateState<OperateStateType>();
+    if (!getDragKey() && isSelected && selectedIndex === index) {
+      setSelectedNode(parentRootNode.current);
+    }
   });
 
   if (!isSelected && (!componentName || hidden)) return null;
@@ -65,7 +81,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
         (dragKey && !isSelected && domTreeKeys.includes(lockedKey)),
       className,
       animateClass,
-      index
+      index,
     ),
     onDragStart,
     onMouseOver,

@@ -9,6 +9,7 @@ export type OperateStateType = {
   dragKey?: string;
   operateHoverKey?: string;
   operateSelectedKey?: string;
+  index?: number;
 };
 export const OperateContext = createContext<BrickStore<OperateStateType>>(null);
 export const OperateProvider = (

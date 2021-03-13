@@ -4,7 +4,7 @@ import React, {
   useCallback,
   useContext,
   useMemo,
-  forwardRef
+  forwardRef,
 } from 'react';
 import { each, get, map } from 'lodash';
 import {
@@ -24,8 +24,8 @@ import { useHandleProps } from '../hooks/useHandleProps';
 export interface CommonPropsType {
   renderKey: string;
   [propName: string]: any;
-};
-function Container(vProps: CommonPropsType,ref:any) {
+}
+function Container(vProps: CommonPropsType, ref: any) {
   const { renderKey, ...rest } = vProps;
   const { pageConfig, componentsMap } = useContext(StaticContext);
   const vNode = pageConfig[renderKey];
@@ -36,23 +36,43 @@ function Container(vProps: CommonPropsType,ref:any) {
     (childNodes: string[]) => {
       return childNodes.map((nodeKey) => {
         const { childNodes, isStateDomain, loop } = pageConfig[nodeKey];
-        let isContainer=false;
+        let isContainer = false;
         if (childNodes) {
-          isContainer=true;
+          isContainer = true;
         }
         if (isStateDomain)
           return <StateDomainWrapper renderKey={nodeKey} key={nodeKey} />;
-        if (typeof loop==='string'&&isPureVariable(loop)||Array.isArray(loop)) {
-          return map(Array.isArray(loop)?loop:
-            resolveMapping(loop, {...pageState,...pageState.getPageState()}),
+        if (
+          (typeof loop === 'string' && isPureVariable(loop)) ||
+          Array.isArray(loop)
+        ) {
+          return map(
+            Array.isArray(loop)
+              ? loop
+              : resolveMapping(loop, {
+                  ...pageState,
+                  ...pageState.getPageState(),
+                }),
             (item, index) => {
               return (
-                <MapNodesRenderWrapper isContainer={isContainer} renderKey={nodeKey} index={index} key={`${item.key||item.id  || index}${renderKey}`} item={item}/>
+                <MapNodesRenderWrapper
+                  isContainer={isContainer}
+                  renderKey={nodeKey}
+                  index={index}
+                  key={`${item.key || item.id || index}${renderKey}`}
+                  item={item}
+                />
               );
             },
           );
         }
-        return (<ContainerDiffWrapper renderKey={nodeKey} isContainer={isContainer}  key={renderKey}/>);
+        return (
+          <ContainerDiffWrapper
+            renderKey={nodeKey}
+            isContainer={isContainer}
+            key={renderKey}
+          />
+        );
       });
     },
     [pageConfig, pageState],
@@ -82,7 +102,7 @@ function Container(vProps: CommonPropsType,ref:any) {
     return nodeProps;
   }, [pageConfig, childNodes, renderArrChild]);
 
-  const propsResult=useHandleProps(props,ref,nodeProps);
+  const propsResult = useHandleProps(props, ref, nodeProps);
 
   if (hidden) return null;
 

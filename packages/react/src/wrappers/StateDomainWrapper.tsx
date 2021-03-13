@@ -31,7 +31,11 @@ function StateDomainWrapper(props: any) {
   return (
     <PropsProvider value={childProps}>
       <BrickStoreProvider value={brickdStore}>
-        <ContainerDiffWrapper isContainer={isContainerNode} onMouseLeave={onMouseLeave} specialProps={specialProps}/>
+        <ContainerDiffWrapper
+          isContainer={isContainerNode}
+          onMouseLeave={onMouseLeave}
+          specialProps={specialProps}
+        />
       </BrickStoreProvider>
     </PropsProvider>
   );

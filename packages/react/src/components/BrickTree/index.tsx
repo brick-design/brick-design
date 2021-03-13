@@ -1,10 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import {
-  clearHovered,
-  PageConfigType,
-  ROOT,
-  STATE_PROPS,
-} from '@brickd/core';
+import { clearHovered, PageConfigType, ROOT, STATE_PROPS } from '@brickd/core';
 import SortTree from './SortTree';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
@@ -15,7 +10,7 @@ interface BrickTreeProps {
 
 function BrickTree(props: BrickTreeProps) {
   const { pageConfig } = useSelector<
-    { pageConfig: PageConfigType},
+    { pageConfig: PageConfigType },
     STATE_PROPS
   >(['pageConfig'], (prevState, nextState) => {
     const {

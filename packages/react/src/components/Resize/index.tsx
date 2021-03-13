@@ -214,11 +214,6 @@ function Resize() {
     [heightRef.current, widthRef.current],
   );
 
-  useEffect(() => {
-    console.log('setSelectedBorder>>>>>');
-    setSelectedBorder();
-  });
-
   const setSelectedBorder = (css = '') => {
     const { selectedNode, isModal } = getOperateState<OperateStateType>();
     if (selectedNode) {

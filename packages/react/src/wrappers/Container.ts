@@ -51,6 +51,7 @@ import { useChildNodes } from '../hooks/useChildNodes';
 import { useSelector } from '../hooks/useSelector';
 import { useOperate } from '../hooks/useOperate';
 import { useEvents } from '../hooks/useEvents';
+import { OperateStateType } from '../components/OperateProvider';
 /**
  * 所有的容器组件名称
  */
@@ -89,7 +90,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const vNode = get(pageConfig, key, {}) as VirtualDOMType;
   const { childNodes, componentName } = vNode;
   const { props, hidden, pageState } = useCommon(vNode, rest);
-  const{index}=pageState;
+  const { index } = pageState;
   useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType | undefined>(
     childNodes,
@@ -101,7 +102,9 @@ function Container(allProps: CommonPropsType, ref: any) {
   );
   const nodePropNames = keys(nodePropsConfig);
   const prevPropName = useRef(
-    nodePropNames.includes(defaultPropName) ? defaultPropName : nodePropNames[0],
+    nodePropNames.includes(defaultPropName)
+      ? defaultPropName
+      : nodePropNames[0],
   );
   const propParentNodes = useRef<PropParentNodes>({});
   const nodeRectsMap = useRef<NodeRectsMapType>({});
@@ -110,19 +113,17 @@ function Container(allProps: CommonPropsType, ref: any) {
     pageConfig,
     domTreeKeys,
   ]);
-  const { setOperateState } = useOperate(isModal);
+  const { setOperateState, getOperateState } = useOperate(isModal);
   const parentNodeRect = 'parentNodeRect';
-  const {
-    selectedDomKeys,
-    isSelected,
-    propName,
-    lockedKey,
-  } = useSelect(specialProps, !!mirrorModalField);
+  const { selectedDomKeys, isSelected, propName, lockedKey } = useSelect(
+    specialProps,
+    !!mirrorModalField,
+  );
 
-  let selectedPropName=prevPropName.current;
+  let selectedPropName = prevPropName.current;
   if (propName && isSelected) {
     prevPropName.current = propName;
-    selectedPropName=propName;
+    selectedPropName = propName;
   }
   const {
     onClick,
@@ -130,7 +131,13 @@ function Container(allProps: CommonPropsType, ref: any) {
     onMouseOver,
     onDragStart,
     setSelectedNode,
-  } = useEvents(parentRootNode, specialProps, isSelected, selectedPropName);
+  } = useEvents(
+    parentRootNode,
+    specialProps,
+    isSelected,
+    selectedPropName,
+    index,
+  );
 
   // const dragOver=(event:DragEvent,childNodes:string[],propName:string)=>{
   // 	event.preventDefault();
@@ -147,10 +154,11 @@ function Container(allProps: CommonPropsType, ref: any) {
   // };
 
   useEffect(() => {
-    if (!nodePropsConfig||
+    if (
+      !nodePropsConfig ||
       isEmpty(children) ||
-      isEmpty(propParentNodes.current)||
-      index&&parseInt(index)!==0
+      isEmpty(propParentNodes.current) ||
+      (index && parseInt(index) !== 0)
     )
       return;
     const propNameListeners = {};
@@ -181,13 +189,14 @@ function Container(allProps: CommonPropsType, ref: any) {
   });
 
   useEffect(() => {
-      const iframe = getIframe();
-      parentRootNode.current = getSelectedNode(index,key, iframe);
-    if(!getDragKey()&&isSelected){
+    const iframe = getIframe();
+    parentRootNode.current = getSelectedNode(index, key, iframe);
+    const { index: selectedIndex } = getOperateState<OperateStateType>();
+    if (!getDragKey() && isSelected && selectedIndex === index) {
       setSelectedNode(parentRootNode.current);
     }
 
-    if(index&&parseInt(index)!==0) return;
+    if (index && parseInt(index) !== 0) return;
     const parentRect = parentRootNode.current
       ? getParentNodeRealRect(parentRootNode.current)
       : null;
@@ -217,7 +226,12 @@ function Container(allProps: CommonPropsType, ref: any) {
   });
 
   useEffect(() => {
-    if (!isSelected||isEmpty(propParentNodes.current[defaultPropName]) || nodePropsConfig||index&&parseInt(index)!==0)
+    if (
+      !isSelected ||
+      isEmpty(propParentNodes.current[defaultPropName]) ||
+      nodePropsConfig ||
+      (index && parseInt(index) !== 0)
+    )
       return;
     const isV = isVertical(propParentNodes.current[defaultPropName]);
     const dragOver = (event: DragEvent) => {
@@ -250,14 +264,18 @@ function Container(allProps: CommonPropsType, ref: any) {
   });
 
   if (selectedKey !== key && !isEqual(childNodes, children)) {
-
     setChildren(childNodes);
   }
 
   const onParentDragEnter = (e: DragEvent) => {
     e.stopPropagation();
     const dragKey = getDragKey();
-    if (key === dragKey || (nodePropsConfig && isEmpty(children))||index&&parseInt(index)!==0) return;
+    if (
+      key === dragKey ||
+      (nodePropsConfig && isEmpty(children)) ||
+      (index && parseInt(index) !== 0)
+    )
+      return;
     getDropTarget({
       propName: selectedPropName,
       selectedKey: key,
@@ -265,7 +283,8 @@ function Container(allProps: CommonPropsType, ref: any) {
     });
     setOperateState({
       dropNode:
-        propParentNodes.current[selectedPropName||defaultPropName] || parentRootNode.current,
+        propParentNodes.current[selectedPropName || defaultPropName] ||
+        parentRootNode.current,
     });
     setTimeout(() => {
       if (nodePropsConfig) {
@@ -314,7 +333,6 @@ function Container(allProps: CommonPropsType, ref: any) {
         }
       }
     }, 0);
-
   };
 
   if (!isSelected && (!componentName || hidden)) return null;
@@ -341,7 +359,7 @@ function Container(allProps: CommonPropsType, ref: any) {
         (dragKey && !isSelected && domTreeKeys.includes(lockedKey)),
       className,
       animateClass,
-      index
+      index,
     ),
     onMouseOver,
     onDragStart,
@@ -353,7 +371,7 @@ function Container(allProps: CommonPropsType, ref: any) {
     ...handleChildNodes(
       specialProps,
       pageConfig,
-      {...pageState,...pageState.getPageState()},
+      { ...pageState, ...pageState.getPageState() },
       children,
     ),
     ...props,

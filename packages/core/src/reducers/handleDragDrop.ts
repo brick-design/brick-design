@@ -76,7 +76,7 @@ export function getDropTarget(
   if (isEqual(payload, dropTarget)) return state;
   return {
     ...state,
-    dropTarget: payload
+    dropTarget: payload,
   };
 }
 

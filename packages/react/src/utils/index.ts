@@ -56,7 +56,7 @@ export function formatUnit(target: string | null) {
 }
 
 export const getSelectedNode = (
-  index='0',
+  index = 0,
   key?: string | null,
   iframe?: HTMLIFrameElement,
   propName?: string,
@@ -64,7 +64,7 @@ export const getSelectedNode = (
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
-      index+selectClassTarget + parseInt(key) + (propName ? propName : ''),
+      index + selectClassTarget + parseInt(key) + (propName ? propName : ''),
     )[0] as HTMLElement;
   }
 };
@@ -370,16 +370,16 @@ export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
   parentKey: string,
-  index='0'
+  index = 0,
 ) => {
   const iframe = getIframe();
   if (Array.isArray(childNodes)) {
     for (const childKey of childNodes) {
-      const node = getSelectedNode(  index='0',childKey, iframe);
+      const node = getSelectedNode(index, childKey, iframe);
       if (node) {
         const parentNode = node.parentElement;
         parentNode.className +=
-          ` ` + index+selectClassTarget + parentKey + defaultPropName;
+          ` ` + index + selectClassTarget + parentKey + defaultPropName;
         parentNodes[defaultPropName] = parentNode;
         break;
       }
@@ -388,11 +388,11 @@ export const getPropParentNodes = (
     each(childNodes, (nodes, propName) => {
       if (!parentNodes[propName]) {
         for (const key of nodes) {
-          const node = getSelectedNode(index,key, iframe);
+          const node = getSelectedNode(index, key, iframe);
           if (node) {
             const parentNode = node.parentElement;
             parentNode.className +=
-              ` ` + index+selectClassTarget + parentKey + propName;
+              ` ` + index + selectClassTarget + parentKey + propName;
             parentNodes[propName] = parentNode;
             break;
           }

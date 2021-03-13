@@ -7,11 +7,10 @@ import { useHiddenComponent } from './useHiddenComponent';
 
 export function useCommon(vNode: VirtualDOMType, rest: any) {
   const { props: prevProps, state, api, condition, isStateDomain } = vNode;
-  const selector = useMemo(() => getStateFields({ prevProps, api, condition }), [
-    prevProps,
-    api,
-    condition,
-  ]);
+  const selector = useMemo(
+    () => getStateFields({ prevProps, api, condition }),
+    [prevProps, api, condition],
+  );
 
   // eslint-disable-next-line no-undef
   const pageState = useGetState(

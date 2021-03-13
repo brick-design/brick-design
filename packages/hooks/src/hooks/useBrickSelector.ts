@@ -41,7 +41,7 @@ function useSelectorWithStore<T>(
   controlUpdate?: ControlUpdate<T>,
   stateDeep?: string,
 ): T {
-  const forceRender= useForceRender();
+  const forceRender = useForceRender();
   const prevSelector = useRef([]);
   const prevStoreState = useRef();
   const prevSelectedState = useRef({} as any);
