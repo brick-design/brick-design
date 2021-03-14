@@ -3,7 +3,7 @@ import React, { memo, useEffect, useRef } from 'react';
 import { each } from 'lodash';
 import styles from './index.less';
 import {
-  generateCSS,
+  generateCSS, getDragKey,
   getElementInfo,
   getIframe,
   setPosition,
@@ -184,7 +184,7 @@ function Distances() {
       const { selectedNode, hoverNode, isModal } = getOperateState<
         OperateStateType
       >();
-      if (hoverNode && selectedNode) {
+      if (hoverNode && selectedNode&&!getDragKey()) {
         const selectRect: ClientRect = getElementInfo(
           selectedNode,
           iframe,

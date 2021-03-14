@@ -9,6 +9,7 @@ import {
 import { clearDragSource, ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
+import { isEmpty } from 'lodash';
 import {
   CommonPropsType,
   controlUpdate,
@@ -47,7 +48,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const vNode = (pageConfig[key] || {}) as VirtualDOMType;
   const { componentName } = vNode;
   const { props, hidden, pageState } = useCommon(vNode, rest);
-  const { index } = pageState;
+  const { index = 0, funParams, item } = pageState;
   const parentRootNode = useRef<HTMLElement>();
   const {
     onClick,
@@ -65,7 +66,12 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     const iframe = getIframe();
     parentRootNode.current = getSelectedNode(index, key, iframe);
     const { index: selectedIndex } = getOperateState<OperateStateType>();
-    if (!getDragKey() && isSelected && selectedIndex === index) {
+    if (
+      !getDragKey() &&
+      isSelected &&
+      (isEmpty(funParams || item) ||
+        (isEmpty(funParams || item) && selectedIndex === index))
+    ) {
       setSelectedNode(parentRootNode.current);
     }
   });

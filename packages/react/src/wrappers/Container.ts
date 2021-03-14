@@ -90,7 +90,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const vNode = get(pageConfig, key, {}) as VirtualDOMType;
   const { childNodes, componentName } = vNode;
   const { props, hidden, pageState } = useCommon(vNode, rest);
-  const { index } = pageState;
+  const { index = 0, item, funParams } = pageState;
   useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType | undefined>(
     childNodes,
@@ -192,7 +192,13 @@ function Container(allProps: CommonPropsType, ref: any) {
     const iframe = getIframe();
     parentRootNode.current = getSelectedNode(index, key, iframe);
     const { index: selectedIndex } = getOperateState<OperateStateType>();
-    if (!getDragKey() && isSelected && selectedIndex === index) {
+
+    if (
+      !getDragKey() &&
+      isSelected &&
+      (isEmpty(funParams || item) ||
+        (isEmpty(funParams || item) && selectedIndex === index))
+    ) {
       setSelectedNode(parentRootNode.current);
     }
 
@@ -282,9 +288,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       domTreeKeys,
     });
     setOperateState({
-      dropNode:
-        propParentNodes.current[selectedPropName || defaultPropName] ||
-        parentRootNode.current,
+      dropNode: parentRootNode.current,
     });
     setTimeout(() => {
       if (nodePropsConfig) {
@@ -321,16 +325,15 @@ function Container(allProps: CommonPropsType, ref: any) {
     });
     setOperateState({ dropNode: propParentNodes.current[propName] });
     setTimeout(() => {
-      if (isEmpty(children)) {
+      if (isEmpty(childNodes)) {
         setChildren({ [propName]: [dragKey] });
       } else {
         const newChildren = cloneChildNodes(childNodes);
         const childChildren = get(newChildren, propName, []);
         if (!childChildren.includes(dragKey)) {
           newChildren[propName] = [...new Set([dragKey, ...childChildren])];
-
-          setChildren(newChildren);
         }
+        setChildren(newChildren);
       }
     }, 0);
   };

@@ -378,8 +378,8 @@ export const getPropParentNodes = (
       const node = getSelectedNode(index, childKey, iframe);
       if (node) {
         const parentNode = node.parentElement;
-        parentNode.className +=
-          ` ` + index + selectClassTarget + parentKey + defaultPropName;
+        // parentNode.className +=
+        //   ` ` + index + selectClassTarget + parentKey + defaultPropName;
         parentNodes[defaultPropName] = parentNode;
         break;
       }

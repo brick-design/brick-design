@@ -8,11 +8,7 @@ import {
 export function useOperate(isModal?: boolean) {
   const operateStore = useContext<BrickStore<OperateStateType>>(OperateContext);
   const setOperateState = useCallback((operateState: OperateStateType) => {
-    const { dragKey } = operateState;
     operateState.isModal = isModal;
-    if (!dragKey) {
-      operateState.dragKey = undefined;
-    }
     operateStore.setPageState(operateState);
   }, []);
 

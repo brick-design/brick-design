@@ -6,7 +6,6 @@ export type OperateStateType = {
   selectedNode?: HTMLElement;
   dropNode?: HTMLElement;
   isModal?: boolean;
-  dragKey?: string;
   operateHoverKey?: string;
   operateSelectedKey?: string;
   index?: number;

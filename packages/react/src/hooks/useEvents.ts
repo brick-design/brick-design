@@ -30,21 +30,24 @@ export function useEvents(
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
 
-  const setSelectedNode = useCallback((selectedNode: HTMLElement) => {
-    setOperateState({
-      selectedNode: selectedNode,
-      operateSelectedKey: key,
-      index,
-    });
-  }, []);
+  const setSelectedNode = useCallback(
+    (selectedNode: HTMLElement) => {
+      selectComponent({ ...specialProps, propName });
+      setOperateState({
+        selectedNode: selectedNode,
+        operateSelectedKey: key,
+        index,
+      });
+    },
+    [propName],
+  );
 
   const onDoubleClick = useCallback(
     (e: Event) => {
       e && e.stopPropagation && e.stopPropagation();
       setSelectedNode(nodeRef.current);
-      selectComponent({ ...specialProps, propName });
     },
-    [propName, nodeRef.current],
+    [nodeRef.current],
   );
 
   const onDragStart = useCallback(
