@@ -1,29 +1,29 @@
 {
   "files": {
     "antdesigns.css": "./static/css/antdesigns.chunk.css",
-    "antdesigns.js": "./static/js/antdesigns.66a86c05.chunk.js",
-    "antdesigns.js.map": "./static/js/antdesigns.66a86c05.chunk.js.map",
+    "antdesigns.js": "./static/js/antdesigns.0a0946ff.chunk.js",
+    "antdesigns.js.map": "./static/js/antdesigns.0a0946ff.chunk.js.map",
     "main.css": "./static/css/main.chunk.css",
-    "main.js": "./static/js/main.12b52a7c.chunk.js",
-    "main.js.map": "./static/js/main.12b52a7c.chunk.js.map",
+    "main.js": "./static/js/main.78d87dcf.chunk.js",
+    "main.js.map": "./static/js/main.78d87dcf.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.4bb56a16.js",
     "runtime-main.js.map": "./static/js/runtime-main.4bb56a16.js.map",
-    "vendors.js": "./static/js/vendors.32103eb1.chunk.js",
-    "vendors.js.map": "./static/js/vendors.32103eb1.chunk.js.map",
+    "vendors.js": "./static/js/vendors.29cb9227.chunk.js",
+    "vendors.js.map": "./static/js/vendors.29cb9227.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.a3d4848c0d61fcd1731365fc32fc40c5.js": "./precache-manifest.a3d4848c0d61fcd1731365fc32fc40c5.js",
+    "precache-manifest.c3cf37ec0db5bcce0314d5629527c574.js": "./precache-manifest.c3cf37ec0db5bcce0314d5629527c574.js",
     "service-worker.js": "./service-worker.js",
     "static/css/antdesigns.chunk.css.map": "./static/css/antdesigns.chunk.css.map",
     "static/css/main.chunk.css.map": "./static/css/main.chunk.css.map",
-    "static/js/main.12b52a7c.chunk.js.LICENSE.txt": "./static/js/main.12b52a7c.chunk.js.LICENSE.txt",
-    "static/js/vendors.32103eb1.chunk.js.LICENSE.txt": "./static/js/vendors.32103eb1.chunk.js.LICENSE.txt"
+    "static/js/main.78d87dcf.chunk.js.LICENSE.txt": "./static/js/main.78d87dcf.chunk.js.LICENSE.txt",
+    "static/js/vendors.29cb9227.chunk.js.LICENSE.txt": "./static/js/vendors.29cb9227.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.4bb56a16.js",
-    "static/js/vendors.32103eb1.chunk.js",
+    "static/js/vendors.29cb9227.chunk.js",
     "static/css/antdesigns.chunk.css",
-    "static/js/antdesigns.66a86c05.chunk.js",
+    "static/js/antdesigns.0a0946ff.chunk.js",
     "static/css/main.chunk.css",
-    "static/js/main.12b52a7c.chunk.js"
+    "static/js/main.78d87dcf.chunk.js"
   ]
 }
