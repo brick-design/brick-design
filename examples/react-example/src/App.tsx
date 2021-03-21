@@ -48,7 +48,7 @@ export default function App() {
 				<div className={styles['content']}>
 					<Resizable
 						enable={LEFT_ENABLE}
-						defaultSize={{ width: '260px', height: '100%' }}
+						defaultSize={{ width: '150px', height: '100%' }}
 						className={styles['left-preview']}
 					>
 						<AllComponents />
@@ -69,7 +69,7 @@ export default function App() {
 					</div>
 					<Resizable
 						enable={RIGHT_ENABLE}
-						defaultSize={{ width: '300px', height: '100%' }}
+						defaultSize={{ width: '150px', height: '100%' }}
 						className={styles['props-shadow']}
 					>
 						<SettingsPanel />

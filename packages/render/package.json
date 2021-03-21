@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@brickd/hooks": "^1.0.0-alpha.16",
+    "json5": "^2.2.0",
     "lodash": "^4.17.15",
     "react": "^16.8.0"
   },

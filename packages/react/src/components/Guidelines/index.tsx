@@ -16,7 +16,6 @@ import {
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
-import { OperateStateType } from '../OperateProvider';
 
 type SelectState = {
   hoverKey: string | null;
@@ -40,17 +39,15 @@ function Guidelines() {
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey } = selectedInfo || {};
   const dropKey = get(dropTarget, 'selectedKey');
-  const { operateHoverKey, operateSelectedKey } = getOperateState<
-    OperateStateType
-  >();
+  const { operateHoverKey, operateSelectedKey,dropNode } = getOperateState();
 
   if (!dropKey && hoverKey !== operateHoverKey) {
-    const hoverNode = getSelectedNode(undefined, hoverKey, getIframe());
+    const hoverNode = getSelectedNode( `${hoverKey}-0`, getIframe());
     setOperateState({ hoverNode, operateHoverKey: hoverKey });
   }
 
   if (selectedKey !== operateSelectedKey) {
-    const selectedNode = getSelectedNode(undefined, selectedKey, getIframe());
+    const selectedNode = getSelectedNode(`${selectedKey}-0`, getIframe());
     setOperateState({ selectedNode, operateSelectedKey: selectedKey });
   }
 
@@ -58,9 +55,7 @@ function Guidelines() {
     const iframe = getIframe();
     const { contentWindow, contentDocument } = iframe;
     const renderGuideLines = () => {
-      const { hoverNode, dropNode, isModal } = getOperateState<
-        OperateStateType
-      >();
+      const { hoverNode, dropNode, isModal,isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
         const { left, top, bottom, right, width, height } = getElementInfo(
@@ -74,6 +69,16 @@ function Guidelines() {
           width,
           height,
         );
+        if(dropNode){
+          if(isDropAble){
+            hoverNodeRef.current.style.borderColor='springgreen';
+            hoverNodeRef.current.style.backgroundColor='rgba(0, 256, 0, 0.1)';
+          }else{
+            hoverNodeRef.current.style.borderColor='red';
+            hoverNodeRef.current.style.backgroundColor='rgba(256, 0, 0, 0.1)';
+          }
+
+        }
         topRef.current.style.top = `${top}px`;
         topRef.current.style.width = `${contentDocument!.body.scrollWidth}px`;
         leftRef.current.style.left = `${left}px`;
@@ -120,13 +125,13 @@ function Guidelines() {
     topRef.current,
   ]);
 
-  const guidControl = !dropKey && hoverKey;
+  const guidControl = !dropNode && hoverKey;
 
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
   const guidV = guidControl ? styles['guide-v'] : styles['guide-hidden'];
   const hoverNodeClass =
-    dropKey || hoverKey
-      ? dropKey
+    dropNode || hoverKey
+      ? dropNode
         ? styles['drop-node']
         : styles['hover-node']
       : styles['guide-hidden'];

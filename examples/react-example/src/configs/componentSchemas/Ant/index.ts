@@ -55,7 +55,7 @@ export default {
 	BackTop,
 	Badge,
 	...Breadcrumb,
-	Button,
+	...Button,
 	Calendar,
 	...Card,
 	Carousel,

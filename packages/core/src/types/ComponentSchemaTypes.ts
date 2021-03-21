@@ -84,7 +84,7 @@ export interface NodePropsConfigType {
  */
 export interface MirrorModalFieldType {
   // 控制显示的属性字段（比如：Modal的visible）
-  displayPropName: string;
+  displayPropName?: string;
   // 挂载组件的配置信息
   mounted?: {
     //挂载组件的属性的名 (比如Modal的getContainer)

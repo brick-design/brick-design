@@ -16,10 +16,12 @@ export function useEvents(
   nodeRef: RefObject<HTMLElement>,
   specialProps: SelectedInfoBaseType,
   isSelected: boolean,
+  props:any,
   propName?: string,
   index?: number,
 ) {
   const { key, domTreeKeys, parentKey, parentPropName } = specialProps;
+  const {onMouseOver:onMouseOverFun}=props;
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
     ['pageConfig'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
@@ -47,7 +49,7 @@ export function useEvents(
       e && e.stopPropagation && e.stopPropagation();
       setSelectedNode(nodeRef.current);
     },
-    [nodeRef.current],
+    [nodeRef.current,],
   );
 
   const onDragStart = useCallback(
@@ -75,14 +77,16 @@ export function useEvents(
     (event: Event) => {
       event.stopPropagation();
       if (getDragKey()) {
-        return setOperateState({ hoverNode: null, operateHoverKey: null });
+         setOperateState({ hoverNode: null, operateHoverKey: null });
+      }else {
+        setOperateState({ hoverNode: nodeRef.current, operateHoverKey: key });
+        overTarget({
+          hoverKey: key,
+        });
       }
-      setOperateState({ hoverNode: nodeRef.current, operateHoverKey: key });
-      overTarget({
-        hoverKey: key,
-      });
+      if(typeof onMouseOverFun==='function' ) onMouseOverFun();
     },
-    [nodeRef.current],
+    [nodeRef.current,onMouseOverFun],
   );
 
   return {

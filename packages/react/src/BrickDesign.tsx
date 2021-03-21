@@ -27,7 +27,7 @@ import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
 import { useSelector } from './hooks/useSelector';
-import StateDomainWarpper from './wrappers/StateDomainWrapper';
+import StateDomainWrapper from './wrappers/StateDomainWrapper';
 import {
   OperateProvider,
   OperateStateType,
@@ -62,6 +62,7 @@ const controlUpdate = (
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {
+
   const { onLoadEnd, pageName, initState, options, ...props } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     stateSelector,
@@ -77,7 +78,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onMouseLeave = useCallback((event: Event) => {
     event.stopPropagation();
     clearHovered();
-    operateStore.current.setPageState<OperateStateType>({
+    operateStore.setPageState({
       hoverNode: null,
       operateHoverKey: null,
     });
@@ -88,7 +89,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     if (!rootComponent) return null;
     const specialProps = { domTreeKeys: [ROOT], key: ROOT, parentKey: '' };
     return (
-      <StateDomainWarpper
+      <StateDomainWrapper
         {...props}
         onMouseLeave={onMouseLeave}
         specialProps={specialProps}
@@ -100,12 +101,12 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const divContainer = useRef(null);
   const operateStore = useRef<BrickStore<OperateStateType>>(
     new BrickStore<OperateStateType>(),
-  );
+  ).current;
   const componentMount = useCallback(
     (divContainer, designPage) => {
       ReactDOM.render(
         <StaticContextProvider value={staticState}>
-          <OperateProvider value={operateStore.current}>
+          <OperateProvider value={operateStore}>
             <BrickContext.Provider value={getStore()}>
               {designPage}
               <Guidelines />
@@ -130,7 +131,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const onIframeLoad = useCallback(() => {
     const head = document.head.cloneNode(true);
-    const contentDocument = iframeRef.current.contentDocument!;
+    const{contentDocument}=iframeRef.current;
     contentDocument.head.remove();
     contentDocument.documentElement.insertBefore(head, contentDocument.body);
     divContainer.current = contentDocument.getElementById('dnd-container');
@@ -152,7 +153,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onDrop = useCallback((e: DragEvent) => {
     e.stopPropagation();
     addComponent();
-    operateStore.current.setPageState({ dropNode: null });
+    operateStore.setPageState({ dropNode: null });
   }, []);
 
   useEffect(() => {

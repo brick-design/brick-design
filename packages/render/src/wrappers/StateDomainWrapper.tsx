@@ -15,10 +15,10 @@ function StateDomainWrapper(props: any) {
   const { renderKey, ...rest } = props;
   const { pageConfig } = useContext(StaticContext);
 
-  const { state, api, propFields, childNodes } = pageConfig[renderKey];
+  const { state, api, childNodes } = pageConfig[renderKey];
   const brickdStore = useRedux(state);
   const childProps =
-    useGetProps(propFields, brickdStore.getPageState()) || rest;
+    useGetProps(brickdStore.getPageState(),rest);
   useService(brickdStore.getPageState(), api);
   return (
     <PropsProvider value={childProps}>

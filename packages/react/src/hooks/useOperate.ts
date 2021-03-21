@@ -7,9 +7,9 @@ import {
 
 export function useOperate(isModal?: boolean) {
   const operateStore = useContext<BrickStore<OperateStateType>>(OperateContext);
-  const setOperateState = useCallback((operateState: OperateStateType) => {
+  const setOperateState = useCallback((operateState: OperateStateType, executeKey?: string) => {
     operateState.isModal = isModal;
-    operateStore.setPageState(operateState);
+    operateStore.setPageState(operateState,undefined,executeKey);
   }, []);
 
   return {

@@ -16,6 +16,9 @@
     "moment": "^2.29.1",
     "qs": "^6.9.6"
   },
+  "devDependencies": {
+    "@types/react": "^16.9.35"
+  },
   "scripts": {
     "build": "tsc && rollup -c rollup.config.js",
     "clean": "../../scripts/clean_package.sh",

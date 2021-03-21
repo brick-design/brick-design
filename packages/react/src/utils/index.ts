@@ -56,15 +56,13 @@ export function formatUnit(target: string | null) {
 }
 
 export const getSelectedNode = (
-  index = 0,
   key?: string | null,
   iframe?: HTMLIFrameElement,
-  propName?: string,
 ): HTMLElement | undefined => {
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
-      index + selectClassTarget + parseInt(key) + (propName ? propName : ''),
+      selectClassTarget + key,
     )[0] as HTMLElement;
   }
 };
@@ -369,17 +367,14 @@ export const dragSort = (
 export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
-  parentKey: string,
   index = 0,
 ) => {
   const iframe = getIframe();
   if (Array.isArray(childNodes)) {
     for (const childKey of childNodes) {
-      const node = getSelectedNode(index, childKey, iframe);
+      const node = getSelectedNode(`${childKey}-${index}`, iframe);
       if (node) {
         const parentNode = node.parentElement;
-        // parentNode.className +=
-        //   ` ` + index + selectClassTarget + parentKey + defaultPropName;
         parentNodes[defaultPropName] = parentNode;
         break;
       }
@@ -388,11 +383,9 @@ export const getPropParentNodes = (
     each(childNodes, (nodes, propName) => {
       if (!parentNodes[propName]) {
         for (const key of nodes) {
-          const node = getSelectedNode(index, key, iframe);
+          const node = getSelectedNode(`${key}-${index}`, iframe);
           if (node) {
             const parentNode = node.parentElement;
-            parentNode.className +=
-              ` ` + index + selectClassTarget + parentKey + propName;
             parentNodes[propName] = parentNode;
             break;
           }
@@ -408,7 +401,7 @@ export const getDragKey = () =>
   get(getSelector(['dragSource']), ['dragSource', 'dragKey']);
 export const getDragSourceVDom = () =>
   get(getSelector(['dragSource']), ['dragSource', 'vDOMCollection'], {});
-
+export const getDragComponentName=(dragKey?:string)=>get(getSelector(['pageConfig']), ['pageConfig',dragKey||getDragKey(),'componentName']);
 export function css(el) {
   const style = el && el.style;
   const iframe = getIframe();
@@ -499,4 +492,31 @@ export function isVertical(el) {
         elCSS[CSSFloatProperty] === 'none' &&
         firstChildWidth + secondChildWidth > elWidth))
   );
+}
+
+export const isNeedJudgeFather=(dragKey?:string)=>{
+  const componentName= getDragComponentName(dragKey);
+  const fatherNodesRule = get(getComponentConfig(componentName),'fatherNodesRule');
+  return !!fatherNodesRule;
+};
+
+export const isAllowDrop=(childNodesRule?:string[])=>{
+  if(!childNodesRule) return  true;
+  const componentName= getDragComponentName();
+  return childNodesRule.includes(componentName);
+};
+
+export function isAllowAdd(targetComponentName:string,dragKey?:string){
+ const componentName= getDragComponentName(dragKey);
+  const fatherNodesRule=get(getComponentConfig(componentName),'fatherNodesRule');
+  if(!fatherNodesRule) return false;
+  if(fatherNodesRule){
+    for(const father of fatherNodesRule) {
+      if(father.includes(targetComponentName)){
+        return  true;
+      }
+    }
+  }
+
+
 }

@@ -1,12 +1,12 @@
 import {
   createElement,
   forwardRef,
-  memo,
+  memo, useCallback,
   useEffect,
   useMemo,
   useRef,
 } from 'react';
-import { clearDragSource, ROOT, STATE_PROPS } from '@brickd/core';
+import { clearDragSource, clearDropTarget, ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
 import { isEmpty } from 'lodash';
@@ -30,7 +30,6 @@ import {
 import { useSelect } from '../hooks/useSelect';
 import { useSelector } from '../hooks/useSelector';
 import { useEvents } from '../hooks/useEvents';
-import { OperateStateType } from '../components/OperateProvider';
 import { useOperate } from '../hooks/useOperate';
 
 function NoneContainer(allProps: CommonPropsType, ref: any) {
@@ -49,6 +48,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const { componentName } = vNode;
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const { index = 0, funParams, item } = pageState;
+  const uniqueKey=`${key}-${index}`;
   const parentRootNode = useRef<HTMLElement>();
   const {
     onClick,
@@ -56,16 +56,16 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     onMouseOver,
     onDragStart,
     setSelectedNode,
-  } = useEvents(parentRootNode, specialProps, isSelected);
+  } = useEvents(parentRootNode, specialProps, isSelected,props);
   const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
     pageConfig,
     domTreeKeys,
   ]);
-  const { getOperateState } = useOperate(isModal);
+  const { getOperateState,setOperateState } = useOperate(isModal);
   useEffect(() => {
     const iframe = getIframe();
-    parentRootNode.current = getSelectedNode(index, key, iframe);
-    const { index: selectedIndex } = getOperateState<OperateStateType>();
+    parentRootNode.current = getSelectedNode(uniqueKey, iframe);
+    const { index: selectedIndex } = getOperateState();
     if (
       !getDragKey() &&
       isSelected &&
@@ -74,7 +74,24 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     ) {
       setSelectedNode(parentRootNode.current);
     }
+
+    parentRootNode.current&&parentRootNode.current.addEventListener('dragenter',onDragEnter);
+    return ()=>{
+      parentRootNode.current&&parentRootNode.current.removeEventListener('dragenter',onDragEnter);
+    };
   });
+
+
+
+  const onDragEnter=useCallback((e)=>{
+    e.stopPropagation();
+    console.log('onDragEnter>>>>>>>',parentRootNode.current);
+    setOperateState({
+      dropNode: parentRootNode.current,
+      isDropAble:false,
+    });
+    clearDropTarget();
+  },[parentRootNode.current]);
 
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
@@ -82,26 +99,23 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   return createElement(getComponent(componentName), {
     ...restProps,
     className: handlePropsClassName(
-      key,
+      uniqueKey,
       dragKey === key ||
         (dragKey && !isSelected && domTreeKeys.includes(lockedKey)),
       className,
-      animateClass,
-      index,
-    ),
+      animateClass),
     onDragStart,
     onMouseOver,
     onDoubleClick,
     onClick,
     onDragEnd: clearDragSource,
+    onDragEnter,
     ...generateRequiredProps(componentName),
-    ...props,
     draggable: true,
     /**
      * 设置组件id方便抓取图片
      */
     ref,
-    ...rest,
   });
 }
 

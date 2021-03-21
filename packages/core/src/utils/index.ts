@@ -199,7 +199,8 @@ export function deleteChildNodesKey(
   }
 }
 
-export function getComponentConfig(componentName: string): ComponentSchemaType {
+export function getComponentConfig(componentName?: string): ComponentSchemaType {
+  if(!componentName) return;
   const componentSchemasMap = get(getBrickdConfig(), ['componentSchemasMap']);
   if (!componentSchemasMap) {
     error('Component configuration information set not found！! !');

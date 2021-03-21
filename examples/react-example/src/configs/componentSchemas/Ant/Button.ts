@@ -79,5 +79,11 @@ const Button: ComponentSchemaType = {
 		},
 	},
 }
-
-export default Button
+const Group: ComponentSchemaType = {
+	propsConfig: {
+	},
+}
+export default {
+	Button,
+	'Button.Group': Group,
+}

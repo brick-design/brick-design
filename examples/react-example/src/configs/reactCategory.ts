@@ -75,6 +75,7 @@ export const reactContainers: CategoryType = {
 			},
 		],
 	},
+	"Button.Group":null,
 	Input: {
 		components: {
 			Input: {

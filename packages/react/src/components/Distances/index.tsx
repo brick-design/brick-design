@@ -9,7 +9,6 @@ import {
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
-import { OperateStateType } from '../OperateProvider';
 
 function handleDistances(selectRect: ClientRect, hoverRect: ClientRect) {
   const {
@@ -181,9 +180,7 @@ function Distances() {
 
   useEffect(() => {
     const renderDistances = () => {
-      const { selectedNode, hoverNode, isModal } = getOperateState<
-        OperateStateType
-      >();
+      const { selectedNode, hoverNode, isModal } = getOperateState();
       if (hoverNode && selectedNode&&!getDragKey()) {
         const selectRect: ClientRect = getElementInfo(
           selectedNode,

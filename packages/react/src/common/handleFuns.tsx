@@ -16,7 +16,7 @@ import { resolveMapping, isPureVariable } from '@brickd/utils';
 import styles from './style.less';
 import { selectClassTarget } from './constants';
 
-import { generateRequiredProps, getComponent, getIframe } from '../utils';
+import { generateRequiredProps, getComponent, getIframe, } from '../utils';
 import StateDomainWrapper from '../wrappers/StateDomainWrapper';
 import MapNodesRenderWrapper from '../wrappers/MapNodesRenderWrapper';
 import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
@@ -26,10 +26,10 @@ export function handlePropsClassName(
   isLockTarget: boolean,
   className: any,
   animateClass: string,
-  index = '0',
+  isAllowAdd?:boolean
 ) {
-  return `${index + selectClassTarget + key} ${className} ${animateClass} 
-  ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}`;
+  return `${selectClassTarget + key} ${className} ${animateClass} 
+  ${!isLockTarget&&isAllowAdd?styles['allow-add']:''}`;
 }
 
 /**
@@ -80,7 +80,7 @@ function renderNodes(
               isContainer={isCon}
               index={index}
               specialProps={specialProps}
-              key={`${item.key || item.id || index}${index}${key}`}
+              key={`${item.key || item.id||index}${key}`}
               item={item}
             />
           );
@@ -214,7 +214,7 @@ export function handleModalTypeContainer(
   if (mounted) {
     const { propName, type } = mounted;
     const iframe: any = getIframe();
-    const mountedNode = iframe.contentDocument.body;
+    const mountedNode = iframe.contentWindow;
     mountedProps[propName] =
       type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
   }

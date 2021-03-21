@@ -1,6 +1,12 @@
 import { ComponentSchemaType, PROPS_TYPES } from '@brickd/react'
 
 const BackTop: ComponentSchemaType = {
+	mirrorModalField: {
+		mounted: {
+			propName: 'target',
+			type: PROPS_TYPES.function,
+		},
+	},
 	propsConfig: {
 		target: {
 			label: '监听滚动事件元素',

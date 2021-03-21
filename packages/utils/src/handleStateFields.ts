@@ -1,4 +1,5 @@
 import { each, isPlainObject } from 'lodash';
+import { ChildNodesType, PageConfigType } from './types';
 
 export const ALL_PROPS = '$all';
 export function getStateFields(data: any, fieldsRet?: string[]) {
@@ -31,6 +32,28 @@ export function getStateFields(data: any, fieldsRet?: string[]) {
   });
 
   return [...new Set(ret.filter((field) => field !== 'funParams'))];
+}
+export function getChildrenFields(pageConfig:PageConfigType,childNodes:ChildNodesType){
+  const resultFields=[];
+  const getFields=(childNodes:string[])=>{
+    each(childNodes,nodeKey=>{
+      const {loop}=pageConfig[nodeKey];
+      if(typeof loop==='string'){
+        resultFields.push(...getStateFields({loop}));
+      }
+    });
+  };
+  if(childNodes){
+    if(Array.isArray(childNodes)){
+      getFields(childNodes);
+    }else {
+      each(childNodes,nodeKeys=>{
+        getFields(nodeKeys);
+      });
+    }
+  }
+
+  return resultFields;
 }
 
 export const resolveFieldFromExpression = (

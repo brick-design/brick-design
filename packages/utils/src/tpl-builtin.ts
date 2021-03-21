@@ -11,7 +11,6 @@ import {
   string2regExp,
 } from './helper';
 import { createStr2Function, Enginer, evalExpression } from './tpl';
-import { ActionType } from './types';
 
 type PlainObject = {
   [key: string]: any;
@@ -744,20 +743,6 @@ export function resolveMapping(
     : value;
 }
 
-export const actionMap = {};
-
-export function handleAction(action: ActionType | string, data: PlainObject) {
-  if (typeof action === 'string') {
-    return createStr2Function(action, data);
-  } else {
-    if (action.actionType) {
-      return actionMap[action.actionType];
-    } else if (action.api) {
-      return;
-    }
-  }
-}
-
 export function dataMapping(
   to: any,
   from: PlainObject,
@@ -784,8 +769,7 @@ export function dataMapping(
         ...from,
       };
     } else if (key.includes('$') && typeof value === 'string') {
-      //todo
-      ret[key.substring(1)] = handleAction(value, from);
+        ret[key.substring(1)] = createStr2Function(value, from);
     } else if (key === '&') {
       const v =
         isPlainObject(value) &&

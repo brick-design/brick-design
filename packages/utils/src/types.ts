@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react';
+
 export interface SchemaApiObject {
   /**
    * API 发送类型
@@ -164,6 +166,7 @@ export type PropsNodeType = {
 export type ChildNodesType = string[] | PropsNodeType;
 
 export type PropsType = {
+  style?:CSSProperties
   [propName: string]: ActionType | any;
 };
 
@@ -177,7 +180,7 @@ export interface VirtualDOMType {
   isStateDomain?: boolean;
   propFields?: string[];
   methods?: {
-    [key: string]: Function;
+    [key: string]: string;
   };
   loop?: string | any[];
   fileName?: string;

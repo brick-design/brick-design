@@ -21,7 +21,6 @@ import {
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
 import { useOperate } from '../../hooks/useOperate';
-import { OperateStateType } from '../OperateProvider';
 
 type ResizeState = {
   selectedInfo: SelectedInfoType;
@@ -77,7 +76,7 @@ function Resize() {
   const baseboardRef = useRef<HTMLDivElement | any>();
   const [isOut, setIsOut] = useState<boolean>(true);
   const { props, childNodes } = pageConfig[selectedKey] || {};
-  let { width, height } = get(props, 'style', {});
+  let { width, height } = get(props, 'style', {width:'auto',height:'auto'});
   width = width || 'auto';
   height = height || 'auto';
 
@@ -134,7 +133,7 @@ function Resize() {
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
-      const { selectedNode } = getOperateState<OperateStateType>();
+      const { selectedNode } = getOperateState();
       if (originSizeRef.current) {
         const { clientX, clientY } = event;
         const { x, y, direction, height, width } = originSizeRef.current;
@@ -215,7 +214,7 @@ function Resize() {
   );
 
   const setSelectedBorder = (css = '') => {
-    const { selectedNode, isModal } = getOperateState<OperateStateType>();
+    const { selectedNode, isModal } = getOperateState();
     if (selectedNode) {
       const { left, top, width, height } = getElementInfo(
         selectedNode,
@@ -234,7 +233,7 @@ function Resize() {
   };
   const onResizeStart = useCallback(
     function (event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {
-      const { selectedNode } = getOperateState<OperateStateType>();
+      const { selectedNode } = getOperateState();
       if (event.nativeEvent && iframe) {
         const { contentWindow } = iframe!;
         const {

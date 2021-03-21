@@ -25,6 +25,7 @@
     "@brickd/hooks": "^1.0.0-alpha.16",
     "@brickd/utils": "^1.0.0-alpha.16",
     "html2canvas": "^1.0.0-rc.7",
+    "json5": "^2.2.0",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",
     "react": "^16.8.0",

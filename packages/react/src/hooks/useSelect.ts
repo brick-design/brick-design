@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   DragSourceType,
   SelectedInfoBaseType,
@@ -27,12 +27,8 @@ export function useSelect(
   isModal?: boolean,
 ): UseSelectType {
   const { key, domTreeKeys: selfDomTreeKeys } = specialProps;
-  const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
-    ['selectedInfo', 'dragSource'],
-    controlUpdate,
-  );
 
-  function controlUpdate(prevState: SelectType, nextState: SelectType) {
+  const controlUpdate=useCallback((prevState: SelectType, nextState: SelectType)=> {
     const {
       selectedKey: prevSelectedKey,
       propName: prevPropName,
@@ -42,6 +38,7 @@ export function useSelect(
 
     const prevDragKey = get(prevState, 'dragSource.dragKey');
     const nextDragKey = get(nextState, 'dragSource.dragKey');
+
     if (!prevSelectedKey && selectedKey) {
       if (isModal && domTreeKeys.includes(key)) {
         return true;
@@ -86,7 +83,13 @@ export function useSelect(
       }
     }
     return prevDragKey === key && nextDragKey !== key;
-  }
+  },[]);
+
+  const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
+    ['selectedInfo', 'dragSource'],
+    controlUpdate,
+  );
+
   const { selectedKey, domTreeKeys: selectedDomKeys, propName } =
     selectedInfo || {};
   const isSelected = isEqualKey(key, selectedKey);

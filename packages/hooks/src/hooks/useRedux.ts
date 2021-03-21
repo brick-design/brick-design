@@ -3,12 +3,12 @@ import { isEqual } from 'lodash';
 import { BrickStore } from '../utils';
 
 export function useRedux(propsState: any) {
-  const brickStore = useRef(new BrickStore(propsState));
-  const prevPropsState = useRef(propsState);
+  const brickStore = useRef(new BrickStore(propsState)).current;
+  const prevPropsState = useRef(propsState).current;
   useMemo(() => {
-    if (!isEqual(prevPropsState.current, propsState))
-      brickStore.current.setPageState(propsState, true);
+    if (!isEqual(prevPropsState, propsState))
+      brickStore.setPageState(propsState, true);
     return;
-  }, [propsState, prevPropsState.current]);
-  return brickStore.current;
+  }, [propsState, prevPropsState]);
+  return brickStore;
 }
