@@ -24,6 +24,29 @@ type SelectState = {
   dragSource: DragSourceType | null;
 };
 
+
+function getNode(key:string){
+  const iframe=getIframe();
+  const selectedNode = getSelectedNode(`${key}-0`, iframe);
+  if(selectedNode){
+    const {contentWindow}=iframe;
+    const {innerWidth,innerHeight}=contentWindow;
+    const {x,y}=selectedNode.getBoundingClientRect();
+    const  position:{left?:number,top?:number}={};
+    if(y>innerHeight){
+      position.top=y-50;
+    }else if(y<0){
+      position.top=y-50;
+    }else if(x>innerWidth){
+      position.left=innerWidth+x;
+    }else if(x<0){
+      position.left=x;
+    }
+    contentWindow.scrollBy({...position,behavior:'smooth'});
+  }
+  return selectedNode;
+}
+
 function Guidelines() {
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
@@ -42,12 +65,12 @@ function Guidelines() {
   const { operateHoverKey, operateSelectedKey,dropNode } = getOperateState();
 
   if (!dropKey && hoverKey !== operateHoverKey) {
-    const hoverNode = getSelectedNode( `${hoverKey}-0`, getIframe());
+    const hoverNode = getNode(hoverKey);
     setOperateState({ hoverNode, operateHoverKey: hoverKey });
   }
 
   if (selectedKey !== operateSelectedKey) {
-    const selectedNode = getSelectedNode(`${selectedKey}-0`, getIframe());
+    const selectedNode=getNode(selectedKey);
     setOperateState({ selectedNode, operateSelectedKey: selectedKey });
   }
 

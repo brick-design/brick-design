@@ -143,19 +143,32 @@ function Container(allProps: CommonPropsType, ref: any) {
     index,
   );
 
-  // const dragOver=(event:DragEvent,childNodes:string[],propName:string)=>{
-  // 	event.preventDefault();
-  // 	const childRects=map(childNodes,(key)=>nodeRectsMap.current[key]);
-  // 	const isHor=isHorizontal(childRects);
-  // 	setTimeout(()=>{
-  // 		const newChildren=dragSort(getDragKey(),childNodes,childRects,nodeRectsMap.current[parentNodeRect] as DOMRect,event,isHor);
-  // 		const renderChildren=cloneChildNodes(childNodes);
-  // 				renderChildren[propName]=newChildren;
-  // 		if(!isEqual(renderChildren,children)){
-  // 			setChildren(renderChildren);
-  // 		}
-  // 	},100);
-  // };
+  const dragOver=(event:DragEvent,childNodes:string[],propName:string)=>{
+  	event.preventDefault();
+    const dragKey=getDragKey();
+    if(selectedKey!==key||dragKey===key) return ;
+    setTimeout(()=>{
+      const isV=isVertical(propParentNodes.current[propName]);
+      if(!get(children,propName,[]).includes(dragKey)){
+        if (isEmpty(children)) {
+          setChildren({ [propName]: [dragKey] });
+        } else {
+          const newChildren = cloneChildNodes(childNodes);
+          newChildren[propName]=[dragKey];
+          setChildren(newChildren);
+        }
+      }else {
+        const newChildren=dragSort(dragKey,childNodes,nodeRectsMap.current,event,propName,isV);
+        const renderChildren=cloneChildNodes(childNodes);
+        renderChildren[propName]=newChildren;
+        if(!isEqual(renderChildren,children)){
+          setChildren(renderChildren);
+        }
+      }
+
+
+  	},100);
+  };
 
   useEffect(() => {
     if (
@@ -166,13 +179,12 @@ function Container(allProps: CommonPropsType, ref: any) {
       return;
     const propNameListeners = {};
     each(propParentNodes.current, (parentNode, propName) => {
-      // const isSelectedPropName=isSelected&&propName===selectedPropName;
 
       propNameListeners[propName] = {
-        // dragOver:(event)=>dragOver(event,children[propName],propName),
+        dragOver:(event)=>dragOver(event,children[propName],propName),
         dragEnter: (event) => onDragEnter(event, propName),
       };
-      // isSelectedPropName&&parentNode.addEventListener('dragover',propNameListeners[propName].dragOver);
+      parentNode.addEventListener('dragover',propNameListeners[propName].dragOver);
       parentNode.addEventListener(
         'dragenter',
         get(propNameListeners, [propName, 'dragEnter']),
@@ -181,8 +193,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 
     return () => {
       each(propParentNodes.current, (parentNode, propName) => {
-        // const isSelectedPropName=isSelected&&propName===selectedPropName;
-        // isSelectedPropName&&parentNode.removeEventListener('dragover',propNameListeners[propName].dragOver);
+        parentNode.removeEventListener('dragover',propNameListeners[propName].dragOver);
         parentNode.removeEventListener(
           'dragenter',
           get(propNameListeners, [propName, 'dragEnter']),
@@ -232,26 +243,45 @@ function Container(allProps: CommonPropsType, ref: any) {
 
   useEffect(() => {
     const iframe = getIframe();
-    parentRootNode.current = getSelectedNode( uniqueKey, iframe);
+    parentRootNode.current =parentRootNode.current|| getSelectedNode( uniqueKey, iframe);
     const containerRootNode=propParentNodes.current[defaultPropName]||parentRootNode.current;
-    if (isEmpty(containerRootNode))
-      return;
+    if (isEmpty(containerRootNode)) return;
     const isV = isVertical(containerRootNode);
     const dragOver = (event: DragEvent) => {
       event.preventDefault();
-      if(!isSelected) return ;
+      const dragKey = getDragKey();
+
+      if(selectedKey!==key||dragKey===key) return ;
       setTimeout(() => {
-        const newChildren = dragSort(
-          getDragKey(),
-          children as string[],
-          nodeRectsMap.current,
-          event,
-          defaultPropName,
-          isV,
-        );
-        if (!isEqual(newChildren, children)) {
-          setChildren(newChildren);
+        if(isEmpty(childNodes)){
+          if(nodePropsConfig){
+            setChildren({ [selectedPropName]: [dragKey] });
+          }else {
+            setChildren([dragKey]);
+          }
+        }else if(!nodePropsConfig) {
+          const newChildren = dragSort(
+            dragKey,
+            children as string[],
+            nodeRectsMap.current,
+            event,
+            defaultPropName,
+            isV,
+          );
+          if (!isEqual(newChildren, children)) {
+            setChildren(newChildren);
+          }
+        }else {
+          if (!get(children, selectedPropName, []).includes(dragKey)) {
+            const newChildren = cloneChildNodes(children);
+            const childChildren = get(newChildren, selectedPropName, []);
+            newChildren[selectedPropName] = [
+              ...new Set([dragKey, ...childChildren]),
+            ];
+            setChildren(newChildren);
+          }
         }
+
       }, 100);
     };
 
@@ -279,8 +309,7 @@ function Container(allProps: CommonPropsType, ref: any) {
     e.stopPropagation();
 
     const dragKey = getDragKey();
-    if (!dragKey||
-      key === dragKey ||
+    if ( key === dragKey ||
       (nodePropsConfig && isEmpty(children)))
       return;
    let isDropAble=isAllowDrop(childNodesRule)&&(!isNeedJudgeFather()||isAllowAdd(componentName));
@@ -299,37 +328,14 @@ function Container(allProps: CommonPropsType, ref: any) {
       selectedKey: key,
       domTreeKeys,
     });
-    setTimeout(() => {
-      if (nodePropsConfig) {
-        if (isEmpty(children)) {
-          setChildren({ [selectedPropName]: [dragKey] });
-        } else {
-          if (!get(children, selectedPropName, []).includes(dragKey)) {
-            const newChildren = cloneChildNodes(children);
-            const childChildren = get(newChildren, selectedPropName, []);
-            newChildren[selectedPropName] = [
-              ...new Set([dragKey, ...childChildren]),
-            ];
-            setChildren(newChildren);
-          }
-        }
-      } else if (Array.isArray(children)) {
-        if (children.includes(dragKey)) return;
-
-        setChildren([dragKey, ...children]);
-      } else {
-        setChildren([dragKey]);
-      }
-    }, 0);
   };
 
   const onDragEnter = (e: DragEvent, propName?: string) => {
     e.stopPropagation();
     const dragKey = getDragKey();
-
+    if (key === dragKey) return;
     const {childNodesRule}=nodePropsConfig[propName];
     const isDropAble=isAllowDrop(childNodesRule)&&(!isNeedJudgeFather()||isAllowAdd(componentName));
-    if (key === dragKey) return;
     setOperateState({
       dropNode: propParentNodes.current[propName],
       isDropAble,
@@ -341,18 +347,6 @@ function Container(allProps: CommonPropsType, ref: any) {
       selectedKey: key,
       domTreeKeys,
     });
-    setTimeout(() => {
-      if (isEmpty(childNodes)) {
-        setChildren({ [propName]: [dragKey] });
-      } else {
-        const newChildren = cloneChildNodes(childNodes);
-        const childChildren = get(newChildren, propName, []);
-        if (!childChildren.includes(dragKey)) {
-          newChildren[propName] = [...new Set([dragKey, ...childChildren])];
-        }
-        setChildren(newChildren);
-      }
-    }, 0);
   };
   if (!isSelected && (!componentName || hidden)) return null;
 

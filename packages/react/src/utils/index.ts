@@ -272,22 +272,13 @@ export const dragSort = (
       const offsetTop = offsetY - (top - parentTop);
       const offsetW = parentWidth - realWidth;
       const offsetH = parentHeight - realHeight;
-      console.log(
-        'offsetW11>>>>>>',
-        isVertical,
-        offsetW,
-        dragWidth,
-        offsetLeft,
-      );
-
       if (!isVertical) {
-        console.log('offsetW>>>>>>', offsetW, dragWidth, offsetLeft);
         if (offsetW >= dragWidth) {
           if (offsetLeft > 0) {
-            if (offsetLeft <= width * 0.5) {
+            if (offsetLeft <= width * 0.3) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
               break;
-            } else if (offsetLeft < width) {
+            } else if (offsetLeft < width&&offsetLeft>width*0.7) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -302,9 +293,9 @@ export const dragSort = (
           }
         } else {
           if (offsetTop > 0) {
-            if (offsetTop < height * 0.5) {
+            if (offsetTop < height * 0.3) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
-            } else if (offsetTop < height) {
+            } else if (offsetTop < height&&offsetTop>height*0.7) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -321,10 +312,10 @@ export const dragSort = (
       } else {
         if (offsetH >= dragHeight) {
           if (offsetTop > 0) {
-            if (offsetTop <= height * 0.5) {
+            if (offsetTop <= height * 0.3) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
               break;
-            } else if (offsetTop < height) {
+            } else if (offsetTop < height&&offsetTop>height*0.7) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -339,9 +330,9 @@ export const dragSort = (
           }
         } else {
           if (offsetLeft > 0) {
-            if (offsetLeft < width * 0.5) {
+            if (offsetLeft < width * 0.3) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
-            } else if (offsetLeft < width) {
+            } else if (offsetLeft < width&&offsetLeft > width*0.7) {
               newChildren.push(
                 compareKey,
                 dragKey,
