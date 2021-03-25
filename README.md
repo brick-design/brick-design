@@ -124,9 +124,9 @@ npm run start:example
    - [ ] 画布与代码相互转换
    - [ ] 画布与代码实时交互
 
-### 技术交流
+### 技术交流 QQ群
 
- <img src="./docs/QQ.jpeg" width="140" />
+ <img src="https://user-images.githubusercontent.com/15995127/112433279-fb821700-8d7c-11eb-9b86-da2b0f317b1f.jpeg" width="140" />
  
 ### 捐赠作者
 
