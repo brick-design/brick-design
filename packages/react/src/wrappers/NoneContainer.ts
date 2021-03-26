@@ -6,7 +6,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { clearDragSource, clearDropTarget, ROOT, STATE_PROPS } from '@brickd/core';
+import { clearDropTarget, ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
 import { isEmpty } from 'lodash';
@@ -51,11 +51,8 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const uniqueKey=`${key}-${index}`;
   const parentRootNode = useRef<HTMLElement>();
   const {
-    onClick,
-    onDoubleClick,
-    onMouseOver,
-    onDragStart,
     setSelectedNode,
+    ...events
   } = useEvents(parentRootNode, specialProps, isSelected,props);
   const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
     pageConfig,
@@ -85,7 +82,6 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 
   const onDragEnter=useCallback((e)=>{
     e.stopPropagation();
-    console.log('onDragEnter>>>>>>>',parentRootNode.current);
     setOperateState({
       dropNode: parentRootNode.current,
       isDropAble:false,
@@ -104,12 +100,8 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
         (dragKey && !isSelected && domTreeKeys.includes(lockedKey)),
       className,
       animateClass),
-    onDragStart,
-    onMouseOver,
-    onDoubleClick,
-    onClick,
-    onDragEnd: clearDragSource,
     onDragEnter,
+    ...events,
     ...generateRequiredProps(componentName),
     draggable: true,
     /**

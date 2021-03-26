@@ -96,6 +96,13 @@ export function clearDropTarget(state: StateType): StateType {
 
 export function clearDragSource(state: StateType) {
   const { dragSource } = state;
-  if (dragSource) return { ...state, dragSource: null };
+  if (dragSource) return { ...state, dragSource: null,dragSort:null };
   return state;
+}
+
+export function getDragSort(state: StateType,payload:string[]){
+return {
+  ...state,
+  dragSort:payload
+};
 }

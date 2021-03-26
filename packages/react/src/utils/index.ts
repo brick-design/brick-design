@@ -198,14 +198,15 @@ export function getChildNodesRects(
     if (!parentNodes) return;
     const childNodes = parentNodes.children;
     each(nodeKeys, (key, index) => {
-      if (!childNodes.item(Number.parseInt(index))) return;
+      const childNode=childNodes[index];
+      if (!childNode||EXCLUDE_POSITION.includes(css(childNode).position)) return;
       if (!nodeRectsMap[key]) {
         nodeRectsMap[key] = getNodeRealRect(
-          childNodes.item(Number.parseInt(index)),
+          childNode
         );
       } else if (isRest) {
         nodeRectsMap[key] = getNodeRealRect(
-          childNodes.item(Number.parseInt(index)),
+          childNode
         );
       }
     });
@@ -244,23 +245,20 @@ export interface RealRect {
 
 export type NodeRectsMapType = { [key: string]: RealRect };
 export const dragSort = (
-  dragKey: string,
   compareChildren: string[] = [],
   nodeRectsMap: NodeRectsMapType,
   dragOffset: DragEvent,
   propName: string,
   isVertical?: boolean,
 ) => {
+  const dragKey=getDragKey();
   const {
-    left: parentLeft,
-    top: parentTop,
     realWidth: parentWidth,
     realHeight: parentHeight,
   } = nodeRectsMap[propName];
-  const { offsetX, offsetY } = dragOffset;
+  const { clientX, clientY } = dragOffset;
   const newChildren = [];
-  const { realWidth: dragWidth = 2, realHeight: dragHeight = 2 } =
-    nodeRectsMap[dragKey] || {};
+
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
     if (nodeRectsMap[compareKey]) {
@@ -268,21 +266,21 @@ export const dragSort = (
       const { left, top, realWidth, realHeight, width, height } = nodeRectsMap[
         compareKey
       ];
-      const offsetLeft = offsetX - (left - parentLeft);
-      const offsetTop = offsetY - (top - parentTop);
+      const offsetLeft = clientX -left;
+      const offsetTop = clientY -top;
       const offsetW = parentWidth - realWidth;
       const offsetH = parentHeight - realHeight;
       if (!isVertical) {
-        if (offsetW >= dragWidth) {
+        if (offsetW > 0) {
           if (offsetLeft > 0) {
-            if (offsetLeft <= width * 0.3) {
+            if (offsetLeft <= width * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
               break;
-            } else if (offsetLeft < width&&offsetLeft>width*0.7) {
+            } else if (offsetLeft < width&&offsetLeft>width*0.5) {
               newChildren.push(
                 compareKey,
                 dragKey,
-                ...compareChildren.slice(index + 1),
+                ...compareChildren.slice(index+1),
               );
               break;
             } else {
@@ -290,12 +288,14 @@ export const dragSort = (
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+            break;
           }
         } else {
           if (offsetTop > 0) {
-            if (offsetTop < height * 0.3) {
+            if (offsetTop < height * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
-            } else if (offsetTop < height&&offsetTop>height*0.7) {
+               break;
+            } else if (offsetTop < height&&offsetTop>height*0.5) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -307,15 +307,16 @@ export const dragSort = (
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+            break;
           }
         }
       } else {
-        if (offsetH >= dragHeight) {
+        if (offsetH >0) {
           if (offsetTop > 0) {
-            if (offsetTop <= height * 0.3) {
+            if (offsetTop <= height * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
               break;
-            } else if (offsetTop < height&&offsetTop>height*0.7) {
+            } else if (offsetTop < height&&offsetTop>height*0.5) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -327,12 +328,14 @@ export const dragSort = (
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+            break;
           }
         } else {
           if (offsetLeft > 0) {
-            if (offsetLeft < width * 0.3) {
+            if (offsetLeft < width * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
-            } else if (offsetLeft < width&&offsetLeft > width*0.7) {
+              break;
+            } else if (offsetLeft < width&&offsetLeft > width*0.5) {
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -344,9 +347,12 @@ export const dragSort = (
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+            break;
           }
         }
       }
+    }else {
+      newChildren.push(compareKey);
     }
   }
   if (!newChildren.includes(dragKey)) {
@@ -408,12 +414,14 @@ export function css(el) {
   }
 }
 
+export const EXCLUDE_POSITION=['absolute','fixed'];
+
 function getChild(el, childNum) {
-  let currentChild = 0,
-    i = 0;
+  let currentChild = 0, i = 0;
   const children = el.children;
   while (i < children.length) {
-    if (children[i].style.display !== 'none') {
+    const node=children[i];
+    if (css(node).display !== 'none'||!EXCLUDE_POSITION.includes(css(node).position)) {
       if (currentChild === childNum) {
         return children[i];
       }

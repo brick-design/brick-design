@@ -1,5 +1,6 @@
-import { RefObject, useCallback, useMemo } from 'react';
+import { RefObject, useCallback, useMemo, useRef } from 'react';
 import {
+  clearDragSource,
   clearSelectedStatus,
   getDragSource,
   overTarget,
@@ -9,7 +10,7 @@ import {
 } from '@brickd/core';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
-import { getDragKey, getIsModalChild } from '../utils';
+import {  getDragKey, getIsModalChild } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 
 export function useEvents(
@@ -22,6 +23,8 @@ export function useEvents(
 ) {
   const { key, domTreeKeys, parentKey, parentPropName } = specialProps;
   const {onMouseOver:onMouseOverFun}=props;
+  const positionRef=useRef<{clientX:number,clientY:number}>();
+  const parentPositionRef=useRef<string>();
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
     ['pageConfig'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
@@ -55,6 +58,9 @@ export function useEvents(
   const onDragStart = useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
+      const {clientX,clientY}=event;
+      positionRef.current={clientX,clientY};
+      parentPositionRef.current=nodeRef.current.parentElement.style.position;
       setTimeout(() => {
         getDragSource({
           dragKey: key,
@@ -64,7 +70,7 @@ export function useEvents(
         isSelected && setOperateState({ selectedNode: null });
       }, 0);
     },
-    [isSelected],
+    [isSelected,positionRef.current],
   );
 
   const onClick = useCallback((e: Event) => {
@@ -89,6 +95,26 @@ export function useEvents(
     [nodeRef.current,onMouseOverFun],
   );
 
+  const onDrag=(event: DragEvent)=> {
+    // if (!EXCLUDE_POSITION.includes(nodeRef.current.style.position)) {
+    //   return;
+    // }
+    //
+    // const { clientY: originalY, clientX: originalX } = positionRef.current
+    // const { clientY, clientX } = event;
+    // const {top,left}=nodeRef.current.style;
+    //
+    // nodeRef.current.style.top=`${clientY-originalY+Number.parseInt(top+0)}px`;
+    // nodeRef.current.style.left=`${clientX-originalX+Number.parseInt(left+0)}px`;
+    // positionRef.current={clientY, clientX}
+  };
+
+  const onDragEnd=useCallback(()=>{
+    clearDragSource();
+
+  },[]);
+
+
   return {
     onDoubleClick,
     onClick,
@@ -96,5 +122,7 @@ export function useEvents(
     onDragStart,
     setSelectedNode,
     getOperateState,
+    onDrag,
+    onDragEnd
   };
 }

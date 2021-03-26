@@ -9,7 +9,7 @@ import {
 } from './handleComponentSchema';
 import {
   clearDragSource,
-  clearDropTarget,
+  clearDropTarget, getDragSort,
   getDragSource,
   getDropTarget,
 } from './handleDragDrop';
@@ -103,7 +103,9 @@ export const reducer: ReducerType = (prevState, action) => {
     case ACTION_TYPES.clearDragSource:
       newState = clearDragSource(state);
       break;
-
+    case ACTION_TYPES.dragSort:
+      newState=getDragSort(state,payload);
+      break;
     case ACTION_TYPES.setComponentState:
       newState = setComponentState(state, payload);
       break;

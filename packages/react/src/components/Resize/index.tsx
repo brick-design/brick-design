@@ -268,6 +268,7 @@ function Resize() {
           isOut={isOut}
           hasChildNodes={propName ? !!get(childNodes, propName) : !!childNodes}
           isRoot={selectedKey === ROOT}
+          keyValue={selectedKey}
         />
         {map(Direction, (direction) => (
           <Item
