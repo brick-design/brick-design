@@ -139,7 +139,8 @@ function Container(allProps: CommonPropsType, ref: any) {
   const dragOver=useCallback((event:DragEvent,propName:string)=>{
   	event.preventDefault();
     const dragKey=getDragKey();
-    if(selectedKey!==key||domTreeKeys.includes(dragKey)) return ;
+    const {isLock}=getOperateState();
+    if(selectedKey!==key||domTreeKeys.includes(dragKey)||!isLock) return ;
     setTimeout(()=>{
       const childNodeKeys=get(children,propName,[]);
       const isV=isVertical(propParentNodes.current[propName]);
@@ -219,7 +220,8 @@ function Container(allProps: CommonPropsType, ref: any) {
   const parentDragOver =useCallback((event: DragEvent) => {
     event.preventDefault();
     const dragKey = getDragKey();
-    if(selectedKey!==key||domTreeKeys.includes(dragKey)) return ;
+    const {isLock}=getOperateState();
+    if(selectedKey!==key||domTreeKeys.includes(dragKey)||!isLock) return ;
     const containerRootNode=propParentNodes.current[defaultPropName]||parentRootNode.current;
     const isV = isVertical(containerRootNode);
 
@@ -272,7 +274,8 @@ function Container(allProps: CommonPropsType, ref: any) {
     setOperateState({
       dropNode: parentRootNode.current,
       isDropAble,
-      index
+      index,
+      isLock:true
     });
     if(!isDropAble) return;
     getDropTarget({
@@ -314,7 +317,8 @@ function Container(allProps: CommonPropsType, ref: any) {
     setOperateState({
       dropNode: propParentNodes.current[propName],
       isDropAble,
-      index
+      index,
+      isLock:true
     });
     if(!isDropAble) return;
     getDropTarget({

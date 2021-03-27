@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import {
   DragSourceType,
   DropTargetType,
@@ -148,6 +148,10 @@ function Guidelines() {
     topRef.current,
   ]);
 
+  const onTransitionEnd=useCallback(()=>{
+    setOperateState({isLock:false});
+  },[]);
+
   const guidControl = !dropNode && hoverKey;
 
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
@@ -160,7 +164,7 @@ function Guidelines() {
       : styles['guide-hidden'];
   return (
     <>
-      <div ref={hoverNodeRef} className={hoverNodeClass} />
+      <div onTransitionEnd={onTransitionEnd} ref={hoverNodeRef} className={hoverNodeClass} />
       <div ref={leftRef} className={guidV} />
       <div ref={rightRef} className={guidV} />
       <div ref={topRef} className={guidH} />
