@@ -6,9 +6,12 @@
 [![codecov](https://codecov.io/gh/brick-design/react-visual-editor/branch/master/graph/badge.svg)](https://codecov.io/gh/brick-design/react-visual-editor)
 
 ## SNAPSHOT
-![brickd1](https://user-images.githubusercontent.com/15995127/85188005-7e4de100-b2d6-11ea-9441-2bd5570b14a9.gif)
-![brickd2](https://user-images.githubusercontent.com/15995127/85187856-86595100-b2d5-11ea-883e-e45313797fb3.gif)
-![brickd3](https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif)
+
+[comment]: <> "![brickd1]&#40;https://user-images.githubusercontent.com/15995127/85188005-7e4de100-b2d6-11ea-9441-2bd5570b14a9.gif&#41;"
+
+[comment]: <> "![brickd2]&#40;https://user-images.githubusercontent.com/15995127/85187856-86595100-b2d5-11ea-883e-e45313797fb3.gif&#41;"
+
+[comment]: <> "![brickd3]&#40;https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif&#41;"
 
 ## 描述
 基于React组件之间原始约束设计，还原真实开发中组件编码过程，所见即所得。当前版本还在开发中，新功能持续更新.....欢迎关注！
@@ -78,56 +81,41 @@ yarn  install
 npm run start:example
 ```
 ### Features
-1. 画布
-    - [x] 参考线
-    - [x] 组件间距查看
-    - [x] 拖拽改变组件形状
-    - [x] 拖拽实时预览
-    - [x] 组件: 复制
-    - [x] 组件: 删除
-    - [x] 父组件: 清除子组件
-    - [ ] 组件排序 
-    - [x] 模板：生成
-    - [x] 模板：添加
-    - [x] 快速预览
-    - [x] 撤销、重做
-    - [x] 样式可视化操作实时预览
-    - [x] 组件自由拖拽嵌套
-    - [x] 父子组件约束
-    - [x] 组件对象(vDom)扩展
-    - [x] 自定义reducer处理页面状态
-    - [x] 组件逻辑渲染
-    - [x] 方法节点
-    - [x] 网络数据获取
-    - [x] 网络数据获取
-    - [x] React
-    - [ ] rax
-    
-2. 组件树
-    - [x] 组件: 复制
-    - [x] 组件: 删除
-    - [x] 父组件: 清除子组件
-    - [x] 同级组件排序 
-    - [x] 模板：生成
-    - [x] 模板：添加 
-    - [x] 拖拽添加组件
-    - [x] 拖拽跨组件排序
-    - [x] 与画布实时映射
 
-3. 渲染器
-    - [x] 支持react
-    - [x] 支持rax
-    - [x] 支持plugins处理组件
+| 画布                                                         | 组件树                                                | 属性配置                                              | 样式配置                                    | 高级配置                                                  | 渲染器                                      | 代码生成器                                  |
+| ------------------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------- | ------------------------------------------- | ------------------------------------------- |
+| <input type="checkbox" checked> 操作：参考线展示、组件间距实时查看、拖拽改变组件宽高 | <input type="checkbox">组件-复制                      | <input type="checkbox" checked>普通属性配置（待重做） | <input type="checkbox">支持所有Css样式      | <input type="checkbox">支原生事件方法自定                 | <input type="checkbox" checked>完全还原渲染 | <input type="checkbox">完代码生成           |
+| <input type="checkbox" checked>弹窗类组件：选中展示          | <input type="checkbox" checked>组件-删除              | <input type="checkbox">变量配置                       | <input type="checkbox">组件样式定制         | <input type="checkbox">支dsl方法选择                      | <input type="checkbox">dsl支持              | <input type="checkbox">完画布与代码相互转换 |
+| <input type="checkbox">自由拖拽：绝对布局自由拖拽调整位置    | <input type="checkbox" checked>组件-清空              | <input type="checkbox">表达式配置                     | <input type="checkbox">样式变量支持         | <input type="checkbox">支手写自定义方法：执行生命周期规则 |                                             | <input type="checkbox">完画布与代码实时交互 |
+| <input type="checkbox" checked>拖拽实时预览                  | <input type="checkbox">主域组件分类标记               |                                                       | <input type="checkbox">手写样式支持         |                                                           |                                             |                                             |
+| <input type="checkbox" checked>组件: 复制、删除、清空子组件  | <input type="checkbox" checked>拖拽-同级排序          |                                                       | <input type="checkbox" checked>样式实时预览 |                                                           |                                             |                                             |
+| <input type="checkbox" checked>拖拽:实时预览、实时排序、自由嵌套、属性节点区分 | <input type="checkbox" checked>拖拽-跨组件排序        |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>模板：生成、添加、模板截图    | <input type="checkbox" checked>画板协同-选中实时协同  |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>快速预览                      | <input type="checkbox" checked>画板协同-hover实时协同 |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>撤销、重做                    |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">样式可视化操作：实时预览              |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">属性可视化操作                        |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">自定义组件：组件协议自动生成          |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>父子组件约束限制：红色-禁止添加、黄色-提示可添加、绿色-可添加 |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>组件对象(vDom)扩展            |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>自定义reducer处理页面状态     |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>组件渲染：逻辑渲染、Map渲染、方法渲染 |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>数据：状态域、变量            |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">逻辑：自定义方法、数据映射、变量过滤器 |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>平台支持:PC各型号手机         |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">声明周期：初始化执行、每次渲染执行    |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">dsl: dsl插件支持                      |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">plugin：插件扩展                      |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">标尺展示                              |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">组件：样式就近操作                    |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox" checked>React                         |                                                       |                                                       |                                             |                                                           |                                             |                                             |
+| <input type="checkbox">Rax                                   |                                                       |                                                       |                                             |                                                           |                                             |                                             |
 
-4. 代码生成器
-   - [ ] 代码生成
-   - [ ] 画布与代码相互转换
-   - [ ] 画布与代码实时交互
 
 ### 技术交流 QQ群
 
  <img src="https://user-images.githubusercontent.com/15995127/112433279-fb821700-8d7c-11eb-9b86-da2b0f317b1f.jpeg" width="140" />
- 
+
 ### 捐赠作者
 
 如果你觉得这个项目对你有用或者有所启发，可以请作者喝杯咖啡提提神持续更新：
