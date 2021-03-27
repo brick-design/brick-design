@@ -67,7 +67,6 @@ export function addComponent(state: StateType): StateType {
   ) {
     return { ...state, dragSource: null, dropTarget: null ,dragSort:null};
   }
-
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
   return {

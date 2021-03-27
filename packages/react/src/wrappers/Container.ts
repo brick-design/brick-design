@@ -145,7 +145,6 @@ function Container(allProps: CommonPropsType, ref: any) {
       const childNodeKeys=get(children,propName,[]);
       const isV=isVertical(propParentNodes.current[propName]);
       if(!childNodeKeys.length){
-        getDragSort([dragKey]);
         if (isEmpty(children)) {
           setChildren({ [propName]: [dragKey] });
         } else {
@@ -153,17 +152,18 @@ function Container(allProps: CommonPropsType, ref: any) {
           newChildren[propName]=[dragKey];
           setChildren(newChildren);
         }
-
+        getDragSort([dragKey]);
       }else if(childNodeKeys.length===1&&childNodeKeys.includes(dragKey)){
-        return;
+        return getDragSort(childNodeKeys);
       }else {
         const newChildren=dragSort(childNodeKeys,propParentNodes.current[propName],event,isV);
         const renderChildren=cloneChildNodes(childNodes);
         renderChildren[propName]=newChildren;
         if(!isEqual(renderChildren,children)){
-          getDragSort(newChildren);
           setChildren(renderChildren);
         }
+        getDragSort(newChildren);
+
       }},200);
   },[setChildren,children,selectedKey]);
 
@@ -233,7 +233,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       }
       getDragSort([dragKey]);
     }else if(Array.isArray(children)) {
-      if(children.length===1&&children.includes(dragKey)) return;
+      if(children.length===1&&children.includes(dragKey)) return getDragSort(children);
       const newChildren = dragSort(
         children,
         containerRootNode,
@@ -241,9 +241,9 @@ function Container(allProps: CommonPropsType, ref: any) {
         isV,
       );
       if (!isEqual(newChildren, children)) {
-        getDragSort(newChildren);
         setChildren(newChildren);
       }
+      getDragSort(newChildren);
     }else {
       const propChildren=  get(children, selectedPropName, []);
       if (!propChildren.includes(dragKey)) {
@@ -252,6 +252,8 @@ function Container(allProps: CommonPropsType, ref: any) {
         getDragSort(childrenResult);
         newChildren[selectedPropName] = childrenResult;
         setChildren(newChildren);
+      }else {
+        getDragSort(propChildren);
       }
     }
   },[children,setChildren,selectedKey]) ;
@@ -262,7 +264,7 @@ function Container(allProps: CommonPropsType, ref: any) {
     /**
      * 如果dragKey包含在组件所属的domTreeKeys中说明当前组件为拖拽组件的祖先节点之一
      */
-    if (domTreeKeys.includes(dragKey)) return;
+    if (domTreeKeys.includes(dragKey)||dragKey===key) return;
     let isDropAble;
     if(nodePropsConfig){
       const {childNodesRule}=nodePropsConfig[selectedPropName];
@@ -311,7 +313,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const onDragEnter = useCallback((e: DragEvent, propName?: string) => {
     e.stopPropagation();
     const dragKey = getDragKey();
-    if (domTreeKeys.includes(dragKey)) return;
+    if (domTreeKeys.includes(dragKey)||dragKey===key) return;
     const {childNodesRule}=nodePropsConfig[propName];
     const isDropAble=isAllowDrop(childNodesRule)&&(!isNeedJudgeFather()||isAllowAdd(componentName));
     setOperateState({

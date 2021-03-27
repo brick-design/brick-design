@@ -142,6 +142,7 @@ export function generateRequiredProps(componentName: string) {
 export type PropParentNodes = { [propName: string]: HTMLElement };
 
 export const getNodeRealRect = (element: Element) => {
+  if(!element) return;
   const eleCSS = css(element);
   const {
     left,
@@ -266,8 +267,8 @@ export const dragSort = (
       newChildren.push(compareKey);
       continue;
     }
-    console.log('childNode>>>>>>>',childNode);
     const childRect=getNodeRealRect(childNode);
+    if(!childRect) continue;
       const { left, top, realWidth, realHeight, width, height } = childRect;
       const offsetLeft = clientX -left;
       const offsetTop = clientY -top;
