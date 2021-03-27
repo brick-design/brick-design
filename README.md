@@ -124,9 +124,17 @@ npm run start:example
    - [ ] 画布与代码相互转换
    - [ ] 画布与代码实时交互
 
-### 技术交流
+### 技术交流 QQ群
 
- <img src="./docs/QQ.jpeg" width="300" />
+ <img src="https://user-images.githubusercontent.com/15995127/112433279-fb821700-8d7c-11eb-9b86-da2b0f317b1f.jpeg" width="140" />
+ 
+### 捐赠作者
+
+如果你觉得这个项目对你有用或者有所启发，可以请作者喝杯咖啡提提神持续更新：
+
+| 微信捐赠  | 支付宝捐赠
+|---|---|
+| <img src="https://user-images.githubusercontent.com/15995127/111981180-4bc16500-8b42-11eb-8376-60c16e415a8f.png" width="140" />| <img src="https://user-images.githubusercontent.com/15995127/111981247-61368f00-8b42-11eb-82f1-dbe47ca64682.jpeg" width="140" />
 
 ## LICENSE
 
