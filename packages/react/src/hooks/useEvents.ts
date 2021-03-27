@@ -23,7 +23,7 @@ export function useEvents(
   index?: number,
 ) {
   const { key, domTreeKeys, parentKey, parentPropName } = specialProps;
-  const {onMouseOver:onMouseOverFun}=props;
+  const {onMouseOver:onMouseOverFun,onClick:onClickFn,onDoubleClick:onDoubleClickFn}=props;
   const positionRef=useRef<{clientX:number,clientY:number}>();
   const parentPositionRef=useRef<string>();
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
@@ -52,8 +52,9 @@ export function useEvents(
     (e: Event) => {
       e && e.stopPropagation && e.stopPropagation();
       setSelectedNode(nodeRef.current);
+      onDoubleClickFn&&onDoubleClickFn();
     },
-    [nodeRef.current,],
+    [nodeRef.current,onDoubleClickFn],
   );
 
   const onDragStart = useCallback(
@@ -78,7 +79,8 @@ export function useEvents(
     e && e.stopPropagation && e.stopPropagation();
     clearSelectedStatus();
     setOperateState({ selectedNode: null });
-  }, []);
+    onClickFn&&onClickFn();
+  }, [onClickFn]);
 
   const onMouseOver = useCallback(
     (event: Event) => {

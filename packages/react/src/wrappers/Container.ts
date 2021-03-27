@@ -329,7 +329,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       domTreeKeys,
       childNodeKeys:get(childNodes,propName,[])
     });
-  },[propParentNodes.current,childNodes]);
+  },[childNodes]);
 
   if (!isSelected && (!componentName || hidden)) return null;
 

@@ -44,6 +44,7 @@ function getNode(key:string){
     }
     contentWindow.scrollBy({...position,behavior:'smooth'});
   }
+
   return selectedNode;
 }
 

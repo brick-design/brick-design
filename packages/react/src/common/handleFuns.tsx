@@ -214,8 +214,8 @@ export function handleModalTypeContainer(
   const { displayPropName, mounted } = mirrorModalField;
   if (mounted) {
     const { propName, type } = mounted;
-    const iframe: any = getIframe();
-    const mountedNode = iframe.contentWindow;
+    const iframe = getIframe();
+    const mountedNode = iframe.contentDocument.body;
     mountedProps[propName] =
       type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
   }
