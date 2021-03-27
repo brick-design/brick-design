@@ -42,7 +42,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
   );
-  const { isSelected, lockedKey } = useSelect(specialProps);
+  const { isSelected } = useSelect(specialProps);
   const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom();
   const vNode = (pageConfig[key] || {}) as VirtualDOMType;
   const { componentName } = vNode;
@@ -59,12 +59,14 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     domTreeKeys,
   ]);
   const { getOperateState,setOperateState } = useOperate(isModal);
+  const dragKey=getDragKey();
+
   useEffect(() => {
+    if(dragKey&&domTreeKeys.includes(dragKey)) return;
     const iframe = getIframe();
     parentRootNode.current = getSelectedNode(uniqueKey, iframe);
     const { index: selectedIndex } = getOperateState();
     if (
-      !getDragKey() &&
       isSelected &&
       (isEmpty(funParams || item) ||
         (isEmpty(funParams || item) && selectedIndex === index))
@@ -72,16 +74,16 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
       setSelectedNode(parentRootNode.current);
     }
 
-    parentRootNode.current&&parentRootNode.current.addEventListener('dragenter',onDragEnter);
+    parentRootNode.current.addEventListener('dragenter',onDragEnter);
     return ()=>{
-      parentRootNode.current&&parentRootNode.current.removeEventListener('dragenter',onDragEnter);
+      parentRootNode.current.removeEventListener('dragenter',onDragEnter);
     };
-  });
-
+  },[funParams,isSelected,item,dragKey]);
 
 
   const onDragEnter=useCallback((e)=>{
     e.stopPropagation();
+   if(domTreeKeys.includes(getDragKey()))  return;
     setOperateState({
       dropNode: parentRootNode.current,
       isDropAble:false,
@@ -91,13 +93,11 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
 
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
-  const dragKey = getDragKey();
   return createElement(getComponent(componentName), {
     ...restProps,
     className: handlePropsClassName(
       uniqueKey,
-      dragKey === key ||
-        (dragKey && !isSelected && domTreeKeys.includes(lockedKey)),
+      domTreeKeys.includes(dragKey),
       className,
       animateClass),
     onDragEnter,

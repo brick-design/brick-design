@@ -32,57 +32,33 @@ export function useSelect(
     const {
       selectedKey: prevSelectedKey,
       propName: prevPropName,
-      domTreeKeys: prevDomTreeKeys,
+      domTreeKeys: prevDomTreeKeys=[],
     } = prevState.selectedInfo || {};
-    const { selectedKey, domTreeKeys, propName } = nextState.selectedInfo || {};
+    const { selectedKey, domTreeKeys=[], propName } = nextState.selectedInfo || {};
 
     const prevDragKey = get(prevState, 'dragSource.dragKey');
     const nextDragKey = get(nextState, 'dragSource.dragKey');
 
-    if (!prevSelectedKey && selectedKey) {
-      if (isModal && domTreeKeys.includes(key)) {
+    if (!prevSelectedKey && selectedKey||prevSelectedKey && !selectedKey) {
+      if (isModal && (domTreeKeys.includes(key)||prevDomTreeKeys.includes(key))) {
         return true;
       }
+      return isEqualKey(key, selectedKey)||isEqualKey(key,prevSelectedKey);
+    }
 
-      return isEqualKey(key, selectedKey);
-    }
-    if (prevSelectedKey && !selectedKey) {
-      if (isModal) {
-        if (prevDomTreeKeys.includes(key)) {
-          return true;
-        }
-      }
-      return (
-        isEqualKey(key, prevSelectedKey) ||
-        selfDomTreeKeys.includes(prevSelectedKey)
-      );
-    }
     if (prevSelectedKey && selectedKey) {
-      if (isModal) {
-        if (
-          (!prevDomTreeKeys.includes(key) && domTreeKeys.includes(key)) ||
-          (prevDomTreeKeys.includes(key) && !domTreeKeys.includes(key))
-        ) {
-          return true;
-        }
-      }
       if (prevSelectedKey !== selectedKey) {
+        if(isModal&&domTreeKeys.includes(key)) return  true;
         return (
-          isEqualKey(key, prevSelectedKey) ||
-          (!isEqualKey(key, prevSelectedKey) && isEqualKey(key, selectedKey)) ||
-          (selfDomTreeKeys.includes(prevSelectedKey) &&
-            !selfDomTreeKeys.includes(selectedKey))
+          isEqualKey(key, prevSelectedKey) || isEqualKey(key, selectedKey)
         );
       } else {
-        return (
-          propName !== prevPropName ||
-          (prevDragKey === key && nextDragKey !== key) ||
-          (((!prevDragKey && nextDragKey) || (prevDragKey && !nextDragKey)) &&
-            selfDomTreeKeys.includes(selectedKey))
-        );
+        return propName !== prevPropName||selfDomTreeKeys.includes(prevDragKey)||selfDomTreeKeys.includes(nextDragKey);
       }
+    }else {
+      return selfDomTreeKeys.includes(prevDragKey)||selfDomTreeKeys.includes(nextDragKey);
     }
-    return prevDragKey === key && nextDragKey !== key;
+
   },[]);
 
   const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(

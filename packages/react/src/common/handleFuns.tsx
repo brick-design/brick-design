@@ -28,7 +28,8 @@ export function handlePropsClassName(
   animateClass: string,
   isAllowAdd?:boolean
 ) {
-  return `${selectClassTarget + key} ${className} ${animateClass} 
+  return `${selectClassTarget + key} ${className} ${animateClass}  
+  ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}
   ${!isLockTarget&&isAllowAdd?styles['allow-add']:''}`;
 }
 

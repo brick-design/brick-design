@@ -246,26 +246,29 @@ export interface RealRect {
 export type NodeRectsMapType = { [key: string]: RealRect };
 export const dragSort = (
   compareChildren: string[] = [],
-  nodeRectsMap: NodeRectsMapType,
+  parentNode: Element,
   dragOffset: DragEvent,
-  propName: string,
   isVertical?: boolean,
 ) => {
   const dragKey=getDragKey();
+  if(!dragKey) return  compareChildren;
   const {
     realWidth: parentWidth,
     realHeight: parentHeight,
-  } = nodeRectsMap[propName];
+  } = getParentNodeRealRect(parentNode);
   const { clientX, clientY } = dragOffset;
   const newChildren = [];
-
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
-    if (nodeRectsMap[compareKey]) {
-      if (compareKey === dragKey) continue;
-      const { left, top, realWidth, realHeight, width, height } = nodeRectsMap[
-        compareKey
-      ];
+    if(compareKey===dragKey) continue;
+    const childNode=parentNode.children[index];
+    if(EXCLUDE_POSITION.includes(get(css(childNode),'position'))){
+      newChildren.push(compareKey);
+      continue;
+    }
+    console.log('childNode>>>>>>>',childNode);
+    const childRect=getNodeRealRect(childNode);
+      const { left, top, realWidth, realHeight, width, height } = childRect;
       const offsetLeft = clientX -left;
       const offsetTop = clientY -top;
       const offsetW = parentWidth - realWidth;
@@ -274,6 +277,7 @@ export const dragSort = (
         if (offsetW > 0) {
           if (offsetLeft > 0) {
             if (offsetLeft <= width * 0.5) {
+
               newChildren.push(dragKey, ...compareChildren.slice(index));
               break;
             } else if (offsetLeft < width&&offsetLeft>width*0.5) {
@@ -285,28 +289,35 @@ export const dragSort = (
               break;
             } else {
               newChildren.push(compareKey);
+
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+
             break;
           }
         } else {
           if (offsetTop > 0) {
             if (offsetTop < height * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
-               break;
+
+              break;
             } else if (offsetTop < height&&offsetTop>height*0.5) {
               newChildren.push(
                 compareKey,
                 dragKey,
                 ...compareChildren.slice(index + 1),
+
               );
+
               break;
             } else {
               newChildren.push(compareKey);
+
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+
             break;
           }
         }
@@ -315,8 +326,10 @@ export const dragSort = (
           if (offsetTop > 0) {
             if (offsetTop <= height * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
+
               break;
             } else if (offsetTop < height&&offsetTop>height*0.5) {
+
               newChildren.push(
                 compareKey,
                 dragKey,
@@ -325,15 +338,18 @@ export const dragSort = (
               break;
             } else {
               newChildren.push(compareKey);
+
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+
             break;
           }
         } else {
           if (offsetLeft > 0) {
             if (offsetLeft < width * 0.5) {
               newChildren.push(dragKey, ...compareChildren.slice(index));
+
               break;
             } else if (offsetLeft < width&&offsetLeft > width*0.5) {
               newChildren.push(
@@ -341,23 +357,24 @@ export const dragSort = (
                 dragKey,
                 ...compareChildren.slice(index + 1),
               );
+
               break;
             } else {
               newChildren.push(compareKey);
+
             }
           } else {
             newChildren.push(dragKey, ...compareChildren.slice(index));
+
             break;
           }
         }
       }
-    }else {
-      newChildren.push(compareKey);
-    }
   }
   if (!newChildren.includes(dragKey)) {
     newChildren.push(dragKey);
   }
+
   return [...new Set(newChildren)];
 };
 

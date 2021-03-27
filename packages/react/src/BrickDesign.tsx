@@ -152,8 +152,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const onDrop = useCallback((e: DragEvent) => {
     e.stopPropagation();
-    addComponent();
     operateStore.setPageState({ dropNode: null });
+    addComponent();
   }, []);
 
   useEffect(() => {

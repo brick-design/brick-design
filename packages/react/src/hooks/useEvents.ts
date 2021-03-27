@@ -8,6 +8,7 @@ import {
   SelectedInfoBaseType,
   STATE_PROPS,
 } from '@brickd/core';
+import {get} from 'lodash';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
 import {  getDragKey, getIsModalChild } from '../utils';
@@ -60,7 +61,7 @@ export function useEvents(
       event.stopPropagation();
       const {clientX,clientY}=event;
       positionRef.current={clientX,clientY};
-      parentPositionRef.current=nodeRef.current.parentElement.style.position;
+      parentPositionRef.current=get(nodeRef.current.parentElement,'style.position');
       setTimeout(() => {
         getDragSource({
           dragKey: key,
