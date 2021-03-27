@@ -268,7 +268,10 @@ export const dragSort = (
       continue;
     }
     const childRect=getNodeRealRect(childNode);
-    if(!childRect) continue;
+    if(!childRect){
+      newChildren.push(compareKey);
+      continue;
+    }
       const { left, top, realWidth, realHeight, width, height } = childRect;
       const offsetLeft = clientX -left;
       const offsetTop = clientY -top;

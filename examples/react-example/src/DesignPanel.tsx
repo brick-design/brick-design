@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './index.less'
 import { BrickDesign, useSelector } from '@brickd/react'
-import initData from './initData'
+import initData from '@/xiaomi'
 
 export default function DesignPanel() {
 	const { platformInfo } = useSelector(['platformInfo'])
