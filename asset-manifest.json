@@ -4,18 +4,18 @@
     "antdesigns.js": "./static/js/antdesigns.1fbe74dd.chunk.js",
     "antdesigns.js.map": "./static/js/antdesigns.1fbe74dd.chunk.js.map",
     "main.css": "./static/css/main.chunk.css",
-    "main.js": "./static/js/main.09f8c9f8.chunk.js",
-    "main.js.map": "./static/js/main.09f8c9f8.chunk.js.map",
+    "main.js": "./static/js/main.3ada45ef.chunk.js",
+    "main.js.map": "./static/js/main.3ada45ef.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.4bb56a16.js",
     "runtime-main.js.map": "./static/js/runtime-main.4bb56a16.js.map",
     "vendors.js": "./static/js/vendors.29cb9227.chunk.js",
     "vendors.js.map": "./static/js/vendors.29cb9227.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.755031c5bd76da0d34959eb2807f023c.js": "./precache-manifest.755031c5bd76da0d34959eb2807f023c.js",
+    "precache-manifest.537e7f8ecbc3e04ad2b7c7edeb5ae24e.js": "./precache-manifest.537e7f8ecbc3e04ad2b7c7edeb5ae24e.js",
     "service-worker.js": "./service-worker.js",
     "static/css/antdesigns.chunk.css.map": "./static/css/antdesigns.chunk.css.map",
     "static/css/main.chunk.css.map": "./static/css/main.chunk.css.map",
-    "static/js/main.09f8c9f8.chunk.js.LICENSE.txt": "./static/js/main.09f8c9f8.chunk.js.LICENSE.txt",
+    "static/js/main.3ada45ef.chunk.js.LICENSE.txt": "./static/js/main.3ada45ef.chunk.js.LICENSE.txt",
     "static/js/vendors.29cb9227.chunk.js.LICENSE.txt": "./static/js/vendors.29cb9227.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
@@ -24,6 +24,6 @@
     "static/css/antdesigns.chunk.css",
     "static/js/antdesigns.1fbe74dd.chunk.js",
     "static/css/main.chunk.css",
-    "static/js/main.09f8c9f8.chunk.js"
+    "static/js/main.3ada45ef.chunk.js"
   ]
 }
