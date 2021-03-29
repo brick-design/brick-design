@@ -6,17 +6,15 @@ interface ActionSheetProps {
   isOut: boolean;
   hasChildNodes: boolean;
   isRoot: boolean;
-  keyValue?:string
+  keyValue?: string;
 }
 
 function ActionSheet(props: ActionSheetProps) {
-  const { isOut, isRoot, hasChildNodes,keyValue } = props;
+  const { isOut, isRoot, hasChildNodes, keyValue } = props;
 
   return (
     <div className={styles['container']} style={{ top: isOut ? -9 : 0 }}>
-      <div className={styles['action-btn']} >
-        {keyValue}
-      </div>
+      <div className={styles['action-btn']}>{keyValue}</div>
       {configs.map((config) => {
         const { icon, action, type } = config;
         if (isRoot && type === ACTIONS.copy) return null;

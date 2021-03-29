@@ -47,4 +47,5 @@ export const clearDragSource = () =>
     type: ACTION_TYPES.clearDragSource,
   });
 
-export const getDragSort=(payload:string[])=>createActions({type:ACTION_TYPES.dragSort,payload});
+export const getDragSort = (payload: string[]) =>
+  createActions({ type: ACTION_TYPES.dragSort, payload });

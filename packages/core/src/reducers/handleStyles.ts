@@ -24,7 +24,7 @@ export function changeStyles(
     pageConfig: produce(pageConfig, (oldConfigs) => {
       const config = oldConfigs[selectedInfo.selectedKey];
       if (config.props) {
-        config.props.style = {...config.props.style,...style};
+        config.props.style = { ...config.props.style, ...style };
       } else {
         config.props = { style };
       }

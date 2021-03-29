@@ -142,7 +142,7 @@ export function generateRequiredProps(componentName: string) {
 export type PropParentNodes = { [propName: string]: HTMLElement };
 
 export const getNodeRealRect = (element: Element) => {
-  if(!element) return;
+  if (!element) return;
   const eleCSS = css(element);
   const {
     left,
@@ -199,16 +199,13 @@ export function getChildNodesRects(
     if (!parentNodes) return;
     const childNodes = parentNodes.children;
     each(nodeKeys, (key, index) => {
-      const childNode=childNodes[index];
-      if (!childNode||EXCLUDE_POSITION.includes(css(childNode).position)) return;
+      const childNode = childNodes[index];
+      if (!childNode || EXCLUDE_POSITION.includes(css(childNode).position))
+        return;
       if (!nodeRectsMap[key]) {
-        nodeRectsMap[key] = getNodeRealRect(
-          childNode
-        );
+        nodeRectsMap[key] = getNodeRealRect(childNode);
       } else if (isRest) {
-        nodeRectsMap[key] = getNodeRealRect(
-          childNode
-        );
+        nodeRectsMap[key] = getNodeRealRect(childNode);
       }
     });
   }
@@ -251,8 +248,8 @@ export const dragSort = (
   dragOffset: DragEvent,
   isVertical?: boolean,
 ) => {
-  const dragKey=getDragKey();
-  if(!dragKey) return  compareChildren;
+  const dragKey = getDragKey();
+  if (!dragKey) return compareChildren;
   const {
     realWidth: parentWidth,
     realHeight: parentHeight,
@@ -261,119 +258,112 @@ export const dragSort = (
   const newChildren = [];
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
-    if(compareKey===dragKey) continue;
-    const childNode=parentNode.children[index];
-    if(EXCLUDE_POSITION.includes(get(css(childNode),'position'))){
+    if (compareKey === dragKey) continue;
+    const childNode = parentNode.children[index];
+    if (EXCLUDE_POSITION.includes(get(css(childNode), 'position'))) {
       newChildren.push(compareKey);
       continue;
     }
-    const childRect=getNodeRealRect(childNode);
-    if(!childRect){
+    const childRect = getNodeRealRect(childNode);
+    if (!childRect) {
       newChildren.push(compareKey);
       continue;
     }
-      const { left, top, realWidth, realHeight, width, height } = childRect;
-      const offsetLeft = clientX -left;
-      const offsetTop = clientY -top;
-      const offsetW = parentWidth - realWidth;
-      const offsetH = parentHeight - realHeight;
-      if (!isVertical) {
-        if (offsetW > 0) {
-          if (offsetLeft > 0) {
-            if (offsetLeft <= width * 0.5) {
-
-              newChildren.push(dragKey, ...compareChildren.slice(index));
-              break;
-            } else if (offsetLeft < width&&offsetLeft>width*0.5) {
-              newChildren.push(
-                compareKey,
-                dragKey,
-                ...compareChildren.slice(index+1),
-              );
-              break;
-            } else {
-              newChildren.push(compareKey);
-
-            }
-          } else {
+    const { left, top, realWidth, realHeight, width, height } = childRect;
+    const offsetLeft = clientX - left;
+    const offsetTop = clientY - top;
+    const offsetW = parentWidth - realWidth;
+    const offsetH = parentHeight - realHeight;
+    if (!isVertical) {
+      if (offsetW > 0) {
+        if (offsetLeft > 0) {
+          if (offsetLeft <= width * 0.5) {
             newChildren.push(dragKey, ...compareChildren.slice(index));
-
             break;
+          } else if (offsetLeft < width && offsetLeft > width * 0.5) {
+            newChildren.push(
+              compareKey,
+              dragKey,
+              ...compareChildren.slice(index + 1),
+            );
+            break;
+          } else {
+            newChildren.push(compareKey);
           }
         } else {
-          if (offsetTop > 0) {
-            if (offsetTop < height * 0.5) {
-              newChildren.push(dragKey, ...compareChildren.slice(index));
+          newChildren.push(dragKey, ...compareChildren.slice(index));
 
-              break;
-            } else if (offsetTop < height&&offsetTop>height*0.5) {
-              newChildren.push(
-                compareKey,
-                dragKey,
-                ...compareChildren.slice(index + 1),
-
-              );
-
-              break;
-            } else {
-              newChildren.push(compareKey);
-
-            }
-          } else {
-            newChildren.push(dragKey, ...compareChildren.slice(index));
-
-            break;
-          }
+          break;
         }
       } else {
-        if (offsetH >0) {
-          if (offsetTop > 0) {
-            if (offsetTop <= height * 0.5) {
-              newChildren.push(dragKey, ...compareChildren.slice(index));
-
-              break;
-            } else if (offsetTop < height&&offsetTop>height*0.5) {
-
-              newChildren.push(
-                compareKey,
-                dragKey,
-                ...compareChildren.slice(index + 1),
-              );
-              break;
-            } else {
-              newChildren.push(compareKey);
-
-            }
-          } else {
+        if (offsetTop > 0) {
+          if (offsetTop < height * 0.5) {
             newChildren.push(dragKey, ...compareChildren.slice(index));
 
             break;
+          } else if (offsetTop < height && offsetTop > height * 0.5) {
+            newChildren.push(
+              compareKey,
+              dragKey,
+              ...compareChildren.slice(index + 1),
+            );
+
+            break;
+          } else {
+            newChildren.push(compareKey);
           }
         } else {
-          if (offsetLeft > 0) {
-            if (offsetLeft < width * 0.5) {
-              newChildren.push(dragKey, ...compareChildren.slice(index));
+          newChildren.push(dragKey, ...compareChildren.slice(index));
 
-              break;
-            } else if (offsetLeft < width&&offsetLeft > width*0.5) {
-              newChildren.push(
-                compareKey,
-                dragKey,
-                ...compareChildren.slice(index + 1),
-              );
-
-              break;
-            } else {
-              newChildren.push(compareKey);
-
-            }
-          } else {
+          break;
+        }
+      }
+    } else {
+      if (offsetH > 0) {
+        if (offsetTop > 0) {
+          if (offsetTop <= height * 0.5) {
             newChildren.push(dragKey, ...compareChildren.slice(index));
 
             break;
+          } else if (offsetTop < height && offsetTop > height * 0.5) {
+            newChildren.push(
+              compareKey,
+              dragKey,
+              ...compareChildren.slice(index + 1),
+            );
+            break;
+          } else {
+            newChildren.push(compareKey);
           }
+        } else {
+          newChildren.push(dragKey, ...compareChildren.slice(index));
+
+          break;
+        }
+      } else {
+        if (offsetLeft > 0) {
+          if (offsetLeft < width * 0.5) {
+            newChildren.push(dragKey, ...compareChildren.slice(index));
+
+            break;
+          } else if (offsetLeft < width && offsetLeft > width * 0.5) {
+            newChildren.push(
+              compareKey,
+              dragKey,
+              ...compareChildren.slice(index + 1),
+            );
+
+            break;
+          } else {
+            newChildren.push(compareKey);
+          }
+        } else {
+          newChildren.push(dragKey, ...compareChildren.slice(index));
+
+          break;
         }
       }
+    }
   }
   if (!newChildren.includes(dragKey)) {
     newChildren.push(dragKey);
@@ -415,10 +405,15 @@ export const getPropParentNodes = (
   return parentNodes;
 };
 
-export const getDragKey = () =>getDragSourceFromKey('dragKey');
-export const getDragSourceFromKey = (propName:string,defaultValue?:any) =>
-  get(getSelector(['dragSource']), ['dragSource',propName], defaultValue);
-export const getDragComponentName=(dragKey?:string)=>get(getSelector(['pageConfig']), ['pageConfig',dragKey||getDragKey(),'componentName']);
+export const getDragKey = () => getDragSourceFromKey('dragKey');
+export const getDragSourceFromKey = (propName: string, defaultValue?: any) =>
+  get(getSelector(['dragSource']), ['dragSource', propName], defaultValue);
+export const getDragComponentName = (dragKey?: string) =>
+  get(getSelector(['pageConfig']), [
+    'pageConfig',
+    dragKey || getDragKey(),
+    'componentName',
+  ]);
 export function css(el) {
   const style = el && el.style;
   const iframe = getIframe();
@@ -434,14 +429,18 @@ export function css(el) {
   }
 }
 
-export const EXCLUDE_POSITION=['absolute','fixed'];
+export const EXCLUDE_POSITION = ['absolute', 'fixed'];
 
 function getChild(el, childNum) {
-  let currentChild = 0, i = 0;
+  let currentChild = 0,
+    i = 0;
   const children = el.children;
   while (i < children.length) {
-    const node=children[i];
-    if (css(node).display !== 'none'||!EXCLUDE_POSITION.includes(css(node).position)) {
+    const node = children[i];
+    if (
+      css(node).display !== 'none' ||
+      !EXCLUDE_POSITION.includes(css(node).position)
+    ) {
       if (currentChild === childNum) {
         return children[i];
       }
@@ -513,29 +512,33 @@ export function isVertical(el) {
   );
 }
 
-export const isNeedJudgeFather=(dragKey?:string)=>{
-  const componentName= getDragComponentName(dragKey);
-  const fatherNodesRule = get(getComponentConfig(componentName),'fatherNodesRule');
+export const isNeedJudgeFather = (dragKey?: string) => {
+  const componentName = getDragComponentName(dragKey);
+  const fatherNodesRule = get(
+    getComponentConfig(componentName),
+    'fatherNodesRule',
+  );
   return !!fatherNodesRule;
 };
 
-export const isAllowDrop=(childNodesRule?:string[])=>{
-  if(!childNodesRule) return  true;
-  const componentName= getDragComponentName();
+export const isAllowDrop = (childNodesRule?: string[]) => {
+  if (!childNodesRule) return true;
+  const componentName = getDragComponentName();
   return childNodesRule.includes(componentName);
 };
 
-export function isAllowAdd(targetComponentName:string,dragKey?:string){
- const componentName= getDragComponentName(dragKey);
-  const fatherNodesRule=get(getComponentConfig(componentName),'fatherNodesRule');
-  if(!fatherNodesRule) return false;
-  if(fatherNodesRule){
-    for(const father of fatherNodesRule) {
-      if(father.includes(targetComponentName)){
-        return  true;
+export function isAllowAdd(targetComponentName: string, dragKey?: string) {
+  const componentName = getDragComponentName(dragKey);
+  const fatherNodesRule = get(
+    getComponentConfig(componentName),
+    'fatherNodesRule',
+  );
+  if (!fatherNodesRule) return false;
+  if (fatherNodesRule) {
+    for (const father of fatherNodesRule) {
+      if (father.includes(targetComponentName)) {
+        return true;
       }
     }
   }
-
-
 }

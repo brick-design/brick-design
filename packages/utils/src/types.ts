@@ -166,7 +166,7 @@ export type PropsNodeType = {
 export type ChildNodesType = string[] | PropsNodeType;
 
 export type PropsType = {
-  style?:CSSProperties
+  style?: CSSProperties;
   [propName: string]: ActionType | any;
 };
 

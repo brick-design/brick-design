@@ -17,8 +17,7 @@ function StateDomainWrapper(props: any) {
 
   const { state, api, childNodes } = pageConfig[renderKey];
   const brickdStore = useRedux(state);
-  const childProps =
-    useGetProps(brickdStore.getPageState(),rest);
+  const childProps = useGetProps(brickdStore.getPageState(), rest);
   useService(brickdStore.getPageState(), api);
   return (
     <PropsProvider value={childProps}>

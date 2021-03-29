@@ -76,7 +76,10 @@ function Resize() {
   const baseboardRef = useRef<HTMLDivElement | any>();
   const [isOut, setIsOut] = useState<boolean>(true);
   const { props, childNodes } = pageConfig[selectedKey] || {};
-  let { width, height } = get(props, 'style', {width:'auto',height:'auto'});
+  let { width, height } = get(props, 'style', {
+    width: 'auto',
+    height: 'auto',
+  });
   width = width || 'auto';
   height = height || 'auto';
 

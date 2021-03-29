@@ -1,4 +1,4 @@
-import { get, update,isEqual} from 'lodash';
+import { get, update, isEqual } from 'lodash';
 import { produce } from 'immer';
 import { StateType } from '../types';
 import {
@@ -20,12 +20,12 @@ import { LayoutSortPayload } from '../actions';
  * @returns {{pageConfig: *}}
  */
 export function addComponent(state: StateType): StateType {
-  const { undo, redo, pageConfig, dragSource, dropTarget,dragSort } = state;
+  const { undo, redo, pageConfig, dragSource, dropTarget, dragSort } = state;
   /**
    * 如果没有拖拽的组件不做添加动作, 如果没有
    */
   if (!dragSource || (!dropTarget && pageConfig[ROOT]))
-    return { ...state, dragSource: null,dragSort:null };
+    return { ...state, dragSource: null, dragSort: null };
   const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
   /**
    * 如果没有root根节点，新添加的组件添加到root
@@ -38,13 +38,13 @@ export function addComponent(state: StateType): StateType {
       pageConfig: vDOMCollection!,
       dragSource: null,
       dropTarget: null,
-      dragSort:null,
+      dragSort: null,
       undo,
       redo,
     };
   }
   // eslint-disable-next-line prefer-const
-  let { selectedKey, propName,childNodeKeys } = dropTarget;
+  let { selectedKey, propName, childNodeKeys } = dropTarget;
   /**
    * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
    * 添加之前的页面配置
@@ -55,17 +55,18 @@ export function addComponent(state: StateType): StateType {
      * 返回原先的state状态
      */
     if (!parentKey) {
-      return { ...state, ...undo.pop(), dragSource: null,dragSort:null };
+      return { ...state, ...undo.pop(), dragSource: null, dragSort: null };
     } else {
-      return { ...state, dragSource: null,dragSort:null };
+      return { ...state, dragSource: null, dragSort: null };
     }
   }
 
-  if (!dragSort||
-    parentKey===selectedKey&&isEqual(childNodeKeys,dragSort)||
+  if (
+    !dragSort ||
+    (parentKey === selectedKey && isEqual(childNodeKeys, dragSort)) ||
     handleRules(pageConfig, dragKey!, selectedKey, propName)
   ) {
-    return { ...state, dragSource: null, dropTarget: null ,dragSort:null};
+    return { ...state, dragSource: null, dropTarget: null, dragSort: null };
   }
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
@@ -75,7 +76,10 @@ export function addComponent(state: StateType): StateType {
       //添加新组件到指定容器中
       update(oldConfigs, getLocation(selectedKey!, propName), () => dragSort);
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用
-      if (parentKey&&(parentKey!==selectedKey||parentPropName!==propName)) {
+      if (
+        parentKey &&
+        (parentKey !== selectedKey || parentPropName !== propName)
+      ) {
         update(oldConfigs, getLocation(parentKey), (childNodes) =>
           deleteChildNodesKey(childNodes, dragKey!, parentPropName),
         );
@@ -83,7 +87,7 @@ export function addComponent(state: StateType): StateType {
     }),
     dragSource: null,
     dropTarget: null,
-    dragSort:null,
+    dragSort: null,
     undo,
     redo,
   };

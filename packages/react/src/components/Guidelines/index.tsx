@@ -24,25 +24,24 @@ type SelectState = {
   dragSource: DragSourceType | null;
 };
 
-
-function getNode(key:string){
-  const iframe=getIframe();
+function getNode(key: string) {
+  const iframe = getIframe();
   const selectedNode = getSelectedNode(`${key}-0`, iframe);
-  if(selectedNode){
-    const {contentWindow}=iframe;
-    const {innerWidth,innerHeight}=contentWindow;
-    const {x,y}=selectedNode.getBoundingClientRect();
-    const  position:{left?:number,top?:number}={};
-    if(y>innerHeight){
-      position.top=y-50;
-    }else if(y<0){
-      position.top=y-50;
-    }else if(x>innerWidth){
-      position.left=innerWidth+x;
-    }else if(x<0){
-      position.left=x;
+  if (selectedNode) {
+    const { contentWindow } = iframe;
+    const { innerWidth, innerHeight } = contentWindow;
+    const { x, y } = selectedNode.getBoundingClientRect();
+    const position: { left?: number; top?: number } = {};
+    if (y > innerHeight) {
+      position.top = y - 50;
+    } else if (y < 0) {
+      position.top = y - 50;
+    } else if (x > innerWidth) {
+      position.left = innerWidth + x;
+    } else if (x < 0) {
+      position.left = x;
     }
-    contentWindow.scrollBy({...position,behavior:'smooth'});
+    contentWindow.scrollBy({ ...position, behavior: 'smooth' });
   }
 
   return selectedNode;
@@ -63,7 +62,7 @@ function Guidelines() {
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey } = selectedInfo || {};
   const dropKey = get(dropTarget, 'selectedKey');
-  const { operateHoverKey, operateSelectedKey,dropNode } = getOperateState();
+  const { operateHoverKey, operateSelectedKey, dropNode } = getOperateState();
 
   if (!dropKey && hoverKey !== operateHoverKey) {
     const hoverNode = getNode(hoverKey);
@@ -71,7 +70,7 @@ function Guidelines() {
   }
 
   if (selectedKey !== operateSelectedKey) {
-    const selectedNode=getNode(selectedKey);
+    const selectedNode = getNode(selectedKey);
     setOperateState({ selectedNode, operateSelectedKey: selectedKey });
   }
 
@@ -79,7 +78,7 @@ function Guidelines() {
     const iframe = getIframe();
     const { contentWindow, contentDocument } = iframe;
     const renderGuideLines = () => {
-      const { hoverNode, dropNode, isModal,isDropAble } = getOperateState();
+      const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
         const { left, top, bottom, right, width, height } = getElementInfo(
@@ -93,15 +92,14 @@ function Guidelines() {
           width,
           height,
         );
-        if(dropNode){
-          if(isDropAble){
-            hoverNodeRef.current.style.borderColor='springgreen';
-            hoverNodeRef.current.style.backgroundColor='rgba(0, 256, 0, 0.1)';
-          }else{
-            hoverNodeRef.current.style.borderColor='red';
-            hoverNodeRef.current.style.backgroundColor='rgba(256, 0, 0, 0.1)';
+        if (dropNode) {
+          if (isDropAble) {
+            hoverNodeRef.current.style.borderColor = 'springgreen';
+            hoverNodeRef.current.style.backgroundColor = 'rgba(0, 256, 0, 0.1)';
+          } else {
+            hoverNodeRef.current.style.borderColor = 'red';
+            hoverNodeRef.current.style.backgroundColor = 'rgba(256, 0, 0, 0.1)';
           }
-
         }
         topRef.current.style.top = `${top}px`;
         topRef.current.style.width = `${contentDocument!.body.scrollWidth}px`;
@@ -149,9 +147,9 @@ function Guidelines() {
     topRef.current,
   ]);
 
-  const onTransitionEnd=useCallback(()=>{
-    setOperateState({isLock:false});
-  },[]);
+  const onTransitionEnd = useCallback(() => {
+    setOperateState({ isLock: false });
+  }, []);
 
   const guidControl = !dropNode && hoverKey;
 
@@ -165,7 +163,11 @@ function Guidelines() {
       : styles['guide-hidden'];
   return (
     <>
-      <div onTransitionEnd={onTransitionEnd} ref={hoverNodeRef} className={hoverNodeClass} />
+      <div
+        onTransitionEnd={onTransitionEnd}
+        ref={hoverNodeRef}
+        className={hoverNodeClass}
+      />
       <div ref={leftRef} className={guidV} />
       <div ref={rightRef} className={guidV} />
       <div ref={topRef} className={guidH} />

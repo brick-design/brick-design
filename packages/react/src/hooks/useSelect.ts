@@ -28,38 +28,54 @@ export function useSelect(
 ): UseSelectType {
   const { key, domTreeKeys: selfDomTreeKeys } = specialProps;
 
-  const controlUpdate=useCallback((prevState: SelectType, nextState: SelectType)=> {
-    const {
-      selectedKey: prevSelectedKey,
-      propName: prevPropName,
-      domTreeKeys: prevDomTreeKeys=[],
-    } = prevState.selectedInfo || {};
-    const { selectedKey, domTreeKeys=[], propName } = nextState.selectedInfo || {};
+  const controlUpdate = useCallback(
+    (prevState: SelectType, nextState: SelectType) => {
+      const {
+        selectedKey: prevSelectedKey,
+        propName: prevPropName,
+        domTreeKeys: prevDomTreeKeys = [],
+      } = prevState.selectedInfo || {};
+      const { selectedKey, domTreeKeys = [], propName } =
+        nextState.selectedInfo || {};
 
-    const prevDragKey = get(prevState, 'dragSource.dragKey');
-    const nextDragKey = get(nextState, 'dragSource.dragKey');
+      const prevDragKey = get(prevState, 'dragSource.dragKey');
+      const nextDragKey = get(nextState, 'dragSource.dragKey');
 
-    if (!prevSelectedKey && selectedKey||prevSelectedKey && !selectedKey) {
-      if (isModal && (domTreeKeys.includes(key)||prevDomTreeKeys.includes(key))) {
-        return true;
+      if (
+        (!prevSelectedKey && selectedKey) ||
+        (prevSelectedKey && !selectedKey)
+      ) {
+        if (
+          isModal &&
+          (domTreeKeys.includes(key) || prevDomTreeKeys.includes(key))
+        ) {
+          return true;
+        }
+        return isEqualKey(key, selectedKey) || isEqualKey(key, prevSelectedKey);
       }
-      return isEqualKey(key, selectedKey)||isEqualKey(key,prevSelectedKey);
-    }
 
-    if (prevSelectedKey && selectedKey) {
-      if (prevSelectedKey !== selectedKey) {
-        if(isModal&&domTreeKeys.includes(key)) return  true;
-        return (
-          isEqualKey(key, prevSelectedKey) || isEqualKey(key, selectedKey)
-        );
+      if (prevSelectedKey && selectedKey) {
+        if (prevSelectedKey !== selectedKey) {
+          if (isModal && domTreeKeys.includes(key)) return true;
+          return (
+            isEqualKey(key, prevSelectedKey) || isEqualKey(key, selectedKey)
+          );
+        } else {
+          return (
+            propName !== prevPropName ||
+            selfDomTreeKeys.includes(prevDragKey) ||
+            selfDomTreeKeys.includes(nextDragKey)
+          );
+        }
       } else {
-        return propName !== prevPropName||selfDomTreeKeys.includes(prevDragKey)||selfDomTreeKeys.includes(nextDragKey);
+        return (
+          selfDomTreeKeys.includes(prevDragKey) ||
+          selfDomTreeKeys.includes(nextDragKey)
+        );
       }
-    }else {
-      return selfDomTreeKeys.includes(prevDragKey)||selfDomTreeKeys.includes(nextDragKey);
-    }
-
-  },[]);
+    },
+    [],
+  );
 
   const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
     ['selectedInfo', 'dragSource'],

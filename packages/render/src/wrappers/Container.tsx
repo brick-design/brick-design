@@ -12,7 +12,11 @@ import {
   useCommon,
   StaticContext,
 } from '@brickd/hooks';
-import { getChildrenFields, isPureVariable, resolveMapping } from '@brickd/utils';
+import {
+  getChildrenFields,
+  isPureVariable,
+  resolveMapping,
+} from '@brickd/utils';
 import StateDomainWrapper from './StateDomainWrapper';
 import MapNodesRenderWrapper from './MapNodesRenderWrapper';
 import ContainerDiffWrapper from './ContainerDiffWrapper';
@@ -30,7 +34,11 @@ function Container(vProps: CommonPropsType, ref: any) {
   const { pageConfig, componentsMap } = useContext(StaticContext);
   const vNode = pageConfig[renderKey];
   const { componentName, childNodes } = vNode;
-  const { props, hidden, pageState } = useCommon(vNode, rest,getChildrenFields(pageConfig,childNodes));
+  const { props, hidden, pageState } = useCommon(
+    vNode,
+    rest,
+    getChildrenFields(pageConfig, childNodes),
+  );
 
   const renderArrChild = useCallback(
     (childNodes: string[]) => {

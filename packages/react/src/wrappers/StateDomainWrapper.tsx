@@ -22,10 +22,11 @@ function StateDomainWrapper(props: any) {
       controlUpdate(prevState, nextState, specialProps.key),
   );
   const { state, api, componentName } =
-    pageConfig[specialProps.key] || getDragSourceFromKey('vDOMCollection',{})[specialProps.key];
+    pageConfig[specialProps.key] ||
+    getDragSourceFromKey('vDOMCollection', {})[specialProps.key];
   const isContainerNode = useMemo(() => isContainer(componentName), []);
   const brickdStore = useRedux(state);
-  const childProps = useGetProps(brickdStore.getPageState(),rest);
+  const childProps = useGetProps(brickdStore.getPageState(), rest);
   useService(brickdStore.getPageState(), api);
   return (
     <PropsProvider value={childProps}>

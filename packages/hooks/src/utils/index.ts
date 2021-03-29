@@ -3,15 +3,15 @@ import { each } from 'lodash';
 type ListenerType = () => void;
 
 export class BrickStore<T> {
-  constructor(propState?:T) {
-    this.state = propState||{} as T;
+  constructor(propState?: T) {
+    this.state = propState || ({} as T);
   }
   isPageStore = true;
-  state:T;
+  state: T;
   listeners = [];
-  listenerMap={};
+  listenerMap = {};
   getPageState = (): T => this.state;
-  setPageState = (newState: T, isReplace?: boolean,executeKey?:string) => {
+  setPageState = (newState: T, isReplace?: boolean, executeKey?: string) => {
     if (isReplace) {
       this.state = newState;
     } else {
@@ -19,30 +19,29 @@ export class BrickStore<T> {
     }
     each(this.listeners, (listener) => listener());
 
-    if(executeKey&&this.listenerMap[executeKey]){
+    if (executeKey && this.listenerMap[executeKey]) {
       this.listenerMap[executeKey]();
     }
   };
 
-  subscribe = (listener: ListenerType,key?:string) => {
+  subscribe = (listener: ListenerType, key?: string) => {
     let isSubscribed = true;
-    if(!key){
+    if (!key) {
       this.listeners.push(listener);
-    }else {
-      this.listenerMap[key]=listener;
+    } else {
+      this.listenerMap[key] = listener;
     }
     return () => {
       if (!isSubscribed) {
         return;
       }
       isSubscribed = false;
-      if(!key){
+      if (!key) {
         const index = this.listeners.indexOf(listener);
         this.listeners.splice(index, 1);
-      }else {
+      } else {
         delete this.listenerMap[key];
       }
-
     };
   };
 }

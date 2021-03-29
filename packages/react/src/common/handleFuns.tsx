@@ -16,7 +16,7 @@ import { resolveMapping, isPureVariable } from '@brickd/utils';
 import styles from './style.less';
 import { selectClassTarget } from './constants';
 
-import { generateRequiredProps, getComponent, getIframe, } from '../utils';
+import { generateRequiredProps, getComponent, getIframe } from '../utils';
 import StateDomainWrapper from '../wrappers/StateDomainWrapper';
 import MapNodesRenderWrapper from '../wrappers/MapNodesRenderWrapper';
 import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
@@ -26,11 +26,11 @@ export function handlePropsClassName(
   isLockTarget: boolean,
   className: any,
   animateClass: string,
-  isAllowAdd?:boolean
+  isAllowAdd?: boolean,
 ) {
   return `${selectClassTarget + key} ${className} ${animateClass}  
   ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}
-  ${!isLockTarget&&isAllowAdd?styles['allow-add']:''}`;
+  ${!isLockTarget && isAllowAdd ? styles['allow-add'] : ''}`;
 }
 
 /**
@@ -81,7 +81,7 @@ function renderNodes(
               isContainer={isCon}
               index={index}
               specialProps={specialProps}
-              key={`${item.key || item.id||index}${key}`}
+              key={`${item.key || item.id || index}${key}`}
               item={item}
             />
           );

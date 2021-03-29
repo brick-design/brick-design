@@ -62,7 +62,6 @@ const controlUpdate = (
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {
-
   const { onLoadEnd, pageName, initState, options, ...props } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     stateSelector,
@@ -122,7 +121,10 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   );
 
   const onDragEnter = useCallback(() => {
-    componentMount(divContainer, renderComponent(getDragSourceFromKey('vDOMCollection',{})));
+    componentMount(
+      divContainer,
+      renderComponent(getDragSourceFromKey('vDOMCollection', {})),
+    );
   }, [componentMount, divContainer]);
 
   const onDragLeave = useCallback(() => {
@@ -131,7 +133,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const onIframeLoad = useCallback(() => {
     const head = document.head.cloneNode(true);
-    const{contentDocument}=iframeRef.current;
+    const { contentDocument } = iframeRef.current;
     contentDocument.head.remove();
     contentDocument.documentElement.insertBefore(head, contentDocument.body);
     divContainer.current = contentDocument.getElementById('dnd-container');

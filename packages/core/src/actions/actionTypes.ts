@@ -34,5 +34,5 @@ export default {
   restStateDomain: 'restStateDomain',
   initPageBrickdState: 'initPageBrickdState',
   removePageBrickdState: 'removePageBrickdState',
-  dragSort:'dragSort'
+  dragSort: 'dragSort',
 };
