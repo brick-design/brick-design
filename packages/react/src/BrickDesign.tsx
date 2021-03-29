@@ -21,7 +21,7 @@ import {
 import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import { getDragSourceVDom, getIframe, iframeSrcDoc } from './utils';
+import { getDragSourceFromKey, getIframe, iframeSrcDoc } from './utils';
 import { onDragover } from './common/events';
 import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
@@ -122,7 +122,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   );
 
   const onDragEnter = useCallback(() => {
-    componentMount(divContainer, renderComponent(getDragSourceVDom()));
+    componentMount(divContainer, renderComponent(getDragSourceFromKey('vDOMCollection',{})));
   }, [componentMount, divContainer]);
 
   const onDragLeave = useCallback(() => {

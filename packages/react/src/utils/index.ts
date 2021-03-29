@@ -415,10 +415,9 @@ export const getPropParentNodes = (
   return parentNodes;
 };
 
-export const getDragKey = () =>
-  get(getSelector(['dragSource']), ['dragSource', 'dragKey']);
-export const getDragSourceVDom = () =>
-  get(getSelector(['dragSource']), ['dragSource', 'vDOMCollection'], {});
+export const getDragKey = () =>getDragSourceFromKey('dragKey');
+export const getDragSourceFromKey = (propName:string,defaultValue?:any) =>
+  get(getSelector(['dragSource']), ['dragSource',propName], defaultValue);
 export const getDragComponentName=(dragKey?:string)=>get(getSelector(['pageConfig']), ['pageConfig',dragKey||getDragKey(),'componentName']);
 export function css(el) {
   const style = el && el.style;

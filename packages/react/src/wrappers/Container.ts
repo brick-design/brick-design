@@ -32,7 +32,7 @@ import {
   getIsModalChild,
   PropParentNodes,
   isVertical,
-  getDragSourceVDom,
+  getDragSourceFromKey,
   isAllowAdd, isNeedJudgeFather, isAllowDrop,
 } from '../utils';
 
@@ -84,10 +84,11 @@ function Container(allProps: CommonPropsType, ref: any) {
     STATE_PROPS
   >(['dropTarget', 'pageConfig'], controlUpdate);
   const { selectedKey } = dropTarget || {};
-  const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom();
+  const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceFromKey('vDOMCollection',{});
   const vNode = get(pageConfig, key, {}) as VirtualDOMType;
   const { childNodes, componentName } = vNode;
-
+  const dragKey=getDragKey();
+  const  isAddComponent = useRef(!getDragSourceFromKey('parentKey')&&dragKey===key);
   const { props, hidden, pageState } = useCommon(vNode, rest,getChildrenFields(pageConfig,childNodes));
   const { index = 0, item, funParams } = pageState;
   const uniqueKey=`${key}-${index}`;
@@ -133,9 +134,6 @@ function Container(allProps: CommonPropsType, ref: any) {
     selectedPropName,
     index,
   );
-
-  const dragKey = getDragKey();
-
   const dragOver=useCallback((event:DragEvent,propName:string)=>{
   	event.preventDefault();
     const dragKey=getDragKey();
@@ -206,9 +204,12 @@ function Container(allProps: CommonPropsType, ref: any) {
     if (
       isSelected &&
       (isEmpty(funParams || item) ||
-        (isEmpty(funParams || item) && selectedIndex === index))
+        (isEmpty(funParams || item) && selectedIndex === index))||
+      isAddComponent.current
     ) {
       setSelectedNode(parentRootNode.current);
+      isAddComponent.current=false;
+
     }
 
     if (childNodes) {
@@ -217,7 +218,7 @@ function Container(allProps: CommonPropsType, ref: any) {
 
   },[childNodes,dragKey]);
 
-  const parentDragOver =useCallback((event: DragEvent) => {
+  const onParentDragOver =useCallback((event: DragEvent) => {
     event.preventDefault();
     const dragKey = getDragKey();
     const {isLock}=getOperateState();
@@ -245,7 +246,9 @@ function Container(allProps: CommonPropsType, ref: any) {
       }
       getDragSort(newChildren);
     }else {
+
       const propChildren=  get(children, selectedPropName, []);
+
       if (!propChildren.includes(dragKey)) {
         const newChildren = cloneChildNodes(children);
         const childrenResult=[dragKey, ...propChildren];
@@ -256,7 +259,7 @@ function Container(allProps: CommonPropsType, ref: any) {
         getDragSort(propChildren);
       }
     }
-  },[children,setChildren,selectedKey]) ;
+  },[children,setChildren,selectedKey,selectedPropName]) ;
 
   const onParentDragEnter = useCallback((e: DragEvent) => {
     e.stopPropagation();
@@ -289,18 +292,15 @@ function Container(allProps: CommonPropsType, ref: any) {
   },[childNodes,selectedPropName]);
 
   useEffect(() => {
-    const containerRootNode=propParentNodes.current[defaultPropName]||parentRootNode.current;
-    if (isEmpty(containerRootNode)) return;
-    containerRootNode.addEventListener(
+    if (isEmpty(parentRootNode.current)) return;
+    parentRootNode.current.addEventListener(
       'dragover',
-      parentDragOver,
+      onParentDragOver,
     );
-    containerRootNode.addEventListener('dragenter',onParentDragEnter);
     return () => {
-      containerRootNode.removeEventListener('dragover', parentDragOver);
-      containerRootNode.removeEventListener('dragenter',onParentDragEnter);
+      parentRootNode.current.removeEventListener('dragover', onParentDragOver);
     };
-  },[parentDragOver,onParentDragEnter]);
+  },[onParentDragOver]);
 
 
 
@@ -359,6 +359,7 @@ function Container(allProps: CommonPropsType, ref: any) {
       animateClass,
       !!dragKey&&isAllowAdd(componentName)
     ),
+    onDragOver:onParentDragOver,
     onDragEnter:onParentDragEnter,
     ...events,
     ...generateRequiredProps(componentName),

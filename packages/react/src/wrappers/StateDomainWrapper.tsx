@@ -12,7 +12,7 @@ import { STATE_PROPS, isContainer } from '@brickd/core';
 import ContainerDiffWrapper from './ContainerDiffWrapper';
 import { useSelector } from '../hooks/useSelector';
 import { controlUpdate, HookState, stateSelector } from '../common/handleFuns';
-import { getDragSourceVDom } from '../utils';
+import { getDragSourceFromKey } from '../utils';
 
 function StateDomainWrapper(props: any) {
   const { specialProps, ...rest } = props;
@@ -22,7 +22,7 @@ function StateDomainWrapper(props: any) {
       controlUpdate(prevState, nextState, specialProps.key),
   );
   const { state, api, componentName } =
-    pageConfig[specialProps.key] || getDragSourceVDom()[specialProps.key];
+    pageConfig[specialProps.key] || getDragSourceFromKey('vDOMCollection',{})[specialProps.key];
   const isContainerNode = useMemo(() => isContainer(componentName), []);
   const brickdStore = useRedux(state);
   const childProps = useGetProps(brickdStore.getPageState(),rest);

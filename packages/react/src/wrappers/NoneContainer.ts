@@ -22,7 +22,7 @@ import {
   generateRequiredProps,
   getComponent,
   getDragKey,
-  getDragSourceVDom,
+  getDragSourceFromKey,
   getIframe,
   getIsModalChild,
   getSelectedNode,
@@ -43,9 +43,11 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
   );
   const { isSelected } = useSelect(specialProps);
-  const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceVDom();
+  const pageConfig = PageDom[ROOT] ? PageDom : getDragSourceFromKey('vDOMCollection',{});
   const vNode = (pageConfig[key] || {}) as VirtualDOMType;
   const { componentName } = vNode;
+  const dragKey=getDragKey();
+  const  isAddComponent = useRef(!getDragSourceFromKey('parentKey')&&dragKey===key);
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const { index = 0, funParams, item } = pageState;
   const uniqueKey=`${key}-${index}`;
@@ -59,7 +61,6 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     domTreeKeys,
   ]);
   const { getOperateState,setOperateState } = useOperate(isModal);
-  const dragKey=getDragKey();
 
   useEffect(() => {
     if(dragKey&&domTreeKeys.includes(dragKey)) return;
@@ -69,17 +70,17 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     if (
       isSelected &&
       (isEmpty(funParams || item) ||
-        (isEmpty(funParams || item) && selectedIndex === index))
+        (isEmpty(funParams || item) && selectedIndex === index))||
+      isAddComponent.current
     ) {
       setSelectedNode(parentRootNode.current);
+      isAddComponent.current=false;
     }
-
     parentRootNode.current.addEventListener('dragenter',onDragEnter);
     return ()=>{
       parentRootNode.current.removeEventListener('dragenter',onDragEnter);
     };
   },[funParams,isSelected,item,dragKey]);
-
 
   const onDragEnter=useCallback((e)=>{
     e.stopPropagation();
