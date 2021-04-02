@@ -20,7 +20,7 @@ interface ComponentSchemaType {
 
 ```
 ### isNonContainer
-是否为非容易，如果是非容器将该属性设置为true，否则不设置值或者设置为false
+是否为非容器，如果是非容器将该属性设置为true，否则不设置值或者设置为false
 ### childNodesRule
 子组件约束，内容为允许放置的组件名称集合，如果childNodesRule设置在配置信息个根节点下，那么约束的就是children属性下的子组件，当如是在
 节点属性配置中设置的约束就为该节点属性所允许放置的组件名称集合。
