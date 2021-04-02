@@ -140,7 +140,7 @@ export function generateRequiredProps(componentName: string) {
 }
 
 export type PropParentNodes = { [propName: string]: HTMLElement };
-
+export type PropNodesPosition={ [propName: string]: boolean }
 export const getNodeRealRect = (element: Element) => {
   if (!element) return;
   const eleCSS = css(element);
@@ -375,6 +375,7 @@ export const dragSort = (
 export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
+  propNodesPosition:PropNodesPosition,
   index = 0,
 ) => {
   const iframe = getIframe();
@@ -384,6 +385,7 @@ export const getPropParentNodes = (
       if (node) {
         const parentNode = node.parentElement;
         parentNodes[defaultPropName] = parentNode;
+        propNodesPosition[defaultPropName]=isVertical(parentNode);
         break;
       }
     }
@@ -395,6 +397,7 @@ export const getPropParentNodes = (
           if (node) {
             const parentNode = node.parentElement;
             parentNodes[propName] = parentNode;
+            propNodesPosition[propName]=isVertical(parentNode);
             break;
           }
         }
@@ -414,6 +417,9 @@ export const getDragComponentName = (dragKey?: string) =>
     dragKey || getDragKey(),
     'componentName',
   ]);
+
+export const getVNode=(nodeKey:string)=>get(getSelector(['pageConfig']),['pageConfig', nodeKey]);
+
 export function css(el) {
   const style = el && el.style;
   const iframe = getIframe();

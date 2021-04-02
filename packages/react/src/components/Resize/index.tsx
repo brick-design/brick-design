@@ -224,6 +224,9 @@ function Resize() {
         iframe,
         isModal,
       );
+      // if(width===0||height===0){
+      //   selectedNode.className
+      // }
       if (top <= 14 && isOut) {
         setIsOut(false);
       } else if (top > 14 && !isOut) {

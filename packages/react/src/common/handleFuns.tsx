@@ -16,7 +16,7 @@ import { resolveMapping, isPureVariable } from '@brickd/utils';
 import styles from './style.less';
 import { selectClassTarget } from './constants';
 
-import { generateRequiredProps, getComponent, getIframe } from '../utils';
+import { generateRequiredProps, getComponent, getIframe, getVNode } from '../utils';
 import StateDomainWrapper from '../wrappers/StateDomainWrapper';
 import MapNodesRenderWrapper from '../wrappers/MapNodesRenderWrapper';
 import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
@@ -44,7 +44,6 @@ export function handlePropsClassName(
 function renderNodes(
   childNodes: string[],
   specialProps: SelectedInfoBaseType,
-  pageConfig: PageConfigType,
   allState: any,
   parentPropName?: string,
   isOnlyNode?: boolean,
@@ -56,7 +55,7 @@ function renderNodes(
   }
 
   const resultChildNodes = map(childNodes, (key) => {
-    const { componentName, isStateDomain, loop } = pageConfig[key] || {};
+    const { componentName, isStateDomain, loop } = getVNode(key) || {};
     if (!componentName) return null;
     /** 根据组件类型处理属性 */
     const specialProps = {
@@ -136,13 +135,12 @@ function handleRequiredChildNodes(componentName: string) {
 
 export function handleChildNodes(
   specialProps: SelectedInfoBaseType,
-  pageConfig: PageConfigType,
   allState: any,
   children?: ChildNodesType,
 ) {
   const nodeProps: any = {};
   const { key: parentKey } = specialProps;
-  const { componentName } = pageConfig[parentKey];
+  const { componentName } = getVNode(parentKey);
   if (isEmpty(children)) {
     return handleRequiredChildNodes(componentName);
   }
@@ -152,7 +150,6 @@ export function handleChildNodes(
     nodeProps.children = renderNodes(
       children as string[],
       specialProps,
-      pageConfig,
       allState,
       undefined,
       isOnlyNode,
@@ -178,7 +175,6 @@ export function handleChildNodes(
               {renderNodes(
                 nodes,
                 specialProps,
-                pageConfig,
                 allState,
                 propName,
                 isOnlyNode,
@@ -190,7 +186,6 @@ export function handleChildNodes(
         nodeProps[propName] = renderNodes(
           nodes,
           specialProps,
-          pageConfig,
           allState,
           propName,
           isOnlyNode,
