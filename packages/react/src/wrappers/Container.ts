@@ -1,6 +1,5 @@
 import {
   createElement,
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -60,7 +59,7 @@ export type ContainerState = {
   pageConfig: PageConfigType;
   dropTarget: DropTargetType;
 };
-function Container(allProps: CommonPropsType, ref: any) {
+function Container(allProps: CommonPropsType) {
   const {
     specialProps,
     specialProps: { key, domTreeKeys },
@@ -99,6 +98,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const isAddComponent = useRef(
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
+  const nodeRef=useRef();
   // const dragOverOrigin=useRef()
   const { props, hidden, pageState } = useCommon(
     vNode,
@@ -346,7 +346,7 @@ function Container(allProps: CommonPropsType, ref: any) {
   const { index: selectedIndex } = getOperateState();
 
   if (
-    (selectedKey !== key || (selectedKey === key && selectedIndex !== index)) &&
+    (selectedKey !== key || selectedIndex !== index) &&
     !isEqual(childNodes, children)
   ) {
     setChildren(childNodes);
@@ -419,9 +419,9 @@ function Container(allProps: CommonPropsType, ref: any) {
     /**
      * 设置组件id方便抓取图片
      */
-    ref,
+    ref:nodeRef,
     ...modalProps,
   });
 }
 
-export default memo<CommonPropsType>(forwardRef(Container), propAreEqual);
+export default memo<CommonPropsType>(Container, propAreEqual);

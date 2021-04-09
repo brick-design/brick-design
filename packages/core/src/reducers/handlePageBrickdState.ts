@@ -9,7 +9,7 @@ export const legoState: StateType = {
   hoverKey: null,
   dragSource: null,
   dropTarget: null,
-  platformInfo: { isMobile: false, size: ['100%', '100%'] },
+  platformInfo: { isMobile: false, size: [1920, 1080] },
 };
 export function initPageBrickdState(
   state: StateType,

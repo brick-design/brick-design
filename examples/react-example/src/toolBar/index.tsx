@@ -72,16 +72,6 @@ function renderGroup(
 	)
 }
 
-function onKeyDown(keyEvent: any, enabled: string[]) {
-	const { key, ctrlKey, shiftKey, metaKey } = keyEvent
-	if (key === 'z' && (ctrlKey || metaKey)) {
-		if (!shiftKey && enabled.includes(UNDO)) {
-			undo()
-		} else if (shiftKey && enabled.includes(REDO)) {
-			redo()
-		}
-	}
-}
 
 function ToolBar() {
 	const {
@@ -90,7 +80,6 @@ function ToolBar() {
 		undo,
 		redo,
 		styleSetting,
-		platformInfo,
 	} = useSelector([
 		'selectedInfo',
 		'pageConfig',
@@ -107,14 +96,6 @@ function ToolBar() {
 
 	const enabled: string[] = []
 
-	/**
-	 * 键盘监听 实现快捷键操作
-	 */
-	useEffect(() => {
-		const keyListener = (e: any) => onKeyDown(e, enabled)
-		window.addEventListener('keydown', keyListener)
-		return () => window.removeEventListener('keydown', keyListener)
-	}, [enabled])
 
 	if (style && !isEqual(style, styleSetting)) enabled.push(REST_STYLE)
 	if (isContainer) enabled.push(CLEAR)

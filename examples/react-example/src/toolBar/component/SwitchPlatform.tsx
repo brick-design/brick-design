@@ -19,7 +19,7 @@ function SwitchPlatform(props: SwitchPlatformPropsType) {
 	const [isVertical, setIsVertical] = useState(true)
 
 	useEffect(() => {
-		const size = isMobile ? [...menus[mobileModel]] : ['100%', '100%']
+		const size = isMobile ? [...menus[mobileModel]] : [1920, 1080]
 		!isVertical && size.reverse()
 		changePlatform({
 			isMobile,

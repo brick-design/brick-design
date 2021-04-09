@@ -7,11 +7,10 @@ import { message, Radio } from 'antd'
 import { Resizable } from 're-resizable'
 import 'antd/dist/antd.css'
 import 'animate.css/animate.min.css'
-import { BrickProvider } from '@brickd/react'
-import DesignPanel from './DesignPanel'
+import { BrickDesign, BrickProvider } from '@brickd/react'
 import PreviewPanel from './PreviewPanel'
 import config from './configs'
-import initData from './initData'
+import initData from './xiaomi'
 
 const COMMON_ENABLE = {
 	top: false,
@@ -64,7 +63,8 @@ export default function App() {
 								预览
 							</Radio.Button>
 						</Radio.Group>
-						{isPreview?<PreviewPanel/>:<DesignPanel />}
+						{isPreview?<PreviewPanel/>:			<BrickDesign pageName={'test'} initState={{ pageConfig: initData }} />
+						}
 
 					</div>
 					<Resizable

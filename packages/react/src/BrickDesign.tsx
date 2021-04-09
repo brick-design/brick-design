@@ -16,7 +16,7 @@ import {
   initPageBrickdState,
   setPageName,
   ROOT,
-  addComponent,
+  addComponent, undo, redo,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider } from '@brickd/hooks';
@@ -28,6 +28,7 @@ import Distances from './components/Distances';
 import Resize from './components/Resize';
 import { useSelector } from './hooks/useSelector';
 import StateDomainWrapper from './wrappers/StateDomainWrapper';
+import styles from './global.less';
 import {
   OperateProvider,
   OperateStateType,
@@ -67,6 +68,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     stateSelector,
     controlUpdate,
   );
+  const { platformInfo } = useSelector(['platformInfo']);
   const iframeRef = useRef<HTMLIFrameElement>();
   const rootComponent = pageConfig[ROOT];
   const staticState = useMemo(() => ({ options, pageName }), [
@@ -108,7 +110,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
           <OperateProvider value={operateStore}>
             <BrickContext.Provider value={getStore()}>
               {designPage}
-              <Guidelines />
               <Distances />
               <Resize />
             </BrickContext.Provider>
@@ -161,6 +162,17 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   useEffect(() => {
     iframeRef.current = getIframe();
     const contentWindow = iframeRef.current.contentWindow!;
+    function onKeyDown(keyEvent: any) {
+      const { key, ctrlKey, shiftKey, metaKey } = keyEvent;
+      if (key === 'z' && (ctrlKey || metaKey)) {
+        if (!shiftKey) {
+          undo();
+        } else if (shiftKey) {
+          redo();
+        }
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
     contentWindow.addEventListener('dragover', onDragover);
     window.addEventListener('dragover', onDragover);
     contentWindow.addEventListener('drop', onDrop);
@@ -170,6 +182,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
       contentWindow.removeEventListener('drop', onDrop);
       window.removeEventListener('dragover', onDragover);
       window.removeEventListener('drop', onDrop);
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, []);
 
@@ -191,14 +204,36 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     }
   }, [divContainer.current, componentMount, designPage]);
 
+
+  useEffect(() => {
+    function onMouseWheel(mousewheel:WheelEvent){
+      mousewheel.stopPropagation();
+      return false;
+    }
+    window.addEventListener('mousewheel', onMouseWheel);
+    return () => {
+      window.removeEventListener('mousewheel', onMouseWheel);
+    };
+  }, []);
+
+
+  const { size } = platformInfo;
+  const style = useMemo(()=>({ width: size[0], height: size[1], transition: 'all 700ms',transform:'scale(0.50, 0.50)' }),[size]);
+
   return (
-    <iframe
+    <div
+      style={style}
+      className={styles['browser-mockup']}
+    >
+      <Guidelines operateStore={operateStore} />
+      <iframe
       id="dnd-iframe"
       style={{ border: 0, width: '100%', height: '100%' }}
       srcDoc={iframeSrcDoc}
       onLoad={onIframeLoad}
       {...props}
     />
+    </div>
   );
 }
 

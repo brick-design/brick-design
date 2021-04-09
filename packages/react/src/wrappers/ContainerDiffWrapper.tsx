@@ -1,4 +1,4 @@
-import React, { memo, forwardRef, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import Container from './Container';
 import NoneContainer from './NoneContainer';
 import { CommonPropsType } from '../common/handleFuns';
@@ -6,18 +6,18 @@ import { CommonPropsType } from '../common/handleFuns';
 export interface ContainerDiff extends CommonPropsType {
   isContainer: boolean;
 }
-function ContainerDiffWrapper(props: ContainerDiff, ref: any) {
+function ContainerDiffWrapper(props: ContainerDiff) {
   const { isContainer, ...rest } = props;
 
   return useMemo(
     () =>
       isContainer ? (
-        <Container {...rest} ref={ref} />
+        <Container {...rest} />
       ) : (
-        <NoneContainer {...rest} ref={ref} />
+        <NoneContainer {...rest} />
       ),
     [],
   );
 }
 
-export default memo(forwardRef(ContainerDiffWrapper));
+export default memo(ContainerDiffWrapper);

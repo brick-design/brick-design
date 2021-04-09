@@ -1,13 +1,11 @@
 import {
   createElement,
-  forwardRef,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
 } from 'react';
-import { clearDropTarget, ROOT, STATE_PROPS } from '@brickd/core';
+import { ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
 import { isEmpty } from 'lodash';
@@ -33,7 +31,7 @@ import { useSelector } from '../hooks/useSelector';
 import { useEvents } from '../hooks/useEvents';
 import { useOperate } from '../hooks/useOperate';
 
-function NoneContainer(allProps: CommonPropsType, ref: any) {
+function NoneContainer(allProps: CommonPropsType) {
   const {
     specialProps,
     specialProps: { key, domTreeKeys },
@@ -57,6 +55,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
   const parentRootNode = useRef<HTMLElement>();
+  const nodeRef=useRef();
   const { setSelectedNode, ...events } = useEvents(
     parentRootNode,
     specialProps,
@@ -67,7 +66,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     pageConfig,
     domTreeKeys,
   ]);
-  const { getOperateState, setOperateState } = useOperate(isModal);
+  const { getOperateState } = useOperate(isModal);
 
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
@@ -83,24 +82,7 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
       setSelectedNode(parentRootNode.current);
       isAddComponent.current = false;
     }
-    parentRootNode.current.addEventListener('dragenter', onDragEnter);
-    return () => {
-      parentRootNode.current.removeEventListener('dragenter', onDragEnter);
-    };
-  }, [funParams, isSelected, item, dragKey]);
-
-  const onDragEnter = useCallback(
-    (e) => {
-      e.stopPropagation();
-      if (domTreeKeys.includes(getDragKey())) return;
-      setOperateState({
-        dropNode: parentRootNode.current,
-        isDropAble: false,
-      });
-      clearDropTarget();
-    },
-    [parentRootNode.current],
-  );
+    }, [funParams, isSelected, item, dragKey]);
 
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
@@ -108,19 +90,18 @@ function NoneContainer(allProps: CommonPropsType, ref: any) {
     ...restProps,
     className: handlePropsClassName(
       uniqueKey,
-      domTreeKeys.includes(dragKey),
+      !!dragKey,
       className,
       animateClass,
     ),
-    onDragEnter,
     ...events,
     ...generateRequiredProps(componentName),
     draggable: true,
     /**
      * 设置组件id方便抓取图片
      */
-    ref,
+    ref:nodeRef,
   });
 }
 
-export default memo<CommonPropsType>(forwardRef(NoneContainer), propAreEqual);
+export default memo<CommonPropsType>(NoneContainer, propAreEqual);

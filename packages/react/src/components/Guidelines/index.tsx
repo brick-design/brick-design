@@ -6,6 +6,7 @@ import {
   STATE_PROPS,
 } from '@brickd/core';
 import { get } from 'lodash';
+import { BrickStore } from '@brickd/hooks';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
@@ -16,6 +17,7 @@ import {
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
+import { OperateStateType } from '../OperateProvider';
 
 type SelectState = {
   hoverKey: string | null;
@@ -47,7 +49,11 @@ function getNode(key: string) {
   return selectedNode;
 }
 
-function Guidelines() {
+type GuidelinesType={
+  operateStore:BrickStore<OperateStateType>
+}
+function Guidelines(props:GuidelinesType) {
+  const {operateStore}=props;
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -59,7 +65,7 @@ function Guidelines() {
     STATE_PROPS
   >(['hoverKey', 'dropTarget', 'selectedInfo']);
 
-  const { getOperateState, setSubscribe, setOperateState } = useOperate();
+  const { getOperateState, setSubscribe, setOperateState } = useOperate(false,operateStore);
   const { selectedKey } = selectedInfo || {};
   const dropKey = get(dropTarget, 'selectedKey');
   const { operateHoverKey, operateSelectedKey, dropNode } = getOperateState();
@@ -132,6 +138,7 @@ function Guidelines() {
     };
     const unSubscribe = setSubscribe(renderGuideLines);
     const onScroll = () => {
+      console.log('onScroll');
       setTimeout(renderGuideLines, 66);
     };
     contentWindow.addEventListener('scroll', onScroll);

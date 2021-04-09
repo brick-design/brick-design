@@ -256,10 +256,18 @@ export const dragSort = (
   } = getParentNodeRealRect(parentNode);
   const { clientX, clientY } = dragOffset;
   const newChildren = [];
+  let nodeIndex=0;
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
     if (compareKey === dragKey) continue;
-    const childNode = parentNode.children[index];
+    let childNode;
+    for(nodeIndex;nodeIndex<parentNode.children.length;nodeIndex++){
+       if(parentNode.children[nodeIndex].className.includes(selectClassTarget + compareKey)){
+         childNode=parentNode.children[nodeIndex];
+         break;
+       }
+    }
+
     if (EXCLUDE_POSITION.includes(get(css(childNode), 'position'))) {
       newChildren.push(compareKey);
       continue;

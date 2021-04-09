@@ -1,11 +1,11 @@
-import React, { memo, forwardRef, useMemo, useContext } from 'react';
+import React, { memo, useMemo, useContext } from 'react';
 import { MapNodeContext, MapNodeContextProvider } from '@brickd/hooks';
 import ContainerDiffWrapper, { ContainerDiff } from './ContainerDiffWrapper';
 
 interface MapNodesRenderType extends ContainerDiff {
   item: any;
 }
-export function MapNodesRenderWrapper(props: MapNodesRenderType, ref: any) {
+export function MapNodesRenderWrapper(props: MapNodesRenderType) {
   const { item, index, ...rest } = props;
   const parentMap = useContext(MapNodeContext);
   const { index: parentIndex } = parentMap || {};
@@ -20,9 +20,9 @@ export function MapNodesRenderWrapper(props: MapNodesRenderType, ref: any) {
   ]);
   return (
     <MapNodeContextProvider key={resultIndex} value={mapItem}>
-      <ContainerDiffWrapper {...rest} ref={ref} key={resultIndex} />
+      <ContainerDiffWrapper {...rest} key={resultIndex} />
     </MapNodeContextProvider>
   );
 }
 
-export default memo(forwardRef(MapNodesRenderWrapper));
+export default memo(MapNodesRenderWrapper);

@@ -11,6 +11,7 @@ import {
 import { get, map } from 'lodash';
 import { Item } from './Item';
 import styles from './index.less';
+import {RadiusItem} from './RadiusItem';
 import { useSelector } from '../../hooks/useSelector';
 import {
   formatUnit,
@@ -39,6 +40,13 @@ export enum Direction {
   topLeft = 'topLeft',
 }
 
+export enum Radius{
+  topLeft='borderTopLeftRadius',
+  topRight='borderTopRightRadius',
+  bottomLeft='borderBottomLeftRadius',
+  bottomRight='borderBottomRightRadius'
+}
+
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
   const { selectedInfo, pageConfig, hoverKey } = nextState;
   return (
@@ -60,8 +68,9 @@ type OriginSizeType = {
   direction: Direction;
 };
 
+
 function Resize() {
-  const iframe = getIframe();
+  const iframe = useRef(getIframe()).current;
   const { selectedInfo, hoverKey, pageConfig } = useSelector<
     ResizeState,
     STATE_PROPS
@@ -115,23 +124,18 @@ function Resize() {
 
     resizeChange(sizeResultRef.current);
     sizeResultRef.current = {};
-  }, [
-    originSizeRef.current,
-    baseboardRef.current,
-    resizeRef.current,
-    sizeResultRef.current,
-  ]);
+  }, []);
 
-  const changeBaseboard = () => {
+  const changeBaseboard =useCallback(() => {
     const {
       body: { scrollWidth, scrollHeight },
     } = iframe!.contentDocument;
     baseboardRef.current!.style.cssText = `
     display:block;
     width:${scrollWidth}px;
-    height:${scrollHeight}px
+    height:${scrollHeight}px;
     `;
-  };
+  },[baseboardRef.current]);
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -201,7 +205,7 @@ function Resize() {
         changeBaseboard();
       }
     },
-    [originSizeRef.current, sizeResultRef.current],
+    [],
   );
 
   const showSize = useCallback(
@@ -264,7 +268,7 @@ function Resize() {
         changeBaseboard();
       }
     },
-    [iframe, resizeRef.current, baseboardRef.current, originSizeRef.current],
+    [iframe],
   );
 
   return (
@@ -281,6 +285,13 @@ function Resize() {
             onResizeStart={onResizeStart}
             direction={direction}
             key={direction}
+          />
+        ))}
+        {map(Radius, (radius) => (
+          <RadiusItem
+            changeBaseboard={changeBaseboard}
+            radius={radius}
+            key={radius}
           />
         ))}
         <div
