@@ -53,6 +53,7 @@ export function Item(props: ItemProps) {
   const { onResizeStart, direction } = props;
   return (
     <span
+      draggable={false}
       style={positionStyles[direction]}
       onMouseDown={(e) => onResizeStart(e, direction)}
       className={styles['resize-item']}

@@ -1,12 +1,5 @@
 @import '../../global';
 
-.guide-common {
-	position: absolute;
-	z-index: 10000;
-	top: 0;
-	.animate();
-}
-
 .guide-v {
 	.guide-common();
 	height: 100%;
@@ -19,27 +12,3 @@
 	border-top: 1px dashed @hoverColor;
 }
 
-.guide-hidden {
-	position: absolute;
-	z-index: -1;
-}
-
-.hover-node {
-	.guide-common();
-	border: 1px solid @hoverColor;
-	pointer-events: none;
-	background-color:@translucent ;
-	transition: all 100ms;
-}
-
-//.drop-node {
-//	.hover-node();
-//	border-color: red;
-//	background-color:@dropColorNo;
-//
-//}
-.drop-node{
-	.hover-node();
-	border-color: springgreen;
-	background-color:@dropColorYes;
-}

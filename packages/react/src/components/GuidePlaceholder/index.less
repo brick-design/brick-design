@@ -1,0 +1,15 @@
+@import '../../global';
+
+.hover-node {
+	.guide-common();
+	border: 1px solid @hoverColor;
+	pointer-events: none;
+	background-color:@translucent ;
+	transition: all 100ms;
+}
+
+.drop-node{
+	.hover-node();
+	border-color: springgreen;
+	background-color:@dropColorYes;
+}

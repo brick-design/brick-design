@@ -18,6 +18,7 @@ import {
   getElementInfo,
   getIframe,
   setPosition,
+  showBaseboard,
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
 import { useOperate } from '../../hooks/useOperate';
@@ -39,12 +40,7 @@ export enum Direction {
   topLeft = 'topLeft',
 }
 
-export enum Radius {
-  topLeft = 'borderTopLeftRadius',
-  topRight = 'borderTopRightRadius',
-  bottomLeft = 'borderBottomLeftRadius',
-  bottomRight = 'borderBottomRightRadius',
-}
+
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
   const { selectedInfo, pageConfig, hoverKey } = nextState;
@@ -124,16 +120,7 @@ function Resize() {
     sizeResultRef.current = {};
   }, []);
 
-  const changeBaseboard = useCallback(() => {
-    const {
-      body: { scrollWidth, scrollHeight },
-    } = iframe!.contentDocument;
-    baseboardRef.current!.style.cssText = `
-    display:block;
-    width:${scrollWidth}px;
-    height:${scrollHeight}px;
-    `;
-  }, [baseboardRef.current]);
+
 
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
@@ -199,7 +186,7 @@ function Resize() {
       }
       showSize(sizeResultRef.current.width, sizeResultRef.current.height);
       setSelectedBorder('pointer-events: auto; transition:none;');
-      changeBaseboard();
+      showBaseboard(iframe,baseboardRef.current);
     }
   }, []);
 
@@ -260,7 +247,7 @@ function Resize() {
           maxWidth: formatUnit(maxWidth),
           maxHeight: formatUnit(maxHeight),
         };
-        changeBaseboard();
+        showBaseboard(iframe,baseboardRef.current);
       }
     },
     [iframe],
@@ -298,7 +285,7 @@ function Resize() {
           {height}
         </div>
       </div>
-      <div ref={baseboardRef} className={styles['baseboard']} />
+      <div ref={baseboardRef} id='brick-design-baseboard' className={styles['baseboard']} />
     </>
   );
 }

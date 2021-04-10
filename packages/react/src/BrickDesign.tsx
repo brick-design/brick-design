@@ -20,8 +20,8 @@ import { BrickContext } from 'components/BrickProvider';
 import { getDragSourceFromKey, getIframe, iframeSrcDoc } from './utils';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
-import Guidelines from './components/Guidelines';
-
+import GuidePlaceholder from './components/GuidePlaceholder';
+import RadiusPanel from './components/Radius';
 import { useSelector } from './hooks/useSelector';
 import StateDomainWrapper from './wrappers/StateDomainWrapper';
 import {
@@ -111,7 +111,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
               {designPage}
               <Distances />
               <Resize />
-              <Guidelines />
+              <GuidePlaceholder />
+              <RadiusPanel/>
             </BrickContext.Provider>
           </OperateProvider>
         </StaticContextProvider>,

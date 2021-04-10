@@ -1,13 +1,17 @@
-import React, { RefObject, useCallback, useEffect, useRef } from 'react';
+import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { isEmpty } from 'lodash';
-import styles from '../Resize/index.less';
-import { formatUnit, getIframe } from '../../utils';
+import { changeStyles } from '@brickd/core';
+import styles from './index.less';
+import { formatUnit, getIframe, hiddenBaseboard, showBaseboard } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
-import { Radius } from '../Resize';
+import { Radius } from './index';
 
 interface ItemProps {
   radius: Radius;
-  changeBaseboard: () => void;
+}
+
+export interface RadiusObjectType{
+  [key: string]:string
 }
 
 const radiusStyles: { [key: string]: React.CSSProperties } = {
@@ -45,14 +49,17 @@ type OriginRadiusType = {
   width: number;
 };
 
+const computePosition=(r:number)=>{
+  return Math.floor(Math.sqrt(r*r/2));
+};
 export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
-  const { changeBaseboard } = props;
   const originRadiusRef = useRef<OriginRadiusType>();
   const radiusResultRef = useRef({});
   const nodeRef = useRef<HTMLElement>();
   const iframe = useRef(getIframe()).current;
-  const { getOperateState } = useOperate();
-
+  const { getOperateState,setSubscribe } = useOperate();
+  const [show,setShow]=useState(false);
+  const baseboardRef=useRef<HTMLElement>();
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
     const { selectedNode } = getOperateState();
@@ -67,13 +74,15 @@ export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
         borderTopRightRadius,
         borderBottomLeftRadius,
         borderBottomRightRadius,
+        width,height
       } = originRadiusRef.current;
       let offsetY = 0;
       let offsetX = 0;
       let offsetR = 0;
-      let top = 7,
-        bottom = 7;
+      let top = 9,
+        bottom = 9;
        let position=0;
+       const maxRadius=Math.min(width,height);
       switch (radius) {
         case Radius.topLeft:
          top = borderTopLeftRadius || top;
@@ -81,8 +90,9 @@ export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
           offsetX = clientX - x;
           offsetR = Math.max(offsetY, offsetX);
           position=top + offsetR||position;
-          nodeRef.current.style.top = `${position}px`;
-          nodeRef.current.style.left = `${position}px`;
+          if(position>maxRadius||position<0)return;
+          nodeRef.current.style.top = `${computePosition(position)}px`;
+          nodeRef.current.style.left = `${computePosition(position)}px`;
           break;
         case Radius.topRight:
            top = borderTopRightRadius || top;
@@ -90,8 +100,9 @@ export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
           offsetX = x - clientX;
           offsetR = Math.max(offsetY, offsetX);
           position=top + offsetR||position;
-          nodeRef.current.style.top = `${position}px`;
-          nodeRef.current.style.right = `${position}px`;
+          if(position>maxRadius||position<0)return;
+          nodeRef.current.style.top = `${computePosition(position)}px`;
+          nodeRef.current.style.right = `${computePosition(position)}px`;
           break;
         case Radius.bottomLeft:
           bottom = borderBottomLeftRadius || bottom;
@@ -99,21 +110,25 @@ export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
           offsetY = y - clientY;
           offsetR = Math.max(offsetY, offsetX);
           position=bottom + offsetR||position;
-          nodeRef.current.style.bottom = `${position}px`;
-          nodeRef.current.style.left = `${position}px`;
+          if(position>maxRadius||position<0)return;
+          nodeRef.current.style.bottom = `${computePosition(position)}px`;
+          nodeRef.current.style.left = `${computePosition(position)}px`;
           break;
         case Radius.bottomRight:
           bottom = borderBottomRightRadius || bottom;
-
           offsetY = y - clientY;
           offsetX = x - clientX;
           offsetR = Math.max(offsetY, offsetX);
           position=bottom + offsetR||position;
-          nodeRef.current.style.bottom = `${position}px`;
-          nodeRef.current.style.right = `${position}px`;
+          if(position>maxRadius||position<0)return;
+          nodeRef.current.style.bottom = `${computePosition(position)}px`;
+          nodeRef.current.style.right = `${computePosition(position)}px`;
           break;
       }
+      nodeRef.current.dataset.radius = `${position}px`;
       selectedNode.style[radius] = `${position}px`;
+      radiusResultRef.current[radius]=`${position}px`;
+
     }
   }, []);
   const onRadiusStart = useCallback(function (
@@ -142,34 +157,88 @@ export function RadiusItem(props: ItemProps, ref: RefObject<HTMLElement>) {
         width: formatUnit(width),
         height: formatUnit(height),
       };
-      changeBaseboard();
+      setShow(true);
+      showBaseboard(iframe,baseboardRef.current);
     }
   },
-  []);
+  [setShow]);
 
   const onMouseUp = useCallback(() => {
+    hiddenBaseboard(baseboardRef.current);
     originRadiusRef.current = undefined;
+    changeStyles({style:radiusResultRef.current});
     radiusResultRef.current = {};
-  }, []);
+    setShow(false);
+
+  }, [setShow]);
+
+  const resetPosition=useCallback(()=>{
+    const { selectedNode } = getOperateState();
+    if (selectedNode&&iframe) {
+      const { contentWindow } = iframe!;
+      const {
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
+      } = contentWindow!.getComputedStyle(selectedNode);
+      let top:number|string = computePosition(9), bottom:number|string = computePosition(9);
+      let radiusNum=0;
+      switch (radius) {
+        case Radius.topLeft:
+          radiusNum=formatUnit(borderTopLeftRadius);
+          top = (radiusNum>9?computePosition(radiusNum): top)+'px';
+          nodeRef.current.style.top = top;
+          nodeRef.current.style.left = top;
+          break;
+        case Radius.topRight:
+          radiusNum=formatUnit(borderTopRightRadius);
+          top = (radiusNum>9?computePosition(radiusNum): top)+'px';
+          nodeRef.current.style.top = top;
+          nodeRef.current.style.right = top;
+          break;
+        case Radius.bottomLeft:
+          radiusNum=formatUnit(borderBottomLeftRadius);
+          bottom = (radiusNum>9?computePosition(radiusNum): bottom)+'px';
+          nodeRef.current.style.bottom = bottom;
+          nodeRef.current.style.left = bottom;
+          break;
+        case Radius.bottomRight:
+          radiusNum=formatUnit(borderBottomRightRadius);
+          bottom = (radiusNum>9?computePosition(radiusNum): bottom)+'px';
+          nodeRef.current.style.bottom = bottom;
+          nodeRef.current.style.right = bottom;
+          break;
+      }
+      nodeRef.current.dataset.radius = `${radiusNum}px`;
+
+
+    }
+  },[]);
 
   useEffect(() => {
-    const contentWindow = iframe!.contentWindow!;
+    const {contentWindow,contentDocument}=iframe;
+    const unSubscribe =setSubscribe(resetPosition);
+    if(!baseboardRef.current){
+      baseboardRef.current=contentDocument.getElementById('brick-design-baseboard');
+    }
     contentWindow.addEventListener('mouseup', onMouseUp);
     contentWindow.addEventListener('mousemove', onMouseMove);
-
     return () => {
+      unSubscribe();
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
     };
-  }, []);
+  }, [onMouseUp]);
 
   const { radius } = props;
   return (
     <span
+      draggable={false}
       ref={nodeRef}
       style={radiusStyles[radius]}
       onMouseDown={(e) => onRadiusStart(e, radius)}
-      className={styles['radius-item']}
+      className={`${styles['radius-item']} ${show&&styles[radius]}`}
     />
   );
 }

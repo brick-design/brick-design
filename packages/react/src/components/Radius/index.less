@@ -1,0 +1,52 @@
+@import '../../global';
+.brickd-radius-container {
+		.guide-common();
+		border: 1px solid @hoverColor;
+		background-color: @translucent;
+		transition: all 100ms;
+		pointer-events: none;
+}
+
+.pseudo-class{
+	.distances-tip();
+	content: attr(data-radius);
+	pointer-events: none;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.radius-item {
+	position: absolute;
+	height: 7px;
+	width: 7px;
+	border-radius: 50%;
+	background-color: white;
+	border: 1px @selectColor solid;
+	pointer-events: auto;
+}
+
+.borderTopLeftRadius{
+	&:before{
+		.pseudo-class();
+		left: 5px;
+	}
+}
+.borderTopRightRadius{
+	&:after{
+		.pseudo-class();
+		right: 5px;
+	}
+}
+.borderBottomLeftRadius{
+	&:before{
+		.pseudo-class();
+		left: 5px;
+	}
+}
+.borderBottomRightRadius{
+	&:after{
+		.pseudo-class();
+		right: 5px;
+
+	}
+}

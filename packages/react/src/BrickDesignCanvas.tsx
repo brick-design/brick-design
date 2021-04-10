@@ -25,7 +25,7 @@ import styles from './global.less';
 import { getIframe } from './utils';
 import { onDragover } from './common/events';
 import { useSelector } from './hooks/useSelector';
-import GuidelinesOut from './components/GuidelinesOut';
+import Guidelines from './components/Guidelines';
 
 interface BrickDesignCanvasType extends BrickDesignProps {
   initState?: Partial<StateType>;
@@ -160,7 +160,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         >
           {isLoading && (
             <>
-              <GuidelinesOut scale={scale} operateStore={operateStore} />
+              <Guidelines scale={scale} operateStore={operateStore} />
             </>
           )}
           <BrickDesign

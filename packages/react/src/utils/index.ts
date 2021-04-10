@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import {  useEffect, useRef } from 'react';
 import { each, get } from 'lodash';
 import {
   PageConfigType,
@@ -577,3 +577,19 @@ export function getScalePosition(
     left: (brickdLeft - left) / scale,
   };
 }
+
+
+export const showBaseboard =(iframe:HTMLIFrameElement,baseboard:HTMLElement) => {
+  const {
+    body: { scrollWidth, scrollHeight },
+  } = iframe!.contentDocument;
+  baseboard.style.cssText = `
+    display:block;
+    width:${scrollWidth}px;
+    height:${scrollHeight}px;
+    `;
+};
+
+export const hiddenBaseboard=(baseboard:HTMLElement)=>{
+  baseboard.style.display='none';
+};

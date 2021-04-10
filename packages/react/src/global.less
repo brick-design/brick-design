@@ -4,6 +4,16 @@
 @translucent: rgba(0, 0, 0, 0.1);
 @dropColorNo: rgba(256, 0, 0, 0.1);
 @dropColorYes: rgba(0, 256, 0, 0.1);
+.guide-common {
+	position: absolute;
+	z-index: 10000;
+	top: 0;
+	.animate();
+}
+.guide-hidden {
+	position: absolute;
+	z-index: -1;
+}
 .animate {
 	transition: all 50ms;
 }
