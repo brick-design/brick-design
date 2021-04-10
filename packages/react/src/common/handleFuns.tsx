@@ -16,7 +16,12 @@ import { resolveMapping, isPureVariable } from '@brickd/utils';
 import styles from './style.less';
 import { selectClassTarget } from './constants';
 
-import { generateRequiredProps, getComponent, getIframe, getVNode } from '../utils';
+import {
+  generateRequiredProps,
+  getComponent,
+  getIframe,
+  getVNode,
+} from '../utils';
 import StateDomainWrapper from '../wrappers/StateDomainWrapper';
 import MapNodesRenderWrapper from '../wrappers/MapNodesRenderWrapper';
 import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
@@ -172,13 +177,7 @@ export function handleChildNodes(
         nodeProps[realPropName] = (...funParams) => {
           return (
             <FunParamContextProvider value={funParams}>
-              {renderNodes(
-                nodes,
-                specialProps,
-                allState,
-                propName,
-                isOnlyNode,
-              )}
+              {renderNodes(nodes, specialProps, allState, propName, isOnlyNode)}
             </FunParamContextProvider>
           );
         };

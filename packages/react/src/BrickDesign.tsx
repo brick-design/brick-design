@@ -12,23 +12,18 @@ import {
   DragSourceType,
   STATE_PROPS,
   getStore,
-  StateType,
-  initPageBrickdState,
-  setPageName,
   ROOT,
-  addComponent, undo, redo,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
 import { getDragSourceFromKey, getIframe, iframeSrcDoc } from './utils';
-import { onDragover } from './common/events';
-import Guidelines from './components/Guidelines';
 import Distances from './components/Distances';
 import Resize from './components/Resize';
+import Guidelines from './components/Guidelines';
+
 import { useSelector } from './hooks/useSelector';
 import StateDomainWrapper from './wrappers/StateDomainWrapper';
-import styles from './global.less';
 import {
   OperateProvider,
   OperateStateType,
@@ -37,10 +32,9 @@ import {
 /**
  * 鼠标离开设计区域清除hover状态
  */
-interface BrickDesignProps extends IframeHTMLAttributes<any> {
+export interface BrickDesignProps extends IframeHTMLAttributes<any> {
   onLoadEnd?: () => void;
-  initState?: Partial<StateType>;
-  pageName: string;
+  operateStore?: BrickStore<OperateStateType>;
   [propName: string]: any;
 }
 
@@ -63,14 +57,21 @@ const controlUpdate = (
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {
-  const { onLoadEnd, pageName, initState, options, ...props } = brickdProps;
+  const {
+    onLoadEnd,
+    pageName,
+    initState,
+    options,
+    operateStore,
+    ...props
+  } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     stateSelector,
     controlUpdate,
   );
-  const { platformInfo } = useSelector(['platformInfo']);
   const iframeRef = useRef<HTMLIFrameElement>();
   const rootComponent = pageConfig[ROOT];
+
   const staticState = useMemo(() => ({ options, pageName }), [
     pageName,
     options,
@@ -100,9 +101,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const designPage = useMemo(() => renderComponent(pageConfig), [pageConfig]);
   const divContainer = useRef(null);
-  const operateStore = useRef<BrickStore<OperateStateType>>(
-    new BrickStore<OperateStateType>(),
-  ).current;
+
   const componentMount = useCallback(
     (divContainer, designPage) => {
       ReactDOM.render(
@@ -112,6 +111,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
               {designPage}
               <Distances />
               <Resize />
+              <Guidelines />
             </BrickContext.Provider>
           </OperateProvider>
         </StaticContextProvider>,
@@ -149,44 +149,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   ]);
 
   useEffect(() => {
-    setPageName(pageName);
-    initPageBrickdState(initState);
-  }, [pageName]);
-
-  const onDrop = useCallback((e: DragEvent) => {
-    e.stopPropagation();
-    operateStore.setPageState({ dropNode: null });
-    addComponent();
-  }, []);
-
-  useEffect(() => {
-    iframeRef.current = getIframe();
-    const contentWindow = iframeRef.current.contentWindow!;
-    function onKeyDown(keyEvent: any) {
-      const { key, ctrlKey, shiftKey, metaKey } = keyEvent;
-      if (key === 'z' && (ctrlKey || metaKey)) {
-        if (!shiftKey) {
-          undo();
-        } else if (shiftKey) {
-          redo();
-        }
-      }
-    }
-    window.addEventListener('keydown', onKeyDown);
-    contentWindow.addEventListener('dragover', onDragover);
-    window.addEventListener('dragover', onDragover);
-    contentWindow.addEventListener('drop', onDrop);
-    window.addEventListener('drop', onDrop);
-    return () => {
-      contentWindow.removeEventListener('dragover', onDragover);
-      contentWindow.removeEventListener('drop', onDrop);
-      window.removeEventListener('dragover', onDragover);
-      window.removeEventListener('drop', onDrop);
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, []);
-
-  useEffect(() => {
     if (rootComponent) return;
     const contentWindow = getIframe()!.contentWindow!;
 
@@ -199,41 +161,22 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   }, [rootComponent, onDragEnter, onDragLeave]);
 
   useEffect(() => {
+    if (!iframeRef.current) {
+      iframeRef.current = getIframe();
+    }
     if (divContainer.current) {
       componentMount(divContainer, designPage);
     }
   }, [divContainer.current, componentMount, designPage]);
 
-
-  useEffect(() => {
-    function onMouseWheel(mousewheel:WheelEvent){
-      mousewheel.stopPropagation();
-      return false;
-    }
-    window.addEventListener('mousewheel', onMouseWheel);
-    return () => {
-      window.removeEventListener('mousewheel', onMouseWheel);
-    };
-  }, []);
-
-
-  const { size } = platformInfo;
-  const style = useMemo(()=>({ width: size[0], height: size[1], transition: 'all 700ms',transform:'scale(0.50, 0.50)' }),[size]);
-
   return (
-    <div
-      style={style}
-      className={styles['browser-mockup']}
-    >
-      <Guidelines operateStore={operateStore} />
-      <iframe
+    <iframe
       id="dnd-iframe"
       style={{ border: 0, width: '100%', height: '100%' }}
       srcDoc={iframeSrcDoc}
       onLoad={onIframeLoad}
       {...props}
     />
-    </div>
   );
 }
 

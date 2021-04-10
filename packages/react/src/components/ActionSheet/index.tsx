@@ -13,7 +13,10 @@ function ActionSheet(props: ActionSheetProps) {
   const { isOut, isRoot, hasChildNodes, keyValue } = props;
 
   return (
-    <div className={styles['container']} style={isOut?{ top:-19}:{bottom:-19}}>
+    <div
+      className={styles['container']}
+      style={isOut ? { top: -19 } : { bottom: -19 }}
+    >
       <div className={styles['action-btn']}>{keyValue}</div>
       {configs.map((config) => {
         const { icon, action, type } = config;

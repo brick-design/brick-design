@@ -140,7 +140,7 @@ export function generateRequiredProps(componentName: string) {
 }
 
 export type PropParentNodes = { [propName: string]: HTMLElement };
-export type PropNodesPosition={ [propName: string]: boolean }
+export type PropNodesPosition = { [propName: string]: boolean };
 export const getNodeRealRect = (element: Element) => {
   if (!element) return;
   const eleCSS = css(element);
@@ -256,16 +256,20 @@ export const dragSort = (
   } = getParentNodeRealRect(parentNode);
   const { clientX, clientY } = dragOffset;
   const newChildren = [];
-  let nodeIndex=0;
+  let nodeIndex = 0;
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
     if (compareKey === dragKey) continue;
     let childNode;
-    for(nodeIndex;nodeIndex<parentNode.children.length;nodeIndex++){
-       if(parentNode.children[nodeIndex].className.includes(selectClassTarget + compareKey)){
-         childNode=parentNode.children[nodeIndex];
-         break;
-       }
+    for (nodeIndex; nodeIndex < parentNode.children.length; nodeIndex++) {
+      if (
+        parentNode.children[nodeIndex].className.includes(
+          selectClassTarget + compareKey,
+        )
+      ) {
+        childNode = parentNode.children[nodeIndex];
+        break;
+      }
     }
 
     if (EXCLUDE_POSITION.includes(get(css(childNode), 'position'))) {
@@ -383,7 +387,7 @@ export const dragSort = (
 export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
-  propNodesPosition:PropNodesPosition,
+  propNodesPosition: PropNodesPosition,
   index = 0,
 ) => {
   const iframe = getIframe();
@@ -393,7 +397,7 @@ export const getPropParentNodes = (
       if (node) {
         const parentNode = node.parentElement;
         parentNodes[defaultPropName] = parentNode;
-        propNodesPosition[defaultPropName]=isVertical(parentNode);
+        propNodesPosition[defaultPropName] = isVertical(parentNode);
         break;
       }
     }
@@ -405,7 +409,7 @@ export const getPropParentNodes = (
           if (node) {
             const parentNode = node.parentElement;
             parentNodes[propName] = parentNode;
-            propNodesPosition[propName]=isVertical(parentNode);
+            propNodesPosition[propName] = isVertical(parentNode);
             break;
           }
         }
@@ -426,7 +430,8 @@ export const getDragComponentName = (dragKey?: string) =>
     'componentName',
   ]);
 
-export const getVNode=(nodeKey:string)=>get(getSelector(['pageConfig']),['pageConfig', nodeKey]);
+export const getVNode = (nodeKey: string) =>
+  get(getSelector(['pageConfig']), ['pageConfig', nodeKey]);
 
 export function css(el) {
   const style = el && el.style;
@@ -555,4 +560,20 @@ export function isAllowAdd(targetComponentName: string, dragKey?: string) {
       }
     }
   }
+}
+
+export function getScalePosition(
+  canvas: HTMLElement,
+  canvasContainer: HTMLElement,
+  scale: number,
+) {
+  const { top: brickdTop, left: brickdLeft } = canvas.getBoundingClientRect();
+  const { width, height, top, left } = canvasContainer.getBoundingClientRect();
+
+  return {
+    width: width / scale,
+    height: height / scale,
+    top: (brickdTop - top) / scale,
+    left: (brickdLeft - left) / scale,
+  };
 }

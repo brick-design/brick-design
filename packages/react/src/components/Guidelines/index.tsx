@@ -6,7 +6,6 @@ import {
   STATE_PROPS,
 } from '@brickd/core';
 import { get } from 'lodash';
-import { BrickStore } from '@brickd/hooks';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
@@ -17,7 +16,6 @@ import {
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
-import { OperateStateType } from '../OperateProvider';
 
 type SelectState = {
   hoverKey: string | null;
@@ -49,11 +47,7 @@ function getNode(key: string) {
   return selectedNode;
 }
 
-type GuidelinesType={
-  operateStore:BrickStore<OperateStateType>
-}
-function Guidelines(props:GuidelinesType) {
-  const {operateStore}=props;
+function Guidelines() {
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -65,7 +59,7 @@ function Guidelines(props:GuidelinesType) {
     STATE_PROPS
   >(['hoverKey', 'dropTarget', 'selectedInfo']);
 
-  const { getOperateState, setSubscribe, setOperateState } = useOperate(false,operateStore);
+  const { getOperateState, setSubscribe, setOperateState } = useOperate(false);
   const { selectedKey } = selectedInfo || {};
   const dropKey = get(dropTarget, 'selectedKey');
   const { operateHoverKey, operateSelectedKey, dropNode } = getOperateState();
@@ -137,22 +131,12 @@ function Guidelines(props:GuidelinesType) {
       }
     };
     const unSubscribe = setSubscribe(renderGuideLines);
-    const onScroll = () => {
-      console.log('onScroll');
-      setTimeout(renderGuideLines, 66);
-    };
-    contentWindow.addEventListener('scroll', onScroll);
+    contentWindow.addEventListener('scroll', renderGuideLines);
     return () => {
       unSubscribe();
-      contentWindow.removeEventListener('scroll', onScroll);
+      contentWindow.removeEventListener('scroll', renderGuideLines);
     };
-  }, [
-    hoverNodeRef.current,
-    leftRef.current,
-    rightRef.current,
-    bottomRef.current,
-    topRef.current,
-  ]);
+  }, []);
 
   const onTransitionEnd = useCallback(() => {
     setOperateState({ isLock: false });

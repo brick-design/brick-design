@@ -11,7 +11,6 @@ import {
 import { get, map } from 'lodash';
 import { Item } from './Item';
 import styles from './index.less';
-import {RadiusItem} from './RadiusItem';
 import { useSelector } from '../../hooks/useSelector';
 import {
   formatUnit,
@@ -40,11 +39,11 @@ export enum Direction {
   topLeft = 'topLeft',
 }
 
-export enum Radius{
-  topLeft='borderTopLeftRadius',
-  topRight='borderTopRightRadius',
-  bottomLeft='borderBottomLeftRadius',
-  bottomRight='borderBottomRightRadius'
+export enum Radius {
+  topLeft = 'borderTopLeftRadius',
+  topRight = 'borderTopRightRadius',
+  bottomLeft = 'borderBottomLeftRadius',
+  bottomRight = 'borderBottomRightRadius',
 }
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
@@ -67,7 +66,6 @@ type OriginSizeType = {
   maxHeight: number | null;
   direction: Direction;
 };
-
 
 function Resize() {
   const iframe = useRef(getIframe()).current;
@@ -126,7 +124,7 @@ function Resize() {
     sizeResultRef.current = {};
   }, []);
 
-  const changeBaseboard =useCallback(() => {
+  const changeBaseboard = useCallback(() => {
     const {
       body: { scrollWidth, scrollHeight },
     } = iframe!.contentDocument;
@@ -135,78 +133,75 @@ function Resize() {
     width:${scrollWidth}px;
     height:${scrollHeight}px;
     `;
-  },[baseboardRef.current]);
+  }, [baseboardRef.current]);
 
-  const onMouseMove = useCallback(
-    (event: MouseEvent) => {
-      event.stopPropagation();
-      const { selectedNode } = getOperateState();
-      if (originSizeRef.current) {
-        const { clientX, clientY } = event;
-        const { x, y, direction, height, width } = originSizeRef.current;
-        let offsetY = 0;
-        let offsetX = 0;
-        switch (direction) {
-          case Direction.left:
-            offsetX = x - clientX;
-            break;
-          case Direction.right:
-            offsetX = clientX - x;
-            break;
-          case Direction.top:
-            offsetY = y - clientY;
-            break;
-          case Direction.bottom:
-            offsetY = clientY - y;
-            break;
-          case Direction.topLeft:
-            offsetY = y - clientY;
-            offsetX = x - clientX;
-            break;
-          case Direction.topRight:
-            offsetY = y - clientY;
-            offsetX = clientX - x;
-            break;
-          case Direction.bottomLeft:
-            offsetX = x - clientX;
-            offsetY = clientY - y;
-            break;
-          case Direction.bottomRight:
-            offsetY = clientY - y;
-            offsetX = clientX - x;
-            break;
-        }
-        const heightResult = height + offsetY;
-        const widthResult = width + offsetX;
-        const {
-          minWidth,
-          maxHeight,
-          maxWidth,
-          minHeight,
-        } = originSizeRef.current;
-        if (
-          offsetX !== 0 &&
-          (minWidth === null || widthResult >= minWidth) &&
-          (maxWidth === null || widthResult <= maxWidth)
-        ) {
-          sizeResultRef.current.width = `${widthResult}px`;
-          selectedNode!.style.width = `${widthResult}px`;
-        }
-        if (
-          offsetY !== 0 &&
-          (minHeight === null || heightResult >= minHeight) &&
-          (maxHeight === null || heightResult <= maxHeight)
-        ) {
-          sizeResultRef.current.height = `${heightResult}px`;
-          selectedNode.style.height = `${heightResult}px`;
-        }
-        showSize(sizeResultRef.current.width, sizeResultRef.current.height);
-        setSelectedBorder('pointer-events: auto; transition:none;');
-        changeBaseboard();
+  const onMouseMove = useCallback((event: MouseEvent) => {
+    event.stopPropagation();
+    const { selectedNode } = getOperateState();
+    if (originSizeRef.current) {
+      const { clientX, clientY } = event;
+      const { x, y, direction, height, width } = originSizeRef.current;
+      let offsetY = 0;
+      let offsetX = 0;
+      switch (direction) {
+        case Direction.left:
+          offsetX = x - clientX;
+          break;
+        case Direction.right:
+          offsetX = clientX - x;
+          break;
+        case Direction.top:
+          offsetY = y - clientY;
+          break;
+        case Direction.bottom:
+          offsetY = clientY - y;
+          break;
+        case Direction.topLeft:
+          offsetY = y - clientY;
+          offsetX = x - clientX;
+          break;
+        case Direction.topRight:
+          offsetY = y - clientY;
+          offsetX = clientX - x;
+          break;
+        case Direction.bottomLeft:
+          offsetX = x - clientX;
+          offsetY = clientY - y;
+          break;
+        case Direction.bottomRight:
+          offsetY = clientY - y;
+          offsetX = clientX - x;
+          break;
       }
-    },
-    [],
-  );
+      const heightResult = height + offsetY;
+      const widthResult = width + offsetX;
+      const {
+        minWidth,
+        maxHeight,
+        maxWidth,
+        minHeight,
+      } = originSizeRef.current;
+      if (
+        offsetX !== 0 &&
+        (minWidth === null || widthResult >= minWidth) &&
+        (maxWidth === null || widthResult <= maxWidth)
+      ) {
+        sizeResultRef.current.width = `${widthResult}px`;
+        selectedNode!.style.width = `${widthResult}px`;
+      }
+      if (
+        offsetY !== 0 &&
+        (minHeight === null || heightResult >= minHeight) &&
+        (maxHeight === null || heightResult <= maxHeight)
+      ) {
+        sizeResultRef.current.height = `${heightResult}px`;
+        selectedNode.style.height = `${heightResult}px`;
+      }
+      showSize(sizeResultRef.current.width, sizeResultRef.current.height);
+      setSelectedBorder('pointer-events: auto; transition:none;');
+      changeBaseboard();
+    }
+  }, []);
 
   const showSize = useCallback(
     (width?: string, height?: string) => {
@@ -287,13 +282,7 @@ function Resize() {
             key={direction}
           />
         ))}
-        {map(Radius, (radius) => (
-          <RadiusItem
-            changeBaseboard={changeBaseboard}
-            radius={radius}
-            key={radius}
-          />
-        ))}
+
         <div
           className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']}
           ref={widthRef}

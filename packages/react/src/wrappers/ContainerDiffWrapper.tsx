@@ -10,12 +10,7 @@ function ContainerDiffWrapper(props: ContainerDiff) {
   const { isContainer, ...rest } = props;
 
   return useMemo(
-    () =>
-      isContainer ? (
-        <Container {...rest} />
-      ) : (
-        <NoneContainer {...rest} />
-      ),
+    () => (isContainer ? <Container {...rest} /> : <NoneContainer {...rest} />),
     [],
   );
 }

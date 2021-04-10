@@ -170,20 +170,24 @@ export type PropsType = {
   [propName: string]: ActionType | any;
 };
 
-type FunType={
-  lifeCycle?:'init'|'didMount'|'willUnmount'|'willUpdate'|'didUpdate'[]
-  funContent:string
+type FunType = {
+  lifeCycle?:
+    | 'init'
+    | 'didMount'
+    | 'willUnmount'
+    | 'willUpdate'
+    | 'didUpdate'[];
+  funContent: string;
+};
 
-}
+export type MethodsType = FunType[];
 
-export type MethodsType=FunType[];
-
-export const LIFE_CYCLE={
-  init:'init',
-  didMount:'didMount',
-  willUnmount:'willUnmount',
-  willUpdate:'willUpdate',
-  didUpdate:'didUpdate'
+export const LIFE_CYCLE = {
+  init: 'init',
+  didMount: 'didMount',
+  willUnmount: 'willUnmount',
+  willUpdate: 'willUpdate',
+  didUpdate: 'didUpdate',
 };
 
 export interface VirtualDOMType {
@@ -195,7 +199,7 @@ export interface VirtualDOMType {
   condition?: string;
   isStateDomain?: boolean;
   propFields?: string[];
-  methods?:MethodsType ;
+  methods?: MethodsType;
   loop?: string | any[];
   fileName?: string;
   [custom: string]: any;

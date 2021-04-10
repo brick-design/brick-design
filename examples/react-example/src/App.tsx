@@ -54,18 +54,18 @@ export default function App() {
 					</Resizable>
 
 					<div className={styles['canvas-container']}>
-						<Radio.Group defaultValue={'0'} style={{marginBottom:20}}
-												 onChange={(e)=>setIsPreview(e.target.value==='1')}>
-							<Radio.Button value={'0'}>
-								编辑
-							</Radio.Button>
-							<Radio.Button value='1'>
-								预览
-							</Radio.Button>
-						</Radio.Group>
-						{isPreview?<PreviewPanel/>:			<BrickDesign pageName={'test'} initState={{ pageConfig: initData }} />
-						}
-
+						{/*<Radio.Group defaultValue={'0'} style={{marginBottom:20}}*/}
+						{/*						 onChange={(e)=>setIsPreview(e.target.value==='1')}>*/}
+						{/*	<Radio.Button value={'0'}>*/}
+						{/*		编辑*/}
+						{/*	</Radio.Button>*/}
+						{/*	<Radio.Button value='1'>*/}
+						{/*		预览*/}
+						{/*	</Radio.Button>*/}
+						{/*</Radio.Group>*/}
+						{/*{isPreview?<PreviewPanel/>:			<BrickDesign pageName={'test'} initState={{ pageConfig: initData }} />*/}
+						{/*}*/}
+						<BrickDesign pageName={'test'} initState={{ pageConfig: initData }} />
 					</div>
 					<Resizable
 						enable={RIGHT_ENABLE}

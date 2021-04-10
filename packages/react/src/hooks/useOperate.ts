@@ -5,8 +5,12 @@ import {
   OperateStateType,
 } from '../components/OperateProvider';
 
-export function useOperate(isModal?: boolean,operateStore?:BrickStore<OperateStateType>) {
-   operateStore = useContext<BrickStore<OperateStateType>>(OperateContext)||operateStore;
+export function useOperate(
+  isModal?: boolean,
+  operateStore?: BrickStore<OperateStateType>,
+) {
+  operateStore =
+    useContext<BrickStore<OperateStateType>>(OperateContext) || operateStore;
   const setOperateState = useCallback(
     (operateState: OperateStateType, executeKey?: string) => {
       operateState.isModal = isModal;

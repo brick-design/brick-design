@@ -1,10 +1,4 @@
-import {
-  createElement,
-  memo,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import { createElement, memo, useEffect, useMemo, useRef } from 'react';
 import { ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
@@ -55,7 +49,7 @@ function NoneContainer(allProps: CommonPropsType) {
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
   const parentRootNode = useRef<HTMLElement>();
-  const nodeRef=useRef();
+  const nodeRef = useRef();
   const { setSelectedNode, ...events } = useEvents(
     parentRootNode,
     specialProps,
@@ -82,7 +76,7 @@ function NoneContainer(allProps: CommonPropsType) {
       setSelectedNode(parentRootNode.current);
       isAddComponent.current = false;
     }
-    }, [funParams, isSelected, item, dragKey]);
+  }, [funParams, isSelected, item, dragKey]);
 
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
@@ -100,7 +94,7 @@ function NoneContainer(allProps: CommonPropsType) {
     /**
      * 设置组件id方便抓取图片
      */
-    ref:nodeRef,
+    ref: nodeRef,
   });
 }
 
