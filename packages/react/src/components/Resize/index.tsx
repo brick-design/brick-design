@@ -22,6 +22,7 @@ import {
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
 import { useOperate } from '../../hooks/useOperate';
+import { DEFAULT_ANIMATION } from '../../common/constants';
 
 type ResizeState = {
   selectedInfo: SelectedInfoType;
@@ -39,8 +40,6 @@ export enum Direction {
   bottomLeft = 'bottomLeft',
   topLeft = 'topLeft',
 }
-
-
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
   const { selectedInfo, pageConfig, hoverKey } = nextState;
@@ -69,7 +68,7 @@ function Resize() {
     ResizeState,
     STATE_PROPS
   >(['selectedInfo', 'pageConfig', 'hoverKey'], controlUpdate);
-  const { getOperateState, setSubscribe } = useOperate();
+  const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey, propName } = selectedInfo || {};
   const resizeRef = useRef<any>();
   const originSizeRef = useRef<OriginSizeType>();
@@ -77,6 +76,7 @@ function Resize() {
   const widthRef = useRef<any>();
   const heightRef = useRef<any>();
   const baseboardRef = useRef<HTMLDivElement | any>();
+  const actionSheetRef = useRef<any>();
   const [isOut, setIsOut] = useState<boolean>(true);
   const { props, childNodes } = pageConfig[selectedKey] || {};
   let { width, height } = get(props, 'style', {
@@ -86,20 +86,63 @@ function Resize() {
   width = width || 'auto';
   height = height || 'auto';
 
+  const setSelectedBorder = useCallback((css = '') => {
+    const {
+      selectedNode,
+      operateSelectedKey,
+      isModal,
+      radiusChangePosition,
+    } = getOperateState();
+    if (selectedNode && operateSelectedKey) {
+      const { left, top, width, height } = getElementInfo(
+        selectedNode,
+        iframe,
+        isModal,
+      );
+      // if(width===0||height===0){
+      //   selectedNode.className
+      // }
+      if (top <= 14 && isOut) {
+        setIsOut(false);
+      } else if (top > 14 && !isOut) {
+        setIsOut(true);
+      }
+      resizeRef.current.style.cssText =
+        generateCSS(left, top, width, height) + css;
+      radiusChangePosition(left, top, width, height, css);
+
+      setPosition([resizeRef.current], isModal);
+    }
+  }, []);
+
+  const resizeChangePosition = useCallback((left: number, top: number) => {
+    resizeRef.current.style.cssText =
+      generateCSS(left, top) + `transition:none;`;
+    actionSheetRef.current.setShow(false);
+  }, []);
+
   useEffect(() => {
     const contentWindow = iframe!.contentWindow!;
-    const changeSize = () => setSelectedBorder();
-    const unSubscribe = setSubscribe(setSelectedBorder);
+    setOperateState({ resizeChangePosition, actionSheetRef });
     contentWindow.addEventListener('mouseup', onMouseUp);
     contentWindow.addEventListener('mousemove', onMouseMove);
     contentWindow.addEventListener('mouseleave', onMouseUp);
+    return () => {
+      contentWindow.removeEventListener('mouseup', onMouseUp);
+      contentWindow.removeEventListener('mousemove', onMouseMove);
+      contentWindow.removeEventListener('mousemove', onMouseUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const contentWindow = iframe!.contentWindow!;
+    const changeSize = () =>
+      setSelectedBorder(`transition:${DEFAULT_ANIMATION};`);
+    const unSubscribe = setSubscribe(changeSize);
     contentWindow.addEventListener('resize', changeSize);
     contentWindow.addEventListener('animationend', changeSize);
     return () => {
       unSubscribe();
-      contentWindow.removeEventListener('mouseup', onMouseUp);
-      contentWindow.removeEventListener('mousemove', onMouseMove);
-      contentWindow.removeEventListener('mousemove', onMouseUp);
       contentWindow.removeEventListener('resize', changeSize);
       contentWindow.removeEventListener('animationend', changeSize);
     };
@@ -110,17 +153,15 @@ function Resize() {
   }
 
   const onMouseUp = useCallback(() => {
+    const { selectedNode } = getOperateState();
     originSizeRef.current = undefined;
     baseboardRef.current!.style.display = 'none';
     resizeRef.current.style.pointerEvents = 'none';
-    resizeRef.current.style.transitionProperty = 'all';
-    resizeRef.current.style.transitionDuration = '50ms';
-
+    resizeRef.current.style.transition = DEFAULT_ANIMATION;
+    selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
     resizeChange(sizeResultRef.current);
     sizeResultRef.current = {};
   }, []);
-
-
 
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
@@ -168,6 +209,7 @@ function Resize() {
         maxWidth,
         minHeight,
       } = originSizeRef.current;
+      selectedNode!.style.transition = 'none';
       if (
         offsetX !== 0 &&
         (minWidth === null || widthResult >= minWidth) &&
@@ -186,77 +228,55 @@ function Resize() {
       }
       showSize(sizeResultRef.current.width, sizeResultRef.current.height);
       setSelectedBorder('pointer-events: auto; transition:none;');
-      showBaseboard(iframe,baseboardRef.current);
+      showBaseboard(iframe, baseboardRef.current);
     }
   }, []);
 
-  const showSize = useCallback(
-    (width?: string, height?: string) => {
-      if (width) {
-        widthRef.current.innerHTML = width;
-      }
-      if (height) {
-        heightRef.current.innerHTML = height;
-      }
-    },
-    [heightRef.current, widthRef.current],
-  );
-
-  const setSelectedBorder = (css = '') => {
-    const { selectedNode, isModal } = getOperateState();
-    if (selectedNode) {
-      const { left, top, width, height } = getElementInfo(
-        selectedNode,
-        iframe,
-        isModal,
-      );
-      // if(width===0||height===0){
-      //   selectedNode.className
-      // }
-      if (top <= 14 && isOut) {
-        setIsOut(false);
-      } else if (top > 14 && !isOut) {
-        setIsOut(true);
-      }
-      resizeRef.current.style.cssText =
-        generateCSS(left, top, width, height) + css;
-      setPosition([resizeRef.current], isModal);
+  const showSize = useCallback((width?: string, height?: string) => {
+    if (width) {
+      widthRef.current.innerHTML = width;
     }
-  };
-  const onResizeStart = useCallback(
-    function (event: React.MouseEvent<HTMLSpanElement>, direction: Direction) {
-      const { selectedNode } = getOperateState();
-      if (event.nativeEvent && iframe) {
-        const { contentWindow } = iframe!;
-        const {
-          width,
-          height,
-          minWidth,
-          minHeight,
-          maxWidth,
-          maxHeight,
-        } = contentWindow!.getComputedStyle(selectedNode);
-        originSizeRef.current = {
-          x: event.nativeEvent.clientX,
-          y: event.nativeEvent.clientY,
-          direction,
-          width: formatUnit(width)!,
-          height: formatUnit(height)!,
-          minWidth: formatUnit(minWidth),
-          minHeight: formatUnit(minHeight),
-          maxWidth: formatUnit(maxWidth),
-          maxHeight: formatUnit(maxHeight),
-        };
-        showBaseboard(iframe,baseboardRef.current);
-      }
-    },
-    [iframe],
-  );
+    if (height) {
+      heightRef.current.innerHTML = height;
+    }
+  }, []);
+
+  const onResizeStart = useCallback(function (
+    event: React.MouseEvent<HTMLSpanElement>,
+    direction: Direction,
+  ) {
+    const { selectedNode } = getOperateState();
+    if (event.nativeEvent && iframe) {
+      const { contentWindow } = iframe!;
+      const {
+        width,
+        height,
+        minWidth,
+        minHeight,
+        maxWidth,
+        maxHeight,
+      } = contentWindow!.getComputedStyle(selectedNode);
+      originSizeRef.current = {
+        x: event.nativeEvent.clientX,
+        y: event.nativeEvent.clientY,
+        direction,
+        width: formatUnit(width)!,
+        height: formatUnit(height)!,
+        minWidth: formatUnit(minWidth),
+        minHeight: formatUnit(minHeight),
+        maxWidth: formatUnit(maxWidth),
+        maxHeight: formatUnit(maxHeight),
+      };
+      showBaseboard(iframe, baseboardRef.current);
+    }
+  },
+  []);
 
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
         <ActionSheet
+          ref={actionSheetRef}
           isOut={isOut}
           hasChildNodes={propName ? !!get(childNodes, propName) : !!childNodes}
           isRoot={selectedKey === ROOT}
@@ -285,7 +305,11 @@ function Resize() {
           {height}
         </div>
       </div>
-      <div ref={baseboardRef} id='brick-design-baseboard' className={styles['baseboard']} />
+      <div
+        ref={baseboardRef}
+        id="brick-design-baseboard"
+        className={styles['baseboard']}
+      />
     </>
   );
 }

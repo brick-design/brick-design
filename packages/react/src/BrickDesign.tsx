@@ -28,6 +28,7 @@ import {
   OperateProvider,
   OperateStateType,
 } from './components/OperateProvider';
+import BoxModel from './components/BoxModel';
 
 /**
  * 鼠标离开设计区域清除hover状态
@@ -35,6 +36,7 @@ import {
 export interface BrickDesignProps extends IframeHTMLAttributes<any> {
   onLoadEnd?: () => void;
   operateStore?: BrickStore<OperateStateType>;
+  pageName: string;
   [propName: string]: any;
 }
 
@@ -60,7 +62,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const {
     onLoadEnd,
     pageName,
-    initState,
     options,
     operateStore,
     ...props
@@ -112,7 +113,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
               <Distances />
               <Resize />
               <GuidePlaceholder />
-              <RadiusPanel/>
+              <RadiusPanel />
+              <BoxModel />
             </BrickContext.Provider>
           </OperateProvider>
         </StaticContextProvider>,

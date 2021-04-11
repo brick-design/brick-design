@@ -15,7 +15,7 @@ import {
   StateType,
   undo,
 } from '@brickd/core';
-import {isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 import BrickDesign, { BrickDesignProps } from './BrickDesign';
 import {
   OperateProvider,
@@ -29,7 +29,6 @@ import Guidelines from './components/Guidelines';
 
 interface BrickDesignCanvasType extends BrickDesignProps {
   initState?: Partial<StateType>;
-  pageName: string;
 }
 
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
@@ -41,10 +40,10 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     platformInfo: { size },
   } = useSelector(['platformInfo']);
   const [isLoading, setIsLoading] = useState(false);
-  const [scale,setScale] = useState(0.5);
-  const [canvasSize,setCanvasSize]=useState(size);
+  const [scale, setScale] = useState(0.5);
+  const [canvasSize, setCanvasSize] = useState(size);
   const iframeRef = useRef<HTMLIFrameElement>();
-  const prevSize=useRef(size);
+  const prevSize = useRef(size);
   const loadEnd = useCallback(() => {
     setIsLoading(true);
     onLoadEnd && onLoadEnd();
@@ -73,7 +72,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   }, []);
 
   useEffect(() => {
-    iframeRef.current=getIframe();
+    iframeRef.current = getIframe();
     const { contentWindow } = iframeRef.current;
     contentWindow.addEventListener('dragover', onDragover);
     window.addEventListener('dragover', onDragover);
@@ -87,54 +86,54 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     };
   }, []);
 
-  useEffect(()=>{
-    if(!isEqual(prevSize.current,size)){
+  useEffect(() => {
+    if (!isEqual(prevSize.current, size)) {
       setCanvasSize(size);
-      prevSize.current=size;
+      prevSize.current = size;
     }
   });
-  const changeCanvasSize=useCallback(()=>{
-    const {contentDocument:{body:{scrollHeight,scrollWidth}}}=iframeRef.current;
-    if(canvasSize[0]===size[0]&&canvasSize[1]===size[1]){
-      setCanvasSize([scrollWidth,scrollHeight]);
-    }else{
+  const changeCanvasSize = useCallback(() => {
+    const {
+      contentDocument: {
+        body: { scrollHeight, scrollWidth },
+      },
+    } = iframeRef.current;
+    if (canvasSize[0] === size[0] && canvasSize[1] === size[1]) {
+      setCanvasSize([scrollWidth, scrollHeight]);
+    } else {
       setCanvasSize(size);
-
     }
-  },[setCanvasSize,size,canvasSize]);
+  }, [setCanvasSize, size, canvasSize]);
 
-  useEffect(()=>{
-    const { contentWindow } = iframeRef.current||{};
+  useEffect(() => {
+    const { contentWindow } = iframeRef.current || {};
     function onKeyDown(keyEvent: KeyboardEvent) {
       keyEvent.stopPropagation();
       const { key, ctrlKey, shiftKey, metaKey } = keyEvent;
-      if((ctrlKey || metaKey)){
-        if (key === 'z' ) {
+      if (ctrlKey || metaKey) {
+        if (key === 'z') {
           if (!shiftKey) {
             undo();
           } else if (shiftKey) {
             redo();
           }
-        }else  if(key==='u') {
+        } else if (key === 'u') {
           changeCanvasSize();
-        }else if(key==='='){
-          setScale(scale+0.1);
-        }else if (key==='-'){
-          setScale(scale-0.1);
+        } else if (key === '=') {
+          setScale(scale + 0.1);
+        } else if (key === '-') {
+          setScale(scale - 0.1);
         }
       }
-      keyEvent.returnValue=false;
+      keyEvent.returnValue = false;
     }
-    contentWindow&&contentWindow.addEventListener('keydown', onKeyDown);
+    contentWindow && contentWindow.addEventListener('keydown', onKeyDown);
     window.addEventListener('keydown', onKeyDown);
-    return  ()=>{
+    return () => {
       window.removeEventListener('keydown', onKeyDown);
-      contentWindow&&contentWindow.removeEventListener('keydown', onKeyDown);
-
+      contentWindow && contentWindow.removeEventListener('keydown', onKeyDown);
     };
-  },[changeCanvasSize,setScale,scale]);
-
-
+  }, [changeCanvasSize, setScale, scale]);
 
   const style = useMemo(
     () => ({
@@ -148,15 +147,16 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     [canvasSize, scale],
   );
 
-
-
   return (
     <OperateProvider value={operateStore}>
-      <div className={styles['brick-design-container']} id="brickd-canvas-container">
+      <div
+        className={styles['brick-design-container']}
+        id="brickd-canvas-container"
+      >
         <div
           id="brickd-canvas"
           style={style}
-          className={styles["brickd-canvas"]}
+          className={styles['brickd-canvas']}
         >
           {isLoading && (
             <>
@@ -168,7 +168,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             operateStore={operateStore}
             onLoadEnd={loadEnd}
           />
-
         </div>
       </div>
     </OperateProvider>

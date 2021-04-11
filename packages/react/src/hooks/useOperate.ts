@@ -23,5 +23,6 @@ export function useOperate(
     setOperateState,
     getOperateState: operateStore.getPageState,
     setSubscribe: operateStore.subscribe,
+    executeKeyListener: operateStore.executeKeyListener,
   };
 }

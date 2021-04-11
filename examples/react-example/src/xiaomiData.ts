@@ -350,7 +350,8 @@ export const seckillList = [{
 				'label_text': '',
 				'is_test': '0',
 				'action': { 'log_code': '31activity_homeseckill#goodsid=2201300013\u0026start_time=1616292000\u0026end_time=1616305320' },
-			}, {
+			},
+	{
 				'goods_id': '2194500025',
 				'product_id': '11222',
 				'goods_name': '智能积木 公路赛车 白色',
@@ -378,7 +379,8 @@ export const seckillList = [{
 				'label_text': '',
 				'is_test': '0',
 				'action': { 'log_code': '31activity_homeseckill#goodsid=2201700006\u0026start_time=1616292000\u0026end_time=1616305320' },
-			}, {
+			},
+	{
 				'goods_id': '2202300015',
 				'product_id': '12261',
 				'goods_name': '米家声波电动牙刷T500C 蓝色',
@@ -490,7 +492,8 @@ export const seckillList = [{
 				'label_text': '',
 				'is_test': '0',
 				'action': { 'log_code': '31activity_homeseckill#goodsid=2191200015\u0026start_time=1616292000\u0026end_time=1616305320' },
-			}, {
+			},
+	{
 				'goods_id': '2203700003',
 				'product_id': '12774',
 				'goods_name': '纯麦无线K歌麦克风 U7PRO',
@@ -518,7 +521,35 @@ export const seckillList = [{
 				'label_text': '',
 				'is_test': '0',
 				'action': { 'log_code': '31activity_homeseckill#goodsid=2194100059\u0026start_time=1616292000\u0026end_time=1616305320' },
-			}]
+			},{
+		'goods_id': '2194500025',
+		'product_id': '11222',
+		'goods_name': '智能积木 公路赛车 白色',
+		'desc': '烧脑搭建，尽兴狂奔',
+		'seckill_type': 'seckill',
+		'goods_price': '299',
+		'seckill_Price': '269',
+		'discount_img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b464671ac030e3da494b279bac705b63.jpg',
+		'img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b464671ac030e3da494b279bac705b63.jpg',
+		'pc_img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0b5665bc7612ccaea133d1e8311bf422.png',
+		'label_text': '',
+		'is_test': '0',
+		'action': { 'log_code': '31activity_homeseckill#goodsid=2194500025\u0026start_time=1616292000\u0026end_time=1616305320' },
+	}, {
+		'goods_id': '2201700006',
+		'product_id': '11943',
+		'goods_name': '米家扫拖机器人G1 白色',
+		'desc': '能扫会拖，整屋清洁一步到位',
+		'seckill_type': 'seckill',
+		'goods_price': '999',
+		'seckill_Price': '899',
+		'discount_img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a0b76cf97563d009fc8d4b331e2e16fb.jpg',
+		'img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a0b76cf97563d009fc8d4b331e2e16fb.jpg',
+		'pc_img': 'https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/f9b7f04730f4f475b58c2762f195378a.png',
+		'label_text': '',
+		'is_test': '0',
+		'action': { 'log_code': '31activity_homeseckill#goodsid=2201700006\u0026start_time=1616292000\u0026end_time=1616305320' },
+	}]
 export const seckillResult=chunk(seckillList,4)
 
 export const borderColors=['red','green','black','yellow','blue','pink']

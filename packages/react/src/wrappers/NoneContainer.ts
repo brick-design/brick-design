@@ -31,6 +31,8 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
+  const iframe = useRef(getIframe()).current;
+
   const { pageConfig: PageDom } = useSelector<HookState, STATE_PROPS>(
     stateSelector,
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
@@ -49,8 +51,7 @@ function NoneContainer(allProps: CommonPropsType) {
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
   const parentRootNode = useRef<HTMLElement>();
-  const nodeRef = useRef();
-  const { setSelectedNode, ...events } = useEvents(
+  const { setSelectedNode, onDrag, onDragStart, ...events } = useEvents(
     parentRootNode,
     specialProps,
     isSelected,
@@ -63,14 +64,19 @@ function NoneContainer(allProps: CommonPropsType) {
   const { getOperateState } = useOperate(isModal);
 
   useEffect(() => {
-    if (dragKey && domTreeKeys.includes(dragKey)) return;
-    const iframe = getIframe();
     parentRootNode.current = getSelectedNode(uniqueKey, iframe);
+    parentRootNode.current.addEventListener('drag', onDrag);
+    parentRootNode.current.addEventListener('dragstart', onDragStart);
+    return () => {
+      parentRootNode.current.removeEventListener('drag', onDrag);
+      parentRootNode.current.removeEventListener('dragstart', onDragStart);
+    };
+  }, []);
+  useEffect(() => {
+    if (dragKey && domTreeKeys.includes(dragKey)) return;
     const { index: selectedIndex } = getOperateState();
     if (
-      (isSelected &&
-        (isEmpty(funParams || item) ||
-          (isEmpty(funParams || item) && selectedIndex === index))) ||
+      (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
       isAddComponent.current
     ) {
       setSelectedNode(parentRootNode.current);
@@ -94,7 +100,6 @@ function NoneContainer(allProps: CommonPropsType) {
     /**
      * 设置组件id方便抓取图片
      */
-    ref: nodeRef,
   });
 }
 

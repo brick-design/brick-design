@@ -1,10 +1,12 @@
 @import '../../global';
 .brickd-radius-container {
 		.guide-common();
-		border: 1px solid @hoverColor;
 		background-color: @translucent;
-		transition: all 100ms;
 		pointer-events: none;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	z-index: 3000;
 }
 
 .pseudo-class{
@@ -17,36 +19,58 @@
 
 .radius-item {
 	position: absolute;
-	height: 7px;
-	width: 7px;
+	height: 8px;
+	width: 8px;
 	border-radius: 50%;
 	background-color: white;
 	border: 1px @selectColor solid;
 	pointer-events: auto;
 }
 
-.borderTopLeftRadius{
-	&:before{
-		.pseudo-class();
-		left: 5px;
-	}
+.radius-item-checked{
+	background-color: @selectColor;
 }
-.borderTopRightRadius{
-	&:after{
-		.pseudo-class();
-		right: 5px;
-	}
-}
-.borderBottomLeftRadius{
-	&:before{
-		.pseudo-class();
-		left: 5px;
-	}
-}
-.borderBottomRightRadius{
-	&:after{
-		.pseudo-class();
-		right: 5px;
 
+.border-radius-default{
+	&:hover{
+		&:before{
+			.pseudo-class();
+			left: 5px;
+		}
 	}
+}
+
+.border-radius-selected{
+	&:before{
+		.pseudo-class();
+		left: 5px;
+	}
+}
+
+.margin-selector-item{
+	position: absolute;
+	height: 8px;
+	width: 8px;
+	border: 1px @selectColor solid;
+	transform:rotate(45deg);
+	background-color: white;
+	pointer-events: auto;
+	cursor: pointer;
+	&:hover{
+		&:before {
+			.distances-tip();
+			content: attr(data-content);
+			pointer-events: none;
+			left: 0;
+			transform:rotate(-45deg);
+
+		}
+	}
+
+}
+
+.margin-checked{
+	background-image: radial-gradient(red, @selectColor);
+	background-color: red;
+	border-color: @transparent;
 }

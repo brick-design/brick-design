@@ -2,8 +2,8 @@
 
 .border-container {
 	position: absolute;
-	z-index: 20000;
-	border: 1px @selectColor solid;
+	z-index: 2000;
+	border: 1px lawngreen solid;
 	pointer-events: none;
 	display: none;
 	justify-content: center;
@@ -49,6 +49,21 @@
 	border-radius: 50%;
 	background-color: white;
 	border: 1px @selectColor solid;
+	pointer-events: auto;
+}
+
+.resize-item-h{
+	position: absolute;
+	height: 1px;
+	width: 100%;
+	background-color: @transparent;
+	pointer-events: auto;
+}
+.resize-item-v{
+	position: absolute;
+	height: 100%;
+	width: 1px;
+	background-color: @transparent;
 	pointer-events: auto;
 }
 

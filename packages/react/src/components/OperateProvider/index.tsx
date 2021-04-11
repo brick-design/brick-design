@@ -11,6 +11,7 @@ export type OperateStateType = {
   index?: number;
   isDropAble?: boolean;
   isLock?: boolean;
+  [key: string]: any;
 };
 export const OperateContext = createContext<BrickStore<OperateStateType>>(null);
 export const OperateProvider = (

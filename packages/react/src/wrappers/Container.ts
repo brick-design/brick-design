@@ -141,7 +141,7 @@ function Container(allProps: CommonPropsType) {
     prevPropName.current = propName;
     selectedPropName = propName;
   }
-  const { setSelectedNode, ...events } = useEvents(
+  const { setSelectedNode, onDrag, onDragStart, ...events } = useEvents(
     parentRootNode,
     specialProps,
     isSelected,
@@ -227,7 +227,7 @@ function Container(allProps: CommonPropsType) {
         );
       });
     };
-  }, [propParentNodes.current]);
+  }, []);
 
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
@@ -235,9 +235,7 @@ function Container(allProps: CommonPropsType) {
     parentRootNode.current = getSelectedNode(uniqueKey, iframe);
     const { index: selectedIndex } = getOperateState();
     if (
-      (isSelected &&
-        (isEmpty(funParams || item) ||
-          (isEmpty(funParams || item) && selectedIndex === index))) ||
+      (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
       isAddComponent.current
     ) {
       setSelectedNode(parentRootNode.current);
@@ -355,10 +353,16 @@ function Container(allProps: CommonPropsType) {
     if (isEmpty(parentRootNode.current)) return;
     parentRootNode.current.addEventListener('dragover', onParentDragOver);
     parentRootNode.current.addEventListener('dragenter', onParentDragEnter);
-
+    parentRootNode.current.addEventListener('drag', onDrag);
+    parentRootNode.current.addEventListener('dragstart', onDragStart);
     return () => {
       parentRootNode.current.removeEventListener('dragover', onParentDragOver);
-      parentRootNode.current.addEventListener('dragenter', onParentDragEnter);
+      parentRootNode.current.removeEventListener(
+        'dragenter',
+        onParentDragEnter,
+      );
+      parentRootNode.current.removeEventListener('drag', onDrag);
+      parentRootNode.current.removeEventListener('dragstart', onDragStart);
     };
   }, [onParentDragOver]);
 

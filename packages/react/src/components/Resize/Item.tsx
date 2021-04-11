@@ -10,21 +10,23 @@ interface ItemProps {
   direction: Direction;
 }
 
+const resizeH = ['top', 'bottom'];
+const resizeV = ['left', 'right'];
 const positionStyles: { [key: string]: React.CSSProperties } = {
   top: {
-    top: '-3px',
+    top: '-1px',
     cursor: 'row-resize',
   },
   right: {
-    right: '-3px',
+    right: '-1px',
     cursor: 'col-resize',
   },
   bottom: {
-    bottom: '-3px',
+    bottom: '-1px',
     cursor: 'row-resize',
   },
   left: {
-    left: '-3px',
+    left: '-1px',
     cursor: 'col-resize',
   },
   topRight: {
@@ -51,12 +53,18 @@ const positionStyles: { [key: string]: React.CSSProperties } = {
 
 export function Item(props: ItemProps) {
   const { onResizeStart, direction } = props;
+  let className = styles['resize-item'];
+  if (resizeV.includes(direction)) {
+    className = styles['resize-item-v'];
+  } else if (resizeH.includes(direction)) {
+    className = styles['resize-item-h'];
+  }
   return (
     <span
       draggable={false}
       style={positionStyles[direction]}
       onMouseDown={(e) => onResizeStart(e, direction)}
-      className={styles['resize-item']}
+      className={className}
     />
   );
 }

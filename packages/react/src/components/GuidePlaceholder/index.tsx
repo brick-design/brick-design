@@ -5,7 +5,7 @@ import {
   SelectedInfoType,
   STATE_PROPS,
 } from '@brickd/core';
-import { get} from 'lodash';
+import { get } from 'lodash';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
@@ -23,7 +23,6 @@ type SelectState = {
   selectedInfo: SelectedInfoType | null;
   dragSource: DragSourceType | null;
 };
-
 
 function getNode(key: string) {
   const iframe = getIframe();
@@ -78,7 +77,7 @@ function GuidePlaceholder() {
       const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
-        const { left, top,width, height } = getElementInfo(
+        const { left, top, width, height } = getElementInfo(
           node,
           iframe,
           isModal,
@@ -98,12 +97,7 @@ function GuidePlaceholder() {
             hoverNodeRef.current.style.backgroundColor = 'rgba(256, 0, 0, 0.1)';
           }
         }
-        setPosition(
-          [
-            hoverNodeRef.current,
-          ],
-          isModal,
-        );
+        setPosition([hoverNodeRef.current], isModal);
       }
       if (dropNode) {
         setTimeout(renderGuideLines, 100);
@@ -128,11 +122,11 @@ function GuidePlaceholder() {
         : styles['hover-node']
       : styles['guide-hidden'];
   return (
-      <div
-        onTransitionEnd={onTransitionEnd}
-        ref={hoverNodeRef}
-        className={hoverNodeClass}
-      />
+    <div
+      onTransitionEnd={onTransitionEnd}
+      ref={hoverNodeRef}
+      className={hoverNodeClass}
+    />
   );
 }
 

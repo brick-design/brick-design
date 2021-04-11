@@ -1,15 +1,14 @@
 import { each } from 'lodash';
 
 type ListenerType = () => void;
-
 export class BrickStore<T> {
   constructor(propState?: T) {
     this.state = propState || ({} as T);
   }
   isPageStore = true;
   state: T;
-  listeners = [];
-  listenerMap = {};
+  listeners: ListenerType[] = [];
+  listenerMap: { [key: string]: ListenerType } = {};
   getPageState = (): T => this.state;
   setPageState = (newState: T, isReplace?: boolean, executeKey?: string) => {
     if (isReplace) {
@@ -17,6 +16,7 @@ export class BrickStore<T> {
     } else {
       this.state = { ...this.state, ...newState };
     }
+    console.log('this.listeners>>>>>', this.listeners.length);
     each(this.listeners, (listener) => listener());
 
     if (executeKey && this.listenerMap[executeKey]) {
@@ -43,5 +43,17 @@ export class BrickStore<T> {
         delete this.listenerMap[key];
       }
     };
+  };
+
+  executeKeyListener = (selectedKey?: string) => {
+    each(this.listenerMap, (listener, key) => {
+      if (selectedKey) {
+        if (selectedKey === key) {
+          listener();
+        }
+      } else {
+        listener();
+      }
+    });
   };
 }

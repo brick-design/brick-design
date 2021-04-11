@@ -1,7 +1,7 @@
 import { clearChildNodes, copyComponent, deleteComponent } from '@brickd/core';
-import deleteSvg from './svgs/delete.svg';
-import copySvg from './svgs/copy.svg';
-import clearSvg from './svgs/clear.svg';
+import deleteSvg from '../../assets/delete.svg';
+import copySvg from '../../assets/copy.svg';
+import clearSvg from '../../assets/clear.svg';
 
 interface ActionSheetConfig {
   icon: any;

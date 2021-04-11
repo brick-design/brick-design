@@ -65,7 +65,6 @@ function Guidelines(props: GuidelinesType) {
         );
         const { scrollY, scrollX } = contentWindow;
         const positionSize = getScalePosition(canvas, canvasContainer, scale);
-        console.log('positionSize>>>>>>',positionSize);
         topRef.current.style.top = `${top - scrollY}px`;
         topRef.current.style.width = `${positionSize.width}px`;
         topRef.current.style.marginLeft = `${-positionSize.left}px`;

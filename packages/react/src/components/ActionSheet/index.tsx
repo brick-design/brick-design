@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, forwardRef, useState, useImperativeHandle } from 'react';
 import styles from './index.less';
 import configs, { ACTIONS } from './configs';
 
@@ -9,9 +9,18 @@ interface ActionSheetProps {
   keyValue?: string;
 }
 
-function ActionSheet(props: ActionSheetProps) {
+function ActionSheet(props: ActionSheetProps, ref: any) {
   const { isOut, isRoot, hasChildNodes, keyValue } = props;
+  const [show, setShow] = useState(true);
+  useImperativeHandle(
+    ref,
+    () => ({
+      setShow,
+    }),
+    [setShow],
+  );
 
+  if (!show) return null;
   return (
     <div
       className={styles['container']}
@@ -32,4 +41,4 @@ function ActionSheet(props: ActionSheetProps) {
   );
 }
 
-export default memo(ActionSheet);
+export default memo(forwardRef(ActionSheet));

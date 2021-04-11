@@ -1,4 +1,4 @@
-import {  useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { each, get } from 'lodash';
 import {
   PageConfigType,
@@ -68,17 +68,17 @@ export const getSelectedNode = (
 };
 
 export function generateCSS(
-  left: number,
-  top: number,
+  left?: number,
+  top?: number,
   width?: number,
   height?: number,
 ) {
   return `
-    ${width ? `width:${width}px;` : ''}
-    ${height ? `height:${height}px;` : ''}
+    ${width !== undefined ? `width:${width}px;` : ''}
+    ${height !== undefined ? `height:${height}px;` : ''}
     display:flex;
-    left:${left}px;
-    top:${top}px;
+    ${left !== undefined ? `left:${left}px;` : ''}
+    ${top !== undefined ? `top:${top}px;` : ''}
   `;
 }
 
@@ -578,8 +578,10 @@ export function getScalePosition(
   };
 }
 
-
-export const showBaseboard =(iframe:HTMLIFrameElement,baseboard:HTMLElement) => {
+export const showBaseboard = (
+  iframe: HTMLIFrameElement,
+  baseboard: HTMLElement,
+) => {
   const {
     body: { scrollWidth, scrollHeight },
   } = iframe!.contentDocument;
@@ -590,6 +592,6 @@ export const showBaseboard =(iframe:HTMLIFrameElement,baseboard:HTMLElement) => 
     `;
 };
 
-export const hiddenBaseboard=(baseboard:HTMLElement)=>{
-  baseboard.style.display='none';
+export const hiddenBaseboard = (baseboard: HTMLElement) => {
+  baseboard.style.display = 'none';
 };
