@@ -63,7 +63,7 @@ function RadiusItem(props: ItemProps) {
   const radiusResultRef = useRef({});
   const nodeRef = useRef<HTMLElement>();
   const iframe = useRef(getIframe()).current;
-  const { getOperateState, setSubscribe } = useOperate();
+  const { getOperateState, setSubscribe,executeKeyListener} = useOperate();
   const [show, setShow] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -140,9 +140,12 @@ function RadiusItem(props: ItemProps) {
           selectedNode.style[radius] = `${position}px`;
           radiusResultRef.current[radius] = `${position}px`;
         } else {
-          each(Radius, (radius) => {
-            selectedNode.style[radius] = `${position}px`;
-            radiusResultRef.current[radius] = `${position}px`;
+          each(Radius, (r) => {
+            selectedNode.style[r] = `${position}px`;
+            radiusResultRef.current[r] = `${position}px`;
+            if(r!==radius){
+              executeKeyListener(r);
+            }
           });
         }
         selectedNode.style.transition = 'none';
@@ -237,6 +240,7 @@ function RadiusItem(props: ItemProps) {
   useEffect(() => {
     const { contentWindow, contentDocument } = iframe;
     const unSubscribe = setSubscribe(resetPosition);
+    const unKeySubscribe =setSubscribe(resetPosition,radius);
     if (!baseboardRef.current) {
       baseboardRef.current = contentDocument.getElementById(
         'brick-design-baseboard',
@@ -246,6 +250,7 @@ function RadiusItem(props: ItemProps) {
     contentWindow.addEventListener('mousemove', onMouseMove);
     return () => {
       unSubscribe();
+      unKeySubscribe();
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
     };

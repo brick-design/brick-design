@@ -36,7 +36,6 @@ import BoxModel from './components/BoxModel';
 export interface BrickDesignProps extends IframeHTMLAttributes<any> {
   onLoadEnd?: () => void;
   operateStore?: BrickStore<OperateStateType>;
-  pageName: string;
   [propName: string]: any;
 }
 

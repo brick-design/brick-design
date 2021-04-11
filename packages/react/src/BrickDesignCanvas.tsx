@@ -29,6 +29,7 @@ import Guidelines from './components/Guidelines';
 
 interface BrickDesignCanvasType extends BrickDesignProps {
   initState?: Partial<StateType>;
+  pageName: string;
 }
 
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
