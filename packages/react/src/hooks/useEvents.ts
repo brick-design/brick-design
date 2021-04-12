@@ -35,6 +35,8 @@ type OriginalPosition = {
   right: number;
   pageLeft: number;
   pageTop: number;
+  prevClientX:number
+  prevClientY:number
 };
 
 export function useEvents(
@@ -118,6 +120,8 @@ export function useEvents(
       originalMarginBottom: formatUnit(marginBottom),
       pageTop,
       pageLeft,
+      prevClientX:clientX,
+      prevClientY:clientY
     };
     parentPositionRef.current = get(
       targetNode.parentElement,
@@ -163,28 +167,36 @@ export function useEvents(
   const onDrag = useCallback((event: React.DragEvent) => {
     event.stopPropagation();
     event.persist();
-    setTimeout(()=>{
       if(!originalPositionRef.current) return;
       const { clientY, clientX,target } = event;
+    const {
+      clientY: originalY,
+      clientX: originalX,
+      originalMarginLeft,
+      originalMarginTop,
+      originalMarginBottom,
+      originalMarginRight,
+      prevClientY,
+      prevClientX
+    } = originalPositionRef.current;
+    const currentOffsetX=clientX-prevClientX;
+    const currentOffsetY=clientY-prevClientY;
+    if(Math.abs(currentOffsetX)>50||
+      Math.abs(currentOffsetY)>50||
+      currentOffsetX===0&&
+      currentOffsetY===0){
+      return;
+    }
+    originalPositionRef.current['prevClientX']=clientX;
+    originalPositionRef.current['prevClientY']=clientY;
       const targetNode= target as HTMLElement;
       const {
-        selectedNode,
-        operateSelectedKey,
         resizeChangePosition,
         radiusChangePosition,
         boxChange,
         lockedMarginLeft,
         lockedMarginTop,
       } = getOperateState();
-      if (selectedNode === targetNode && operateSelectedKey) {
-        const {
-          clientY: originalY,
-          clientX: originalX,
-          originalMarginLeft,
-          originalMarginTop,
-          originalMarginBottom,
-          originalMarginRight,
-        } = originalPositionRef.current;
         const offsetY = clientY - originalY;
         const offsetX = clientX - originalX;
         const marginLeft = originalMarginLeft + offsetX;
@@ -194,9 +206,9 @@ export function useEvents(
 
         targetNode.style.transition = 'none';
         if (EXCLUDE_POSITION.includes(targetNode.style.position)) {
+
           return;
         } else {
-
           if (!lockedMarginLeft && !lockedMarginTop) {
             targetNode.style.marginLeft = marginLeft + 'px';
             targetNode.style.marginTop = marginTop + 'px';
@@ -231,10 +243,6 @@ export function useEvents(
         );
         resizeChangePosition(left, top);
         radiusChangePosition(left, top,width,height,'transition:none;');
-      }
-    },10);
-
-
   }, []);
 
   const onDragEnd = useCallback((event:DragEvent) => {

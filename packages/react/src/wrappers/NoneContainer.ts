@@ -61,15 +61,6 @@ function NoneContainer(allProps: CommonPropsType) {
   ]);
   const { getOperateState } = useOperate(isModal);
 
-  // useEffect(() => {
-  //   parentRootNode.current = getSelectedNode(uniqueKey, iframe);
-  //   parentRootNode.current.addEventListener('drag', onDrag);
-  //   parentRootNode.current.addEventListener('dragstart', onDragStart);
-  //   return () => {
-  //     parentRootNode.current.removeEventListener('drag', onDrag);
-  //     parentRootNode.current.removeEventListener('dragstart', onDragStart);
-  //   };
-  // }, []);
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
     const { index: selectedIndex } = getOperateState();

@@ -148,7 +148,7 @@ function Container(allProps: CommonPropsType) {
   );
   const dragOver = useCallback(
     (event: DragEvent, propName: string) => {
-      event.stopPropagation();
+      event.preventDefault();
       const dragKey = getDragKey();
       const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
@@ -260,7 +260,7 @@ function Container(allProps: CommonPropsType) {
 
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
-      event.stopPropagation();
+      event.preventDefault();
       const dragKey = getDragKey();
       const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
@@ -309,10 +309,12 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent) => {
       event.stopPropagation();
       const dragKey = getDragKey();
+      const dragParentKey=getDragSourceFromKey('parentKey');
+      const {operateSelectedKey}=getOperateState();
       /**
        * 如果dragKey包含在组件所属的domTreeKeys中说明当前组件为拖拽组件的祖先节点之一
        */
-      if (domTreeKeys.includes(dragKey) || dragKey === key) return;
+      if (domTreeKeys.includes(dragKey) || dragKey === key ||operateSelectedKey&&dragParentKey!==key) return;
       let isDropAble;
       if (nodePropsConfig) {
         const { childNodesRule } = nodePropsConfig[selectedPropName];
@@ -332,9 +334,8 @@ function Container(allProps: CommonPropsType) {
         index,
         isLock: true,
       });
-      const {operateSelectedKey}=getOperateState();
 
-      if (!isDropAble||operateSelectedKey) return;
+      if (!isDropAble) return;
       getDropTarget({
         propName: selectedPropName,
         selectedKey: key,
@@ -347,22 +348,6 @@ function Container(allProps: CommonPropsType) {
     [childNodes, selectedPropName],
   );
 
-  // useEffect(() => {
-  //   if (isEmpty(parentRootNode.current)) return;
-  //   parentRootNode.current.addEventListener('dragover', onParentDragOver);
-  //   parentRootNode.current.addEventListener('dragenter', onParentDragEnter);
-  //   parentRootNode.current.addEventListener('drag', onDrag);
-  //   parentRootNode.current.addEventListener('dragstart', onDragStart);
-  //   return () => {
-  //     parentRootNode.current.removeEventListener('dragover', onParentDragOver);
-  //     parentRootNode.current.removeEventListener(
-  //       'dragenter',
-  //       onParentDragEnter,
-  //     );
-  //     parentRootNode.current.removeEventListener('drag', onDrag);
-  //     parentRootNode.current.removeEventListener('dragstart', onDragStart);
-  //   };
-  // }, [onParentDragOver]);
 
   const { index: selectedIndex } = getOperateState();
 
@@ -377,7 +362,9 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName?: string) => {
       event.stopPropagation();
       const dragKey = getDragKey();
-      if (domTreeKeys.includes(dragKey) || dragKey === key) return;
+      const dragParentKey=getDragSourceFromKey('parentKey');
+      const {operateSelectedKey}=getOperateState();
+      if (domTreeKeys.includes(dragKey) || dragKey === key||operateSelectedKey&&dragParentKey!==key) return;
       const { childNodesRule } = nodePropsConfig[propName];
       const isDropAble =
         isAllowDrop(childNodesRule) &&
@@ -390,8 +377,7 @@ function Container(allProps: CommonPropsType) {
         index,
         isLock: true,
       });
-      const {operateSelectedKey}=getOperateState();
-      if (!isDropAble||operateSelectedKey) return;
+      if (!isDropAble) return;
       getDropTarget({
         propName,
         selectedKey: key,
