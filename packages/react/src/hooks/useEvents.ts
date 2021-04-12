@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useMemo, useRef } from 'react';
+import React,{  useCallback, useMemo, useRef } from 'react';
 import {
   changeStyles,
   clearDragSource,
@@ -38,7 +38,6 @@ type OriginalPosition = {
 };
 
 export function useEvents(
-  nodeRef: RefObject<HTMLElement>,
   specialProps: SelectedInfoBaseType,
   isSelected: boolean,
   props: any,
@@ -79,19 +78,19 @@ export function useEvents(
 
   const onDoubleClick = useCallback(
     (e: Event) => {
-      e && e.stopPropagation && e.stopPropagation();
-      setSelectedNode(nodeRef.current);
+      e && e.stopPropagation();
+      setSelectedNode(e.target as HTMLElement);
       onDoubleClickFn && onDoubleClickFn();
     },
     [onDoubleClickFn],
   );
 
-  const onDragStart = useCallback((event: DragEvent) => {
+  const onDragStart = useCallback((event: React.DragEvent) => {
     event.stopPropagation();
     iframe.contentDocument.body.style.cursor = 'move';
-
     event.dataTransfer.setDragImage(dragImg, 0, 0);
-    const { clientX, clientY } = event;
+    const { clientX, clientY,target } = event;
+    const targetNode=target as HTMLElement;
     const {
       marginLeft,
       marginTop,
@@ -101,11 +100,11 @@ export function useEvents(
       left,
       right,
       bottom,
-    } = css(nodeRef.current);
+    } = css(targetNode);
     const {
       top: pageTop,
       left: pageLeft,
-    } = nodeRef.current.getBoundingClientRect();
+    } = targetNode.getBoundingClientRect();
     originalPositionRef.current = {
       top: formatUnit(top),
       left: formatUnit(left),
@@ -121,7 +120,7 @@ export function useEvents(
       pageLeft,
     };
     parentPositionRef.current = get(
-      nodeRef.current.parentElement,
+      targetNode.parentElement,
       'style.position',
     );
 
@@ -137,7 +136,7 @@ export function useEvents(
 
   const onClick = useCallback(
     (e: Event) => {
-      e && e.stopPropagation && e.stopPropagation();
+      e &&e.stopPropagation();
       clearSelectedStatus();
       setOperateState({ selectedNode: null });
       onClickFn && onClickFn();
@@ -151,20 +150,23 @@ export function useEvents(
       if (getDragKey()) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
       } else {
-        setOperateState({ hoverNode: nodeRef.current, operateHoverKey: key });
+        setOperateState({ hoverNode: event.target as HTMLElement, operateHoverKey: key });
         overTarget({
           hoverKey: key,
         });
       }
       if (typeof onMouseOverFun === 'function') onMouseOverFun();
     },
-    [nodeRef.current, onMouseOverFun],
+    [onMouseOverFun],
   );
 
-  const onDrag = useCallback((event: DragEvent) => {
+  const onDrag = useCallback((event: React.DragEvent) => {
     event.stopPropagation();
+    event.persist();
     setTimeout(()=>{
       if(!originalPositionRef.current) return;
+      const { clientY, clientX,target } = event;
+      const targetNode= target as HTMLElement;
       const {
         selectedNode,
         operateSelectedKey,
@@ -174,7 +176,7 @@ export function useEvents(
         lockedMarginLeft,
         lockedMarginTop,
       } = getOperateState();
-      if (selectedNode === nodeRef.current && operateSelectedKey) {
+      if (selectedNode === targetNode && operateSelectedKey) {
         const {
           clientY: originalY,
           clientX: originalX,
@@ -183,33 +185,33 @@ export function useEvents(
           originalMarginBottom,
           originalMarginRight,
         } = originalPositionRef.current;
-        const { clientY, clientX } = event;
         const offsetY = clientY - originalY;
         const offsetX = clientX - originalX;
         const marginLeft = originalMarginLeft + offsetX;
         const marginTop = originalMarginTop + offsetY;
         const marginRight = originalMarginRight - offsetX;
         const marginBottom = originalMarginBottom - offsetY;
-        nodeRef.current.style.transition = 'none';
-        if (EXCLUDE_POSITION.includes(nodeRef.current.style.position)) {
+
+        targetNode.style.transition = 'none';
+        if (EXCLUDE_POSITION.includes(targetNode.style.position)) {
           return;
         } else {
 
           if (!lockedMarginLeft && !lockedMarginTop) {
-            nodeRef.current.style.marginLeft = marginLeft + 'px';
-            nodeRef.current.style.marginTop = marginTop + 'px';
+            targetNode.style.marginLeft = marginLeft + 'px';
+            targetNode.style.marginTop = marginTop + 'px';
             positionResultRef.current = { marginLeft, marginTop };
           } else if (lockedMarginLeft && !lockedMarginTop) {
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginTop = marginTop + 'px';
+            targetNode.style.marginRight = marginRight + 'px';
+            targetNode.style.marginTop = marginTop + 'px';
             positionResultRef.current = { marginRight, marginTop };
           } else if (!lockedMarginLeft && lockedMarginTop) {
-            nodeRef.current.style.marginLeft = marginLeft + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
+            targetNode.style.marginLeft = marginLeft + 'px';
+            targetNode.style.marginBottom = marginBottom + 'px';
             positionResultRef.current = { marginLeft, marginBottom };
           } else {
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
+            targetNode.style.marginRight = marginRight + 'px';
+            targetNode.style.marginBottom = marginBottom + 'px';
             positionResultRef.current = { marginRight, marginBottom };
           }
 
@@ -219,7 +221,7 @@ export function useEvents(
           left,
           width,
           height,
-        } = nodeRef.current.getBoundingClientRect();
+        } = targetNode.getBoundingClientRect();
         boxChange(
           width,
           height,
@@ -230,7 +232,7 @@ export function useEvents(
         resizeChangePosition(left, top);
         radiusChangePosition(left, top,width,height,'transition:none;');
       }
-    },1);
+    },10);
 
 
   }, []);
@@ -248,7 +250,7 @@ export function useEvents(
     }
     originalPositionRef.current=null;
     // actionSheetRef.current.setShow(true);
-    nodeRef.current.style.transition = DEFAULT_ANIMATION;
+    (event.target as HTMLElement).style.transition = DEFAULT_ANIMATION;
     iframe.contentDocument.body.style.cursor = 'default';
   }, []);
 

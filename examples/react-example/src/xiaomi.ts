@@ -104,7 +104,7 @@ const data: PageConfigType = {
 	3: {
 		componentName: 'img',
 		props: {
-			src: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.canva.cn%2Flearn%2Fwp-content%2Fuploads%2Fsites%2F17%2F2019%2F11%2F1000.png&refer=http%3A%2F%2Fwww.canva.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618299431&t=e9fd3262b900bd370391699d178994bd',
+			src:'https://gss3.bdstatic.com/84oSdTum2Q5BphGlnYG/timg?wapp&quality=80&size=b150_150&subsize=20480&cut_x=0&cut_w=0&cut_y=0&cut_h=0&sec=1369815402&srctrace&di=a7c2991cb8117751aa9ff14283f80033&wh_rate=null&src=http%3A%2F%2Ftiebapic.baidu.com%2Fforum%2Fwh%3D120%2C120%2Fsign%3D9c001225c609b3deebeaec69fe8f40b0%2Fe850352ac65c1038990d7b8fa5119313b07e8908.jpg',
 			style: {
 				width: 55,
 				height: 55,

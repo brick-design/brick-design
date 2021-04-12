@@ -99,7 +99,6 @@ function Container(allProps: CommonPropsType) {
   const isAddComponent = useRef(
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
-  const nodeRef = useRef();
   // const dragOverOrigin=useRef()
   const { props, hidden, pageState } = useCommon(
     vNode,
@@ -126,7 +125,6 @@ function Container(allProps: CommonPropsType) {
   const isVPropNodesPositionRef = useRef<PropNodesPosition>({});
 
   const propParentNodes = useRef<PropParentNodes>({});
-  const parentRootNode = useRef<HTMLElement>();
   const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
     pageConfig,
     domTreeKeys,
@@ -141,8 +139,7 @@ function Container(allProps: CommonPropsType) {
     prevPropName.current = propName;
     selectedPropName = propName;
   }
-  const { setSelectedNode, onDrag, onDragStart, ...events } = useEvents(
-    parentRootNode,
+  const { setSelectedNode, ...events } = useEvents(
     specialProps,
     isSelected,
     props,
@@ -151,7 +148,7 @@ function Container(allProps: CommonPropsType) {
   );
   const dragOver = useCallback(
     (event: DragEvent, propName: string) => {
-      event.preventDefault();
+      event.stopPropagation();
       const dragKey = getDragKey();
       const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
@@ -233,13 +230,12 @@ function Container(allProps: CommonPropsType) {
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
     const iframe = getIframe();
-    parentRootNode.current = getSelectedNode(uniqueKey, iframe);
     const { index: selectedIndex } = getOperateState();
     if (
       (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
       isAddComponent.current
     ) {
-      setSelectedNode(parentRootNode.current);
+      setSelectedNode(getSelectedNode(uniqueKey, iframe));
       isAddComponent.current = false;
     }
 
@@ -264,7 +260,7 @@ function Container(allProps: CommonPropsType) {
 
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
-      event.preventDefault();
+      event.stopPropagation();
       const dragKey = getDragKey();
       const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
@@ -275,8 +271,6 @@ function Container(allProps: CommonPropsType) {
         operateSelectedKey
       )
         return;
-      const containerRootNode =
-        propParentNodes.current[defaultPropName] || parentRootNode.current;
       const isV = isVPropNodesPositionRef.current[defaultPropName];
 
       if (isEmpty(children)) {
@@ -289,7 +283,7 @@ function Container(allProps: CommonPropsType) {
       } else if (Array.isArray(children)) {
         if (children.length === 1 && children.includes(dragKey))
           return getDragSort(children);
-        const newChildren = dragSort(children, containerRootNode, event, isV);
+        const newChildren = dragSort(children, event.target as HTMLElement, event, isV);
         if (!isEqual(newChildren, children)) {
           setChildren(newChildren);
         }
@@ -312,8 +306,8 @@ function Container(allProps: CommonPropsType) {
   );
 
   const onParentDragEnter = useCallback(
-    (e: DragEvent) => {
-      e.stopPropagation();
+    (event: DragEvent) => {
+      event.stopPropagation();
       const dragKey = getDragKey();
       /**
        * 如果dragKey包含在组件所属的domTreeKeys中说明当前组件为拖拽组件的祖先节点之一
@@ -333,7 +327,7 @@ function Container(allProps: CommonPropsType) {
       }
       isDropAble = Number.parseInt(index) === 0 && isDropAble;
       setOperateState({
-        dropNode: parentRootNode.current,
+        dropNode: event.target as HTMLElement,
         isDropAble,
         index,
         isLock: true,
@@ -353,22 +347,22 @@ function Container(allProps: CommonPropsType) {
     [childNodes, selectedPropName],
   );
 
-  useEffect(() => {
-    if (isEmpty(parentRootNode.current)) return;
-    parentRootNode.current.addEventListener('dragover', onParentDragOver);
-    parentRootNode.current.addEventListener('dragenter', onParentDragEnter);
-    parentRootNode.current.addEventListener('drag', onDrag);
-    parentRootNode.current.addEventListener('dragstart', onDragStart);
-    return () => {
-      parentRootNode.current.removeEventListener('dragover', onParentDragOver);
-      parentRootNode.current.removeEventListener(
-        'dragenter',
-        onParentDragEnter,
-      );
-      parentRootNode.current.removeEventListener('drag', onDrag);
-      parentRootNode.current.removeEventListener('dragstart', onDragStart);
-    };
-  }, [onParentDragOver]);
+  // useEffect(() => {
+  //   if (isEmpty(parentRootNode.current)) return;
+  //   parentRootNode.current.addEventListener('dragover', onParentDragOver);
+  //   parentRootNode.current.addEventListener('dragenter', onParentDragEnter);
+  //   parentRootNode.current.addEventListener('drag', onDrag);
+  //   parentRootNode.current.addEventListener('dragstart', onDragStart);
+  //   return () => {
+  //     parentRootNode.current.removeEventListener('dragover', onParentDragOver);
+  //     parentRootNode.current.removeEventListener(
+  //       'dragenter',
+  //       onParentDragEnter,
+  //     );
+  //     parentRootNode.current.removeEventListener('drag', onDrag);
+  //     parentRootNode.current.removeEventListener('dragstart', onDragStart);
+  //   };
+  // }, [onParentDragOver]);
 
   const { index: selectedIndex } = getOperateState();
 
@@ -380,8 +374,8 @@ function Container(allProps: CommonPropsType) {
   }
 
   const onDragEnter = useCallback(
-    (e: DragEvent, propName?: string) => {
-      e.stopPropagation();
+    (event: DragEvent, propName?: string) => {
+      event.stopPropagation();
       const dragKey = getDragKey();
       if (domTreeKeys.includes(dragKey) || dragKey === key) return;
       const { childNodesRule } = nodePropsConfig[propName];
@@ -437,6 +431,7 @@ function Container(allProps: CommonPropsType) {
       !!dragKey && isAllowAdd(componentName),
     ),
     onDragEnter: onParentDragEnter,
+    onDragOver:onParentDragOver,
     ...events,
     ...generateRequiredProps(componentName),
     ...handleChildNodes(
@@ -448,7 +443,6 @@ function Container(allProps: CommonPropsType) {
     /**
      * 设置组件id方便抓取图片
      */
-    ref: nodeRef,
     ...modalProps,
   });
 }

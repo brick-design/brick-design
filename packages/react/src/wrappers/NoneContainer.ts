@@ -50,9 +50,7 @@ function NoneContainer(allProps: CommonPropsType) {
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
-  const parentRootNode = useRef<HTMLElement>();
-  const { setSelectedNode, onDrag, onDragStart, ...events } = useEvents(
-    parentRootNode,
+  const { setSelectedNode, ...events } = useEvents(
     specialProps,
     isSelected,
     props,
@@ -63,15 +61,15 @@ function NoneContainer(allProps: CommonPropsType) {
   ]);
   const { getOperateState } = useOperate(isModal);
 
-  useEffect(() => {
-    parentRootNode.current = getSelectedNode(uniqueKey, iframe);
-    parentRootNode.current.addEventListener('drag', onDrag);
-    parentRootNode.current.addEventListener('dragstart', onDragStart);
-    return () => {
-      parentRootNode.current.removeEventListener('drag', onDrag);
-      parentRootNode.current.removeEventListener('dragstart', onDragStart);
-    };
-  }, []);
+  // useEffect(() => {
+  //   parentRootNode.current = getSelectedNode(uniqueKey, iframe);
+  //   parentRootNode.current.addEventListener('drag', onDrag);
+  //   parentRootNode.current.addEventListener('dragstart', onDragStart);
+  //   return () => {
+  //     parentRootNode.current.removeEventListener('drag', onDrag);
+  //     parentRootNode.current.removeEventListener('dragstart', onDragStart);
+  //   };
+  // }, []);
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
     const { index: selectedIndex } = getOperateState();
@@ -79,7 +77,7 @@ function NoneContainer(allProps: CommonPropsType) {
       (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
       isAddComponent.current
     ) {
-      setSelectedNode(parentRootNode.current);
+      setSelectedNode(getSelectedNode(uniqueKey, iframe));
       isAddComponent.current = false;
     }
   }, [funParams, isSelected, item, dragKey]);
