@@ -16,12 +16,11 @@ import {
   css,
   EXCLUDE_POSITION,
   formatUnit,
-  getDragKey,
+  getDragKey, getIframe,
   getIsModalChild,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
-import layoutIcon from '../assets/layout_icon.svg';
-import { DEFAULT_ANIMATION } from '../common/constants';
+import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
 
 type OriginalPosition = {
   clientX: number;
@@ -52,6 +51,7 @@ export function useEvents(
     onClick: onClickFn,
     onDoubleClick: onDoubleClickFn,
   } = props;
+  const iframe=useRef(getIframe()).current;
   const originalPositionRef = useRef<OriginalPosition>();
   const parentPositionRef = useRef<string>();
   const positionResultRef = useRef<any>();
@@ -88,10 +88,9 @@ export function useEvents(
 
   const onDragStart = useCallback((event: DragEvent) => {
     event.stopPropagation();
-    const img = new Image(10, 10);
-    img.src = layoutIcon;
-    event.dataTransfer.setDragImage(img, 0, 0);
-    nodeRef.current.style.cursor = 'move';
+    iframe.contentDocument.body.style.cursor = 'move';
+
+    event.dataTransfer.setDragImage(dragImg, 0, 0);
     const { clientX, clientY } = event;
     const {
       marginLeft,
@@ -133,6 +132,7 @@ export function useEvents(
         parentPropName,
       });
     }, 0);
+
   }, []);
 
   const onClick = useCallback(
@@ -162,116 +162,94 @@ export function useEvents(
   );
 
   const onDrag = useCallback((event: DragEvent) => {
-    const {
-      selectedNode,
-      operateSelectedKey,
-      resizeChangePosition,
-      radiusChangePosition,
-      boxChange,
-      isPositionAdd,
-    } = getOperateState();
-    if (selectedNode === nodeRef.current && operateSelectedKey) {
+    event.stopPropagation();
+    setTimeout(()=>{
+      if(!originalPositionRef.current) return;
       const {
-        clientY: originalY,
-        clientX: originalX,
-        originalMarginLeft,
-        originalMarginTop,
-        originalMarginBottom,
-        originalMarginRight,
-      } = originalPositionRef.current;
-      const { clientY, clientX } = event;
-      const offsetY = clientY - originalY;
-      const offsetX = clientX - originalX;
-      const marginLeft = originalMarginLeft + offsetX;
-      const marginTop = originalMarginTop + offsetY;
-      const marginRight = originalMarginRight - offsetX;
-      const marginBottom = originalMarginBottom - offsetY;
-      let widthAdd = false,
-        heightAdd = false;
-      nodeRef.current.style.transition = 'none';
-      if (EXCLUDE_POSITION.includes(nodeRef.current.style.position)) {
-        return;
-      } else {
-        if (isPositionAdd) {
-          if (offsetY >= 0 && offsetX >= 0) {
-            nodeRef.current.style.marginLeft = marginLeft + 'px';
-            nodeRef.current.style.marginTop = marginTop + 'px';
-            positionResultRef.current = { marginLeft, marginTop };
-          } else if (offsetY >= 0 && offsetX < 0) {
-            widthAdd = true;
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginTop = marginTop + 'px';
-            positionResultRef.current = { marginRight, marginTop };
-          } else if (offsetY < 0 && offsetX >= 0) {
-            heightAdd = true;
-            nodeRef.current.style.marginLeft = marginLeft + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
-            positionResultRef.current = { marginLeft, marginBottom };
-          } else {
-            widthAdd = true;
-            heightAdd = true;
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
-            positionResultRef.current = { marginRight, marginBottom };
-          }
+        selectedNode,
+        operateSelectedKey,
+        resizeChangePosition,
+        radiusChangePosition,
+        boxChange,
+        lockedMarginLeft,
+        lockedMarginTop,
+      } = getOperateState();
+      if (selectedNode === nodeRef.current && operateSelectedKey) {
+        const {
+          clientY: originalY,
+          clientX: originalX,
+          originalMarginLeft,
+          originalMarginTop,
+          originalMarginBottom,
+          originalMarginRight,
+        } = originalPositionRef.current;
+        const { clientY, clientX } = event;
+        const offsetY = clientY - originalY;
+        const offsetX = clientX - originalX;
+        const marginLeft = originalMarginLeft + offsetX;
+        const marginTop = originalMarginTop + offsetY;
+        const marginRight = originalMarginRight - offsetX;
+        const marginBottom = originalMarginBottom - offsetY;
+        nodeRef.current.style.transition = 'none';
+        if (EXCLUDE_POSITION.includes(nodeRef.current.style.position)) {
+          return;
         } else {
-          if (offsetY >= 0 && offsetX >= 0) {
-            widthAdd = true;
-            heightAdd = true;
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
-            positionResultRef.current = { marginRight, marginBottom };
-          } else if (offsetY >= 0 && offsetX < 0) {
-            heightAdd = true;
-            nodeRef.current.style.marginLeft = marginLeft + 'px';
-            nodeRef.current.style.marginBottom = marginBottom + 'px';
-            positionResultRef.current = { marginLeft, marginBottom };
-          } else if (offsetY < 0 && offsetX >= 0) {
-            widthAdd = true;
-            nodeRef.current.style.marginRight = marginRight + 'px';
-            nodeRef.current.style.marginTop = marginTop + 'px';
-            positionResultRef.current = { marginRight, marginTop };
-          } else {
+
+          if (!lockedMarginLeft && !lockedMarginTop) {
             nodeRef.current.style.marginLeft = marginLeft + 'px';
             nodeRef.current.style.marginTop = marginTop + 'px';
             positionResultRef.current = { marginLeft, marginTop };
+          } else if (lockedMarginLeft && !lockedMarginTop) {
+            nodeRef.current.style.marginRight = marginRight + 'px';
+            nodeRef.current.style.marginTop = marginTop + 'px';
+            positionResultRef.current = { marginRight, marginTop };
+          } else if (!lockedMarginLeft && lockedMarginTop) {
+            nodeRef.current.style.marginLeft = marginLeft + 'px';
+            nodeRef.current.style.marginBottom = marginBottom + 'px';
+            positionResultRef.current = { marginLeft, marginBottom };
+          } else {
+            nodeRef.current.style.marginRight = marginRight + 'px';
+            nodeRef.current.style.marginBottom = marginBottom + 'px';
+            positionResultRef.current = { marginRight, marginBottom };
           }
+
         }
+        const {
+          top,
+          left,
+          width,
+          height,
+        } = nodeRef.current.getBoundingClientRect();
+        boxChange(
+          width,
+          height,
+          top,
+          left,
+          positionResultRef.current
+        );
+        resizeChangePosition(left, top);
+        radiusChangePosition(left, top,width,height,'transition:none;');
       }
-      const {
-        top,
-        left,
-        right,
-        bottom,
-        width,
-        height,
-      } = nodeRef.current.getBoundingClientRect();
-      boxChange(
-        width,
-        height,
-        heightAdd ? bottom : top,
-        widthAdd ? right : left,
-        heightAdd ? marginBottom : marginTop,
-        widthAdd ? marginRight : marginLeft,
-        heightAdd,
-        widthAdd,
-      );
-      resizeChangePosition(left, top);
-      radiusChangePosition(left, top);
-    }
+    },1);
+
+
   }, []);
 
-  const onDragEnd = useCallback(() => {
-    const { actionSheetRef, changeBoxDisplay } = getOperateState();
+  const onDragEnd = useCallback((event:DragEvent) => {
+    event.stopPropagation();
+    const {
+      // actionSheetRef,
+      changeBoxDisplay } = getOperateState();
     clearDragSource();
     if (!isEmpty(positionResultRef.current)) {
       changeStyles({ style: positionResultRef.current });
       changeBoxDisplay('none');
       positionResultRef.current = {};
     }
-    actionSheetRef.current.setShow(true);
+    originalPositionRef.current=null;
+    // actionSheetRef.current.setShow(true);
     nodeRef.current.style.transition = DEFAULT_ANIMATION;
-    nodeRef.current.style.cursor = 'default';
+    iframe.contentDocument.body.style.cursor = 'default';
   }, []);
 
   return {

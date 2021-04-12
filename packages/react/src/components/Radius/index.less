@@ -15,13 +15,14 @@
 	pointer-events: none;
 	margin-left: 2px;
 	margin-right: 2px;
+	z-index: 4000;
 }
 
 .radius-item {
 	position: absolute;
 	height: 8px;
 	width: 8px;
-	border-radius: 50%;
+	border-radius: 8px;
 	background-color: white;
 	border: 1px @selectColor solid;
 	pointer-events: auto;
@@ -63,6 +64,8 @@
 			pointer-events: none;
 			left: 0;
 			transform:rotate(-45deg);
+			z-index: 4000;
+
 
 		}
 	}

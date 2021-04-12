@@ -153,12 +153,13 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName: string) => {
       event.preventDefault();
       const dragKey = getDragKey();
-      const { isLock, isDropAble } = getOperateState();
+      const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||
-        !isDropAble
+        !isDropAble||
+        operateSelectedKey
       )
         return;
       setTimeout(() => {
@@ -265,12 +266,13 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent) => {
       event.preventDefault();
       const dragKey = getDragKey();
-      const { isLock, isDropAble } = getOperateState();
+      const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||
-        !isDropAble
+        !isDropAble||
+        operateSelectedKey
       )
         return;
       const containerRootNode =
@@ -336,7 +338,9 @@ function Container(allProps: CommonPropsType) {
         index,
         isLock: true,
       });
-      if (!isDropAble) return;
+      const {operateSelectedKey}=getOperateState();
+
+      if (!isDropAble||operateSelectedKey) return;
       getDropTarget({
         propName: selectedPropName,
         selectedKey: key,
@@ -392,7 +396,8 @@ function Container(allProps: CommonPropsType) {
         index,
         isLock: true,
       });
-      if (!isDropAble) return;
+      const {operateSelectedKey}=getOperateState();
+      if (!isDropAble||operateSelectedKey) return;
       getDropTarget({
         propName,
         selectedKey: key,

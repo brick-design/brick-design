@@ -592,6 +592,18 @@ export const showBaseboard = (
     `;
 };
 
+export const firstToUpper=(str:string)=>{
+ return  str.replace(/\b(\w)(\w*)/g, function($0, $1, $2) {
+   return $1.toUpperCase() + $2;
+ });
+};
+
+export const changeElPositionAndSize=(el:HTMLElement,css:any)=>{
+  each(css,(v,k)=>{
+    el.style[k]=v+'px';
+  });
+};
+
 export const hiddenBaseboard = (baseboard: HTMLElement) => {
   baseboard.style.display = 'none';
 };

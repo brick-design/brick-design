@@ -1,13 +1,14 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react';
 import styles from './index.less';
 import { useOperate } from '../../hooks/useOperate';
+import { changeElPositionAndSize } from '../../utils';
 
 function BoxModel() {
   const topRef = useRef<HTMLDivElement>();
   const leftRef = useRef<HTMLDivElement>();
   const topDistanceRef = useRef<HTMLDivElement>();
   const leftDistanceRef = useRef<HTMLDivElement>();
-  const { setOperateState } = useOperate();
+  const { setOperateState,getOperateState } = useOperate();
 
   const changeBoxDisplay = useCallback((display: string) => {
     topRef.current.style.display = display;
@@ -22,26 +23,45 @@ function BoxModel() {
       height: number,
       top: number,
       left: number,
-      marginTop: number,
-      marginLeft: number,
+      positions:any
     ) => {
+      const {lockedMarginLeft,lockedMarginTop}=getOperateState();
+      const {marginLeft,marginRight,marginTop,marginBottom}=positions;
       changeBoxDisplay('flex');
-      const topResult = top - marginTop,
-        leftResult = left - marginLeft;
-      topRef.current.style.width = width + 'px';
-      topRef.current.style.top = topResult + 'px';
-      topRef.current.style.left = left + 'px';
-      topDistanceRef.current.style.left = width / 2 + left + 'px';
-      topDistanceRef.current.style.height = marginTop + 'px';
-      topDistanceRef.current.style.top = topResult + 'px';
-      topDistanceRef.current.dataset.distance = 'top:' + marginTop;
-      leftRef.current.style.height = height + 'px';
-      leftRef.current.style.top = top + 'px';
-      leftRef.current.style.left = leftResult + 'px';
-      leftDistanceRef.current.style.width = marginLeft + 'px';
-      leftDistanceRef.current.style.top = top + height / 2 + 'px';
-      leftDistanceRef.current.style.left = leftResult + 'px';
-      leftDistanceRef.current.dataset.distance = 'left:' + marginLeft;
+      let topResult = top - marginTop;
+       const leftResult = left - marginLeft;
+      if(!lockedMarginLeft){
+        changeElPositionAndSize(leftDistanceRef.current,{left:leftResult,top:top + height / 2,width:Math.abs(marginLeft)});
+        leftDistanceRef.current.dataset.distance = 'marginLeft:' + marginLeft;
+        if(!lockedMarginTop){
+           changeElPositionAndSize(topRef.current,{left:leftResult,top:topResult,width:width+marginLeft});
+          changeElPositionAndSize(topDistanceRef.current,{left:width / 2 + left,top:marginTop>0?topResult:top,height:Math.abs(marginTop)});
+          topDistanceRef.current.dataset.distance = 'marginTop:' + marginTop;
+          changeElPositionAndSize(leftRef.current,{left:leftResult,top:topResult,height:marginTop+height});
+        }else {
+          topResult=top+height+marginBottom;
+          changeElPositionAndSize(topRef.current,{left:leftResult,top:topResult,width:width+marginLeft});
+          changeElPositionAndSize(topDistanceRef.current,{left:width / 2 + left,top:top+height,height:marginBottom});
+          topDistanceRef.current.dataset.distance = 'marginBottom:' + marginBottom;
+          changeElPositionAndSize(leftRef.current,{left:leftResult,top,height:marginBottom+height});
+        }
+      }else{
+        changeElPositionAndSize(leftDistanceRef.current,{left:left+width,top:top + height / 2,width:Math.abs(marginRight)});
+        leftDistanceRef.current.dataset.distance = 'marginRight:' + marginRight;
+        if(!lockedMarginTop){
+          changeElPositionAndSize(topRef.current,{left,top:topResult,width:width+marginRight});
+          changeElPositionAndSize(topDistanceRef.current,{left:width / 2 + left,top:topResult,height:Math.abs(marginTop)});
+          topDistanceRef.current.dataset.distance = 'marginTop:' + marginTop;
+          changeElPositionAndSize(leftRef.current,{left:left+width+marginRight,top:topResult,height:marginTop+height});
+        }else {
+          topResult=top+height+marginBottom;
+          changeElPositionAndSize(topRef.current,{left,top:topResult,width:width+marginRight});
+          changeElPositionAndSize( topDistanceRef.current,{left:width / 2 + left,top:topResult,height:Math.abs(marginBottom)});
+          topDistanceRef.current.dataset.distance = 'marginBottom:' + marginBottom;
+          changeElPositionAndSize( leftRef.current,{left:left+width+marginRight,top:topResult,height:marginBottom+height});
+        }
+
+      }
     },
     [],
   );
@@ -54,12 +74,10 @@ function BoxModel() {
     <>
       <div
         className={styles['box-top']}
-        style={{ transition: 'none' }}
         ref={topRef}
       />
       <div
         className={styles['box-left']}
-        style={{ transition: 'none' }}
         ref={leftRef}
       />
       <div

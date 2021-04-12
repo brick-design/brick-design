@@ -118,7 +118,7 @@ function Resize() {
   const resizeChangePosition = useCallback((left: number, top: number) => {
     resizeRef.current.style.cssText =
       generateCSS(left, top) + `transition:none;`;
-    actionSheetRef.current.setShow(false);
+    // actionSheetRef.current.setShow(false);
   }, []);
 
   useEffect(() => {
@@ -275,13 +275,13 @@ function Resize() {
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        <ActionSheet
+        {false&&<ActionSheet
           ref={actionSheetRef}
           isOut={isOut}
           hasChildNodes={propName ? !!get(childNodes, propName) : !!childNodes}
           isRoot={selectedKey === ROOT}
           keyValue={selectedKey}
-        />
+        />}
         {map(Direction, (direction) => (
           <Item
             onResizeStart={onResizeStart}
