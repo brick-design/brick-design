@@ -72,7 +72,6 @@ function GuidePlaceholder() {
   }
 
   useEffect(() => {
-    const { contentWindow } = iframe;
     const renderGuideLines = () => {
       const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
@@ -104,10 +103,8 @@ function GuidePlaceholder() {
       }
     };
     const unSubscribe = setSubscribe(renderGuideLines);
-    contentWindow.addEventListener('scroll', renderGuideLines);
     return () => {
       unSubscribe();
-      contentWindow.removeEventListener('scroll', renderGuideLines);
     };
   }, []);
 

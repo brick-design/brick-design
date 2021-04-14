@@ -45,14 +45,7 @@ export const getComponent = (componentName: string) =>
   get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
-  if (target) {
-    const result = target.match(/\d+/);
-    if (result) {
-      return Number.parseInt(result[0]);
-    }
-  }
-
-  return null;
+   return  Number.parseInt(target) ||null;
 }
 
 export const getSelectedNode = (
@@ -592,15 +585,19 @@ export const showBaseboard = (
     `;
 };
 
-export const firstToUpper=(str:string)=>{
- return  str.replace(/\b(\w)(\w*)/g, function($0, $1, $2) {
-   return $1.toUpperCase() + $2;
- });
+export const firstToUpper = (str: string) => {
+  return str.replace(/\b(\w)(\w*)/g, function ($0, $1, $2) {
+    return $1.toUpperCase() + $2;
+  });
 };
 
-export const changeElPositionAndSize=(el:HTMLElement,css:any)=>{
-  each(css,(v,k)=>{
-    el.style[k]=v+'px';
+export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
+  each(css, (v, k) => {
+    if (typeof v === 'number') {
+      el.style[k] = v + 'px';
+    } else {
+      el.style[k] = v;
+    }
   });
 };
 

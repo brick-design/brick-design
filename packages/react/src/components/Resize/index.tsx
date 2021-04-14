@@ -15,6 +15,7 @@ import { useSelector } from '../../hooks/useSelector';
 import {
   formatUnit,
   generateCSS,
+  getDragKey,
   getElementInfo,
   getIframe,
   setPosition,
@@ -272,16 +273,22 @@ function Resize() {
   },
   []);
 
+  const dragKey = getDragKey();
+  const isHidden = (selectedKey && dragKey === selectedKey) || hoverKey;
   return (
     <>
       <div className={styles['border-container']} ref={resizeRef}>
-        {false&&<ActionSheet
-          ref={actionSheetRef}
-          isOut={isOut}
-          hasChildNodes={propName ? !!get(childNodes, propName) : !!childNodes}
-          isRoot={selectedKey === ROOT}
-          keyValue={selectedKey}
-        />}
+        {false && (
+          <ActionSheet
+            ref={actionSheetRef}
+            isOut={isOut}
+            hasChildNodes={
+              propName ? !!get(childNodes, propName) : !!childNodes
+            }
+            isRoot={selectedKey === ROOT}
+            keyValue={selectedKey}
+          />
+        )}
         {map(Direction, (direction) => (
           <Item
             onResizeStart={onResizeStart}
@@ -291,14 +298,14 @@ function Resize() {
         ))}
 
         <div
-          className={hoverKey ? styles['tip-hidden'] : styles['size-tip-width']}
+          className={isHidden ? styles['tip-hidden'] : styles['size-tip-width']}
           ref={widthRef}
         >
           {width}
         </div>
         <div
           className={
-            hoverKey ? styles['tip-hidden'] : styles['size-tip-height']
+            isHidden ? styles['tip-hidden'] : styles['size-tip-height']
           }
           ref={heightRef}
         >

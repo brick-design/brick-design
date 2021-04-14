@@ -269,7 +269,7 @@ function Distances() {
 
     const unSubscribe = setSubscribe(renderDistances);
     return unSubscribe;
-  }, [leftRef.current, rightRef.current, topRef.current, bottomRef.current]);
+  }, []);
 
   return (
     <>

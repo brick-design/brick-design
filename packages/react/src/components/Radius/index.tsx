@@ -8,7 +8,7 @@ import { useSelector } from '../../hooks/useSelector';
 import { useOperate } from '../../hooks/useOperate';
 import { generateCSS } from '../../utils';
 
-type SelectState = {
+export type SelectState = {
   selectedInfo: SelectedInfoType | null;
 };
 
@@ -31,9 +31,9 @@ function RadiusPanel() {
   const { selectedInfo } = useSelector<SelectState, STATE_PROPS>([
     'selectedInfo',
   ]);
+  const { selectedKey } = selectedInfo || {};
 
   const { setOperateState } = useOperate(false);
-  const { selectedKey } = selectedInfo || {};
 
   const radiusChangePosition = useCallback(
     (

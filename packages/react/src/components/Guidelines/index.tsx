@@ -9,6 +9,7 @@ import { BrickStore } from '@brickd/hooks';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
+  changeElPositionAndSize,
   getElementInfo,
   getIframe,
   getScalePosition,
@@ -65,21 +66,28 @@ function Guidelines(props: GuidelinesType) {
         );
         const { scrollY, scrollX } = contentWindow;
         const positionSize = getScalePosition(canvas, canvasContainer, scale);
-        topRef.current.style.top = `${top - scrollY}px`;
-        topRef.current.style.width = `${positionSize.width}px`;
-        topRef.current.style.marginLeft = `${-positionSize.left}px`;
+        const { width, height } = positionSize;
 
-        leftRef.current.style.left = `${left - scrollX}px`;
-        leftRef.current.style.height = `${positionSize.height}px`;
-        leftRef.current.style.marginTop = `${-positionSize.top}px`;
-
-        rightRef.current.style.left = `${right - 1 - scrollX}px`;
-        rightRef.current.style.height = `${positionSize.height}px`;
-        rightRef.current.style.marginTop = `${-positionSize.top}px`;
-
-        bottomRef.current.style.top = `${bottom - 1 - scrollY}px`;
-        bottomRef.current.style.width = `${positionSize.width}px`;
-        bottomRef.current.style.marginLeft = `${-positionSize.left}px`;
+        changeElPositionAndSize(topRef.current, {
+          top: top - scrollY,
+          width,
+          left: -positionSize.left,
+        });
+        changeElPositionAndSize(leftRef.current, {
+          left: left - scrollX,
+          height,
+          top: -positionSize.top,
+        });
+        changeElPositionAndSize(rightRef.current, {
+          left: right - 1 - scrollX,
+          height,
+          top: -positionSize.top,
+        });
+        changeElPositionAndSize(bottomRef.current, {
+          left: -positionSize.left,
+          width,
+          top: bottom - 1 - scrollY,
+        });
 
         setPosition(
           [

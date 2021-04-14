@@ -152,11 +152,11 @@ function Container(allProps: CommonPropsType) {
       const dragKey = getDragKey();
       const { isLock, isDropAble,operateSelectedKey } = getOperateState();
       if (
+        dragKey===operateSelectedKey||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||
-        !isDropAble||
-        operateSelectedKey
+        !isDropAble
       )
         return;
       setTimeout(() => {
@@ -240,14 +240,13 @@ function Container(allProps: CommonPropsType) {
     }
 
     if (
-      childNodes &&
-      ((Array.isArray(childNodes) &&
+      (Array.isArray(childNodes) &&
         isVPropNodesPositionRef.current[defaultPropName] === undefined) ||
-        some(
-          childNodes,
-          (_, propName) =>
-            isVPropNodesPositionRef.current[propName] === undefined,
-        ))
+      some(
+        childNodes,
+        (_, propName) =>
+          isVPropNodesPositionRef.current[propName] === undefined,
+      )
     ) {
       getPropParentNodes(
         childNodes,
@@ -262,13 +261,13 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent) => {
       event.preventDefault();
       const dragKey = getDragKey();
-      const { isLock, isDropAble,operateSelectedKey } = getOperateState();
+      const { isLock, isDropAble,operateSelectedKey  } = getOperateState();
       if (
+        dragKey===operateSelectedKey||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||
-        !isDropAble||
-        operateSelectedKey
+        !isDropAble
       )
         return;
       const isV = isVPropNodesPositionRef.current[defaultPropName];
@@ -283,7 +282,13 @@ function Container(allProps: CommonPropsType) {
       } else if (Array.isArray(children)) {
         if (children.length === 1 && children.includes(dragKey))
           return getDragSort(children);
-        const newChildren = dragSort(children, event.target as HTMLElement, event, isV);
+        const newChildren = dragSort(
+          children,
+          propParentNodes.current[defaultPropName] ||
+            (event.target as HTMLElement),
+          event,
+          isV,
+        );
         if (!isEqual(newChildren, children)) {
           setChildren(newChildren);
         }
@@ -309,12 +314,19 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent) => {
       event.stopPropagation();
       const dragKey = getDragKey();
-      const dragParentKey=getDragSourceFromKey('parentKey');
-      const {operateSelectedKey}=getOperateState();
+      const dragParentKey = getDragSourceFromKey('parentKey');
+      const { operateSelectedKey } = getOperateState();
       /**
        * 如果dragKey包含在组件所属的domTreeKeys中说明当前组件为拖拽组件的祖先节点之一
        */
-      if (domTreeKeys.includes(dragKey) || dragKey === key ||operateSelectedKey&&dragParentKey!==key) return;
+      if (
+        domTreeKeys.includes(dragKey) ||
+        dragKey === key ||
+        (dragKey === operateSelectedKey &&
+          dragParentKey &&
+          dragParentKey !== key)
+      )
+        return;
       let isDropAble;
       if (nodePropsConfig) {
         const { childNodesRule } = nodePropsConfig[selectedPropName];
@@ -348,7 +360,6 @@ function Container(allProps: CommonPropsType) {
     [childNodes, selectedPropName],
   );
 
-
   const { index: selectedIndex } = getOperateState();
 
   if (
@@ -362,9 +373,16 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName?: string) => {
       event.stopPropagation();
       const dragKey = getDragKey();
-      const dragParentKey=getDragSourceFromKey('parentKey');
-      const {operateSelectedKey}=getOperateState();
-      if (domTreeKeys.includes(dragKey) || dragKey === key||operateSelectedKey&&dragParentKey!==key) return;
+      const dragParentKey = getDragSourceFromKey('parentKey');
+      const { operateSelectedKey } = getOperateState();
+      if (
+        domTreeKeys.includes(dragKey) ||
+        dragKey === key ||
+        (dragKey === operateSelectedKey &&
+          dragParentKey &&
+          dragParentKey !== key)
+      )
+        return;
       const { childNodesRule } = nodePropsConfig[propName];
       const isDropAble =
         isAllowDrop(childNodesRule) &&
@@ -417,7 +435,7 @@ function Container(allProps: CommonPropsType) {
       !!dragKey && isAllowAdd(componentName),
     ),
     onDragEnter: onParentDragEnter,
-    onDragOver:onParentDragOver,
+    onDragOver: onParentDragOver,
     ...events,
     ...generateRequiredProps(componentName),
     ...handleChildNodes(

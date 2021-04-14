@@ -58,13 +58,7 @@ const controlUpdate = (
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {
-  const {
-    onLoadEnd,
-    pageName,
-    options,
-    operateStore,
-    ...props
-  } = brickdProps;
+  const { onLoadEnd, pageName, options, operateStore, ...props } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     stateSelector,
     controlUpdate,
@@ -153,7 +147,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   useEffect(() => {
     if (rootComponent) return;
     const contentWindow = getIframe()!.contentWindow!;
-
     contentWindow.addEventListener('dragenter', onDragEnter);
     contentWindow.addEventListener('dragleave', onDragLeave);
     return () => {

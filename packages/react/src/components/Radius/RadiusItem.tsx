@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { isEmpty, each } from 'lodash';
-import { changeStyles } from '@brickd/core';
+import { changeStyles, STATE_PROPS } from '@brickd/core';
 import styles from './index.less';
 import {
   formatUnit,
@@ -10,7 +10,8 @@ import {
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
-import { Radius } from './index';
+import { useSelector } from '../../hooks/useSelector';
+import { Radius, SelectState } from './index';
 
 interface ItemProps {
   radius: Radius;
@@ -63,7 +64,11 @@ function RadiusItem(props: ItemProps) {
   const radiusResultRef = useRef({});
   const nodeRef = useRef<HTMLElement>();
   const iframe = useRef(getIframe()).current;
-  const { getOperateState, setSubscribe,executeKeyListener} = useOperate();
+  const { selectedInfo } = useSelector<SelectState, STATE_PROPS>([
+    'selectedInfo',
+  ]);
+  const { selectedKey } = selectedInfo || {};
+  const { getOperateState, setSubscribe, executeKeyListener } = useOperate();
   const [show, setShow] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -143,7 +148,7 @@ function RadiusItem(props: ItemProps) {
           each(Radius, (r) => {
             selectedNode.style[r] = `${position}px`;
             radiusResultRef.current[r] = `${position}px`;
-            if(r!==radius){
+            if (r !== radius) {
               executeKeyListener(r);
             }
           });
@@ -240,7 +245,7 @@ function RadiusItem(props: ItemProps) {
   useEffect(() => {
     const { contentWindow, contentDocument } = iframe;
     const unSubscribe = setSubscribe(resetPosition);
-    const unKeySubscribe =setSubscribe(resetPosition,radius);
+    const unKeySubscribe = setSubscribe(resetPosition, radius);
     if (!baseboardRef.current) {
       baseboardRef.current = contentDocument.getElementById(
         'brick-design-baseboard',
@@ -264,13 +269,17 @@ function RadiusItem(props: ItemProps) {
       ref={nodeRef}
       style={radiusStyles[radius]}
       onMouseDown={(e) => onRadiusStart(e, radius)}
-      className={`${styles['radius-item']} ${
-        checked && styles['radius-item-checked']
-      } ${
-        show
-          ? styles['border-radius-selected']
-          : styles['border-radius-default']
-      }`}
+      className={
+        selectedKey
+          ? `${styles['radius-item']} ${
+              checked && styles['radius-item-checked']
+            } ${
+              show
+                ? styles['border-radius-selected']
+                : styles['border-radius-default']
+            }`
+          : styles['guide-hidden']
+      }
     />
   );
 }
