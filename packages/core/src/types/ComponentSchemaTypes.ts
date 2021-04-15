@@ -106,6 +106,7 @@ export interface ComponentSchemaType
   //注意要明确约束到父组件的节点属性
   isNonContainer?: boolean;
   fatherNodesRule?: string[];
+  editAbleProp?: string;
   nodePropsConfig?: NodePropsConfigType;
   mirrorModalField?: MirrorModalFieldType;
   propsConfig: PropsConfigType;

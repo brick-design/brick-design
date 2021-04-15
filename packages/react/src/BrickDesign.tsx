@@ -19,17 +19,15 @@ import { BrickStore, StaticContextProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
 import { getDragSourceFromKey, getIframe, iframeSrcDoc } from './utils';
 import Distances from './components/Distances';
-import Resize from './components/Resize';
 import GuidePlaceholder from './components/GuidePlaceholder';
-import RadiusPanel from './components/Radius';
 import { useSelector } from './hooks/useSelector';
 import StateDomainWrapper from './wrappers/StateDomainWrapper';
 import {
   OperateProvider,
   OperateStateType,
 } from './components/OperateProvider';
+import OperationPanel from './components/OperationPanel';
 import BoxModel from './components/BoxModel';
-
 /**
  * 鼠标离开设计区域清除hover状态
  */
@@ -104,10 +102,9 @@ function BrickDesign(brickdProps: BrickDesignProps) {
             <BrickContext.Provider value={getStore()}>
               {designPage}
               <Distances />
-              <Resize />
-              <GuidePlaceholder />
-              <RadiusPanel />
+              <OperationPanel />
               <BoxModel />
+              <GuidePlaceholder />
             </BrickContext.Provider>
           </OperateProvider>
         </StaticContextProvider>,
@@ -136,13 +133,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     divContainer.current = contentDocument.getElementById('dnd-container');
     componentMount(divContainer, designPage);
     onLoadEnd && onLoadEnd();
-  }, [
-    divContainer.current,
-    iframeRef.current,
-    designPage,
-    onLoadEnd,
-    componentMount,
-  ]);
+  }, [designPage, onLoadEnd, componentMount]);
 
   useEffect(() => {
     if (rootComponent) return;
@@ -162,7 +153,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     if (divContainer.current) {
       componentMount(divContainer, designPage);
     }
-  }, [divContainer.current, componentMount, designPage]);
+  }, [componentMount, designPage]);
 
   return (
     <iframe

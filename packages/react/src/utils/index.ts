@@ -45,7 +45,7 @@ export const getComponent = (componentName: string) =>
   get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
-   return  Number.parseInt(target) ||null;
+  return Number.parseInt(target) || null;
 }
 
 export const getSelectedNode = (
@@ -426,7 +426,7 @@ export const getDragComponentName = (dragKey?: string) =>
 export const getVNode = (nodeKey: string) =>
   get(getSelector(['pageConfig']), ['pageConfig', nodeKey]);
 
-export function css(el) {
+export function css(el): CSSStyleDeclaration {
   const style = el && el.style;
   const iframe = getIframe();
   const { contentWindow } = iframe;
@@ -591,6 +591,7 @@ export const firstToUpper = (str: string) => {
   });
 };
 
+
 export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
   each(css, (v, k) => {
     if (typeof v === 'number') {
@@ -604,3 +605,29 @@ export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
 export const hiddenBaseboard = (baseboard: HTMLElement) => {
   baseboard.style.display = 'none';
 };
+
+/**
+ * 解析matrix矩阵，0°-360°，返回旋转角度
+ * 当a=b||-a=b,0<=deg<=180
+ * 当-a+b=180,180<=deg<=270
+ * 当a+b=180,270<=deg<=360
+ *
+ * 当0<=deg<=180,deg=d;
+ * 当180<deg<=270,deg=180+c;
+ * 当270<deg<=360,deg=360-(c||d);
+ * */
+export function getMatrix(a, b, c, d, e, f) {
+  const aa = Math.round((180 * Math.asin(a)) / Math.PI);
+  const bb = Math.round((180 * Math.acos(b)) / Math.PI);
+  const cc = Math.round((180 * Math.asin(c)) / Math.PI);
+  const dd = Math.round((180 * Math.acos(d)) / Math.PI);
+  let deg = 0;
+  if (aa == bb || -aa == bb) {
+    deg = dd;
+  } else if (-aa + bb == 180) {
+    deg = 180 + cc;
+  } else if (aa + bb == 180) {
+    deg = 360 - cc || 360 - dd;
+  }
+  return deg >= 360 ? 0 : deg;
+}

@@ -3,6 +3,7 @@ import {
   changeStyles,
   clearDragSource,
   clearSelectedStatus,
+  getComponentConfig,
   getDragSource,
   overTarget,
   ROOT,
@@ -44,6 +45,7 @@ export function useEvents(
   specialProps: SelectedInfoBaseType,
   isSelected: boolean,
   props: any,
+  componentName: string,
   propName?: string,
   index?: number,
 ) {
@@ -56,6 +58,7 @@ export function useEvents(
   const iframe = useRef(getIframe()).current;
   const originalPositionRef = useRef<OriginalPosition>();
   const positionResultRef = useRef<any>();
+  const { editAbleProp } = getComponentConfig(componentName);
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
     ['pageConfig'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
@@ -81,7 +84,11 @@ export function useEvents(
   const onDoubleClick = useCallback(
     (e: Event) => {
       e && e.stopPropagation();
-      setSelectedNode(e.target as HTMLElement);
+      const targetNode = e.target as HTMLElement;
+      if (editAbleProp) {
+        targetNode.contentEditable = 'true';
+      }
+      setSelectedNode(targetNode);
       onDoubleClickFn && onDoubleClickFn();
     },
     [onDoubleClickFn, setSelectedNode],
@@ -122,7 +129,7 @@ export function useEvents(
         } = targetNode.parentElement.getBoundingClientRect();
         let topPosition = formatUnit(top),
           leftPosition = formatUnit(left);
-          const rightPosition = formatUnit(right),
+        const rightPosition = formatUnit(right),
           bottomPosition = formatUnit(bottom);
         if (
           topPosition === 0 &&
@@ -149,7 +156,7 @@ export function useEvents(
           prevClientX: clientX,
           prevClientY: clientY,
         };
-        console.log('marginLeft>>>>>>',originalPositionRef.current);
+        console.log('marginLeft>>>>>>', originalPositionRef.current);
 
         targetNode.style.transition = 'none';
       }
@@ -160,11 +167,12 @@ export function useEvents(
   const onClick = useCallback(
     (e: Event) => {
       e && e.stopPropagation();
+      if (isSelected) return;
       clearSelectedStatus();
       setOperateState({ selectedNode: null });
       onClickFn && onClickFn();
     },
-    [onClickFn],
+    [onClickFn, isSelected],
   );
 
   const onMouseOver = useCallback(
@@ -216,8 +224,7 @@ export function useEvents(
     originalPositionRef.current['prevClientY'] = clientY;
     const targetNode = target as HTMLElement;
     const {
-      resizeChangePosition,
-      radiusChangePosition,
+      operationPanel,
       boxChange,
       lockedMarginLeft,
       lockedMarginTop,
@@ -264,8 +271,7 @@ export function useEvents(
       positionResultRef.current,
       isFlowLayout,
     );
-    resizeChangePosition(pageLeft, pageTop);
-    radiusChangePosition(pageLeft, pageTop, width, height, 'transition:none;');
+    changeElPositionAndSize(operationPanel,{left:pageLeft, top:pageTop,	transition:'none'});
   }, []);
 
   const onDragEnd = useCallback((event: DragEvent) => {

@@ -143,6 +143,7 @@ function Container(allProps: CommonPropsType) {
     specialProps,
     isSelected,
     props,
+    componentName,
     selectedPropName,
     index,
   );
@@ -150,9 +151,9 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName: string) => {
       event.preventDefault();
       const dragKey = getDragKey();
-      const { isLock, isDropAble,operateSelectedKey } = getOperateState();
+      const { isLock, isDropAble, operateSelectedKey } = getOperateState();
       if (
-        dragKey===operateSelectedKey||
+        dragKey === operateSelectedKey ||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||
@@ -261,9 +262,9 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent) => {
       event.preventDefault();
       const dragKey = getDragKey();
-      const { isLock, isDropAble,operateSelectedKey  } = getOperateState();
+      const { isLock, isDropAble, operateSelectedKey } = getOperateState();
       if (
-        dragKey===operateSelectedKey||
+        dragKey === operateSelectedKey ||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock ||

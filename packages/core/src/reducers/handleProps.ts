@@ -17,18 +17,23 @@ export function changeProps(
 ): StateType {
   const { pageConfig, selectedInfo, undo, redo } = state;
   if (!selectedInfo) return state;
-  const { props } = payload;
+  const { props, isMerge } = payload;
   const { selectedKey } = selectedInfo;
   undo.push({ pageConfig });
   redo.length = 0;
   return {
     ...state,
     pageConfig: produce(pageConfig!, (oldConfigs) => {
-      const style = get(oldConfigs, [selectedKey, 'props', 'style']);
-      if (style) {
-        oldConfigs[selectedKey].props = { ...props, style };
+      if (isMerge) {
+        const originalProps = oldConfigs[selectedKey].props;
+        oldConfigs[selectedKey].props = { ...originalProps, ...props };
       } else {
-        oldConfigs[selectedKey].props = props;
+        const style = get(oldConfigs, [selectedKey, 'props', 'style']);
+        if (style) {
+          oldConfigs[selectedKey].props = { ...props, style };
+        } else {
+          oldConfigs[selectedKey].props = props;
+        }
       }
     }),
     undo,

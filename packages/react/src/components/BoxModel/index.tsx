@@ -50,12 +50,24 @@ function BoxModel() {
             changeElPositionAndSize(topRef.current, {
               left: marginLeft > 0 ? leftResult : pageLeft,
               top: topResult,
-              width: Math.abs(marginLeft > 0 ? width + marginLeft : -marginLeft<width?width:marginLeft),
+              width: Math.abs(
+                marginLeft > 0
+                  ? width + marginLeft
+                  : -marginLeft < width
+                  ? width
+                  : marginLeft,
+              ),
             });
             changeElPositionAndSize(leftRef.current, {
-              left: marginLeft > 0 ? leftResult : pageLeft-marginLeft,
+              left: marginLeft > 0 ? leftResult : pageLeft - marginLeft,
               top: marginTop > 0 ? topResult : pageTop,
-              height: Math.abs(marginTop > 0 ? marginTop + height : -marginTop<height?height:marginTop),
+              height: Math.abs(
+                marginTop > 0
+                  ? marginTop + height
+                  : -marginTop < height
+                  ? height
+                  : marginTop,
+              ),
             });
             changeElPositionAndSize(topDistanceRef.current, {
               left: width / 2 + pageLeft,
@@ -68,24 +80,39 @@ function BoxModel() {
             changeElPositionAndSize(topRef.current, {
               left: marginLeft > 0 ? leftResult : pageLeft,
               top: topResult,
-              width: Math.abs(marginLeft > 0 ? width + marginLeft : -marginLeft<width?width:marginLeft),
+              width: Math.abs(
+                marginLeft > 0
+                  ? width + marginLeft
+                  : -marginLeft < width
+                  ? width
+                  : marginLeft,
+              ),
             });
             changeElPositionAndSize(topDistanceRef.current, {
               left: width / 2 + pageLeft,
-              top: marginBottom > 0 ? pageTop+height :topResult ,
+              top: marginBottom > 0 ? pageTop + height : topResult,
               height: Math.abs(marginBottom),
             });
             topDistanceRef.current.dataset.distance =
               'marginBottom:' + marginBottom;
             changeElPositionAndSize(leftRef.current, {
-              left: marginLeft > 0 ? leftResult : pageLeft-marginLeft,
-              top: marginBottom+height>0 ? pageTop :topResult,
-              height: Math.abs(marginBottom>0?marginBottom + height:-marginBottom<height?height:marginBottom),
+              left: marginLeft > 0 ? leftResult : pageLeft - marginLeft,
+              top: marginBottom + height > 0 ? pageTop : topResult,
+              height: Math.abs(
+                marginBottom > 0
+                  ? marginBottom + height
+                  : -marginBottom < height
+                  ? height
+                  : marginBottom,
+              ),
             });
           }
         } else {
           changeElPositionAndSize(leftDistanceRef.current, {
-            left: marginRight>0?pageLeft + width:pageLeft + width+marginRight,
+            left:
+              marginRight > 0
+                ? pageLeft + width
+                : pageLeft + width + marginRight,
             top: pageTop + height / 2,
             width: Math.abs(marginRight),
           });
@@ -94,9 +121,18 @@ function BoxModel() {
 
           if (!lockedMarginTop) {
             changeElPositionAndSize(topRef.current, {
-              left: marginRight+width>0 ? pageLeft : marginRight+pageLeft+width,
+              left:
+                marginRight + width > 0
+                  ? pageLeft
+                  : marginRight + pageLeft + width,
               top: topResult,
-              width: Math.abs(marginRight > 0 ? width+marginRight :marginRight+width>0?width : marginRight),
+              width: Math.abs(
+                marginRight > 0
+                  ? width + marginRight
+                  : marginRight + width > 0
+                  ? width
+                  : marginRight,
+              ),
             });
             changeElPositionAndSize(topDistanceRef.current, {
               left: width / 2 + pageLeft,
@@ -105,28 +141,49 @@ function BoxModel() {
             });
             topDistanceRef.current.dataset.distance = 'marginTop:' + marginTop;
             changeElPositionAndSize(leftRef.current, {
-              left:pageLeft + width + marginRight,
+              left: pageLeft + width + marginRight,
               top: marginTop > 0 ? topResult : pageTop,
-              height: Math.abs(marginTop > 0 ? marginTop + height : -marginTop<height?height:marginTop),
+              height: Math.abs(
+                marginTop > 0
+                  ? marginTop + height
+                  : -marginTop < height
+                  ? height
+                  : marginTop,
+              ),
             });
           } else {
             topResult = pageTop + height + marginBottom;
             changeElPositionAndSize(topRef.current, {
-              left: marginRight+width>0 ? pageLeft : marginRight+pageLeft+width,
+              left:
+                marginRight + width > 0
+                  ? pageLeft
+                  : marginRight + pageLeft + width,
               top: topResult,
-              width:Math.abs(marginRight > 0 ? width + marginRight : -marginRight<width?width:marginRight) ,
+              width: Math.abs(
+                marginRight > 0
+                  ? width + marginRight
+                  : -marginRight < width
+                  ? width
+                  : marginRight,
+              ),
             });
             changeElPositionAndSize(topDistanceRef.current, {
               left: width / 2 + pageLeft,
-              top: marginBottom > 0 ? pageTop+height :topResult ,
+              top: marginBottom > 0 ? pageTop + height : topResult,
               height: Math.abs(marginBottom),
             });
             topDistanceRef.current.dataset.distance =
               'marginBottom:' + marginBottom;
             changeElPositionAndSize(leftRef.current, {
               left: pageLeft + width + marginRight,
-              top: marginBottom+height>0 ? pageTop :topResult,
-              height: Math.abs(marginBottom>0?marginBottom + height:-marginBottom<height?height:marginBottom),
+              top: marginBottom + height > 0 ? pageTop : topResult,
+              height: Math.abs(
+                marginBottom > 0
+                  ? marginBottom + height
+                  : -marginBottom < height
+                  ? height
+                  : marginBottom,
+              ),
             });
           }
         }

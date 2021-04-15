@@ -2,6 +2,7 @@ import ACTION_TYPES from '../actionTypes';
 import { createActions } from '../../utils';
 
 export type ChangePropsPayload = {
+  isMerge?: boolean;
   props: any;
 };
 export const changeProps = (payload: ChangePropsPayload) =>

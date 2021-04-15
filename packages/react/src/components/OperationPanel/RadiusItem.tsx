@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { isEmpty, each } from 'lodash';
-import { changeStyles, STATE_PROPS } from '@brickd/core';
+import { changeStyles } from '@brickd/core';
 import styles from './index.less';
 import {
   formatUnit,
@@ -10,8 +10,7 @@ import {
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
-import { useSelector } from '../../hooks/useSelector';
-import { Radius, SelectState } from './index';
+import { Radius } from './index';
 
 interface ItemProps {
   radius: Radius;
@@ -64,10 +63,6 @@ function RadiusItem(props: ItemProps) {
   const radiusResultRef = useRef({});
   const nodeRef = useRef<HTMLElement>();
   const iframe = useRef(getIframe()).current;
-  const { selectedInfo } = useSelector<SelectState, STATE_PROPS>([
-    'selectedInfo',
-  ]);
-  const { selectedKey } = selectedInfo || {};
   const { getOperateState, setSubscribe, executeKeyListener } = useOperate();
   const [show, setShow] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -269,16 +264,13 @@ function RadiusItem(props: ItemProps) {
       ref={nodeRef}
       style={radiusStyles[radius]}
       onMouseDown={(e) => onRadiusStart(e, radius)}
-      className={
-        selectedKey
-          ? `${styles['radius-item']} ${
+      className={`${styles['radius-item']} ${
               checked && styles['radius-item-checked']
             } ${
               show
                 ? styles['border-radius-selected']
                 : styles['border-radius-default']
             }`
-          : styles['guide-hidden']
       }
     />
   );

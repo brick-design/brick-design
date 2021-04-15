@@ -1,10 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { STATE_PROPS } from '@brickd/core';
 import styles from './index.less';
 import { useOperate } from '../../hooks/useOperate';
 import { css, firstToUpper, formatUnit } from '../../utils';
-import { useSelector } from '../../hooks/useSelector';
-import { MarginPosition, SelectState } from './index';
+import { MarginPosition } from './index';
 
 type MarginItemType = {
   position: MarginPosition;
@@ -33,10 +31,6 @@ const positionMap = {
 function MarginItem(props: MarginItemType) {
   const { position } = props;
   const marginRef = useRef<HTMLDivElement>();
-  const { selectedInfo } = useSelector<SelectState, STATE_PROPS>([
-    'selectedInfo',
-  ]);
-  const { selectedKey } = selectedInfo || {};
 
   const [checked, setChecked] = useState(!['left', 'top'].includes(position));
   const {
@@ -50,7 +44,9 @@ function MarginItem(props: MarginItemType) {
       ? 'lockedMarginLeft'
       : 'lockedMarginTop';
   const marginPosition = `margin${firstToUpper(position)}`;
+
   const changeChecked = () => setChecked(!checked);
+
   const initMargin = useCallback(() => {
     const { selectedNode } = getOperateState();
     if (selectedNode) {
@@ -85,11 +81,9 @@ function MarginItem(props: MarginItemType) {
       onClick={onClick}
       style={positionStyles[position]}
       className={
-        selectedKey
-          ? `${styles['margin-selector-item']} ${
+        `${styles['margin-selector-item']} ${
               checked && styles['margin-checked']
             }`
-          : styles['guide-hidden']
       }
     />
   );

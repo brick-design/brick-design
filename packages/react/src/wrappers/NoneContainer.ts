@@ -54,6 +54,7 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps,
     isSelected,
     props,
+    componentName,
   );
   const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
     pageConfig,
