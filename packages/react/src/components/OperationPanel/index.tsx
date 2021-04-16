@@ -245,7 +245,6 @@ function OperationPanel() {
 
       }
       const {left,top,width:newWidth,height:newHeight}=getElementInfo(selectedNode, iframe, isModal);
-      console.log('left,top>>>>>>>>>',left,top);
       changeElPositionAndSize(operationPanelRef.current,{left,top,width:newWidth,height:newHeight});
       changeElPositionAndSize(resizeRef.current,{height:heightResult,width:widthResult});
       showSize(sizeResultRef.current.width, sizeResultRef.current.height);
@@ -297,10 +296,13 @@ function OperationPanel() {
         maxHeight: formatUnit(maxHeight),
         transform,
       };
-      showBaseboard(iframe, baseboardRef.current);
+      showBaseboardChange();
     }
   },
   []);
+
+  const showBaseboardChange=useCallback(()=>showBaseboard(iframe, baseboardRef.current),[]);
+
 
   const dragKey = getDragKey();
   const isHidden = (selectedKey && dragKey === selectedKey) || hoverKey;
@@ -327,7 +329,10 @@ function OperationPanel() {
             />
           ))}
           {map(Radius, (radius) => (
-            <RadiusItem radius={radius} key={radius} />
+            <RadiusItem
+              onRadiusStart={showBaseboardChange}
+              radius={radius}
+              key={radius} />
           ))}
           {map(MarginPosition, (p) => (
             <MarginItem position={p} key={p} />

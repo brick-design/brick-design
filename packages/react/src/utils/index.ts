@@ -602,9 +602,7 @@ export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
   });
 };
 
-export const hiddenBaseboard = (baseboard: HTMLElement) => {
-  baseboard.style.display = 'none';
-};
+
 
 /**
  * 解析matrix矩阵，0°-360°，返回旋转角度

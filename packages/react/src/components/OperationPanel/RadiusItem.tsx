@@ -5,8 +5,6 @@ import styles from './index.less';
 import {
   formatUnit,
   getIframe,
-  hiddenBaseboard,
-  showBaseboard,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
@@ -14,6 +12,7 @@ import { Radius } from './index';
 
 interface ItemProps {
   radius: Radius;
+  onRadiusStart:()=>void
 }
 
 export interface RadiusObjectType {
@@ -64,10 +63,9 @@ function RadiusItem(props: ItemProps) {
   const nodeRef = useRef<HTMLElement>();
   const iframe = useRef(getIframe()).current;
   const { getOperateState, setSubscribe, executeKeyListener } = useOperate();
-  const [show, setShow] = useState(false);
+  const [selected, setSelected] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  const baseboardRef = useRef<HTMLElement>();
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
@@ -153,10 +151,11 @@ function RadiusItem(props: ItemProps) {
     },
     [checked],
   );
-  const onRadiusStart = useCallback(
-    function (event: React.MouseEvent<HTMLSpanElement>, radius: Radius) {
+  const onMouseDown = useCallback(
+    function (event: React.MouseEvent<HTMLSpanElement>) {
       const { selectedNode } = getOperateState();
-      if (event.nativeEvent && iframe) {
+      const {radius,onRadiusStart}=props;
+      if (iframe) {
         const { contentWindow } = iframe!;
         const {
           borderTopLeftRadius,
@@ -167,8 +166,8 @@ function RadiusItem(props: ItemProps) {
           height,
         } = contentWindow!.getComputedStyle(selectedNode);
         originRadiusRef.current = {
-          x: event.nativeEvent.clientX,
-          y: event.nativeEvent.clientY,
+          x: event.clientX,
+          y: event.clientY,
           radius,
           borderTopLeftRadius: formatUnit(borderTopLeftRadius),
           borderTopRightRadius: formatUnit(borderTopRightRadius),
@@ -177,26 +176,32 @@ function RadiusItem(props: ItemProps) {
           width: formatUnit(width),
           height: formatUnit(height),
         };
-        setShow(true);
-        showBaseboard(iframe, baseboardRef.current);
+        onRadiusStart();
+        setSelected(true);
+        // showBaseboard(iframe, baseboardRef.current);
       }
     },
-    [setShow],
+    [setSelected],
   );
 
   const onMouseUp = useCallback(() => {
     const { selectedNode } = getOperateState();
-    hiddenBaseboard(baseboardRef.current);
+    // hiddenBaseboard(baseboardRef.current);
     originRadiusRef.current = undefined;
     changeStyles({ style: radiusResultRef.current });
     radiusResultRef.current = {};
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
-    setShow(false);
-  }, [setShow]);
+    setSelected(false);
+  }, [setSelected]);
 
   const resetPosition = useCallback(() => {
-    const { selectedNode } = getOperateState();
-    if (selectedNode && iframe) {
+    const { selectedNode,hoverNode } = getOperateState();
+    if (selectedNode) {
+      if(hoverNode===selectedNode){
+        nodeRef.current.style.display='block';
+      }else if(hoverNode){
+        nodeRef.current.style.display='none';
+      }
       const { contentWindow } = iframe!;
       const {
         borderTopLeftRadius,
@@ -238,14 +243,10 @@ function RadiusItem(props: ItemProps) {
   }, []);
 
   useEffect(() => {
-    const { contentWindow, contentDocument } = iframe;
+    const { contentWindow } = iframe;
     const unSubscribe = setSubscribe(resetPosition);
     const unKeySubscribe = setSubscribe(resetPosition, radius);
-    if (!baseboardRef.current) {
-      baseboardRef.current = contentDocument.getElementById(
-        'brick-design-baseboard',
-      );
-    }
+
     contentWindow.addEventListener('mouseup', onMouseUp);
     contentWindow.addEventListener('mousemove', onMouseMove);
     return () => {
@@ -263,11 +264,11 @@ function RadiusItem(props: ItemProps) {
       draggable={false}
       ref={nodeRef}
       style={radiusStyles[radius]}
-      onMouseDown={(e) => onRadiusStart(e, radius)}
+      onMouseDown={ onMouseDown}
       className={`${styles['radius-item']} ${
               checked && styles['radius-item-checked']
             } ${
-              show
+              selected
                 ? styles['border-radius-selected']
                 : styles['border-radius-default']
             }`
