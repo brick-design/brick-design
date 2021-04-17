@@ -41,7 +41,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     platformInfo: { size },
   } = useSelector(['platformInfo']);
   const [isLoading, setIsLoading] = useState(false);
-  const [scale, setScale] = useState(0.5);
+  const [scale, setScale] = useState(0.4);
   const [canvasSize, setCanvasSize] = useState(size);
   const iframeRef = useRef<HTMLIFrameElement>();
   const prevSize = useRef(size);
@@ -121,12 +121,12 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         } else if (key === 'u') {
           changeCanvasSize();
         } else if (key === '=') {
-          setScale(scale + 0.1);
+          setScale(scale + 0.05);
         } else if (key === '-') {
-          setScale(scale - 0.1);
+          setScale(scale - 0.05);
         }
+        keyEvent.returnValue = false;
       }
-      keyEvent.returnValue = false;
     }
     contentWindow && contentWindow.addEventListener('keydown', onKeyDown);
     window.addEventListener('keydown', onKeyDown);

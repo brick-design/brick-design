@@ -571,19 +571,6 @@ export function getScalePosition(
   };
 }
 
-export const showBaseboard = (
-  iframe: HTMLIFrameElement,
-  baseboard: HTMLElement,
-) => {
-  const {
-    body: { scrollWidth, scrollHeight },
-  } = iframe!.contentDocument;
-  baseboard.style.cssText = `
-    display:block;
-    width:${scrollWidth}px;
-    height:${scrollHeight}px;
-    `;
-};
 
 export const firstToUpper = (str: string) => {
   return str.replace(/\b(\w)(\w*)/g, function ($0, $1, $2) {

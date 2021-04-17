@@ -3,6 +3,7 @@ import { isEmpty, each } from 'lodash';
 import { changeStyles } from '@brickd/core';
 import styles from './index.less';
 import {
+  css,
   formatUnit,
   getIframe,
 } from '../../utils';
@@ -12,7 +13,7 @@ import { Radius } from './index';
 
 interface ItemProps {
   radius: Radius;
-  onRadiusStart:()=>void
+  onRadiusStart:(cursor:string)=>void
 }
 
 export interface RadiusObjectType {
@@ -156,7 +157,6 @@ function RadiusItem(props: ItemProps) {
       const { selectedNode } = getOperateState();
       const {radius,onRadiusStart}=props;
       if (iframe) {
-        const { contentWindow } = iframe!;
         const {
           borderTopLeftRadius,
           borderTopRightRadius,
@@ -164,7 +164,7 @@ function RadiusItem(props: ItemProps) {
           borderBottomRightRadius,
           width,
           height,
-        } = contentWindow!.getComputedStyle(selectedNode);
+        } = css(selectedNode);
         originRadiusRef.current = {
           x: event.clientX,
           y: event.clientY,
@@ -176,7 +176,7 @@ function RadiusItem(props: ItemProps) {
           width: formatUnit(width),
           height: formatUnit(height),
         };
-        onRadiusStart();
+        onRadiusStart(radiusStyles[radius].cursor);
         setSelected(true);
         // showBaseboard(iframe, baseboardRef.current);
       }
@@ -255,7 +255,7 @@ function RadiusItem(props: ItemProps) {
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
     };
-  }, [onMouseUp, onMouseMove]);
+  }, [onMouseMove,onMouseUp]);
 
   const { radius } = props;
   return (

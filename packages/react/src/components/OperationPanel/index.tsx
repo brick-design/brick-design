@@ -9,7 +9,7 @@ import {
 } from '@brickd/core';
 
 import { get, map } from 'lodash';
-import ResizeItem from './ResizeItem';
+import ResizeItem, { positionStyles } from './ResizeItem';
 import styles from './index.less';
 import RadiusItem from './RadiusItem';
 import MarginItem from './MarginItem';
@@ -22,7 +22,6 @@ import {
   getElementInfo,
   getIframe,
   setPosition,
-  showBaseboard,
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
 import { useOperate } from '../../hooks/useOperate';
@@ -30,7 +29,6 @@ import { DEFAULT_ANIMATION } from '../../common/constants';
 
 type ResizeState = {
   selectedInfo: SelectedInfoType;
-  hoverKey: string | null;
   pageConfig: PageConfigType;
 };
 
@@ -60,11 +58,11 @@ export enum MarginPosition {
 }
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
-  const { selectedInfo, pageConfig, hoverKey } = nextState;
+  const { selectedInfo, pageConfig } = nextState;
   return (
     prevState.selectedInfo !== selectedInfo ||
     (selectedInfo &&
-      (prevState.pageConfig !== pageConfig || prevState.hoverKey !== hoverKey))
+      prevState.pageConfig !== pageConfig)
   );
 };
 
@@ -83,30 +81,51 @@ type OriginSizeType = {
 
 function OperationPanel() {
   const iframe = useRef(getIframe()).current;
-  const { selectedInfo, hoverKey, pageConfig } = useSelector<
+  const { selectedInfo, pageConfig } = useSelector<
     ResizeState,
     STATE_PROPS
-  >(['selectedInfo', 'pageConfig', 'hoverKey'], controlUpdate);
+  >(['selectedInfo', 'pageConfig'], controlUpdate);
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey, propName } = selectedInfo || {};
   const resizeRef = useRef<HTMLDivElement>();
   const operationPanelRef = useRef<HTMLDivElement>();
   const originSizeRef = useRef<OriginSizeType>();
   const sizeResultRef = useRef<ResizePayload>({});
-  const widthRef = useRef<any>();
-  const heightRef = useRef<any>();
   const baseboardRef = useRef<HTMLDivElement | any>();
   const actionSheetRef = useRef<any>();
   const [isOut, setIsOut] = useState<boolean>(true);
-  const { props, childNodes } = pageConfig[selectedKey] || {};
-  let { width, height } = get(props, 'style', {
-    width: 'auto',
-    height: 'auto',
-  });
-  width = width || 'auto';
-  height = height || 'auto';
+  const { childNodes } = pageConfig[selectedKey] || {};
 
-  const setSelectedBorder = useCallback(() => {
+const changeOperationPanel=useCallback(()=>{
+  const { selectedNode, operateSelectedKey, isModal } = getOperateState();
+  if (selectedNode && operateSelectedKey) {
+    const {
+      left,
+      top,
+      height: positionHeight,
+      width: positionWidth,
+    } = getElementInfo(selectedNode, iframe, isModal);
+    const { width, height, transform } = css(selectedNode);
+
+    changeElPositionAndSize(operationPanelRef.current, {
+      left,
+      top,
+      height: positionHeight,
+      width: positionWidth,
+      display:'flex',
+      transition: 'none'
+    });
+    changeElPositionAndSize(resizeRef.current, {
+      width: formatUnit(width) || positionWidth,
+      height: formatUnit(height) || positionHeight,
+      transform,
+      transition: 'none'
+    });
+    setPosition([operationPanelRef.current], isModal);
+  }
+},[]);
+
+  const initOperationPanel = useCallback(() => {
     const { selectedNode, operateSelectedKey, isModal } = getOperateState();
     if (selectedNode && operateSelectedKey) {
       const {
@@ -145,8 +164,8 @@ function OperationPanel() {
 
   useEffect(() => {
     const contentWindow = iframe!.contentWindow!;
-    setOperateState({ operationPanel:operationPanelRef.current, actionSheetRef });
-    const changeSize = () => setSelectedBorder();
+    setOperateState({ changeOperationPanel, actionSheetRef });
+    const changeSize = () => initOperationPanel();
     const unSubscribe = setSubscribe(changeSize);
     contentWindow.addEventListener('resize', changeSize);
     contentWindow.addEventListener('animationend', changeSize);
@@ -247,17 +266,7 @@ function OperationPanel() {
       const {left,top,width:newWidth,height:newHeight}=getElementInfo(selectedNode, iframe, isModal);
       changeElPositionAndSize(operationPanelRef.current,{left,top,width:newWidth,height:newHeight});
       changeElPositionAndSize(resizeRef.current,{height:heightResult,width:widthResult});
-      showSize(sizeResultRef.current.width, sizeResultRef.current.height);
-      showBaseboard(iframe, baseboardRef.current);
-    }
-  }, []);
-
-  const showSize = useCallback((width?: string, height?: string) => {
-    if (width) {
-      widthRef.current.innerHTML = width;
-    }
-    if (height) {
-      heightRef.current.innerHTML = height;
+      resizeRef.current.dataset.size=`${widthResult}x${heightResult}`;
     }
   }, []);
 
@@ -296,20 +305,30 @@ function OperationPanel() {
         maxHeight: formatUnit(maxHeight),
         transform,
       };
-      showBaseboardChange();
+      showBaseboard(positionStyles[direction].cursor);
     }
   },
   []);
 
-  const showBaseboardChange=useCallback(()=>showBaseboard(iframe, baseboardRef.current),[]);
+const showBaseboard = useCallback((cursor:string) => {
+    const {
+      body: { scrollWidth, scrollHeight },
+    } = iframe!.contentDocument;
+  baseboardRef.current.style.cssText = `
+    display:block;
+    width:${scrollWidth}px;
+    height:${scrollHeight}px;
+    cursor:${cursor};
+    `;
+  },[]);
 
 
   const dragKey = getDragKey();
-  const isHidden = (selectedKey && dragKey === selectedKey) || hoverKey;
+  const isShowSizeTip = selectedKey && dragKey !== selectedKey;
   return (
     <>
-      <div className={styles['operation-panel']} ref={operationPanelRef}>
-        <div className={styles['border-container']} ref={resizeRef}>
+      <div  className={styles['operation-panel']} ref={operationPanelRef}>
+        <div  className={`${styles['border-container']} ${isShowSizeTip&&styles['size-tip']}`} ref={resizeRef}>
           {false && (
             <ActionSheet
               ref={actionSheetRef}
@@ -321,6 +340,7 @@ function OperationPanel() {
               keyValue={selectedKey}
             />
           )}
+          {!!selectedKey&&<>
           {map(Direction, (direction) => (
             <ResizeItem
               onResizeStart={onResizeStart}
@@ -330,29 +350,14 @@ function OperationPanel() {
           ))}
           {map(Radius, (radius) => (
             <RadiusItem
-              onRadiusStart={showBaseboardChange}
+              onRadiusStart={showBaseboard}
               radius={radius}
               key={radius} />
           ))}
           {map(MarginPosition, (p) => (
             <MarginItem position={p} key={p} />
           ))}
-          <div
-            className={
-              isHidden ? styles['tip-hidden'] : styles['size-tip-width']
-            }
-            ref={widthRef}
-          >
-            {width}
-          </div>
-          <div
-            className={
-              isHidden ? styles['tip-hidden'] : styles['size-tip-height']
-            }
-            ref={heightRef}
-          >
-            {height}
-          </div>
+          </>}
         </div>
       </div>
       <div

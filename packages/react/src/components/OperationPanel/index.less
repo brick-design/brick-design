@@ -7,6 +7,9 @@
 	justify-content: center;
 	align-items: center;
 	transition: all 100ms;
+	&:before{
+
+	}
 }
 
 .operation-panel{
@@ -111,11 +114,20 @@
 	background-color: white;
 	border: 1px @selectColor solid;
 	pointer-events: auto;
-	display: none;
+	display: flex;
 }
 
 .radius-item-checked{
 	background-color: @selectColor;
+}
+
+.size-tip{
+	&:before{
+		position: absolute;
+		.pseudo-class();
+		content: attr(data-size);
+		bottom: -15px;
+	}
 }
 
 .border-radius-default{

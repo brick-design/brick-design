@@ -19,14 +19,18 @@ function BoxModel() {
 
   const boxChange = useCallback(
     (
-      width: number,
-      height: number,
-      pageTop: number,
-      pageLeft: number,
       positions: any,
       isFlowLayout: boolean,
     ) => {
-      const { lockedMarginLeft, lockedMarginTop } = getOperateState();
+
+      const { lockedMarginLeft, lockedMarginTop,selectedNode } = getOperateState();
+      if(!selectedNode) return;
+      const {
+        top: pageTop,
+        left: pageLeft,
+        width,
+        height,
+      } = selectedNode.getBoundingClientRect();
       const {
         marginLeft,
         marginRight,

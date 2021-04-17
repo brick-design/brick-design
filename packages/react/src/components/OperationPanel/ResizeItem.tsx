@@ -13,7 +13,7 @@ interface ItemProps {
 
 const resizeH = ['top', 'bottom'];
 const resizeV = ['left', 'right'];
-const positionStyles: { [key: string]: React.CSSProperties } = {
+export const positionStyles: { [key: string]: React.CSSProperties } = {
   top: {
     top: '-1px',
     cursor: 'row-resize',
@@ -76,6 +76,7 @@ const containerPositionStyles: { [key: string]: React.CSSProperties } = {
 };
 
 function ResizeItem(props: ItemProps) {
+
   const { onResizeStart, direction } = props;
   let className = styles['resize-item'];
   if (resizeV.includes(direction)) {

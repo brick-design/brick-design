@@ -68,7 +68,7 @@ function MarginItem(props: MarginItemType) {
     };
   });
 
-  const onClick = () => {
+  const onClick =() => {
     setChecked(!checked);
     const operateState = getOperateState();
     executeKeyListener('lockedMargin' + positionMap[position]);
