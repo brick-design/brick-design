@@ -1,11 +1,12 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react';
 import styles from './index.less';
 import { useOperate } from '../../hooks/useOperate';
-import { changeElPositionAndSize } from '../../utils';
+import { changeElPositionAndSize, getElementInfo, getIframe } from '../../utils';
 
 function BoxModel() {
   const topRef = useRef<HTMLDivElement>();
   const leftRef = useRef<HTMLDivElement>();
+  const iframe = useRef(getIframe()).current;
   const topDistanceRef = useRef<HTMLDivElement>();
   const leftDistanceRef = useRef<HTMLDivElement>();
   const { setOperateState, getOperateState } = useOperate();
@@ -23,14 +24,14 @@ function BoxModel() {
       isFlowLayout: boolean,
     ) => {
 
-      const { lockedMarginLeft, lockedMarginTop,selectedNode } = getOperateState();
+      const { lockedMarginLeft, lockedMarginTop,selectedNode,isModal } = getOperateState();
       if(!selectedNode) return;
       const {
         top: pageTop,
         left: pageLeft,
         width,
         height,
-      } = selectedNode.getBoundingClientRect();
+      } = getElementInfo(selectedNode, iframe, isModal);
       const {
         marginLeft,
         marginRight,

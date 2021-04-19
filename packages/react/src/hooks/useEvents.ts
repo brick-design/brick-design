@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   changeProps,
   changeStyles,
@@ -22,7 +22,7 @@ import {
   formatUnit,
   getDragKey,
   getIframe,
-  getIsModalChild,
+  getIsModalChild, handleInputText,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
@@ -71,6 +71,8 @@ export function useEvents(
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
 
+  const {selectedNode,changeOperationPanel}=getOperateState();
+
   const setSelectedNode = useCallback(
     (selectedNode: HTMLElement) => {
       selectComponent({ ...specialProps, propName });
@@ -87,6 +89,9 @@ export function useEvents(
     (e: Event) => {
       e && e.stopPropagation();
       const targetNode = e.target as HTMLElement;
+      if(targetNode.contentEditable === 'true'){
+      return   targetNode.contentEditable = 'false';
+      }
       if (editAbleProp) {
         targetNode.contentEditable = 'true';
       }
@@ -166,9 +171,9 @@ export function useEvents(
   );
 
   const onClick = useCallback(
-    (e: Event) => {
-      e && e.stopPropagation();
-      if (isSelected) return;
+    (event: Event) => {
+      event && event.stopPropagation();
+      if (isSelected) {return;};
       clearSelectedStatus();
       setOperateState({ selectedNode: null });
       onClickFn && onClickFn();
@@ -286,16 +291,25 @@ export function useEvents(
   }, []);
 
   const onInput=useCallback((event:React.SyntheticEvent<any>)=>{
+    event.stopPropagation();
    const {changeOperationPanel}=getOperateState();
     const result=(event.target as HTMLElement).innerHTML;
-    contentEditRef.current={[editAbleProp]:result};
+    contentEditRef.current=result;
     changeOperationPanel();
   },[]);
 
   const onBlur=useCallback((event:React.SyntheticEvent<any>)=>{
+    event.stopPropagation();
     (event.target as HTMLElement).contentEditable = 'false';
-    changeProps({props:contentEditRef.current,isMerge:true});
+    if(contentEditRef.current===undefined) return;
+    changeProps({props:{[editAbleProp]:handleInputText(contentEditRef.current)},isMerge:true});
   },[]);
+
+ useEffect(()=>{
+   if(selectedNode){
+     changeOperationPanel();
+   }
+ });
 
   return {
     onDoubleClick,

@@ -45,7 +45,7 @@ export const getComponent = (componentName: string) =>
   get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
-  return Number.parseInt(target) || null;
+  return isNaN(Number.parseInt(target))?null : Number.parseInt(target);
 }
 
 export const getSelectedNode = (
@@ -615,4 +615,14 @@ export function getMatrix(a, b, c, d, e, f) {
     deg = 360 - cc || 360 - dd;
   }
   return deg >= 360 ? 0 : deg;
+}
+
+
+export function handleInputText(text:string){
+
+   return text.replace('<div>','\r').
+   replace('<br/>','\n').
+   replace('</div>','').
+   replace(/&nbsp;|\u202F|\u00A0/g, ' ');
+
 }
