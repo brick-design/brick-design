@@ -20,7 +20,7 @@ import {
   formatUnit,
   getDragKey,
   getElementInfo,
-  getIframe,
+  getIframe, getMatrix,
   setPosition,
 } from '../../utils';
 import ActionSheet from '../ActionSheet';
@@ -76,7 +76,8 @@ type OriginSizeType = {
   maxWidth: number | null;
   maxHeight: number | null;
   direction: Direction;
-  transform: string;
+  rotate: number;
+  transformOrigin:string
 };
 
 function OperationPanel() {
@@ -105,7 +106,7 @@ const changeOperationPanel=useCallback(()=>{
       height: positionHeight,
       width: positionWidth,
     } = getElementInfo(selectedNode, iframe, isModal);
-    const { width, height, transform } = css(selectedNode);
+    const { width, height, transform, } = css(selectedNode);
 
     changeElPositionAndSize(operationPanelRef.current, {
       left,
@@ -119,9 +120,11 @@ const changeOperationPanel=useCallback(()=>{
       width: formatUnit(width) || positionWidth,
       height: formatUnit(height) || positionHeight,
       transform,
-      transition: 'none'
+      transition: 'none',
     });
     setPosition([operationPanelRef.current], isModal);
+    resizeRef.current.dataset.size=`${formatUnit(width)}x${formatUnit(height)}`;
+
   }
 },[]);
 
@@ -151,13 +154,16 @@ const changeOperationPanel=useCallback(()=>{
         display:'flex',
         transition: 'all 100ms'
       });
+
       changeElPositionAndSize(resizeRef.current, {
         width: formatUnit(width) || positionWidth,
         height: formatUnit(height) || positionHeight,
         transform,
-        transition: 'all 100ms'
+        transition: 'all 100ms',
       });
       setPosition([operationPanelRef.current], isModal);
+      resizeRef.current.dataset.size=`${formatUnit(width)}x${formatUnit(height)}`;
+
     }
   }, []);
 
@@ -200,7 +206,7 @@ const changeOperationPanel=useCallback(()=>{
 
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
-    const { selectedNode,isModal } = getOperateState();
+    const { selectedNode } = getOperateState();
     if (originSizeRef.current) {
       const { clientX, clientY } = event;
       const { x, y, direction, height, width } = originSizeRef.current;
@@ -263,10 +269,7 @@ const changeOperationPanel=useCallback(()=>{
         selectedNode.style.height = `${heightResult}px`;
 
       }
-      const {left,top,width:newWidth,height:newHeight}=getElementInfo(selectedNode, iframe, isModal);
-      changeElPositionAndSize(operationPanelRef.current,{left,top,width:newWidth,height:newHeight});
-      changeElPositionAndSize(resizeRef.current,{height:heightResult,width:widthResult});
-      resizeRef.current.dataset.size=`${widthResult}x${heightResult}`;
+      changeOperationPanel();
     }
   }, []);
 
@@ -292,6 +295,7 @@ const changeOperationPanel=useCallback(()=>{
         maxWidth,
         maxHeight,
         transform,
+        transformOrigin
       } = css(selectedNode);
       originSizeRef.current = {
         x: event.clientX,
@@ -303,7 +307,8 @@ const changeOperationPanel=useCallback(()=>{
         minHeight: formatUnit(minHeight),
         maxWidth: formatUnit(maxWidth),
         maxHeight: formatUnit(maxHeight),
-        transform,
+        rotate:getMatrix(transform),
+        transformOrigin
       };
       showBaseboard(positionStyles[direction].cursor);
     }
@@ -329,7 +334,6 @@ const showBaseboard = useCallback((cursor:string) => {
     <>
       <div  className={styles['operation-panel']} ref={operationPanelRef}>
         <div  className={`${styles['border-container']} ${isShowSizeTip&&styles['size-tip']}`} ref={resizeRef}>
-          {false && (
             <ActionSheet
               ref={actionSheetRef}
               isOut={isOut}
@@ -339,7 +343,6 @@ const showBaseboard = useCallback((cursor:string) => {
               isRoot={selectedKey === ROOT}
               keyValue={selectedKey}
             />
-          )}
           {!!selectedKey&&<>
           {map(Direction, (direction) => (
             <ResizeItem

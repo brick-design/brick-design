@@ -3,6 +3,7 @@ import { isEmpty, each } from 'lodash';
 import { changeStyles } from '@brickd/core';
 import styles from './index.less';
 import {
+  changeElPositionAndSize,
   css,
   formatUnit,
   getIframe,
@@ -100,8 +101,7 @@ function RadiusItem(props: ItemProps) {
             offsetR = Math.max(offsetY, offsetX);
             position = top + offsetR || position;
             if (position > maxRadius || position < 0) return;
-            nodeRef.current.style.top = `${computePosition(position)}px`;
-            nodeRef.current.style.left = `${computePosition(position)}px`;
+            changeElPositionAndSize(nodeRef.current,{top:computePosition(position),left:computePosition(position)});
             break;
           case Radius.topRight:
             top = borderTopRightRadius || top;
@@ -110,8 +110,7 @@ function RadiusItem(props: ItemProps) {
             offsetR = Math.max(offsetY, offsetX);
             position = top + offsetR || position;
             if (position > maxRadius || position < 0) return;
-            nodeRef.current.style.top = `${computePosition(position)}px`;
-            nodeRef.current.style.right = `${computePosition(position)}px`;
+            changeElPositionAndSize(nodeRef.current,{top:computePosition(position),right:computePosition(position)});
             break;
           case Radius.bottomLeft:
             bottom = borderBottomLeftRadius || bottom;
@@ -120,8 +119,7 @@ function RadiusItem(props: ItemProps) {
             offsetR = Math.max(offsetY, offsetX);
             position = bottom + offsetR || position;
             if (position > maxRadius || position < 0) return;
-            nodeRef.current.style.bottom = `${computePosition(position)}px`;
-            nodeRef.current.style.left = `${computePosition(position)}px`;
+            changeElPositionAndSize(nodeRef.current,{bottom:computePosition(position),left:computePosition(position)});
             break;
           case Radius.bottomRight:
             bottom = borderBottomRightRadius || bottom;
@@ -130,8 +128,7 @@ function RadiusItem(props: ItemProps) {
             offsetR = Math.max(offsetY, offsetX);
             position = bottom + offsetR || position;
             if (position > maxRadius || position < 0) return;
-            nodeRef.current.style.bottom = `${computePosition(position)}px`;
-            nodeRef.current.style.right = `${computePosition(position)}px`;
+            changeElPositionAndSize(nodeRef.current,{bottom:computePosition(position),right:computePosition(position)});
             break;
         }
         nodeRef.current.dataset.radius = `radius:${position}`;
@@ -216,26 +213,22 @@ function RadiusItem(props: ItemProps) {
         case Radius.topLeft:
           radiusNum = formatUnit(borderTopLeftRadius);
           top = (radiusNum > 9 ? computePosition(radiusNum) : top) + 'px';
-          nodeRef.current.style.top = top;
-          nodeRef.current.style.left = top;
+          changeElPositionAndSize(nodeRef.current,{top,left:top});
           break;
         case Radius.topRight:
           radiusNum = formatUnit(borderTopRightRadius);
           top = (radiusNum > 9 ? computePosition(radiusNum) : top) + 'px';
-          nodeRef.current.style.top = top;
-          nodeRef.current.style.right = top;
+          changeElPositionAndSize(nodeRef.current,{top,right:top});
           break;
         case Radius.bottomLeft:
           radiusNum = formatUnit(borderBottomLeftRadius);
           bottom = (radiusNum > 9 ? computePosition(radiusNum) : bottom) + 'px';
-          nodeRef.current.style.bottom = bottom;
-          nodeRef.current.style.left = bottom;
+          changeElPositionAndSize(nodeRef.current,{bottom,left:bottom});
           break;
         case Radius.bottomRight:
           radiusNum = formatUnit(borderBottomRightRadius);
           bottom = (radiusNum > 9 ? computePosition(radiusNum) : bottom) + 'px';
-          nodeRef.current.style.bottom = bottom;
-          nodeRef.current.style.right = bottom;
+          changeElPositionAndSize(nodeRef.current,{bottom,right:bottom});
           break;
       }
       nodeRef.current.dataset.radius = `radius:${radiusNum}`;

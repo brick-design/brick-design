@@ -77,6 +77,10 @@ const containerPositionStyles: { [key: string]: React.CSSProperties } = {
 
 function ResizeItem(props: ItemProps) {
 
+
+
+
+
   const { onResizeStart, direction } = props;
   let className = styles['resize-item'];
   if (resizeV.includes(direction)) {

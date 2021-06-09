@@ -601,11 +601,13 @@ export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
  * 当180<deg<=270,deg=180+c;
  * 当270<deg<=360,deg=360-(c||d);
  * */
-export function getMatrix(a, b, c, d, e, f) {
-  const aa = Math.round((180 * Math.asin(a)) / Math.PI);
-  const bb = Math.round((180 * Math.acos(b)) / Math.PI);
-  const cc = Math.round((180 * Math.asin(c)) / Math.PI);
-  const dd = Math.round((180 * Math.acos(d)) / Math.PI);
+export function getMatrix(transform:string) {
+  if(!transform.includes('matrix')) return 0;
+ const [a, b, c, d]=transform.replace('matrix(','').replace(')','').split(',');
+  const aa = Math.round((180 * Math.asin(Number(a))) / Math.PI);
+  const bb = Math.round((180 * Math.acos(Number(b))) / Math.PI);
+  const cc = Math.round((180 * Math.asin(Number(c))) / Math.PI);
+  const dd = Math.round((180 * Math.acos(Number(d))) / Math.PI);
   let deg = 0;
   if (aa == bb || -aa == bb) {
     deg = dd;
@@ -626,3 +628,11 @@ export function handleInputText(text:string){
    replace(/&nbsp;|\u202F|\u00A0/g, ' ');
 
 }
+
+
+export const analysisTransformOrigin=(transformOrigin:string)=>{
+  const position=transformOrigin.split(' ');
+
+  return {	top:formatUnit(position[0]),
+    left:formatUnit(position[1])};
+};

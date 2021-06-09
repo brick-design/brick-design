@@ -16,7 +16,6 @@ export class BrickStore<T> {
     } else {
       this.state = { ...this.state, ...newState };
     }
-    console.log('this.listeners>>>>>', this.listeners.length);
     each(this.listeners, (listener) => listener());
 
     if (executeKey && this.listenerMap[executeKey]) {
