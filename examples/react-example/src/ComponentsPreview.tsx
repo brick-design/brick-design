@@ -22,7 +22,6 @@ function AllComponents() {
 				<BrickPreview
 					isShow={activeKey === 'container'}
 					componentsCategory={CONTAINER_CATEGORY}
-					className={styles['preview-container']}
 				/>
 			</TabPane>
 			<TabPane
@@ -34,7 +33,6 @@ function AllComponents() {
 				<BrickPreview
 					isShow={activeKey === 'nonContainer'}
 					componentsCategory={NON_CONTAINER_CATEGORY}
-					className={styles['preview-container']}
 				/>
 			</TabPane>
 		</Tabs>
