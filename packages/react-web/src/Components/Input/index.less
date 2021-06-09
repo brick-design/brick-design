@@ -1,0 +1,31 @@
+
+.container {
+  display: flex;
+  align-items: center;
+
+  flex: 1;
+  position: relative;
+  .common-input{
+    flex: 1;
+    padding:0;
+    border: none;
+    text-align: left;
+    outline:none;
+    white-space:normal;
+    word-wrap:break-word;
+    word-break:break-all;
+    color: rgba(0, 0, 0, 0.8);
+    font-family: PingFangSC-Medium, PingFang SC;
+    &::placeholder{
+      font-weight: 400;
+      font-family: PingFangSC-Regular, PingFang SC;
+      color: rgba(0, 0, 0, 0.3);
+    }
+  }
+
+
+  .close-icon{
+    width: 12px;
+    height: 12px;
+  }
+}

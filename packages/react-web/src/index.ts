@@ -11,9 +11,9 @@ import {
   StringComponent,
 } from './PropComponents';
 
-export * from './BrickPreview/CategoryTypes';
+export * from './ToolComponents/BrickPreview/CategoryTypes';
 
-export { default as BrickPreview } from './BrickPreview';
+export { default as BrickPreview } from './ToolComponents/BrickPreview';
 export * from './PropComponents';
 
 export const TYPES_TO_COMPONENT: any = {
