@@ -1,12 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { AutoComplete, Col, Collapse, Divider, Icon, Input, Row } from 'antd';
-import map from 'lodash/map';
-import update from 'lodash/update';
-import each from 'lodash/each';
-import isArray from 'lodash/isArray';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
+import { map, update, each, isEmpty, isEqual } from 'lodash';
 import { useSelector } from '@brickd/react';
+import Collapse,{ Panel } from 'rc-collapse';
 import {
   CategoryType,
   ComponentCategoryType,
@@ -14,17 +9,10 @@ import {
 } from './CategoryTypes';
 import DragAbleItem from './DragAbleItem';
 import styles from './index.less';
-import { flattenDeepArray, usePrevious } from '../utils';
+import SearchBar from './SearchBar';
+import { usePrevious } from '../../../utils';
+import {arrowIcon} from '../../../assets';
 
-const { Panel } = Collapse;
-
-/**
- * 获取过滤后的组件配置信息
- * @param prevComponentsCategory
- * @param value 搜索字段
- * @param rule 规则字段
- * @returns {{filterCategory, filterOpenKeys: Array}|{filterCategory: *, filterOpenKeys: Array}}
- */
 function getFilterCategory(
   prevComponentsCategory: CategoryType,
   value?: string,
@@ -72,9 +60,9 @@ function getFilterCategory(
 /**
  * 搜索过滤回调
  */
-function searchFilter(inputValue: string, option: any) {
-  return option.props.children.toUpperCase().includes(inputValue.toUpperCase());
-}
+// function searchFilter(inputValue: string, option: any) {
+//   return option.props.children.toUpperCase().includes(inputValue.toUpperCase());
+// }
 
 /**
  * 渲染折叠Header
@@ -82,16 +70,14 @@ function searchFilter(inputValue: string, option: any) {
 function renderHeader(categoryName: string, isFold: boolean) {
   return (
     <div className={styles['fold-header']}>
-      <Icon
-        className={isFold ? styles.rotate90 : ''}
-        style={{
-          marginLeft: '5px',
-          marginRight: '5px',
-          transition: 'all 0.2s',
-        }}
-        type="caret-right"
-      />
-      <span style={{ color: '#555555' }}>{categoryName}</span>
+      <img src={arrowIcon}
+           className={isFold ? styles.rotate90 : ''}
+           style={{
+             marginLeft: '5px',
+             marginRight: '5px',
+             transition: 'all 0.2s',
+           }}/>
+      <span>{categoryName}</span>
     </div>
   );
 }
@@ -100,15 +86,12 @@ function renderHeader(categoryName: string, isFold: boolean) {
  * 渲染拖拽item
  */
 function renderDragItem(
-  span = 24,
   key: string,
   componentName: string,
   defaultProps?: any,
 ) {
   return (
-    <Col span={span} key={key}>
-      <DragAbleItem dragSource={{ componentName, defaultProps }} />
-    </Col>
+    <DragAbleItem key={key} dragSource={{ componentName, defaultProps }} />
   );
 }
 
@@ -118,57 +101,38 @@ function renderDragItem(
  * @param categoryName  分分类名字
  * @param isShow        是否展示分割分类组件名
  */
-function renderContent(
-  categoryInfo: ComponentInfoType | null,
-  categoryName: string,
-  isShow?: boolean,
-) {
-  let items: any = null,
-    isShowCategoryName = false;
+function renderContent(categoryInfo: ComponentInfoType, categoryName: string) {
+  let items: any = null;
   if (!categoryInfo || isEmpty(categoryInfo.props || categoryInfo.components)) {
-    items = renderDragItem(undefined, categoryName, categoryName);
+    items = renderDragItem(undefined, categoryName);
   } else {
-    const { span = 24, props, components } = categoryInfo;
+    const { props, components } = categoryInfo;
     const renderItems = props || components;
     items = map(renderItems, (v: ComponentCategoryType | any, k) => {
-      if (!isArray(renderItems)) {
-        return renderContent(v, k, true);
-      }
-      /**
-       * 如果有默认属性显示分割分类
-       */
-      if (v) isShowCategoryName = true;
-      return renderDragItem(span as number, k, categoryName, v);
+      return renderDragItem(k, isNaN(Number(k)) ? k : categoryName, v);
     });
   }
 
   return (
-    <Row key={categoryName} className={styles['fold-content']}>
+    <div key={categoryName} className={styles['fold-content']}>
       {items}
-      {isShowCategoryName && isShow && (
-        <Divider style={{ fontSize: 12, fontWeight: 'normal', marginTop: 10 }}>
-          {categoryName}
-        </Divider>
-      )}
-    </Row>
+    </div>
   );
 }
 
-interface FoldPanelPropsType {
+export interface BrickPreviewPropsType {
   isShow?: boolean;
-  className?: string;
   componentsCategory: CategoryType;
 }
 
-function BrickPreview(props: FoldPanelPropsType) {
-  const { componentsCategory, isShow = true, className } = props;
-  const searchValues = flattenDeepArray(componentsCategory);
+function BrickPreview(props: BrickPreviewPropsType) {
+  const { componentsCategory, isShow = true } = props;
+  // const searchValues = flattenDeepArray(componentsCategory);
   const { selectedInfo } = useSelector(['selectedInfo']);
   const { childNodesRule } = selectedInfo || {};
   const [openKeys = [], setOpenKeys] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [category, setCategory] = useState(componentsCategory);
-
   const prevIsShow = usePrevious(isShow);
   const prevChildNodesRule = usePrevious(childNodesRule);
   const prevCategory = usePrevious(category);
@@ -222,62 +186,58 @@ function BrickPreview(props: FoldPanelPropsType) {
   /**
    * 搜索下拉框选中组件名称时的回调
    */
-  const onSelect = useCallback(
-    (value: any) => {
-      const { filterOpenKeys, filterCategory } = getFilterCategory(
-        componentsCategory,
-        value,
-        childNodesRule,
-      );
-      setOpenKeys(filterOpenKeys);
-      setSearchValue(value);
-      setCategory(filterCategory);
-    },
-    [childNodesRule],
-  );
+  // const onSelect = useCallback(
+  //   (value: any) => {
+  //     const { filterOpenKeys, filterCategory } = getFilterCategory(
+  //       componentsCategory,
+  //       value,
+  //       childNodesRule,
+  //     );
+  //     setOpenKeys(filterOpenKeys);
+  //     setSearchValue(value);
+  //     setCategory(filterCategory);
+  //   },
+  //   [childNodesRule],
+  // );
 
   return (
-    <div className={`${styles['container']}  ${className}`}>
-      <AutoComplete
-        style={{ marginLeft: 20, marginRight: 20 }}
-        dataSource={childNodesRule || searchValues}
-        filterOption={searchFilter}
-        onSelect={onSelect}
-        onChange={onChange}
-      >
-        <Input.Search allowClear />
-      </AutoComplete>
-      <div className={styles['fold-container']}>
-        {isEmpty(category) ? (
-          <p style={{ textAlign: 'center' }}>为找当前选中组件可拖拽的组件</p>
-        ) : (
-          <Collapse
-            bordered={false}
-            activeKey={openKeys}
-            style={{ backgroundColor: '#fff' }}
-            onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}
-          >
-            {map(category, (categoryInfo: ComponentInfoType, categoryName) => {
-              const isFold = openKeys.includes(categoryName);
-              return (
-                <Panel
-                  style={{ border: 0 }}
-                  header={renderHeader(categoryName, isFold)}
-                  key={categoryName}
-                  showArrow={false}
-                >
-                  {renderContent(categoryInfo, categoryName)}
-                </Panel>
-              );
-            })}
-          </Collapse>
-        )}
-      </div>
+    <div className={styles['container']}>
+      <SearchBar onChange={onChange}>
+        <div className={styles['fold-container']}>
+          {isEmpty(category) ? (
+            <p style={{ textAlign: 'center' }}>为找到相关内容</p>
+          ) : (
+            <Collapse
+              activeKey={openKeys}
+              style={{ backgroundColor: '#fff',border: 0 }}
+              onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}
+            >
+              {map(
+                category,
+                (categoryInfo: ComponentInfoType, categoryName) => {
+                  const isFold = openKeys.includes(categoryName);
+                  return (
+                    <Panel
+                        headerClass={styles['fold-panel-header']}
+                      style={{ border: 0,padding:0 }}
+                      header={renderHeader(categoryName, isFold)}
+                      key={categoryName}
+                      showArrow={false}
+                    >
+                      {renderContent(categoryInfo, categoryName)}
+                    </Panel>
+                  );
+                },
+              )}
+            </Collapse>
+          )}
+        </div>
+      </SearchBar>
     </div>
   );
 }
 
-export default memo<FoldPanelPropsType>(
+export default memo<BrickPreviewPropsType>(
   BrickPreview,
   (prevProps, nextProps) => {
     const { isShow } = nextProps;
