@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Collapse, Icon } from 'antd';
 import { map, update, each, isEmpty, isEqual } from 'lodash';
 import { useSelector } from '@brickd/react';
+import Collapse,{ Panel } from 'rc-collapse';
 import {
   CategoryType,
   ComponentCategoryType,
@@ -10,9 +10,8 @@ import {
 import DragAbleItem from './DragAbleItem';
 import styles from './index.less';
 import SearchBar from './SearchBar';
-import { usePrevious } from '../../utils';
-
-const { Panel } = Collapse;
+import { usePrevious } from '../../../utils';
+import {arrowIcon} from '../../../assets';
 
 function getFilterCategory(
   prevComponentsCategory: CategoryType,
@@ -71,16 +70,14 @@ function getFilterCategory(
 function renderHeader(categoryName: string, isFold: boolean) {
   return (
     <div className={styles['fold-header']}>
-      <Icon
-        className={isFold ? styles.rotate90 : ''}
-        style={{
-          marginLeft: '5px',
-          marginRight: '5px',
-          transition: 'all 0.2s',
-        }}
-        type="caret-right"
-      />
-      <span style={{ color: '#555555' }}>{categoryName}</span>
+      <img src={arrowIcon}
+           className={isFold ? styles.rotate90 : ''}
+           style={{
+             marginLeft: '5px',
+             marginRight: '5px',
+             transition: 'all 0.2s',
+           }}/>
+      <span>{categoryName}</span>
     </div>
   );
 }
@@ -123,12 +120,12 @@ function renderContent(categoryInfo: ComponentInfoType, categoryName: string) {
   );
 }
 
-interface FoldPanelPropsType {
+export interface BrickPreviewPropsType {
   isShow?: boolean;
   componentsCategory: CategoryType;
 }
 
-function BrickPreview(props: FoldPanelPropsType) {
+function BrickPreview(props: BrickPreviewPropsType) {
   const { componentsCategory, isShow = true } = props;
   // const searchValues = flattenDeepArray(componentsCategory);
   const { selectedInfo } = useSelector(['selectedInfo']);
@@ -211,9 +208,8 @@ function BrickPreview(props: FoldPanelPropsType) {
             <p style={{ textAlign: 'center' }}>为找到相关内容</p>
           ) : (
             <Collapse
-              bordered={false}
               activeKey={openKeys}
-              style={{ backgroundColor: '#fff' }}
+              style={{ backgroundColor: '#fff',border: 0 }}
               onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}
             >
               {map(
@@ -222,7 +218,8 @@ function BrickPreview(props: FoldPanelPropsType) {
                   const isFold = openKeys.includes(categoryName);
                   return (
                     <Panel
-                      style={{ border: 0 }}
+                        headerClass={styles['fold-panel-header']}
+                      style={{ border: 0,padding:0 }}
                       header={renderHeader(categoryName, isFold)}
                       key={categoryName}
                       showArrow={false}
@@ -240,7 +237,7 @@ function BrickPreview(props: FoldPanelPropsType) {
   );
 }
 
-export default memo<FoldPanelPropsType>(
+export default memo<BrickPreviewPropsType>(
   BrickPreview,
   (prevProps, nextProps) => {
     const { isShow } = nextProps;

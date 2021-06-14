@@ -27,7 +27,8 @@
     "react": "^16.8.0",
     "react-color": "^2.18.0",
     "sortablejs": "^1.10.2",
-    "rc-collapse": "^2.0.0"
+    "rc-collapse": "^2.0.0",
+    "rc-tabs": "^11.9.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
