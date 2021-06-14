@@ -59,7 +59,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
   if (isChecked) {
     return (
       <div className={styles['list-container']}>
-        <div className={styles['drag-container']}>
+        <div className={styles['list-drag-container']}>
           <div
             draggable
             onDragStart={() => getDragSource(dragSource)}
@@ -68,7 +68,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
             {renderDragComponent()}
           </div>
         </div>
-        <span>{componentName}</span>
+        <span className={styles['drag-name']}>{componentName}</span>
       </div>
     );
   }

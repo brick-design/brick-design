@@ -1,0 +1,71 @@
+@import '../../../global';
+
+.sort-container {
+	display: flex;
+	overflow: auto;
+	background: #fff;
+	flex:1;
+	.sort-able{
+		display: flex;
+		flex: 1;
+		flex-direction:column;
+	}
+	.sort-item {
+		position: relative;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+	}
+	:global{
+		.rc-collapse-content{
+			padding: 0;
+		}
+		.rc-collapse-content > .rc-collapse-content-box{
+			margin-bottom: 0;
+			margin-top: 0;
+		}
+	}
+	.fold-panel-header{
+		padding:0!important;
+	}
+}
+
+.header-container {
+	display: flex;
+	height: 30px;
+	font-size: 12px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.item-background {
+	background-color: #d9d9d9;
+}
+
+.triangle {
+	width: 20px;
+	height: 30px;
+	transition: all 0.2s;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.layout-icon{
+	height: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-right:5px;
+}
+
+.visible-icon{
+	visibility: visible;
+
+}
+
+.hidden-icon{
+	visibility: hidden;
+
+}

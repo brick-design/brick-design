@@ -1,9 +1,9 @@
 import React, { memo, useState } from 'react';
 import styles from './index.less';
 import { PreviewContext } from './PreviewContext';
-import searchIcon from '../../assets/search-icon.svg';
-import Input, { InputProps } from '../../Components/Input';
-import Checkbox from '../../Components/Checkbox';
+import {searchIcon} from '../../../assets';
+import Input, { InputProps } from '../../../Components/Input';
+import Checkbox from '../../../Components/Checkbox';
 
 type SearchBarProps = InputProps
 

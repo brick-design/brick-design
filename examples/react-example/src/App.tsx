@@ -46,14 +46,7 @@ export default function App() {
 			<div className={styles['wrapper']}>
 				<ToolBar />
 				<div className={styles['content']}>
-					<Resizable
-						enable={LEFT_ENABLE}
-						defaultSize={{ width: '150px', height: '100%' }}
-						className={styles['left-preview']}
-					>
 						<AllComponents />
-					</Resizable>
-
 					<div className={styles['canvas-container']}>
 						<Radio.Group defaultValue={'0'} style={{marginBottom:20}}
 												 onChange={(e)=>setIsPreview(e.target.value==='1')}>
