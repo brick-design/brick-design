@@ -1,6 +1,7 @@
-import React, {memo, useEffect, useRef, useCallback, useImperativeHandle, forwardRef} from 'react';
+import React, {memo, useEffect, useRef, useCallback, useImperativeHandle, forwardRef, Ref} from 'react';
 import {css} from "@brickd/react";
 import styles from './index.less';
+import {ANIMATION_YES} from "../../utils";
 
 interface ResizeableProps extends React.AllHTMLAttributes<any>{
     left?:boolean
@@ -14,7 +15,9 @@ interface ResizeableProps extends React.AllHTMLAttributes<any>{
     minWidth?:number,
     minHeight?:number,
     maxWidth?:number,
-    maxHeight?:number
+    maxHeight?:number,
+    defaultHeight?:number,
+    defaultWidth?:number
 }
 
 type OriginSizeType = {
@@ -24,12 +27,34 @@ type OriginSizeType = {
     height?: number;
     isResize:boolean
 };
-function Resizeable(props:ResizeableProps,ref:any){
+
+export type ChangeFoldParam={isHeight?:boolean,isWidth?:boolean,heightTarget?:number,widthTarget?:number}
+
+export interface ResizeableRefType{
+    changeFold:(params:ChangeFoldParam)=>void
+}
+function Resizeable(props:ResizeableProps,ref:Ref<ResizeableRefType>){
     const {children,left,right,top,bottom,topLeft,topRight,bottomLeft,bottomRight,
-        minWidth,minHeight,maxWidth,maxHeight, className,...rest}=props;
-    const originSizeRef = useRef<OriginSizeType>({isResize:false});
+        minWidth,minHeight,maxWidth,maxHeight, className,defaultHeight,defaultWidth,...rest}=props;
+    const originSizeRef = useRef<OriginSizeType>({isResize:false,width:defaultWidth,height:defaultHeight});
     const resizeDivRef=useRef<HTMLDivElement>();
-    useImperativeHandle(ref, () => resizeDivRef.current);
+
+    const changeFold=useCallback((params:ChangeFoldParam)=>{
+        console.log('changeFold>>>>>>>>',params);
+        const {isHeight,isWidth,widthTarget,heightTarget}=params;
+        const {height,width}=originSizeRef.current;
+        if(isHeight||heightTarget!==undefined){
+            resizeDivRef.current.style.height=`${heightTarget!==undefined?heightTarget:height}px`;
+        }
+        if(isWidth||widthTarget!==undefined){
+            resizeDivRef.current.style.width=`${widthTarget!==undefined?widthTarget:width}px`;
+
+        }
+        resizeDivRef.current.style.transition=ANIMATION_YES;
+
+
+    },[]);
+
     const onMouseUp = useCallback(() => {
         originSizeRef.current.isResize=false;
     }, []);
@@ -89,6 +114,7 @@ function Resizeable(props:ResizeableProps,ref:any){
                 originSizeRef.current.y=clientY;
                 resizeDivRef.current.style.height = `${heightResult}px`;
             }
+        resizeDivRef.current.style.transition='none';
     }, []);
 
     const onResizeStart = useCallback(function (event: React.MouseEvent) {
@@ -103,17 +129,23 @@ function Resizeable(props:ResizeableProps,ref:any){
                 };
         }, []);
 
+    useImperativeHandle<ResizeableRefType,ResizeableRefType>(ref, () => ({changeFold}));
 
     useEffect(()=>{
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('mousemove', onMouseMove);
+        if(defaultHeight)
+        resizeDivRef.current.style.height=defaultHeight+'px';
+        if(defaultWidth)
+        resizeDivRef.current.style.width=defaultWidth+'px';
+
         return ()=>{
             window.removeEventListener('mouseup', onMouseUp);
             window.removeEventListener('mousemove', onMouseMove);
         };
     },[]);
 
-    return <div ref={resizeDivRef} className={`${styles['container']} ${className}`} {...rest} >
+    return <div ref={resizeDivRef}  className={`${styles['container']} ${className}`} {...rest} >
         {children}
         {left&&<div className={styles['resize-left']} onMouseDown={onResizeStart}/>}
         {right&&<div className={styles['resize-right']} onMouseDown={onResizeStart}/>}
