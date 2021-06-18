@@ -77,3 +77,5 @@ export const filterProps = (value: any) => {
  */
 export const propsAreEqual = (prevProps: any, nextProps: any) =>
   isEqual(prevProps.value, nextProps.value);
+
+export const ANIMATION_YES='all 200ms';
