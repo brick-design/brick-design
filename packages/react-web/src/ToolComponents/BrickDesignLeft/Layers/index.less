@@ -13,7 +13,7 @@
     display: flex;
     flex: 1;
     overflow: auto;
-    background-color: green;
+    background-color: @bgColor;
   }
 }
 .header-container{
@@ -25,6 +25,7 @@
   font-size: 12px;
   padding-left: 18px;
   padding-right: 5px;
+  user-select: none;
   .header-name{
     font-weight: bold;
   }
@@ -35,6 +36,8 @@
       width: 24px;
       height: 24px;
       cursor: pointer;
+      border-radius: 3px;
+      user-select: none;
       &:hover{
         background-color: @backGroundColor;
       }
