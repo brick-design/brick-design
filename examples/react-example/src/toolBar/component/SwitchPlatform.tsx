@@ -3,7 +3,7 @@ import { Dropdown, Icon, Menu } from 'antd'
 import styles from '../style.less'
 import map from 'lodash/map'
 import { PlatformMenusType } from '../config'
-import { changePlatform, PlatformInfoType } from '@brickd/react'
+import { changePlatform, PlatformInfoType, PlatformSizeType } from '@brickd/react'
 
 interface SwitchPlatformPropsType {
 	platformInfo?: PlatformInfoType
@@ -19,10 +19,10 @@ function SwitchPlatform(props: SwitchPlatformPropsType) {
 	const [isVertical, setIsVertical] = useState(true)
 
 	useEffect(() => {
-		const size = isMobile ? [...menus[mobileModel]] : [1920, 1080]
+		const size:PlatformSizeType = isMobile ? menus[mobileModel]: [1920, 1080]
 		!isVertical && size.reverse()
 		changePlatform({
-			isMobile,
+			platformName:isMobile?mobileModel:'PC',
 			size,
 		})
 	}, [isMobile, isVertical, mobileModel])

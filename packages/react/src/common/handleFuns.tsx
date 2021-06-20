@@ -60,7 +60,7 @@ function renderNodes(
   }
 
   const resultChildNodes = map(childNodes, (key) => {
-    const { componentName, isStateDomain, loop } = getVNode(key) || {};
+    const { componentName, isStateDomain, loop } = getVNode(key);
     if (!componentName) return null;
     /** 根据组件类型处理属性 */
     const specialProps = {
@@ -141,11 +141,10 @@ function handleRequiredChildNodes(componentName: string) {
 export function handleChildNodes(
   specialProps: SelectedInfoBaseType,
   allState: any,
+  componentName:string,
   children?: ChildNodesType,
 ) {
   const nodeProps: any = {};
-  const { key: parentKey } = specialProps;
-  const { componentName } = getVNode(parentKey);
   if (isEmpty(children)) {
     return handleRequiredChildNodes(componentName);
   }

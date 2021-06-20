@@ -43,11 +43,11 @@ export interface DropTargetType {
   childNodeKeys: string[];
 }
 
-export type PlatformStyleType = (number | string)[];
+export type PlatformSizeType = [number, number];
 
 export interface PlatformInfoType {
-  isMobile: boolean;
-  size: PlatformStyleType;
+  platformName?: string;
+  size: PlatformSizeType;
 }
 
 export interface PageConfigType {
@@ -73,6 +73,7 @@ export type StateType = {
 };
 
 export interface BrickDesignStateType {
-  [pageName: string]: StateType | string;
+  layerName:string;
+  [pageName: string]: StateType|string;
 }
 export type STATE_PROPS = keyof StateType;

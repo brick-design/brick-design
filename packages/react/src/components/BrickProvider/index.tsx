@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useEffect, createContext } from 'react';
+import React,{ useEffect, createContext } from 'react';
 import {
   ConfigType,
   createLegoStore,
@@ -9,25 +8,23 @@ import {
   cleanStateCache,
 } from '@brickd/core';
 
-interface BrickProviderType {
+export interface BrickProviderType {
   config: ConfigType;
   customReducer?: ReducerType;
-  children?: any;
   warn?: WarnType;
+  children?:any
 }
 
 export const BrickContext = createContext(null);
 function BrickProvider(props: BrickProviderType) {
-  const { config, customReducer, children, warn } = props;
+  const { config, customReducer,  warn,children } = props;
   useEffect(() => {
     return () => cleanStateCache;
   }, []);
   if (!getStore()) {
     createLegoStore(config, customReducer, warn);
   }
-  return (
-    <BrickContext.Provider value={getStore()}>{children}</BrickContext.Provider>
-  );
+  return (<BrickContext.Provider value={getStore()} >{children}</BrickContext.Provider>);
 }
 
 export default React.memo(BrickProvider);

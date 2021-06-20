@@ -3,7 +3,7 @@ import {css} from "@brickd/react";
 import styles from './index.less';
 import {ANIMATION_YES} from "../../utils";
 
-interface ResizeableProps extends React.AllHTMLAttributes<any>{
+export interface ResizeableProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>{
     left?:boolean
     right?:boolean
     top?:boolean
@@ -17,7 +17,8 @@ interface ResizeableProps extends React.AllHTMLAttributes<any>{
     maxWidth?:number,
     maxHeight?:number,
     defaultHeight?:number,
-    defaultWidth?:number
+    defaultWidth?:number,
+    [key:string]:any
 }
 
 type OriginSizeType = {
@@ -32,6 +33,7 @@ export type ChangeFoldParam={isHeight?:boolean,isWidth?:boolean,heightTarget?:nu
 
 export interface ResizeableRefType{
     changeFold:(params:ChangeFoldParam)=>void
+    target:HTMLDivElement
 }
 function Resizeable(props:ResizeableProps,ref:Ref<ResizeableRefType>){
     const {children,left,right,top,bottom,topLeft,topRight,bottomLeft,bottomRight,
@@ -40,7 +42,6 @@ function Resizeable(props:ResizeableProps,ref:Ref<ResizeableRefType>){
     const resizeDivRef=useRef<HTMLDivElement>();
 
     const changeFold=useCallback((params:ChangeFoldParam)=>{
-        console.log('changeFold>>>>>>>>',params);
         const {isHeight,isWidth,widthTarget,heightTarget}=params;
         const {height,width}=originSizeRef.current;
         if(isHeight||heightTarget!==undefined){
@@ -129,7 +130,10 @@ function Resizeable(props:ResizeableProps,ref:Ref<ResizeableRefType>){
                 };
         }, []);
 
-    useImperativeHandle<ResizeableRefType,ResizeableRefType>(ref, () => ({changeFold}));
+    useImperativeHandle<ResizeableRefType,ResizeableRefType>(ref, () => ({
+        changeFold,
+        target:resizeDivRef.current
+    }));
 
     useEffect(()=>{
         window.addEventListener('mouseup', onMouseUp);

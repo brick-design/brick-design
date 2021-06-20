@@ -1,16 +1,31 @@
-@import '../../../global';
-
+@import 'src/global';
+@import "../index";
 .container {
 	display: flex;
 	flex:1;
 	overflow: auto;
 	flex-direction: column;
+
+}
+
+.result-container{
+	overflow: auto;
+	background: #fff;
+	height: calc(100vh - 160px);
+
+	.item-container{
+		display: flex;
+		overflow: auto;
+		flex-wrap: wrap;
+	}
 }
 
 .fold-container {
 	display: flex;
 	overflow: auto;
 	background: #fff;
+	height: calc(100vh - 160px);
+
 	.fold-container-title {
 		padding-top: 5px;
 		text-align: center;
@@ -29,6 +44,7 @@
 		height: 30px;
 		color: #333;
 		font-size: 12px;
+
 	}
 	:global{
 		.rc-collapse-content{
@@ -44,107 +60,26 @@
 	}
 }
 
-
-.drag-container{
-		position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 60px;
-	height:60px;
-	padding: 5px;
-	margin:5px;
-	border-radius: 4px;
-	border: 1px solid transparent;
-		overflow: hidden;
-	background: rgb(242, 242, 242);
-		&:hover{
-			&:before{
-				transform: scale(0.7);
-				text-align: center;
-				width: 60px;
-				content: attr(data-name);
-				position: absolute;
-				bottom: 0;
-				font-size: 10px;
-				z-index: 100;
-				color:#000;
-			}
-
-		}
-	.item {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-width: 200%;
-		min-height: 200%;
-		transform-origin: center;
-		transform: scale(0.5);
-		cursor: pointer;
-	}
-		.placeholder-item{
-			display: flex;
-			width: 100%;
-			height: 40px;
-			font-size: 12px;
-			color: #fff;
-			justify-content:center;
-			align-items: center;
-		}
-}
-.list-container{
+.placeholder-item{
 	display: flex;
 	width: 100%;
-	align-items: center;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	padding-left: 5px;
-	.drag-name{
-		font-size: 12px;
-		color: #333333;
-		margin-left: 16px;
+	height: 100%;
+
+	img{
+		width: 100%;
+		height: 100%;
 	}
-	.list-drag-container{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 28px;
-	height:28px;
-	border-radius: 4px;
-	border: 1px solid transparent;
-	overflow: hidden;
-	background: rgb(242, 242, 242);
-	.item {
+}
+
+.result-container{
+	overflow: auto;
+	background: #fff;
+	height: calc(100vh - 160px);
+
+	.item-container{
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 200%;
-		height: 200%;
-		transform-origin: center;
-		transform: scale(0.25);
-		cursor: pointer;
+		overflow: auto;
+		flex-wrap: wrap;
 	}
-
-}
 }
 
-.search-container{
-	display: flex;
-	width: 100%;
-	height: 32px;
-	align-items: center;
-	border-width: 1px 0px;
-	border-style: solid;
-	border-color: rgb(242, 242, 242);
-  padding: 0px 8px 0px 17px;
-  .icon{
-		width: 12px;
-		height: 12px;
-	}
-	.search-input{
-		margin-left: 8px;
-		font-size: 12px;
-		color: rgb(51, 51, 51);
-		user-select: text;
-	}
-}

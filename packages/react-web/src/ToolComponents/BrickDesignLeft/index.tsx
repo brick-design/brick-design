@@ -1,12 +1,9 @@
 import React, {memo, useState} from 'react';
-import Tabs, { TabPane } from 'rc-tabs';
+import NTabs, { TabPane } from '../../Components/NTabs';
 import BrickPreview, {BrickPreviewPropsType} from './BrickPreview';
 import Layers from './Layers';
 import styles from './index.less';
-import Resizeable from "../../Components/Resizeable";
-
-require('rc-tabs/assets/index.css');
-require('rc-collapse/assets/index.css');
+import BrickTemplates from './BrickTemplates'
 
 type BrickDesignLeftProps = BrickPreviewPropsType
 
@@ -18,16 +15,17 @@ function BrickDesignLeft(props:BrickDesignLeftProps){
         setActiveKey(key);
     };
 
-    return <Resizeable right minWidth={212} className={styles['container']}>
-    <Tabs
-        className={styles['brickd-left-tabs']}
-        style={{border:0}}
-        activeKey={activeKey}
-        tabBarStyle={{height:39}}
-        tabBarGutter={16}
-
-        onChange={onTabChange}
+    return <NTabs right
+                  minWidth={212}
+                  resizeClassName={styles['left-container']}
+                  className={styles['brickd-left-tabs']}
+                  style={{border:0}}
+                  activeKey={activeKey}
+                  tabBarStyle={{height:39}}
+                  tabBarGutter={16}
+                  onChange={onTabChange}
     >
+
         <TabPane tab={'图层'} key={'1'}>
             <Layers/>
         </TabPane>
@@ -35,10 +33,9 @@ function BrickDesignLeft(props:BrickDesignLeftProps){
             <BrickPreview componentsCategory={componentsCategory}/>
         </TabPane>
         <TabPane tab={'模板'} key={'3'}>
-            <BrickPreview componentsCategory={componentsCategory}/>
+            <BrickTemplates/>
         </TabPane>
-    </Tabs>
-    </Resizeable>;
+    </NTabs>;
 }
 
 export default memo(BrickDesignLeft);

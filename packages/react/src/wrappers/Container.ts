@@ -442,6 +442,7 @@ function Container(allProps: CommonPropsType) {
     ...handleChildNodes(
       specialProps,
       { ...pageState, ...pageState.getPageState() },
+      componentName,
       children,
     ),
     draggable: true,

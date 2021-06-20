@@ -8,6 +8,8 @@ export function get<T>(obj: any, path: string): T {
 }
 
 export function shallowEqual(objA: any, objB: any) {
+
+  if(objA!==objB&&(typeof objA!=='object'||typeof objB!=='object')) return true
   for (const k of Object.keys(objA)) {
     if (objA[k] !== objB[k]) return false;
   }
@@ -40,14 +42,15 @@ function useSelectorWithStore<T>(
   store: any,
   controlUpdate?: ControlUpdate<T>,
   stateDeep?: string,
+  isRoot?:boolean
 ): T {
   const forceRender = useForceRender();
   const prevSelector = useRef([]);
   const prevStoreState = useRef();
   const prevSelectedState = useRef({} as any);
-  const storeState = store.getPageState();
+  const storeState = store.getPageState(isRoot);
   let selectedState: any;
-  if (storeState !== prevStoreState.current) {
+  if (storeState&&storeState !== prevStoreState.current) {
     selectedState = handleState(selector, storeState, stateDeep);
   } else {
     selectedState = prevSelectedState.current;
@@ -61,12 +64,12 @@ function useSelectorWithStore<T>(
 
   useLayoutEffect(() => {
     function checkForUpdates() {
-      const storeState = store.getPageState();
-      const nextSelectedState = handleState(
+      const storeState = store.getPageState(isRoot);
+      const nextSelectedState =storeState? handleState(
         prevSelector.current,
         storeState,
         stateDeep,
-      );
+      ):storeState;
       if (
         shallowEqual(nextSelectedState, prevSelectedState.current) ||
         (controlUpdate &&
@@ -98,7 +101,8 @@ export function useBrickSelector<T, U extends string>(
   controlUpdate?: ControlUpdate<T>,
   stateDeep?: string,
   context: any = BrickStoreContext,
+  isRoot?:boolean
 ): T {
   const store = useContext(context);
-  return useSelectorWithStore<T>(selector, store!, controlUpdate, stateDeep);
+  return useSelectorWithStore<T>(selector, store!, controlUpdate, stateDeep,isRoot);
 }

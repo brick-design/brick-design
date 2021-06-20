@@ -3,13 +3,11 @@ import { Tabs } from 'antd/lib/index'
 import PropsSettings from './propsSettings'
 import StyleSettings from './styleSettings'
 import {
-	BrickTree,
 	PageConfigType,
 	SelectedInfoType,
 	STATE_PROPS,
 	useSelector,
 } from '@brickd/react'
-import styles from '../index.less'
 import get from 'lodash/get'
 
 const { TabPane } = Tabs
@@ -31,13 +29,10 @@ function SettingPanel() {
 			onChange={(activeKey: any) => setActiveKey(activeKey)}
 			activeKey={activeKey}
 		>
-			<TabPane forceRender key="1" tab={'组件树'}>
-				<BrickTree className={styles['brick-tree']} />
-			</TabPane>
-			<TabPane forceRender key="2" tab={'属性配置'}>
+			<TabPane forceRender key="1" tab={'属性配置'}>
 				<PropsSettings selectedInfo={selectedInfo} />
 			</TabPane>
-			<TabPane forceRender key="3" tab={'样式配置'}>
+			<TabPane forceRender key="2" tab={'样式配置'}>
 				<StyleSettings styleSetting={style} />
 			</TabPane>
 		</Tabs>

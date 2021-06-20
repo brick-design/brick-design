@@ -9,3 +9,4 @@ export * from './produceActions/styles';
 export * from './produceActions/componentStateApi';
 export * from './produceActions/stateDomain';
 export * from './produceActions/pageBrickdState';
+export * from './produceActions/layers';

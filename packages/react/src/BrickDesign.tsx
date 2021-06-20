@@ -9,7 +9,6 @@ import React, {
 import {
   clearHovered,
   PageConfigType,
-  DragSourceType,
   STATE_PROPS,
   getStore,
   ROOT,
@@ -41,7 +40,6 @@ const stateSelector: STATE_PROPS[] = ['pageConfig'];
 
 type BrickdHookState = {
   pageConfig: PageConfigType;
-  dragSource: DragSourceType;
 };
 
 const controlUpdate = (
@@ -52,7 +50,7 @@ const controlUpdate = (
   const { pageConfig } = nextState;
   const nextRootComponent = pageConfig[ROOT];
   const prevRootComponent = prevPageConfig[ROOT];
-  return !nextRootComponent || nextRootComponent !== prevRootComponent;
+  return nextRootComponent !== prevRootComponent;
 };
 
 function BrickDesign(brickdProps: BrickDesignProps) {

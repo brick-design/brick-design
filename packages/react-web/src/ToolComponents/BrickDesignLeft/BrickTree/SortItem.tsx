@@ -12,7 +12,7 @@ import { useSelector,isEqualKey, usePrevious,ChildNodesType,
   STATE_PROPS,} from '@brickd/react';
 import SortTree from './SortTree';
 import styles from './index.less';
-import Header from './components/Header';
+import Header from './Header';
 
 interface SortItemPropsType {
   isFold?: boolean;

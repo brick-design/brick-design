@@ -77,6 +77,7 @@ function MarginItem(props: MarginItemType) {
 
   return (
     <div
+      draggable={false}
       ref={marginRef}
       onClick={onClick}
       style={positionStyles[position]}

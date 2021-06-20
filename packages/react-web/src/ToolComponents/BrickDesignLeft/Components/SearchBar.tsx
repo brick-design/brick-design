@@ -1,12 +1,10 @@
-import React, { memo, useState } from 'react';
+import React, { createContext, memo, useState } from 'react'
 import styles from './index.less';
-import { PreviewContext } from './PreviewContext';
 import {searchIcon} from '../../../assets';
 import Input, { InputProps } from '../../../Components/Input';
 import Checkbox from '../../../Components/Checkbox';
-
-type SearchBarProps = InputProps
-
+type SearchBarProps = InputProps;
+export const SearchContext=createContext(false);
 function SearchBar(props: SearchBarProps) {
   const { children, ...rest } = props;
   const [isChecked, setIsChecked] = useState(false);
@@ -26,9 +24,9 @@ function SearchBar(props: SearchBarProps) {
         />
         <Checkbox onChange={onCheckedChange} />
       </div>
-      <PreviewContext.Provider value={isChecked}>
+      <SearchContext.Provider value={isChecked}>
         {children}
-      </PreviewContext.Provider>
+      </SearchContext.Provider>
     </>
   );
 }

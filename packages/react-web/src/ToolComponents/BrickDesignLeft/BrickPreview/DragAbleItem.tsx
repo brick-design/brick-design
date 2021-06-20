@@ -2,13 +2,14 @@ import React, { createElement, memo, useContext, useRef } from 'react';
 import get from 'lodash/get';
 import { getDragSource, getBrickdConfig } from '@brickd/react';
 import styles from './index.less';
-import { PreviewContext } from './PreviewContext';
+import { SearchContext } from '../Components/SearchBar'
 
 interface DragAbleItemPropsType {
   dragSource: {
     defaultProps?: any;
     componentName: string;
   };
+  img?:string
 }
 
 const defaultColors = [
@@ -34,9 +35,10 @@ function DragAbleItem(props: DragAbleItemPropsType) {
   const {
     dragSource,
     dragSource: { defaultProps, componentName },
+    img
   } = props;
 
-  const isChecked = useContext(PreviewContext);
+  const isChecked = useContext(SearchContext);
 
   const randomIndex: number = useRef(Math.floor(Math.random() * 10)).current;
 
@@ -47,7 +49,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
           style={{ backgroundColor: defaultColors[randomIndex] }}
           className={styles['placeholder-item']}
         >
-          {componentName}
+          <img src={img} />
         </div>
       );
     }
@@ -56,34 +58,25 @@ function DragAbleItem(props: DragAbleItemPropsType) {
       defaultProps,
     );
   }
-  if (isChecked) {
+
     return (
-      <div className={styles['list-container']}>
+      <div className={isChecked?styles['list-container']:styles['drag-container']}>
         <div className={styles['list-drag-container']}>
           <div
             draggable
-            onDragStart={() => getDragSource(dragSource)}
+            onDragStart={(event:React.DragEvent) => {
+              event.stopPropagation()
+              getDragSource(dragSource)
+            }}
             className={styles['item']}
           >
             {renderDragComponent()}
           </div>
         </div>
-        <span className={styles['drag-name']}>{componentName}</span>
+        <span className={`${styles['hidden-drag-name']} ${styles['drag-name']}`}>{componentName}</span>
       </div>
     );
-  }
 
-  return (
-    <div data-name={componentName} className={styles['drag-container']}>
-      <div
-        draggable
-        onDragStart={() => getDragSource(dragSource)}
-        className={styles['item']}
-      >
-        {renderDragComponent()}
-      </div>
-    </div>
-  );
 }
 
 export default memo(DragAbleItem, () => true);

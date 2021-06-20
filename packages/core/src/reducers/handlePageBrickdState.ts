@@ -1,5 +1,6 @@
-import { merge, isEmpty } from 'lodash';
-import { StateType } from '../types';
+import { merge,each } from 'lodash';
+import { BrickDesignStateType ,StateType} from '../types'
+import { PageBrickdStateType } from '../actions'
 
 export const legoState: StateType = {
   pageConfig: {}, // 所有组件信息
@@ -9,16 +10,21 @@ export const legoState: StateType = {
   hoverKey: null,
   dragSource: null,
   dropTarget: null,
-  platformInfo: { isMobile: false, size: [1920, 1080] },
+  platformInfo: { platformName: 'PC', size: [1920, 1080] },
 };
-export function initPageBrickdState(
-  state: StateType,
-  payload: Partial<StateType>,
-): StateType {
-  if (!isEmpty(state.pageConfig)) return state;
-  return merge({}, state, payload);
-}
 
-export function removePageBrickdState(): StateType {
-  return undefined;
+
+
+export function initPageBrickdState(
+  state: BrickDesignStateType,
+  payload: PageBrickdStateType,
+): BrickDesignStateType {
+  let newState={};
+  const layerName=Object.keys(payload)[0]
+
+  each(payload,(v,k)=>{
+    newState[k]=merge(v,legoState)
+  })
+
+  return {layerName,...newState};
 }

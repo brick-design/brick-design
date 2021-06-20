@@ -1,11 +1,8 @@
 import ACTION_TYPES from '../actionTypes';
 import { createActions } from '../../utils';
-import { StateType } from '../../types';
-
-export const initPageBrickdState = (payload: Partial<StateType>) =>
+import { StateType } from '../../types'
+export type PageBrickdStateType={
+	[layerName:string]:Partial<StateType>
+}
+export const initPageBrickdState = (payload: PageBrickdStateType) =>
   createActions({ type: ACTION_TYPES.initPageBrickdState, payload });
-
-export const removePageBrickdState = () =>
-  createActions({
-    type: ACTION_TYPES.removePageBrickdState,
-  });

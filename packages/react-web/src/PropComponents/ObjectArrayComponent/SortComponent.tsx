@@ -1,9 +1,9 @@
 import React from 'react';
 import each from 'lodash/each';
 import map from 'lodash/map';
-import { ReactSortable } from '@brickd/react';
 import { PaneType } from './ObjectArrayComponent';
 import styles from '../../index.less';
+import ReactSortable from '../../Components/ReactSortable';
 
 interface SortComponentPropsType {
   onSortChange: (data: any) => any;

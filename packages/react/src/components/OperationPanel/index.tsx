@@ -3,12 +3,11 @@ import {
   PageConfigType,
   resizeChange,
   ResizePayload,
-  ROOT,
   SelectedInfoType,
   STATE_PROPS,
 } from '@brickd/core';
 
-import { get, map } from 'lodash';
+import {  map } from 'lodash';
 import ResizeItem, { positionStyles } from './ResizeItem';
 import styles from './index.less';
 import RadiusItem from './RadiusItem';
@@ -23,7 +22,6 @@ import {
   getIframe, getMatrix,
   setPosition,
 } from '../../utils';
-import ActionSheet from '../ActionSheet';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
 
@@ -58,11 +56,9 @@ export enum MarginPosition {
 }
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
-  const { selectedInfo, pageConfig } = nextState;
+  const { selectedInfo } = nextState;
   return (
-    prevState.selectedInfo !== selectedInfo ||
-    (selectedInfo &&
-      prevState.pageConfig !== pageConfig)
+    prevState.selectedInfo !== selectedInfo
   );
 };
 
@@ -82,12 +78,12 @@ type OriginSizeType = {
 
 function OperationPanel() {
   const iframe = useRef(getIframe()).current;
-  const { selectedInfo, pageConfig } = useSelector<
+  const { selectedInfo } = useSelector<
     ResizeState,
     STATE_PROPS
-  >(['selectedInfo', 'pageConfig'], controlUpdate);
+  >(['selectedInfo'], controlUpdate);
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
-  const { selectedKey, propName } = selectedInfo || {};
+  const { selectedKey } = selectedInfo || {};
   const resizeRef = useRef<HTMLDivElement>();
   const operationPanelRef = useRef<HTMLDivElement>();
   const originSizeRef = useRef<OriginSizeType>();
@@ -95,7 +91,6 @@ function OperationPanel() {
   const baseboardRef = useRef<HTMLDivElement | any>();
   const actionSheetRef = useRef<any>();
   const [isOut, setIsOut] = useState<boolean>(true);
-  const { childNodes } = pageConfig[selectedKey] || {};
 
 const changeOperationPanel=useCallback(()=>{
   const { selectedNode, operateSelectedKey, isModal } = getOperateState();
@@ -334,15 +329,6 @@ const showBaseboard = useCallback((cursor:string) => {
     <>
       <div  className={styles['operation-panel']} ref={operationPanelRef}>
         <div  className={`${styles['border-container']} ${isShowSizeTip&&styles['size-tip']}`} ref={resizeRef}>
-            <ActionSheet
-              ref={actionSheetRef}
-              isOut={isOut}
-              hasChildNodes={
-                propName ? !!get(childNodes, propName) : !!childNodes
-              }
-              isRoot={selectedKey === ROOT}
-              keyValue={selectedKey}
-            />
           {!!selectedKey&&<>
           {map(Direction, (direction) => (
             <ResizeItem

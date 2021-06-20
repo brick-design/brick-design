@@ -3,18 +3,60 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  height: calc(100vh - 130px);
 }
 
 .page-container{
   position: relative;
   display: flex;
   flex-direction: column;
+  border-top: 1px solid @borderColor;
+  border-bottom: 1px solid @borderColor;
   .page-content{
     display: flex;
+    flex-direction: column;
     flex: 1;
     overflow: auto;
     background-color: @bgColor;
   }
+
+  .layer-item{
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    padding-left: 16px;
+    padding-right: 8px;
+    .right-icon{
+      width:8px ;
+      height: 8px;
+      margin-right: 8px;
+    }
+    .layer-text{
+      display: flex;
+      flex:1;
+      align-items: center;
+      height: 100%;
+      color: #333;
+      font-size: 12px;
+    }
+    .hover-icon{
+      display: none;
+    }
+
+    .icon-size{
+      width: 10px;
+      height: 10px;
+    }
+    &:hover{
+      background-color: @backGroundColor;
+      .hover-icon{
+        display: flex;
+        width:20px ;
+        height:20px;
+      }
+    }
+  }
+
 }
 .header-container{
   display: flex;
@@ -45,3 +87,4 @@
 
   }
 }
+

@@ -45,20 +45,6 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
 }
 
 /**
- * 用于获取组件名字数组
- * @param data
- * @returns {Array}
- */
-export function flattenDeepArray(data: CategoryType) {
-	return flattenDeep(
-		map(data, (v, k) => {
-			if (v && v.components) return map(v.components, (_, subK) => subK)
-			return k
-		}),
-	)
-}
-
-/**
  * 过滤掉值为undefined的字段
  * @param value
  * @returns {undefined}

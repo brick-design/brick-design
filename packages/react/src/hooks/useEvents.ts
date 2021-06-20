@@ -173,7 +173,7 @@ export function useEvents(
   const onClick = useCallback(
     (event: Event) => {
       event && event.stopPropagation();
-      if (isSelected) {return;};
+      if (isSelected)
       clearSelectedStatus();
       setOperateState({ selectedNode: null });
       onClickFn && onClickFn();

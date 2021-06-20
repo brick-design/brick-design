@@ -1,3 +1,4 @@
+
 export default {
   submitConfigs: `submitConfigs`,
   searchTemplate: `searchTemplate`,
@@ -33,6 +34,10 @@ export default {
   setStateDomain: 'setStateDomain',
   restStateDomain: 'restStateDomain',
   initPageBrickdState: 'initPageBrickdState',
-  removePageBrickdState: 'removePageBrickdState',
   dragSort: 'dragSort',
+  createLayers:'createLayers',
+  deleteLayers:'deleteLayers',
+  copyLayers:'copyLayers',
+  renameLayers:'renameLayers',
+  changeLayer:'changeLayer',
 };

@@ -1,11 +1,8 @@
 import React, { memo } from 'react';
-import { SelectedInfoBaseType } from '@brickd/core';
-import { LayoutIcon, RowIcon, TriangleIcon } from './Icons';
-import { useSelector } from '../../../hooks/useSelector';
-
-import { handleSelectedStatus, onMouseOver } from '../../../common/events';
-import styles from '../index.less';
-import { isEqualKey } from '../../../utils';
+import { SelectedInfoBaseType,useSelector,handleSelectedStatus, onMouseOver,isEqualKey } from '@brickd/react';
+import styles from './index.less';
+import {arrowIcon,layoutIcon} from '../../../assets';
+import Icon from '../../../Components/Icon';
 
 const selectedColor = '#5E96FF';
 const unSelectedColor = '#555555';
@@ -65,22 +62,18 @@ function Header(props: HeaderProps) {
         onMouseOver={(e: any) => onMouseOver(e, sortItemKey, isSelected)}
         style={{ display: 'flex', flex: 1, alignItems: 'center', color }}
       >
-        <TriangleIcon
-          className={`${styles.triangle} ${isUnfold && styles.rotate90}`}
-          style={{
-            visibility: hasChildNodes ? 'visible' : 'hidden',
-          }}
+        <Icon
+          className={`${styles.triangle} ${isUnfold && styles.rotate180}`}
+          icon={arrowIcon}
+          iconClass={styles[ hasChildNodes ? 'visible-icon' : 'hidden-icon']}
           onClick={(event) => {
             event.stopPropagation();
             setIsUnfold(!isUnfold);
           }}
         />
-        {componentName.includes('Layout') ? (
-          <LayoutIcon style={{ color, marginRight: 5 }} />
-        ) : (
-          <RowIcon style={{ color, marginRight: 5 }} />
-        )}
-        <span>{componentName}</span>
+
+        <Icon className={styles['layout-icon']} style={{color}} icon={layoutIcon}/>
+        {componentName}
       </div>
     </div>
   );

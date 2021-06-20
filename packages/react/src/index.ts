@@ -1,8 +1,8 @@
 export * from './common/events';
 export * from './utils';
-export { default as BrickDesign } from './BrickDesignCanvas';
-export { default as BrickTree } from './components/BrickTree';
-export { default as ReactSortable } from './components/BrickTree/components/ReactSortable';
+export { default as BrickDesignCanvas } from './BrickDesignCanvas';
+export * from './BrickDesignCanvas';
 export * from '@brickd/core';
 export { useSelector } from './hooks/useSelector';
 export { default as BrickProvider } from './components/BrickProvider';
+export * from './components/BrickProvider';

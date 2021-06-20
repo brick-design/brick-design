@@ -9,51 +9,50 @@ import React, {
 import { BrickStore } from '@brickd/hooks';
 import {
   addComponent,
-  initPageBrickdState,
   redo,
-  setPageName,
-  StateType,
   undo,
-} from '@brickd/core';
-import { isEqual } from 'lodash';
+  initPageBrickdState, PageBrickdStateType, changePlatform, PlatformSizeType,
+} from '@brickd/core'
 import BrickDesign, { BrickDesignProps } from './BrickDesign';
 import {
   OperateProvider,
   OperateStateType,
 } from './components/OperateProvider';
-import styles from './global.less';
-import { getIframe } from './utils';
+import styles from './index.less';
+import { css, getIframe } from './utils'
 import { onDragover } from './common/events';
 import { useSelector } from './hooks/useSelector';
 import Guidelines from './components/Guidelines';
+import ResizePolyfill from 'resize-observer-polyfill';
 
-interface BrickDesignCanvasType extends BrickDesignProps {
-  initState?: Partial<StateType>;
-  pageName: string;
+interface PlatformsType{
+  [platformName:string]:PlatformSizeType
 }
 
+export interface BrickDesignCanvasType extends BrickDesignProps {
+  initBrickdState?:PageBrickdStateType
+  platforms?:PlatformsType
+}
+
+const defaultPlatforms:PlatformsType={PC:[1920, 1080]}
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
-  const { onLoadEnd, pageName, initState, ...rest } = props;
+  const { onLoadEnd,initBrickdState,platforms=defaultPlatforms,children,className, ...rest } = props;
   const operateStore = useRef<BrickStore<OperateStateType>>(
     new BrickStore<OperateStateType>(),
   ).current;
   const {
-    platformInfo: { size },
+    platformInfo: {platformName, size },
   } = useSelector(['platformInfo']);
   const [isLoading, setIsLoading] = useState(false);
   const [scale, setScale] = useState(0.4);
-  const [canvasSize, setCanvasSize] = useState(size);
   const iframeRef = useRef<HTMLIFrameElement>();
-  const prevSize = useRef(size);
+  const dndContainerRef=useRef<HTMLElement>();
+  const selectedPlatform=platforms[platformName];
   const loadEnd = useCallback(() => {
     setIsLoading(true);
+    dndContainerRef.current=iframeRef.current.contentDocument.getElementById('dnd-container')
     onLoadEnd && onLoadEnd();
   }, [setIsLoading]);
-
-  useEffect(() => {
-    setPageName(pageName);
-    initPageBrickdState(initState);
-  }, [pageName]);
 
   useEffect(() => {
     function onMouseWheel(mousewheel: WheelEvent) {
@@ -73,6 +72,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   }, []);
 
   useEffect(() => {
+    initBrickdState&&initPageBrickdState(initBrickdState)
     iframeRef.current = getIframe();
     const { contentWindow } = iframeRef.current;
     contentWindow.addEventListener('dragover', onDragover);
@@ -87,24 +87,41 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     };
   }, []);
 
-  useEffect(() => {
-    if (!isEqual(prevSize.current, size)) {
-      setCanvasSize(size);
-      prevSize.current = size;
-    }
-  });
-  const changeCanvasSize = useCallback(() => {
-    const {
-      contentDocument: {
-        body: { scrollHeight, scrollWidth },
-      },
-    } = iframeRef.current;
-    if (canvasSize[0] === size[0] && canvasSize[1] === size[1]) {
-      setCanvasSize([scrollWidth, scrollHeight]);
+
+  const changeCanvasSize = useCallback((isChangePage?:any) => {
+
+    if(typeof isChangePage==='boolean'&&isChangePage){
+      const {
+        contentDocument: {
+          body: { scrollHeight, scrollWidth },
+        },
+      } = iframeRef.current;
+    if (selectedPlatform[0] === size[0] && selectedPlatform[1] === size[1]) {
+      changePlatform({size:[scrollWidth, scrollHeight]});
     } else {
-      setCanvasSize(size);
+      changePlatform({size:selectedPlatform});
     }
-  }, [setCanvasSize, size, canvasSize]);
+    }else {
+      const target=dndContainerRef.current
+      const {width,height}=css(target);
+      const targetWidth=Number.parseInt(width)
+      const targetHeight=Number.parseInt(height)
+      if((selectedPlatform[0] !== size[0]||selectedPlatform[1] !== size[1])&&
+        (selectedPlatform[0]!==targetWidth||selectedPlatform[1]!==targetHeight)){
+        changePlatform({size:[targetWidth>selectedPlatform[0]?targetWidth:selectedPlatform[0], targetHeight>selectedPlatform[1]?targetHeight:selectedPlatform[1]]})
+      }
+    }
+  }, [selectedPlatform,size]);
+
+  useEffect(()=>{
+    const resizeObserver=new ResizePolyfill(changeCanvasSize)
+    const target=dndContainerRef.current
+    target&&resizeObserver.observe(target)
+    return ()=>{
+      target&&resizeObserver.unobserve(target)
+
+    }
+  })
 
   useEffect(() => {
     const { contentWindow } = iframeRef.current || {};
@@ -119,7 +136,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             redo();
           }
         } else if (key === 'u') {
-          changeCanvasSize();
+          changeCanvasSize(true);
         } else if (key === '=') {
           setScale(scale + 0.05);
         } else if (key === '-') {
@@ -138,20 +155,20 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
 
   const style = useMemo(
     () => ({
-      width: canvasSize[0],
-      minWidth: canvasSize[0],
-      height: canvasSize[1],
-      minHeight: canvasSize[1],
+      width:size[0],
+      minWidth: size[0],
+      height:size[1],
+      minHeight: size[1],
       transition: 'all 700ms',
-      transform: `scale(${scale},${scale})`,
+      transform: `scale(${scale})`,
     }),
-    [canvasSize, scale],
+    [size, scale],
   );
 
   return (
     <OperateProvider value={operateStore}>
       <div
-        className={styles['brick-design-container']}
+        className={`${styles['brick-design-container']} ${className}`}
         id="brickd-canvas-container"
       >
         <div
@@ -170,6 +187,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             onLoadEnd={loadEnd}
           />
         </div>
+        {children}
       </div>
     </OperateProvider>
   );

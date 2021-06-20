@@ -353,11 +353,6 @@ export function createActions(action: BrickAction) {
   return getStore().dispatch(action);
 }
 
-let CURRENT_PAGE_NAME: null | string = null;
-export const setPageName = (pageName: null | string) =>
-  (CURRENT_PAGE_NAME = pageName);
-export const getPageName = () => CURRENT_PAGE_NAME;
-
 let STORE: BrickdStoreType<BrickDesignStateType, BrickAction> | null = null;
 export const setStore = (
   store: BrickdStoreType<BrickDesignStateType, BrickAction> | null,
@@ -375,9 +370,11 @@ let WARN: WarnType | null = null;
 export const getWarn = () => WARN;
 export const setWarn = (warn: WarnType | null) => (WARN = warn);
 
-export function getPageState() {
-  const pageName = getPageName();
-  return get(getStore().getState(), pageName, legoState);
+export function getPageState(isRoot?:boolean) {
+  const brickdState=getStore().getState()
+  if(isRoot) return  brickdState;
+  const  layerName = get(brickdState,'layerName');
+  return get(brickdState, layerName, legoState);
 }
 
 export function getSelector(selector: STATE_PROPS[]) {
@@ -391,5 +388,4 @@ export const cleanStateCache = () => {
   setBrickdConfig(null);
   setWarn(null);
   setStore(null);
-  setPageName(null);
 };

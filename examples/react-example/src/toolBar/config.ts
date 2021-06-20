@@ -2,14 +2,13 @@ import SwitchPlatform from './component/SwitchPlatform'
 import {
 	clearChildNodes,
 	copyComponent,
-	deleteComponent,
-	PlatformStyleType,
+	deleteComponent, PlatformSizeType,
 	redo,
 	undo,
 } from '@brickd/react'
 
 export interface PlatformMenusType {
-	[platformName: string]: PlatformStyleType
+	[platformName: string]: PlatformSizeType
 }
 
 const platformMenus: PlatformMenusType = {

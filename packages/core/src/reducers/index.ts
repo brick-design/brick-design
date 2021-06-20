@@ -28,18 +28,33 @@ import { setStateDomain, restStateDomain } from './handleStateDomain';
 import {
   initPageBrickdState,
   legoState,
-  removePageBrickdState,
 } from './handlePageBrickdState';
+import { createLayers, renameLayers, deleteLayers, changeLayer, copyLayers } from './handleLayers'
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, BrickDesignStateType, StateType } from '../types';
-import { getPageName } from '../utils';
 
 export type ReducerType = Reducer<BrickDesignStateType, BrickAction>;
 export const reducer: ReducerType = (prevState, action) => {
-  const pageName = getPageName();
-  const state = get(prevState, pageName, legoState) as StateType;
-  let newState: StateType;
   const { type, payload } = action;
+  switch (type){
+    case ACTION_TYPES.createLayers:
+      return createLayers(prevState,payload);
+    case ACTION_TYPES.deleteLayers:
+      return deleteLayers(prevState,payload);
+    case ACTION_TYPES.renameLayers:
+      return renameLayers(prevState,payload);
+    case ACTION_TYPES.copyLayers:
+      return copyLayers(prevState,payload);
+    case ACTION_TYPES.changeLayer:
+      return changeLayer(prevState,payload);
+    case ACTION_TYPES.initPageBrickdState:
+      return  initPageBrickdState(prevState, payload);
+
+  }
+  const layerName = get(prevState,'layerName');
+  if(!layerName) return prevState;
+  const state = get(prevState, layerName, legoState) as StateType;
+  let newState: StateType;
   switch (type) {
     case ACTION_TYPES.addComponent:
       newState = addComponent(state);
@@ -119,15 +134,10 @@ export const reducer: ReducerType = (prevState, action) => {
     case ACTION_TYPES.restStateDomain:
       newState = restStateDomain(state, payload);
       break;
-    case ACTION_TYPES.initPageBrickdState:
-      newState = initPageBrickdState(state, payload);
-      break;
-    case ACTION_TYPES.removePageBrickdState:
-      newState = removePageBrickdState();
-      break;
+
     default:
       return prevState;
   }
-  if (newState === state || pageName === null) return prevState;
-  return { ...prevState, [pageName]: newState };
+  if (newState === state) return prevState;
+  return { ...prevState, [layerName]: newState };
 };

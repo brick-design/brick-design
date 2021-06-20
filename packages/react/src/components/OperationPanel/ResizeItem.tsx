@@ -100,6 +100,7 @@ function ResizeItem(props: ItemProps) {
   }
   return (
     <div
+      draggable={false}
       style={containerPositionStyles[direction]}
       className={styles['item-container']}
       onMouseDown={(e) => onResizeStart(e, direction, true)}
