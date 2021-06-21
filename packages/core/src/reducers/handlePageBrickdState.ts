@@ -1,6 +1,6 @@
-import { merge,each } from 'lodash';
-import { BrickDesignStateType ,StateType} from '../types'
-import { PageBrickdStateType } from '../actions'
+import { merge, each } from 'lodash';
+import { BrickDesignStateType, StateType } from '../types';
+import { PageBrickdStateType } from '../actions';
 
 export const legoState: StateType = {
   pageConfig: {}, // 所有组件信息
@@ -13,18 +13,16 @@ export const legoState: StateType = {
   platformInfo: { platformName: 'PC', size: [1920, 1080] },
 };
 
-
-
 export function initPageBrickdState(
   state: BrickDesignStateType,
   payload: PageBrickdStateType,
 ): BrickDesignStateType {
-  let newState={};
-  const layerName=Object.keys(payload)[0]
+  let newState = {};
+  const layerName = Object.keys(payload)[0];
 
-  each(payload,(v,k)=>{
-    newState[k]=merge(v,legoState)
-  })
+  each(payload, (v, k) => {
+    newState[k] = merge(v, legoState);
+  });
 
-  return {layerName,...newState};
+  return { layerName, ...newState };
 }

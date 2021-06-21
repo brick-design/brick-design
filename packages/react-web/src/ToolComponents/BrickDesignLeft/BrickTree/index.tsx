@@ -1,5 +1,11 @@
 import React, { memo, useCallback } from 'react';
-import { useSelector,clearHovered, PageConfigType, ROOT, STATE_PROPS } from '@brickd/react';
+import {
+  useSelector,
+  clearHovered,
+  PageConfigType,
+  ROOT,
+  STATE_PROPS,
+} from '@brickd/react';
 import SortTree from './SortTree';
 import styles from './index.less';
 
@@ -27,10 +33,7 @@ function BrickTree(props: BrickTreeProps) {
 
   if (!pageConfig[ROOT]) return null;
   return (
-    <div
-      onMouseLeave={onMouseLeave}
-      className={styles['sort-container']}
-    >
+    <div onMouseLeave={onMouseLeave} className={styles['sort-container']}>
       <SortTree
         disabled
         childNodes={[ROOT]}

@@ -1,21 +1,15 @@
-import { Action, AnyAction, createStore, Store } from 'redux';
+import { createStore } from 'redux';
 import { reducer, ReducerType } from './reducers';
 import { ConfigType } from './types';
+import { combineReducers, getPageState } from './utils';
 import {
-  combineReducers,
-  getBrickdConfig,
-  getPageState,
-  getStore,
-  setBrickdConfig,
-  setStore,
-  setWarn,
   WarnType,
-} from './utils';
-
-export interface BrickdStoreType<T, U extends Action = AnyAction>
-  extends Store<T, U> {
-  getPageState: any;
-}
+  setWarn,
+  getBrickdConfig,
+  setBrickdConfig,
+  getStore,
+  setStore,
+} from './utils/caches';
 
 export function createLegoStore(
   config: ConfigType,

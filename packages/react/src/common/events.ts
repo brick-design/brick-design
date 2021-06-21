@@ -1,25 +1,4 @@
-import {
-  addComponent,
-  clearHovered,
-  clearSelectedStatus,
-  overTarget,
-  selectComponent,
-  SelectedInfoBaseType,
-} from '@brickd/core';
-
-export function handleSelectedStatus(
-  event: Event | null,
-  isSelected: boolean,
-  specialProps: SelectedInfoBaseType,
-  propName?: string,
-) {
-  event && event.stopPropagation && event.stopPropagation();
-  if (isSelected) {
-    clearSelectedStatus();
-  } else {
-    selectComponent({ ...specialProps, propName });
-  }
-}
+import { addComponent, clearHovered, overTarget } from '@brickd/core';
 
 /**
  * hover组件上触发

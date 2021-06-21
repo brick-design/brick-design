@@ -59,11 +59,7 @@ function Guidelines(props: GuidelinesType) {
       const { hoverNode, dropNode, isModal } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
-        const { left, top, bottom, right } = getElementInfo(
-          node,
-          iframe,
-          isModal,
-        );
+        const { left, top, bottom, right } = getElementInfo(node, isModal);
         const { scrollY, scrollX } = contentWindow;
         const positionSize = getScalePosition(canvas, canvasContainer, scale);
         const { width, height } = positionSize;

@@ -68,7 +68,7 @@ function MarginItem(props: MarginItemType) {
     };
   });
 
-  const onClick =() => {
+  const onClick = () => {
     setChecked(!checked);
     const operateState = getOperateState();
     executeKeyListener('lockedMargin' + positionMap[position]);
@@ -81,11 +81,9 @@ function MarginItem(props: MarginItemType) {
       ref={marginRef}
       onClick={onClick}
       style={positionStyles[position]}
-      className={
-        `${styles['margin-selector-item']} ${
-              checked && styles['margin-checked']
-            }`
-      }
+      className={`${styles['margin-selector-item']} ${
+        checked && styles['margin-checked']
+      }`}
     />
   );
 }

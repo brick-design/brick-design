@@ -49,7 +49,6 @@ function getNode(key: string) {
 
 function GuidePlaceholder() {
   const hoverNodeRef = useRef<any>();
-  const iframe = useRef(getIframe()).current;
 
   const { hoverKey, dropTarget, selectedInfo } = useSelector<
     SelectState,
@@ -59,7 +58,7 @@ function GuidePlaceholder() {
   const { getOperateState, setSubscribe, setOperateState } = useOperate(false);
   const { selectedKey } = selectedInfo || {};
   const dropKey = get(dropTarget, 'selectedKey');
-  const { operateHoverKey, operateSelectedKey, dropNode } = getOperateState();
+  const { operateHoverKey, operateSelectedKey } = getOperateState();
 
   if (!dropKey && hoverKey !== operateHoverKey) {
     const hoverNode = getNode(hoverKey);
@@ -76,11 +75,7 @@ function GuidePlaceholder() {
       const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
-        const { left, top, width, height } = getElementInfo(
-          node,
-          iframe,
-          isModal,
-        );
+        const { left, top, width, height } = getElementInfo(node, isModal);
         hoverNodeRef.current.style.cssText = generateCSS(
           left,
           top,
@@ -111,10 +106,9 @@ function GuidePlaceholder() {
   const onTransitionEnd = useCallback(() => {
     setOperateState({ isLock: false });
   }, []);
-
   const hoverNodeClass =
-    dropNode || hoverKey
-      ? dropNode
+    dropKey || hoverKey
+      ? dropKey
         ? styles['drop-node']
         : styles['hover-node']
       : styles['guide-hidden'];

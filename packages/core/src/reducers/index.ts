@@ -10,7 +10,6 @@ import {
 import {
   clearDragSource,
   clearDropTarget,
-  getDragSort,
   getDragSource,
   getDropTarget,
 } from './handleDragDrop';
@@ -25,34 +24,36 @@ import { changeStyles, resetStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import { setApi, setComponentState } from './handleComponetStateApi';
 import { setStateDomain, restStateDomain } from './handleStateDomain';
+import { initPageBrickdState, legoState } from './handlePageBrickdState';
 import {
-  initPageBrickdState,
-  legoState,
-} from './handlePageBrickdState';
-import { createLayers, renameLayers, deleteLayers, changeLayer, copyLayers } from './handleLayers'
+  createLayers,
+  renameLayers,
+  deleteLayers,
+  changeLayer,
+  copyLayers,
+} from './handleLayers';
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, BrickDesignStateType, StateType } from '../types';
 
 export type ReducerType = Reducer<BrickDesignStateType, BrickAction>;
 export const reducer: ReducerType = (prevState, action) => {
   const { type, payload } = action;
-  switch (type){
+  switch (type) {
     case ACTION_TYPES.createLayers:
-      return createLayers(prevState,payload);
+      return createLayers(prevState, payload);
     case ACTION_TYPES.deleteLayers:
-      return deleteLayers(prevState,payload);
+      return deleteLayers(prevState, payload);
     case ACTION_TYPES.renameLayers:
-      return renameLayers(prevState,payload);
+      return renameLayers(prevState, payload);
     case ACTION_TYPES.copyLayers:
-      return copyLayers(prevState,payload);
+      return copyLayers(prevState, payload);
     case ACTION_TYPES.changeLayer:
-      return changeLayer(prevState,payload);
+      return changeLayer(prevState, payload);
     case ACTION_TYPES.initPageBrickdState:
-      return  initPageBrickdState(prevState, payload);
-
+      return initPageBrickdState(prevState, payload);
   }
-  const layerName = get(prevState,'layerName');
-  if(!layerName) return prevState;
+  const layerName = get(prevState, 'layerName');
+  if (!layerName) return prevState;
   const state = get(prevState, layerName, legoState) as StateType;
   let newState: StateType;
   switch (type) {
@@ -118,9 +119,6 @@ export const reducer: ReducerType = (prevState, action) => {
       break;
     case ACTION_TYPES.clearDragSource:
       newState = clearDragSource(state);
-      break;
-    case ACTION_TYPES.dragSort:
-      newState = getDragSort(state, payload);
       break;
     case ACTION_TYPES.setComponentState:
       newState = setComponentState(state, payload);

@@ -1,7 +1,23 @@
-import React, { memo } from 'react';
-import { SelectedInfoBaseType,useSelector,handleSelectedStatus, onMouseOver,isEqualKey } from '@brickd/react';
+import React, { memo, useState } from 'react';
+import {
+  SelectedInfoBaseType,
+  useSelector,
+  onMouseOver,
+  isEqualKey,
+  clearHovered,
+  clearSelectedStatus,
+  selectComponent,
+} from '@brickd/react';
 import styles from './index.less';
-import {arrowIcon,layoutIcon} from '../../../assets';
+import {
+  arrowIcon,
+  closeEye,
+  layoutIcon,
+  lockClose,
+  lockOpen,
+  moreIcon,
+  openEye,
+} from '../../../assets';
 import Icon from '../../../Components/Icon';
 
 const selectedColor = '#5E96FF';
@@ -32,6 +48,8 @@ function Header(props: HeaderProps) {
     componentName,
     hasChildNodes,
   } = props;
+  const [isLock, setIsLock] = useState(false);
+  const [isCloseEye, setIsCloseEye] = useState(false);
   const { selectedInfo, hoverKey } = useSelector(
     ['selectedInfo', 'hoverKey'],
     (prevState, nextState) => controlUpdate(prevState, nextState, key),
@@ -45,36 +63,70 @@ function Header(props: HeaderProps) {
   const isHovered = isEqualKey(sortItemKey, hoverKey);
   const color = isSelected ? selectedColor : unSelectedColor;
 
+  const lockNode = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsLock(!isLock);
+  };
+
+  const onCloseEye = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsCloseEye(!isCloseEye);
+  };
+
   return (
     <div
-      style={{
-        backgroundColor:
-          (isSelected && selectedBGColor) ||
-          (isHovered && hoveredBGColor) ||
-          '#0000',
-      }}
+      style={
+        isSelected || isHovered
+          ? {
+              backgroundColor:
+                (isSelected && selectedBGColor) ||
+                (isHovered && hoveredBGColor),
+            }
+          : {}
+      }
       className={styles['header-container']}
     >
       <div
-        onClick={() =>
-          handleSelectedStatus(null, isSelected, specialProps, propName)
-        }
+        onClick={(event) => {
+          event.stopPropagation();
+          if (isSelected) {
+            clearSelectedStatus();
+          } else {
+            selectComponent({ ...specialProps, propName });
+          }
+        }}
+        onMouseLeave={(e) => isHovered && clearHovered()}
         onMouseOver={(e: any) => onMouseOver(e, sortItemKey, isSelected)}
         style={{ display: 'flex', flex: 1, alignItems: 'center', color }}
       >
         <Icon
           className={`${styles.triangle} ${isUnfold && styles.rotate180}`}
           icon={arrowIcon}
-          iconClass={styles[ hasChildNodes ? 'visible-icon' : 'hidden-icon']}
+          iconClass={styles[hasChildNodes ? 'visible-icon' : 'hidden-icon']}
           onClick={(event) => {
             event.stopPropagation();
             setIsUnfold(!isUnfold);
           }}
         />
 
-        <Icon className={styles['layout-icon']} style={{color}} icon={layoutIcon}/>
+        <Icon
+          className={styles['layout-icon']}
+          style={{ color }}
+          icon={layoutIcon}
+        />
         {componentName}
       </div>
+      <Icon
+        onClick={lockNode}
+        className={styles['item-icon']}
+        icon={isLock ? lockClose : lockOpen}
+      />
+      <Icon
+        onClick={onCloseEye}
+        icon={isCloseEye ? closeEye : openEye}
+        className={styles['item-icon']}
+      />
+      <Icon icon={moreIcon} className={styles['item-icon']} />
     </div>
   );
 }

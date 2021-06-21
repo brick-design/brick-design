@@ -1,8 +1,7 @@
-import { createElement, memo, useEffect, useMemo, useRef } from 'react';
+import { createElement, memo, useEffect, useRef } from 'react';
 import { ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
 import { VirtualDOMType } from '@brickd/utils';
-import { isEmpty } from 'lodash';
 import {
   CommonPropsType,
   controlUpdate,
@@ -17,13 +16,11 @@ import {
   getDragKey,
   getDragSourceFromKey,
   getIframe,
-  getIsModalChild,
   getSelectedNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useSelector } from '../hooks/useSelector';
 import { useEvents } from '../hooks/useEvents';
-import { useOperate } from '../hooks/useOperate';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -56,19 +53,10 @@ function NoneContainer(allProps: CommonPropsType) {
     props,
     componentName,
   );
-  const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
-    pageConfig,
-    domTreeKeys,
-  ]);
-  const { getOperateState } = useOperate(isModal);
 
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
-    const { index: selectedIndex } = getOperateState();
-    if (
-      (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
-      isAddComponent.current
-    ) {
+    if (isAddComponent.current){
       setSelectedNode(getSelectedNode(uniqueKey, iframe));
       isAddComponent.current = false;
     }

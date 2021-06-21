@@ -108,9 +108,7 @@ const data: PageConfigType = {
 			style: {
 				width: 55,
 				height: 55,
-				marginRight: 199,
-				transform:'rotate(45deg)',
-				transformOrigin:'0px 0px'
+				marginRight: 199
 			},
 		},
 

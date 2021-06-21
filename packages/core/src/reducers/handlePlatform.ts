@@ -1,4 +1,4 @@
-import { PlatformInfoType, StateType } from '../types'
+import { PlatformInfoType, StateType } from '../types';
 
 /**
  * 更改平台
@@ -9,9 +9,9 @@ export function changePlatform(
   state: StateType,
   payload: PlatformInfoType,
 ): StateType {
-  const {platformInfo}=state;
+  const { platformInfo } = state;
   return {
     ...state,
-    platformInfo: {...platformInfo,...payload},
+    platformInfo: { ...platformInfo, ...payload },
   };
 }

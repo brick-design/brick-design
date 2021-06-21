@@ -16,7 +16,7 @@ import {
 import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import { getDragSourceFromKey, getIframe, iframeSrcDoc } from './utils';
+import { getDragSourceFromKey, iframeSrcDoc, getIframe, getDragKey } from './utils'
 import Distances from './components/Distances';
 import GuidePlaceholder from './components/GuidePlaceholder';
 import { useSelector } from './hooks/useSelector';
@@ -59,7 +59,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     stateSelector,
     controlUpdate,
   );
-  const iframeRef = useRef<HTMLIFrameElement>();
   const rootComponent = pageConfig[ROOT];
 
   const staticState = useMemo(() => ({ options, pageName }), [
@@ -69,6 +68,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const onMouseLeave = useCallback((event: Event) => {
     event.stopPropagation();
+    if(getDragKey()) return;
     clearHovered();
     operateStore.setPageState({
       hoverNode: null,
@@ -113,19 +113,22 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   );
 
   const onDragEnter = useCallback(() => {
+    if (rootComponent) return;
     componentMount(
       divContainer,
       renderComponent(getDragSourceFromKey('vDOMCollection', {})),
     );
-  }, [componentMount, divContainer]);
+  }, [componentMount, divContainer, rootComponent]);
 
   const onDragLeave = useCallback(() => {
-    ReactDOM.unmountComponentAtNode(divContainer.current);
-  }, [divContainer.current]);
+    if (!rootComponent) {
+      ReactDOM.unmountComponentAtNode(divContainer.current);
+    }
+  }, [divContainer.current, rootComponent]);
 
   const onIframeLoad = useCallback(() => {
     const head = document.head.cloneNode(true);
-    const { contentDocument } = iframeRef.current;
+    const { contentDocument } = getIframe();
     contentDocument.head.remove();
     contentDocument.documentElement.insertBefore(head, contentDocument.body);
     divContainer.current = contentDocument.getElementById('dnd-container');
@@ -134,20 +137,16 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   }, [designPage, onLoadEnd, componentMount]);
 
   useEffect(() => {
-    if (rootComponent) return;
-    const contentWindow = getIframe()!.contentWindow!;
+    const { contentWindow } = getIframe();
     contentWindow.addEventListener('dragenter', onDragEnter);
     contentWindow.addEventListener('dragleave', onDragLeave);
     return () => {
       contentWindow.removeEventListener('dragenter', onDragEnter);
       contentWindow.removeEventListener('dragleave', onDragLeave);
     };
-  }, [rootComponent, onDragEnter, onDragLeave]);
+  }, [onDragEnter, onDragLeave]);
 
   useEffect(() => {
-    if (!iframeRef.current) {
-      iframeRef.current = getIframe();
-    }
     if (divContainer.current) {
       componentMount(divContainer, designPage);
     }

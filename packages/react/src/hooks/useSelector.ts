@@ -5,7 +5,13 @@ export function useSelector<T, U extends string>(
   selector: U[],
   controlUpdate?: ControlUpdate<T>,
   stateDeep?: string,
-  isRoot?:boolean
+  isRoot?: boolean,
 ) {
-  return useBrickSelector(selector, controlUpdate, stateDeep, BrickContext,isRoot);
+  return useBrickSelector(
+    selector,
+    controlUpdate,
+    stateDeep,
+    BrickContext,
+    isRoot,
+  );
 }

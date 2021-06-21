@@ -8,12 +8,11 @@ import {
   SelectedInfoType,
   StateType,
   BrickDesignStateType,
-  ConfigType,
   STATE_PROPS,
 } from '../types';
 import { ReducerType } from '../reducers';
-import { BrickdStoreType } from '../store';
 import { legoState } from '../reducers/handlePageBrickdState';
+import { getStore, getWarn, getBrickdConfig } from './caches';
 
 /**
  * 根节点key
@@ -353,39 +352,16 @@ export function createActions(action: BrickAction) {
   return getStore().dispatch(action);
 }
 
-let STORE: BrickdStoreType<BrickDesignStateType, BrickAction> | null = null;
-export const setStore = (
-  store: BrickdStoreType<BrickDesignStateType, BrickAction> | null,
-) => (STORE = store);
-export const getStore = () => STORE;
-
-let BRICKD_CONFIG: ConfigType | null = null;
-export const getBrickdConfig = () => BRICKD_CONFIG;
-export const setBrickdConfig = (config: ConfigType | null) =>
-  (BRICKD_CONFIG = config);
-
-export type WarnType = (msg: string) => void;
-let WARN: WarnType | null = null;
-
-export const getWarn = () => WARN;
-export const setWarn = (warn: WarnType | null) => (WARN = warn);
-
-export function getPageState(isRoot?:boolean) {
-  const brickdState=getStore().getState()
-  if(isRoot) return  brickdState;
-  const  layerName = get(brickdState,'layerName');
+export function getPageState(isRoot?: boolean) {
+  const brickdState = getStore().getState();
+  if (isRoot) return brickdState;
+  const layerName = get(brickdState, 'layerName');
   return get(brickdState, layerName, legoState);
 }
 
-export function getSelector(selector: STATE_PROPS[]) {
+export function getSelector<T>(selector: STATE_PROPS[]): T {
   const states = getPageState();
   const resultState = {};
   each(selector, (stateName) => (resultState[stateName] = states[stateName]));
-  return resultState;
+  return resultState as T;
 }
-
-export const cleanStateCache = () => {
-  setBrickdConfig(null);
-  setWarn(null);
-  setStore(null);
-};

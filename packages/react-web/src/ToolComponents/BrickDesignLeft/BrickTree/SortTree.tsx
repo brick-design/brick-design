@@ -98,7 +98,7 @@ function SortTree(props: SortTreePropsType) {
   );
   return (
     <ReactSortable
-        className={styles['sort-able']}
+      className={styles['sort-able']}
       options={{
         group: {
           name: 'nested',

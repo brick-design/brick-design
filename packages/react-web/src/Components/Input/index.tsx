@@ -49,9 +49,9 @@ function Input(props: InputProps, ref: any) {
     <div className={`${styles['container']} ${className}`}>
       <input
         type={type || 'text'}
-        onChange={change}
         className={styles['common-input']}
         {...rest}
+        onChange={change}
         value={value}
       />
       {value !== '' && closeAble && (

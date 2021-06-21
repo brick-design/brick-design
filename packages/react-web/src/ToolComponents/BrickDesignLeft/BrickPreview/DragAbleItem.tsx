@@ -1,15 +1,16 @@
 import React, { createElement, memo, useContext, useRef } from 'react';
-import get from 'lodash/get';
+import { get } from 'lodash';
 import { getDragSource, getBrickdConfig } from '@brickd/react';
 import styles from './index.less';
-import { SearchContext } from '../Components/SearchBar'
+import { SearchContext } from '../Components/SearchBar';
 
 interface DragAbleItemPropsType {
   dragSource: {
     defaultProps?: any;
     componentName: string;
   };
-  img?:string
+  img?: string;
+  desc?: string;
 }
 
 const defaultColors = [
@@ -35,7 +36,8 @@ function DragAbleItem(props: DragAbleItemPropsType) {
   const {
     dragSource,
     dragSource: { defaultProps, componentName },
-    img
+    img,
+    desc,
   } = props;
 
   const isChecked = useContext(SearchContext);
@@ -59,24 +61,29 @@ function DragAbleItem(props: DragAbleItemPropsType) {
     );
   }
 
-    return (
-      <div className={isChecked?styles['list-container']:styles['drag-container']}>
-        <div className={styles['list-drag-container']}>
-          <div
-            draggable
-            onDragStart={(event:React.DragEvent) => {
-              event.stopPropagation()
-              getDragSource(dragSource)
-            }}
-            className={styles['item']}
-          >
-            {renderDragComponent()}
-          </div>
+  return (
+    <div
+      className={
+        isChecked ? styles['list-container'] : styles['drag-container']
+      }
+    >
+      <div className={styles['list-drag-container']}>
+        <div
+          draggable
+          onDragStart={(event: React.DragEvent) => {
+            event.stopPropagation();
+            getDragSource(dragSource);
+          }}
+          className={styles['item']}
+        >
+          {renderDragComponent()}
         </div>
-        <span className={`${styles['hidden-drag-name']} ${styles['drag-name']}`}>{componentName}</span>
       </div>
-    );
-
+      <span className={`${styles['hidden-drag-name']} ${styles['drag-name']}`}>
+        {desc || componentName}
+      </span>
+    </div>
+  );
 }
 
 export default memo(DragAbleItem, () => true);

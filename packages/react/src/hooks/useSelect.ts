@@ -1,18 +1,16 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
-  DragSourceType,
   SelectedInfoBaseType,
   SelectedInfoType,
   STATE_PROPS,
+  selectComponent,
 } from '@brickd/core';
 import { get } from 'lodash';
 import { useSelector } from './useSelector';
-import { handleSelectedStatus } from '../common/events';
-import { isEqualKey } from '../utils';
+import { getDragKey, isEqualKey } from '../utils';
 
 interface SelectType {
   selectedInfo: SelectedInfoType;
-  dragSource: DragSourceType;
 }
 
 interface UseSelectType {
@@ -77,6 +75,8 @@ export function useSelect(
     [],
   );
 
+  const renderStatusRef = useRef(false);
+
   const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
     ['selectedInfo', 'dragSource'],
     controlUpdate,
@@ -85,11 +85,20 @@ export function useSelect(
   const { selectedKey, domTreeKeys: selectedDomKeys, propName } =
     selectedInfo || {};
   const isSelected = isEqualKey(key, selectedKey);
+
   useEffect(() => {
-    if (isSelected) {
-      handleSelectedStatus(null, false, specialProps);
+    if (!isSelected) {
+      renderStatusRef.current = true;
     }
   }, []);
+
+  useEffect(() => {
+    const dragKey = getDragKey();
+    if (isSelected && !dragKey && !renderStatusRef.current) {
+      renderStatusRef.current = true;
+      selectComponent(specialProps);
+    }
+  });
 
   return { selectedDomKeys, isSelected, propName, lockedKey: selectedKey };
 }

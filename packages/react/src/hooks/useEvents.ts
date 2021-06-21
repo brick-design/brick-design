@@ -11,7 +11,7 @@ import {
   selectComponent,
   SelectedInfoBaseType,
   STATE_PROPS,
-} from '@brickd/core';
+} from '@brickd/core'
 import { isEmpty } from 'lodash';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
@@ -22,7 +22,8 @@ import {
   formatUnit,
   getDragKey,
   getIframe,
-  getIsModalChild, handleInputText,
+  getIsModalChild,
+  handleInputText,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
@@ -56,10 +57,9 @@ export function useEvents(
     onClick: onClickFn,
     onDoubleClick: onDoubleClickFn,
   } = props;
-  const iframe = useRef(getIframe()).current;
   const originalPositionRef = useRef<OriginalPosition>();
   const positionResultRef = useRef<any>();
-  const contentEditRef=useRef<any>();
+  const contentEditRef = useRef<any>();
   const { editAbleProp } = getComponentConfig(componentName);
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
     ['pageConfig'],
@@ -71,7 +71,7 @@ export function useEvents(
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
 
-  const {selectedNode,changeOperationPanel}=getOperateState();
+  const { selectedNode, changeOperationPanel } = getOperateState();
 
   const setSelectedNode = useCallback(
     (selectedNode: HTMLElement) => {
@@ -89,8 +89,8 @@ export function useEvents(
     (e: Event) => {
       e && e.stopPropagation();
       const targetNode = e.target as HTMLElement;
-      if(targetNode.contentEditable === 'true'){
-      return   targetNode.contentEditable = 'false';
+      if (targetNode.contentEditable === 'true') {
+        return (targetNode.contentEditable = 'false');
       }
       if (editAbleProp) {
         targetNode.contentEditable = 'true';
@@ -104,15 +104,25 @@ export function useEvents(
   const onDragStart = useCallback(
     (event: React.DragEvent) => {
       event.stopPropagation();
-      iframe.contentDocument.body.style.cursor = 'move';
-      event.dataTransfer.setDragImage(dragImg, 0, 0);
-      setTimeout(() => {
-        getDragSource({
-          dragKey: key,
-          parentKey,
-          parentPropName,
-        });
-      }, 0);
+      getIframe().contentDocument.body.style.cursor = 'move';
+      if (!isSelected) {
+        dragImg.style.width = '10px';
+        dragImg.style.height = '10px';
+        event.dataTransfer.setDragImage(dragImg, 0, 0);
+      } else {
+        dragImg.style.width = '0px';
+        dragImg.style.height = '0px';
+        event.dataTransfer.setDragImage(dragImg, 0, 0);
+      }
+      setTimeout(
+        () =>
+          getDragSource({
+            dragKey: key,
+            parentKey,
+            parentPropName,
+          }),
+        0,
+      );
       if (isSelected && key !== ROOT) {
         const { clientX, clientY, target } = event;
         const targetNode = target as HTMLElement;
@@ -173,8 +183,7 @@ export function useEvents(
   const onClick = useCallback(
     (event: Event) => {
       event && event.stopPropagation();
-      if (isSelected)
-      clearSelectedStatus();
+      if (isSelected) clearSelectedStatus();
       setOperateState({ selectedNode: null });
       onClickFn && onClickFn();
     },
@@ -184,9 +193,10 @@ export function useEvents(
   const onMouseOver = useCallback(
     (event: Event) => {
       event.stopPropagation();
-      if (getDragKey()) {
+     const {hoverNode}=getOperateState();
+      if (getDragKey()&&hoverNode) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
-      } else {
+      } else if(!getDragKey()) {
         setOperateState({
           hoverNode: event.target as HTMLElement,
           operateHoverKey: key,
@@ -203,7 +213,7 @@ export function useEvents(
   const onDrag = useCallback((event: React.DragEvent) => {
     event.stopPropagation();
     event.persist();
-    iframe.contentWindow.requestAnimationFrame(()=>{
+    getIframe().contentWindow.requestAnimationFrame(() => {
       if (!originalPositionRef.current) return;
       const { clientY, clientX, target } = event;
       const {
@@ -247,27 +257,40 @@ export function useEvents(
       let isFlowLayout = true;
       if (EXCLUDE_POSITION.includes(targetNode.style.position)) {
         isFlowLayout = false;
-        changeElPositionAndSize(targetNode, { transition: 'none',left, top });
+        changeElPositionAndSize(targetNode, { transition: 'none', left, top });
         positionResultRef.current = { left, top };
       } else {
         if (!lockedMarginLeft && !lockedMarginTop) {
-          changeElPositionAndSize(targetNode, { transition: 'none',marginLeft, marginTop});
+          changeElPositionAndSize(targetNode, {
+            transition: 'none',
+            marginLeft,
+            marginTop,
+          });
           positionResultRef.current = { marginLeft, marginTop };
         } else if (lockedMarginLeft && !lockedMarginTop) {
-          changeElPositionAndSize(targetNode, { transition: 'none',marginRight, marginTop});
+          changeElPositionAndSize(targetNode, {
+            transition: 'none',
+            marginRight,
+            marginTop,
+          });
           positionResultRef.current = { marginRight, marginTop };
         } else if (!lockedMarginLeft && lockedMarginTop) {
-          changeElPositionAndSize(targetNode, { transition: 'none',marginLeft, marginBottom });
+          changeElPositionAndSize(targetNode, {
+            transition: 'none',
+            marginLeft,
+            marginBottom,
+          });
           positionResultRef.current = { marginLeft, marginBottom };
         } else {
-          changeElPositionAndSize(targetNode, {transition: 'none', marginRight, marginBottom });
+          changeElPositionAndSize(targetNode, {
+            transition: 'none',
+            marginRight,
+            marginBottom,
+          });
           positionResultRef.current = { marginRight, marginBottom };
         }
       }
-      boxChange(
-        positionResultRef.current,
-        isFlowLayout,
-      );
+      boxChange(positionResultRef.current, isFlowLayout);
       changeOperationPanel();
     });
   }, []);
@@ -287,29 +310,32 @@ export function useEvents(
     originalPositionRef.current = null;
     // actionSheetRef.current.setShow(true);
     (event.target as HTMLElement).style.transition = DEFAULT_ANIMATION;
-    iframe.contentDocument.body.style.cursor = 'default';
+    getIframe().contentDocument.body.style.cursor = 'default';
   }, []);
 
-  const onInput=useCallback((event:React.SyntheticEvent<any>)=>{
+  const onInput = useCallback((event: React.SyntheticEvent<any>) => {
     event.stopPropagation();
-   const {changeOperationPanel}=getOperateState();
-    const result=(event.target as HTMLElement).innerHTML;
-    contentEditRef.current=result;
+    const { changeOperationPanel } = getOperateState();
+    const result = (event.target as HTMLElement).innerHTML;
+    contentEditRef.current = result;
     changeOperationPanel();
-  },[]);
+  }, []);
 
-  const onBlur=useCallback((event:React.SyntheticEvent<any>)=>{
+  const onBlur = useCallback((event: React.SyntheticEvent<any>) => {
     event.stopPropagation();
     (event.target as HTMLElement).contentEditable = 'false';
-    if(contentEditRef.current===undefined) return;
-    changeProps({props:{[editAbleProp]:handleInputText(contentEditRef.current)},isMerge:true});
-  },[]);
+    if (contentEditRef.current === undefined) return;
+    changeProps({
+      props: { [editAbleProp]: handleInputText(contentEditRef.current) },
+      isMerge: true,
+    });
+  }, []);
 
- useEffect(()=>{
-   if(selectedNode){
-     changeOperationPanel();
-   }
- });
+  useEffect(() => {
+    if (selectedNode) {
+      changeOperationPanel();
+    }
+  });
 
   return {
     onDoubleClick,
@@ -321,6 +347,6 @@ export function useEvents(
     onDrag,
     onDragEnd,
     onInput,
-    onBlur
+    onBlur,
   };
 }

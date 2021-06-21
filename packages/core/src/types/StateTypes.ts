@@ -69,11 +69,10 @@ export type StateType = {
   dragSource: DragSourceType | null;
   dropTarget: null | DropTargetType;
   platformInfo: PlatformInfoType;
-  dragSort?: null | string[];
 };
 
 export interface BrickDesignStateType {
-  layerName:string;
-  [pageName: string]: StateType|string;
+  layerName: string;
+  [pageName: string]: StateType | string;
 }
 export type STATE_PROPS = keyof StateType;

@@ -6,7 +6,6 @@ import {
   generateCSS,
   getDragKey,
   getElementInfo,
-  getIframe,
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
@@ -175,7 +174,6 @@ function Distances() {
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
   const rightRef = useRef<any>();
-  const iframe = getIframe();
 
   const { getOperateState, setSubscribe } = useOperate();
 
@@ -183,17 +181,9 @@ function Distances() {
     const renderDistances = () => {
       const { selectedNode, hoverNode, isModal } = getOperateState();
       if (hoverNode && selectedNode && !getDragKey()) {
-        const selectRect: ClientRect = getElementInfo(
-          selectedNode,
-          iframe,
-          isModal,
-        );
+        const selectRect: ClientRect = getElementInfo(selectedNode, isModal);
         const { width, height, top, left } = selectRect;
-        const hoverRect: ClientRect = getElementInfo(
-          hoverNode,
-          iframe,
-          isModal,
-        );
+        const hoverRect: ClientRect = getElementInfo(hoverNode, isModal);
         const {
           leftGuide,
           leftDistance,

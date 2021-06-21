@@ -14,7 +14,7 @@ import { Radius } from './index';
 
 interface ItemProps {
   radius: Radius;
-  onRadiusStart:(cursor:string)=>void
+  onRadiusStart: (cursor: string) => void;
 }
 
 export interface RadiusObjectType {
@@ -71,88 +71,98 @@ function RadiusItem(props: ItemProps) {
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
+      if (isEmpty(originRadiusRef.current)) return;
       const { selectedNode } = getOperateState();
-
-      if (!isEmpty(originRadiusRef.current)) {
-        const { clientX, clientY } = event;
-        const {
-          x,
-          y,
-          radius,
-          borderTopLeftRadius,
-          borderTopRightRadius,
-          borderBottomLeftRadius,
-          borderBottomRightRadius,
-          width,
-          height,
-        } = originRadiusRef.current;
-        let offsetY = 0;
-        let offsetX = 0;
-        let offsetR = 0;
-        let top = 9,
-          bottom = 9;
-        let position = 0;
-        const maxRadius = Math.min(width, height);
-        switch (radius) {
-          case Radius.topLeft:
-            top = borderTopLeftRadius || top;
-            offsetY = clientY - y;
-            offsetX = clientX - x;
-            offsetR = Math.max(offsetY, offsetX);
-            position = top + offsetR || position;
-            if (position > maxRadius || position < 0) return;
-            changeElPositionAndSize(nodeRef.current,{top:computePosition(position),left:computePosition(position)});
-            break;
-          case Radius.topRight:
-            top = borderTopRightRadius || top;
-            offsetY = clientY - y;
-            offsetX = x - clientX;
-            offsetR = Math.max(offsetY, offsetX);
-            position = top + offsetR || position;
-            if (position > maxRadius || position < 0) return;
-            changeElPositionAndSize(nodeRef.current,{top:computePosition(position),right:computePosition(position)});
-            break;
-          case Radius.bottomLeft:
-            bottom = borderBottomLeftRadius || bottom;
-            offsetX = clientX - x;
-            offsetY = y - clientY;
-            offsetR = Math.max(offsetY, offsetX);
-            position = bottom + offsetR || position;
-            if (position > maxRadius || position < 0) return;
-            changeElPositionAndSize(nodeRef.current,{bottom:computePosition(position),left:computePosition(position)});
-            break;
-          case Radius.bottomRight:
-            bottom = borderBottomRightRadius || bottom;
-            offsetY = y - clientY;
-            offsetX = x - clientX;
-            offsetR = Math.max(offsetY, offsetX);
-            position = bottom + offsetR || position;
-            if (position > maxRadius || position < 0) return;
-            changeElPositionAndSize(nodeRef.current,{bottom:computePosition(position),right:computePosition(position)});
-            break;
-        }
-        nodeRef.current.dataset.radius = `radius:${position}`;
-        if (checked) {
-          selectedNode.style[radius] = `${position}px`;
-          radiusResultRef.current[radius] = `${position}px`;
-        } else {
-          each(Radius, (r) => {
-            selectedNode.style[r] = `${position}px`;
-            radiusResultRef.current[r] = `${position}px`;
-            if (r !== radius) {
-              executeKeyListener(r);
-            }
+      const { clientX, clientY } = event;
+      const {
+        x,
+        y,
+        radius,
+        borderTopLeftRadius,
+        borderTopRightRadius,
+        borderBottomLeftRadius,
+        borderBottomRightRadius,
+        width,
+        height,
+      } = originRadiusRef.current;
+      let offsetY = 0;
+      let offsetX = 0;
+      let offsetR = 0;
+      let top = 9,
+        bottom = 9;
+      let position = 0;
+      const maxRadius = Math.min(width, height);
+      switch (radius) {
+        case Radius.topLeft:
+          top = borderTopLeftRadius || top;
+          offsetY = clientY - y;
+          offsetX = clientX - x;
+          offsetR = Math.max(offsetY, offsetX);
+          position = top + offsetR || position;
+          if (position > maxRadius || position < 0) return;
+          changeElPositionAndSize(nodeRef.current, {
+            top: computePosition(position),
+            left: computePosition(position),
           });
-        }
-        selectedNode.style.transition = 'none';
+          break;
+        case Radius.topRight:
+          top = borderTopRightRadius || top;
+          offsetY = clientY - y;
+          offsetX = x - clientX;
+          offsetR = Math.max(offsetY, offsetX);
+          position = top + offsetR || position;
+          if (position > maxRadius || position < 0) return;
+          changeElPositionAndSize(nodeRef.current, {
+            top: computePosition(position),
+            right: computePosition(position),
+          });
+          break;
+        case Radius.bottomLeft:
+          bottom = borderBottomLeftRadius || bottom;
+          offsetX = clientX - x;
+          offsetY = y - clientY;
+          offsetR = Math.max(offsetY, offsetX);
+          position = bottom + offsetR || position;
+          if (position > maxRadius || position < 0) return;
+          changeElPositionAndSize(nodeRef.current, {
+            bottom: computePosition(position),
+            left: computePosition(position),
+          });
+          break;
+        case Radius.bottomRight:
+          bottom = borderBottomRightRadius || bottom;
+          offsetY = y - clientY;
+          offsetX = x - clientX;
+          offsetR = Math.max(offsetY, offsetX);
+          position = bottom + offsetR || position;
+          if (position > maxRadius || position < 0) return;
+          changeElPositionAndSize(nodeRef.current, {
+            bottom: computePosition(position),
+            right: computePosition(position),
+          });
+          break;
       }
+      nodeRef.current.dataset.radius = `radius:${position}`;
+      if (checked) {
+        selectedNode.style[radius] = `${position}px`;
+        radiusResultRef.current[radius] = `${position}px`;
+      } else {
+        each(Radius, (r) => {
+          selectedNode.style[r] = `${position}px`;
+          radiusResultRef.current[r] = `${position}px`;
+          if (r !== radius) {
+            executeKeyListener(r);
+          }
+        });
+      }
+      selectedNode.style.transition = 'none';
     },
     [checked],
   );
   const onMouseDown = useCallback(
-    function (event: React.MouseEvent<HTMLSpanElement>) {
+    (event: React.MouseEvent<HTMLSpanElement>) => {
       const { selectedNode } = getOperateState();
-      const {radius,onRadiusStart}=props;
+      const { radius, onRadiusStart } = props;
       if (iframe) {
         const {
           borderTopLeftRadius,
@@ -182,6 +192,7 @@ function RadiusItem(props: ItemProps) {
   );
 
   const onMouseUp = useCallback(() => {
+    if (isEmpty(originRadiusRef.current)) return;
     const { selectedNode } = getOperateState();
     // hiddenBaseboard(baseboardRef.current);
     originRadiusRef.current = undefined;
@@ -192,12 +203,12 @@ function RadiusItem(props: ItemProps) {
   }, [setSelected]);
 
   const resetPosition = useCallback(() => {
-    const { selectedNode,hoverNode } = getOperateState();
+    const { selectedNode, hoverNode } = getOperateState();
     if (selectedNode) {
-      if(hoverNode===selectedNode){
-        nodeRef.current.style.display='block';
-      }else if(hoverNode){
-        nodeRef.current.style.display='none';
+      if (hoverNode === selectedNode) {
+        nodeRef.current.style.display = 'block';
+      } else if (hoverNode) {
+        nodeRef.current.style.display = 'none';
       }
       const { contentWindow } = iframe!;
       const {
@@ -213,22 +224,22 @@ function RadiusItem(props: ItemProps) {
         case Radius.topLeft:
           radiusNum = formatUnit(borderTopLeftRadius);
           top = (radiusNum > 9 ? computePosition(radiusNum) : top) + 'px';
-          changeElPositionAndSize(nodeRef.current,{top,left:top});
+          changeElPositionAndSize(nodeRef.current, { top, left: top });
           break;
         case Radius.topRight:
           radiusNum = formatUnit(borderTopRightRadius);
           top = (radiusNum > 9 ? computePosition(radiusNum) : top) + 'px';
-          changeElPositionAndSize(nodeRef.current,{top,right:top});
+          changeElPositionAndSize(nodeRef.current, { top, right: top });
           break;
         case Radius.bottomLeft:
           radiusNum = formatUnit(borderBottomLeftRadius);
           bottom = (radiusNum > 9 ? computePosition(radiusNum) : bottom) + 'px';
-          changeElPositionAndSize(nodeRef.current,{bottom,left:bottom});
+          changeElPositionAndSize(nodeRef.current, { bottom, left: bottom });
           break;
         case Radius.bottomRight:
           radiusNum = formatUnit(borderBottomRightRadius);
           bottom = (radiusNum > 9 ? computePosition(radiusNum) : bottom) + 'px';
-          changeElPositionAndSize(nodeRef.current,{bottom,right:bottom});
+          changeElPositionAndSize(nodeRef.current, { bottom, right: bottom });
           break;
       }
       nodeRef.current.dataset.radius = `radius:${radiusNum}`;
@@ -248,7 +259,7 @@ function RadiusItem(props: ItemProps) {
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
     };
-  }, [onMouseMove,onMouseUp]);
+  }, [onMouseMove, onMouseUp]);
 
   const { radius } = props;
   return (
@@ -257,15 +268,14 @@ function RadiusItem(props: ItemProps) {
       draggable={false}
       ref={nodeRef}
       style={radiusStyles[radius]}
-      onMouseDown={ onMouseDown}
+      onMouseDown={onMouseDown}
       className={`${styles['radius-item']} ${
-              checked && styles['radius-item-checked']
-            } ${
-              selected
-                ? styles['border-radius-selected']
-                : styles['border-radius-default']
-            }`
-      }
+        checked && styles['radius-item-checked']
+      } ${
+        selected
+          ? styles['border-radius-selected']
+          : styles['border-radius-default']
+      }`}
     />
   );
 }

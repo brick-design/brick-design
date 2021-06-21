@@ -36,6 +36,18 @@
 	font-size: 12px;
 	justify-content: space-between;
 	align-items: center;
+	.item-icon{
+		visibility: hidden;
+		width: 25px;
+		height: 25px;
+		color: red;
+	}
+	&:hover{
+		background-color: #F1F1F1;
+		.item-icon{
+			visibility: visible;
+		}
+	}
 }
 
 .item-background {

@@ -20,7 +20,7 @@ interface MoveType{
 }
 
 function NTabs(props:NTabsProps){
-	const {resizeClassName,children,...rest}=props;
+	const {resizeClassName,children,onChange,...rest}=props;
 	const originPositionRef=useRef<MoveType>({isMove:false});
 	const [isDrag,setIsDrag]=useState(false);
 	const moveDivRef=useRef<ResizeableRefType>();
@@ -90,7 +90,9 @@ function NTabs(props:NTabsProps){
 			icon={moveIcon}
 			className={styles['icon-container']}
 			iconClass={styles['icon-class']}/>}
-											{...rest} >
+											{...rest}
+		onChange={onChange}
+	>
 		{children}
 	</Tabs>
 	</Resizeable>

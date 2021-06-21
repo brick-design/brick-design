@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useState } from 'react';
 import { get, isArray, isEmpty, isEqual, map } from 'lodash';
 import Collapse, { Panel } from 'rc-collapse';
-import { useSelector,isEqualKey, usePrevious,ChildNodesType,
+import {
+  useSelector,
+  isEqualKey,
+  usePrevious,
+  ChildNodesType,
   PageConfigType,
   getComponentConfig,
   isContainer,
@@ -9,7 +13,8 @@ import { useSelector,isEqualKey, usePrevious,ChildNodesType,
   NodePropsConfigType,
   SelectedInfoBaseType,
   SelectedInfoType,
-  STATE_PROPS,} from '@brickd/react';
+  STATE_PROPS,
+} from '@brickd/react';
 import SortTree from './SortTree';
 import styles from './index.less';
 import Header from './Header';
@@ -179,13 +184,13 @@ function SortItem(props: SortItemPropsType) {
       {isContainerComponent && (
         <Collapse
           activeKey={isUnfold || isEmpty(childNodes) ? '1' : '2'}
-          style={{ backgroundColor: '#fff',border: 0,marginLeft:20 }}
+          style={{ backgroundColor: '#fff', border: 0, marginLeft: 20 }}
         >
           <Panel
-              headerClass={styles['fold-panel-header']}
-              showArrow={false}
+            headerClass={styles['fold-panel-header']}
+            showArrow={false}
             key="1"
-            style={{ border: 0,padding:0 }}
+            style={{ border: 0, padding: 0 }}
           >
             {renderSortTree(
               props,

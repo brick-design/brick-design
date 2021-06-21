@@ -13,6 +13,7 @@ import {
   warn,
 } from '../utils';
 import { LayoutSortPayload } from '../actions';
+import { getDragSortCache } from '../utils/caches';
 
 /**
  * 往画板或者容器组件添加组件
@@ -20,12 +21,14 @@ import { LayoutSortPayload } from '../actions';
  * @returns {{pageConfig: *}}
  */
 export function addComponent(state: StateType): StateType {
-  const { undo, redo, pageConfig, dragSource, dropTarget, dragSort } = state;
+  const { undo, redo, pageConfig, dragSource, dropTarget } = state;
   /**
    * 如果没有拖拽的组件不做添加动作, 如果没有
    */
-  if (!dragSource || (!dropTarget && pageConfig[ROOT]))
-    return { ...state, dragSource: null, dragSort: null };
+  if (!dragSource || (!dropTarget && pageConfig[ROOT])) {
+    return { ...state, dragSource: null };
+  }
+
   const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
   /**
    * 如果没有root根节点，新添加的组件添加到root
@@ -38,7 +41,6 @@ export function addComponent(state: StateType): StateType {
       pageConfig: vDOMCollection!,
       dragSource: null,
       dropTarget: null,
-      dragSort: null,
       undo,
       redo,
     };
@@ -55,18 +57,18 @@ export function addComponent(state: StateType): StateType {
      * 返回原先的state状态
      */
     if (!parentKey) {
-      return { ...state, ...undo.pop(), dragSource: null, dragSort: null };
+      return { ...state, ...undo.pop(), dragSource: null };
     } else {
-      return { ...state, dragSource: null, dragSort: null };
+      return { ...state, dragSource: null };
     }
   }
 
   if (
-    !dragSort ||
-    (parentKey === selectedKey && isEqual(childNodeKeys, dragSort)) ||
+    !getDragSortCache() ||
+    (parentKey === selectedKey && isEqual(childNodeKeys, getDragSortCache())) ||
     handleRules(pageConfig, dragKey!, selectedKey, propName)
   ) {
-    return { ...state, dragSource: null, dropTarget: null, dragSort: null };
+    return { ...state, dragSource: null, dropTarget: null };
   }
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
@@ -74,7 +76,9 @@ export function addComponent(state: StateType): StateType {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {
       //添加新组件到指定容器中
-      update(oldConfigs, getLocation(selectedKey!, propName), () => dragSort);
+      update(oldConfigs, getLocation(selectedKey!, propName), () =>
+        getDragSortCache(),
+      );
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用
       if (
         parentKey &&
@@ -87,7 +91,6 @@ export function addComponent(state: StateType): StateType {
     }),
     dragSource: null,
     dropTarget: null,
-    dragSort: null,
     undo,
     redo,
   };

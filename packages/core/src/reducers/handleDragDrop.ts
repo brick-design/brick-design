@@ -99,10 +99,3 @@ export function clearDragSource(state: StateType) {
   if (dragSource) return { ...state, dragSource: null, dragSort: null };
   return state;
 }
-
-export function getDragSort(state: StateType, payload: string[]) {
-  return {
-    ...state,
-    dragSort: payload,
-  };
-}

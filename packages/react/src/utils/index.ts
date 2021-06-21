@@ -7,9 +7,10 @@ import {
   ChildNodesType,
   getSelector,
 } from '@brickd/core';
-
+export * from './caches';
 import { Edge, IE11OrLess } from '@brickd/utils';
 import { defaultPropName, selectClassTarget } from '../common/constants';
+import { getIframe } from './caches';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
   null: null,
@@ -27,7 +28,7 @@ export const iframeSrcDoc = `<!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
 <body>
-<div id="dnd-container" style="width: 100%"></div>
+<div id="dnd-container" style="width: 100%;height: 100%"></div>
 </body>
 </html>
 `;
@@ -37,15 +38,11 @@ export const isEqualKey = (key: string, selectKey?: string | null) => {
   return selectKey.includes(key) && parseInt(selectKey) === parseInt(key);
 };
 
-export const getIframe = (): HTMLIFrameElement => {
-  return document.getElementById('dnd-iframe') as HTMLIFrameElement;
-};
-
 export const getComponent = (componentName: string) =>
   get(getBrickdConfig().componentsMap, componentName, componentName);
 
 export function formatUnit(target: string | null) {
-  return isNaN(Number.parseInt(target))?null : Number.parseInt(target);
+  return isNaN(Number.parseInt(target)) ? null : Number.parseInt(target);
 }
 
 export const getSelectedNode = (
@@ -75,12 +72,8 @@ export function generateCSS(
   `;
 }
 
-export function getElementInfo(
-  element: any,
-  iframe: HTMLIFrameElement,
-  isModal?: boolean,
-) {
-  const { contentWindow } = iframe;
+export function getElementInfo(element: any, isModal?: boolean) {
+  const { contentWindow } = getIframe();
   const { scrollX = 0, scrollY = 0 } = contentWindow || {};
   const { width, height, left, top } = element.getBoundingClientRect();
   let newLeft = left;
@@ -424,7 +417,7 @@ export const getDragComponentName = (dragKey?: string) =>
   ]);
 
 export const getVNode = (nodeKey: string) =>
-  get(getSelector(['pageConfig']), ['pageConfig', nodeKey],{});
+  get(getSelector(['pageConfig']), ['pageConfig', nodeKey], {});
 
 export function css(el): CSSStyleDeclaration {
   const style = el && el.style;
@@ -535,24 +528,15 @@ export const isNeedJudgeFather = (dragKey?: string) => {
 
 export const isAllowDrop = (childNodesRule?: string[]) => {
   if (!childNodesRule) return true;
-  const componentName = getDragComponentName();
-  return childNodesRule.includes(componentName);
+  return childNodesRule.includes(getDragComponentName());
 };
 
 export function isAllowAdd(targetComponentName: string, dragKey?: string) {
-  const componentName = getDragComponentName(dragKey);
   const fatherNodesRule = get(
-    getComponentConfig(componentName),
+    getComponentConfig(getDragComponentName(dragKey)),
     'fatherNodesRule',
   );
-  if (!fatherNodesRule) return false;
-  if (fatherNodesRule) {
-    for (const father of fatherNodesRule) {
-      if (father.includes(targetComponentName)) {
-        return true;
-      }
-    }
-  }
+  return !fatherNodesRule || fatherNodesRule.includes(targetComponentName);
 }
 
 export function getScalePosition(
@@ -571,13 +555,11 @@ export function getScalePosition(
   };
 }
 
-
 export const firstToUpper = (str: string) => {
   return str.replace(/\b(\w)(\w*)/g, function ($0, $1, $2) {
     return $1.toUpperCase() + $2;
   });
 };
-
 
 export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
   each(css, (v, k) => {
@@ -589,8 +571,6 @@ export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
   });
 };
 
-
-
 /**
  * 解析matrix矩阵，0°-360°，返回旋转角度
  * 当a=b||-a=b,0<=deg<=180
@@ -601,9 +581,12 @@ export const changeElPositionAndSize = (el: HTMLElement, css: any) => {
  * 当180<deg<=270,deg=180+c;
  * 当270<deg<=360,deg=360-(c||d);
  * */
-export function getMatrix(transform:string) {
-  if(!transform.includes('matrix')) return 0;
- const [a, b, c, d]=transform.replace('matrix(','').replace(')','').split(',');
+export function getMatrix(transform: string) {
+  if (!transform.includes('matrix')) return 0;
+  const [a, b, c, d] = transform
+    .replace('matrix(', '')
+    .replace(')', '')
+    .split(',');
   const aa = Math.round((180 * Math.asin(Number(a))) / Math.PI);
   const bb = Math.round((180 * Math.acos(Number(b))) / Math.PI);
   const cc = Math.round((180 * Math.asin(Number(c))) / Math.PI);
@@ -619,21 +602,16 @@ export function getMatrix(transform:string) {
   return deg >= 360 ? 0 : deg;
 }
 
-
-export function handleInputText(text:string){
-
-   return text.replace('<div>','\r').
-   replace('<br/>','\n').
-   replace('</div>','').
-   replace(/&nbsp;|\u202F|\u00A0/g, ' ');
-
+export function handleInputText(text: string) {
+  return text
+    .replace('<div>', '\r')
+    .replace('<br/>', '\n')
+    .replace('</div>', '')
+    .replace(/&nbsp;|\u202F|\u00A0/g, ' ');
 }
 
+export const analysisTransformOrigin = (transformOrigin: string) => {
+  const position = transformOrigin.split(' ');
 
-export const analysisTransformOrigin=(transformOrigin:string)=>{
-  const position=transformOrigin.split(' ');
-
-  return {	top:formatUnit(position[0]),
-    left:formatUnit(position[1])};
+  return { top: formatUnit(position[0]), left: formatUnit(position[1]) };
 };
-

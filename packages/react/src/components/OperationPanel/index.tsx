@@ -7,7 +7,7 @@ import {
   STATE_PROPS,
 } from '@brickd/core';
 
-import {  map } from 'lodash';
+import { map, isEmpty } from 'lodash';
 import ResizeItem, { positionStyles } from './ResizeItem';
 import styles from './index.less';
 import RadiusItem from './RadiusItem';
@@ -17,9 +17,9 @@ import {
   changeElPositionAndSize,
   css,
   formatUnit,
-  getDragKey,
   getElementInfo,
-  getIframe, getMatrix,
+  getIframe,
+  getMatrix,
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
@@ -57,9 +57,7 @@ export enum MarginPosition {
 
 const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
   const { selectedInfo } = nextState;
-  return (
-    prevState.selectedInfo !== selectedInfo
-  );
+  return prevState.selectedInfo !== selectedInfo;
 };
 
 type OriginSizeType = {
@@ -73,15 +71,15 @@ type OriginSizeType = {
   maxHeight: number | null;
   direction: Direction;
   rotate: number;
-  transformOrigin:string
+  transformOrigin: string;
 };
 
 function OperationPanel() {
   const iframe = useRef(getIframe()).current;
-  const { selectedInfo } = useSelector<
-    ResizeState,
-    STATE_PROPS
-  >(['selectedInfo'], controlUpdate);
+  const { selectedInfo } = useSelector<ResizeState, STATE_PROPS>(
+    ['selectedInfo'],
+    controlUpdate,
+  );
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey } = selectedInfo || {};
   const resizeRef = useRef<HTMLDivElement>();
@@ -91,37 +89,38 @@ function OperationPanel() {
   const baseboardRef = useRef<HTMLDivElement | any>();
   const actionSheetRef = useRef<any>();
   const [isOut, setIsOut] = useState<boolean>(true);
+  const [isShowSizeTip, setIsShowSizeTip] = useState(false);
+  const changeOperationPanel = useCallback(() => {
+    const { selectedNode, operateSelectedKey, isModal } = getOperateState();
+    if (selectedNode && operateSelectedKey) {
+      const {
+        left,
+        top,
+        height: positionHeight,
+        width: positionWidth,
+      } = getElementInfo(selectedNode, isModal);
+      const { width, height, transform } = css(selectedNode);
 
-const changeOperationPanel=useCallback(()=>{
-  const { selectedNode, operateSelectedKey, isModal } = getOperateState();
-  if (selectedNode && operateSelectedKey) {
-    const {
-      left,
-      top,
-      height: positionHeight,
-      width: positionWidth,
-    } = getElementInfo(selectedNode, iframe, isModal);
-    const { width, height, transform, } = css(selectedNode);
-
-    changeElPositionAndSize(operationPanelRef.current, {
-      left,
-      top,
-      height: positionHeight,
-      width: positionWidth,
-      display:'flex',
-      transition: 'none'
-    });
-    changeElPositionAndSize(resizeRef.current, {
-      width: formatUnit(width) || positionWidth,
-      height: formatUnit(height) || positionHeight,
-      transform,
-      transition: 'none',
-    });
-    setPosition([operationPanelRef.current], isModal);
-    resizeRef.current.dataset.size=`${formatUnit(width)}x${formatUnit(height)}`;
-
-  }
-},[]);
+      changeElPositionAndSize(operationPanelRef.current, {
+        left,
+        top,
+        height: positionHeight,
+        width: positionWidth,
+        display: 'flex',
+        transition: 'none',
+      });
+      changeElPositionAndSize(resizeRef.current, {
+        width: formatUnit(width) || positionWidth,
+        height: formatUnit(height) || positionHeight,
+        transform,
+        transition: 'none',
+      });
+      setPosition([operationPanelRef.current], isModal);
+      resizeRef.current.dataset.size = `${formatUnit(width)}x${formatUnit(
+        height,
+      )}`;
+    }
+  }, []);
 
   const initOperationPanel = useCallback(() => {
     const { selectedNode, operateSelectedKey, isModal } = getOperateState();
@@ -131,7 +130,7 @@ const changeOperationPanel=useCallback(()=>{
         top,
         height: positionHeight,
         width: positionWidth,
-      } = getElementInfo(selectedNode, iframe, isModal);
+      } = getElementInfo(selectedNode, isModal);
       const { width, height, transform } = css(selectedNode);
       // if(width===0||height===0){
       //   selectedNode.className
@@ -146,8 +145,8 @@ const changeOperationPanel=useCallback(()=>{
         top,
         height: positionHeight,
         width: positionWidth,
-        display:'flex',
-        transition: 'all 100ms'
+        display: 'flex',
+        transition: 'all 100ms',
       });
 
       changeElPositionAndSize(resizeRef.current, {
@@ -157,11 +156,11 @@ const changeOperationPanel=useCallback(()=>{
         transition: 'all 100ms',
       });
       setPosition([operationPanelRef.current], isModal);
-      resizeRef.current.dataset.size=`${formatUnit(width)}x${formatUnit(height)}`;
-
+      resizeRef.current.dataset.size = `${formatUnit(width)}x${formatUnit(
+        height,
+      )}`;
     }
   }, []);
-
 
   useEffect(() => {
     const contentWindow = iframe!.contentWindow!;
@@ -183,13 +182,14 @@ const changeOperationPanel=useCallback(()=>{
     };
   }, []);
 
-
   if (!selectedKey && operationPanelRef.current) {
     operationPanelRef.current.style.display = 'none';
   }
 
   const onMouseUp = useCallback(() => {
+    if (isEmpty(sizeResultRef.current)) return;
     const { selectedNode } = getOperateState();
+    setIsShowSizeTip(false);
     originSizeRef.current = undefined;
     baseboardRef.current!.style.display = 'none';
     operationPanelRef.current.style.pointerEvents = 'none';
@@ -197,12 +197,12 @@ const changeOperationPanel=useCallback(()=>{
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
     resizeChange(sizeResultRef.current);
     sizeResultRef.current = {};
-  }, []);
+  }, [setIsShowSizeTip]);
 
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
     const { selectedNode } = getOperateState();
-    if (originSizeRef.current) {
+    if (originSizeRef.current && selectedNode) {
       const { clientX, clientY } = event;
       const { x, y, direction, height, width } = originSizeRef.current;
       let offsetY = 0;
@@ -262,91 +262,99 @@ const changeOperationPanel=useCallback(()=>{
       ) {
         sizeResultRef.current.height = `${heightResult}px`;
         selectedNode.style.height = `${heightResult}px`;
-
       }
       changeOperationPanel();
     }
   }, []);
 
-  const onResizeStart = useCallback(function (
-    event: React.MouseEvent<HTMLSpanElement>,
-    direction: Direction,
-    isRotate: boolean,
-  ) {
-    const { selectedNode } = getOperateState();
+  const onResizeStart = useCallback(
+    function (
+      event: React.MouseEvent<HTMLSpanElement>,
+      direction: Direction,
+      isRotate: boolean,
+    ) {
+      const { selectedNode } = getOperateState();
+      if (!selectedNode) return;
+      setIsShowSizeTip(true);
       changeElPositionAndSize(operationPanelRef.current, {
         pointerEvents: 'auto',
         transition: 'none',
       });
-      changeElPositionAndSize(resizeRef.current,{
-        transition: 'none'
+      changeElPositionAndSize(resizeRef.current, {
+        transition: 'none',
       });
-    if (event && iframe) {
-      const {
-        width,
-        height,
-        minWidth,
-        minHeight,
-        maxWidth,
-        maxHeight,
-        transform,
-        transformOrigin
-      } = css(selectedNode);
-      originSizeRef.current = {
-        x: event.clientX,
-        y: event.clientY,
-        direction,
-        width: formatUnit(width),
-        height: formatUnit(height),
-        minWidth: formatUnit(minWidth),
-        minHeight: formatUnit(minHeight),
-        maxWidth: formatUnit(maxWidth),
-        maxHeight: formatUnit(maxHeight),
-        rotate:getMatrix(transform),
-        transformOrigin
-      };
-      showBaseboard(positionStyles[direction].cursor);
-    }
-  },
-  []);
+      if (event && iframe) {
+        const {
+          width,
+          height,
+          minWidth,
+          minHeight,
+          maxWidth,
+          maxHeight,
+          transform,
+          transformOrigin,
+        } = css(selectedNode);
+        originSizeRef.current = {
+          x: event.clientX,
+          y: event.clientY,
+          direction,
+          width: formatUnit(width),
+          height: formatUnit(height),
+          minWidth: formatUnit(minWidth),
+          minHeight: formatUnit(minHeight),
+          maxWidth: formatUnit(maxWidth),
+          maxHeight: formatUnit(maxHeight),
+          rotate: getMatrix(transform),
+          transformOrigin,
+        };
+        showBaseboard(positionStyles[direction].cursor);
+      }
+    },
+    [setIsShowSizeTip],
+  );
 
-const showBaseboard = useCallback((cursor:string) => {
+  const showBaseboard = useCallback((cursor: string) => {
     const {
       body: { scrollWidth, scrollHeight },
     } = iframe!.contentDocument;
-  baseboardRef.current.style.cssText = `
+    baseboardRef.current.style.cssText = `
     display:block;
     width:${scrollWidth}px;
     height:${scrollHeight}px;
     cursor:${cursor};
     `;
-  },[]);
+  }, []);
 
-
-  const dragKey = getDragKey();
-  const isShowSizeTip = selectedKey && dragKey !== selectedKey;
   return (
     <>
-      <div  className={styles['operation-panel']} ref={operationPanelRef}>
-        <div  className={`${styles['border-container']} ${isShowSizeTip&&styles['size-tip']}`} ref={resizeRef}>
-          {!!selectedKey&&<>
-          {map(Direction, (direction) => (
-            <ResizeItem
-              onResizeStart={onResizeStart}
-              direction={direction}
-              key={direction}
-            />
-          ))}
-          {map(Radius, (radius) => (
-            <RadiusItem
-              onRadiusStart={showBaseboard}
-              radius={radius}
-              key={radius} />
-          ))}
-          {map(MarginPosition, (p) => (
-            <MarginItem position={p} key={p} />
-          ))}
-          </>}
+      <div className={styles['operation-panel']} ref={operationPanelRef}>
+        <div
+          className={`${styles['border-container']} ${
+            isShowSizeTip && styles['size-tip']
+          }`}
+          ref={resizeRef}
+        >
+          {!!selectedKey && (
+            <>
+              {map(Direction, (direction) => (
+                <ResizeItem
+                  onResizeStart={onResizeStart}
+                  direction={direction}
+                  key={direction}
+                />
+              ))}
+              {map(Radius, (radius) => (
+                <RadiusItem
+                  onRadiusStart={showBaseboard}
+                  radius={radius}
+                  key={radius}
+                />
+              ))}
+              {map(MarginPosition, (p) => (
+                <MarginItem position={p} key={p} />
+              ))}
+            </>
+          )}
         </div>
       </div>
       <div

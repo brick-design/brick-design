@@ -11,10 +11,10 @@ import {
   ChildNodesType,
   DropTargetType,
   getComponentConfig,
-  getDragSort,
   getDropTarget,
   PageConfigType,
   ROOT,
+  setDragSortCache,
   STATE_PROPS,
 } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
@@ -105,7 +105,7 @@ function Container(allProps: CommonPropsType) {
     rest,
     getChildrenFields(pageConfig, childNodes),
   );
-  const { index = 0, item, funParams } = pageState;
+  const { index = 0 } = pageState;
   const uniqueKey = `${key}-${index}`;
   useChildNodes({ childNodes, componentName, specialProps });
   const [children, setChildren] = useState<ChildNodesType | undefined>(
@@ -153,11 +153,11 @@ function Container(allProps: CommonPropsType) {
       const dragKey = getDragKey();
       const { isLock, isDropAble, operateSelectedKey } = getOperateState();
       if (
+        !isDropAble ||
         dragKey === operateSelectedKey ||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
-        !isLock ||
-        !isDropAble
+        !isLock
       )
         return;
       setTimeout(() => {
@@ -171,12 +171,12 @@ function Container(allProps: CommonPropsType) {
             newChildren[propName] = [dragKey];
             setChildren(newChildren);
           }
-          getDragSort([dragKey]);
+          setDragSortCache([dragKey]);
         } else if (
           childNodeKeys.length === 1 &&
           childNodeKeys.includes(dragKey)
         ) {
-          return getDragSort(childNodeKeys);
+          return setDragSortCache(childNodeKeys);
         } else {
           const newChildren = dragSort(
             childNodeKeys,
@@ -189,7 +189,7 @@ function Container(allProps: CommonPropsType) {
           if (!isEqual(renderChildren, children)) {
             setChildren(renderChildren);
           }
-          getDragSort(newChildren);
+          setDragSortCache(newChildren);
         }
       }, 200);
     },
@@ -231,11 +231,7 @@ function Container(allProps: CommonPropsType) {
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
     const iframe = getIframe();
-    const { index: selectedIndex } = getOperateState();
-    if (
-      (isSelected && (isEmpty(funParams || item) || selectedIndex === index)) ||
-      isAddComponent.current
-    ) {
+    if (isAddComponent.current) {
       setSelectedNode(getSelectedNode(uniqueKey, iframe));
       isAddComponent.current = false;
     }
@@ -264,11 +260,11 @@ function Container(allProps: CommonPropsType) {
       const dragKey = getDragKey();
       const { isLock, isDropAble, operateSelectedKey } = getOperateState();
       if (
+        !isDropAble ||
         dragKey === operateSelectedKey ||
         selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
-        !isLock ||
-        !isDropAble
+        !isLock
       )
         return;
       const isV = isVPropNodesPositionRef.current[defaultPropName];
@@ -279,32 +275,30 @@ function Container(allProps: CommonPropsType) {
         } else {
           setChildren([dragKey]);
         }
-        getDragSort([dragKey]);
+        setDragSortCache([dragKey]);
       } else if (Array.isArray(children)) {
-        if (children.length === 1 && children.includes(dragKey))
-          return getDragSort(children);
+        if (children.length === 1 && children.includes(dragKey)) return;
         const newChildren = dragSort(
           children,
-          propParentNodes.current[defaultPropName] ||
-            (event.target as HTMLElement),
+          event.target as HTMLElement,
           event,
           isV,
         );
         if (!isEqual(newChildren, children)) {
           setChildren(newChildren);
         }
-        getDragSort(newChildren);
+        setDragSortCache(newChildren);
       } else {
         const propChildren = get(children, selectedPropName, []);
 
         if (!propChildren.includes(dragKey)) {
           const newChildren = cloneChildNodes(children);
           const childrenResult = [dragKey, ...propChildren];
-          getDragSort(childrenResult);
+          setDragSortCache(childrenResult);
           newChildren[selectedPropName] = childrenResult;
           setChildren(newChildren);
         } else {
-          getDragSort(propChildren);
+          setDragSortCache(propChildren);
         }
       }
     },
@@ -316,29 +310,26 @@ function Container(allProps: CommonPropsType) {
       event.stopPropagation();
       const dragKey = getDragKey();
       const dragParentKey = getDragSourceFromKey('parentKey');
-      const { operateSelectedKey } = getOperateState();
       /**
        * 如果dragKey包含在组件所属的domTreeKeys中说明当前组件为拖拽组件的祖先节点之一
        */
+      const { operateSelectedKey } = getOperateState();
+
       if (
+        dragKey === operateSelectedKey ||
         domTreeKeys.includes(dragKey) ||
         dragKey === key ||
-        (dragKey === operateSelectedKey &&
-          dragParentKey &&
-          dragParentKey !== key)
+        (dragParentKey && dragParentKey === key)
       )
         return;
-      let isDropAble;
+      let isDropAble = false;
       if (nodePropsConfig) {
         const { childNodesRule } = nodePropsConfig[selectedPropName];
         isDropAble =
           isAllowDrop(childNodesRule) &&
-          (!isNeedJudgeFather() ||
-            isAllowAdd(`${componentName}.${selectedPropName}`));
+          isAllowAdd(componentName + selectedPropName);
       } else {
-        isDropAble =
-          isAllowDrop(childNodesRule) &&
-          (!isNeedJudgeFather() || isAllowAdd(componentName));
+        isDropAble = isAllowDrop(childNodesRule) && isAllowAdd(componentName);
       }
       isDropAble = Number.parseInt(index) === 0 && isDropAble;
       setOperateState({

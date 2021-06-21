@@ -1,10 +1,10 @@
-import React, { createContext, memo, useState } from 'react'
+import React, { createContext, memo, useState } from 'react';
 import styles from './index.less';
-import {searchIcon} from '../../../assets';
+import { searchIcon } from '../../../assets';
 import Input, { InputProps } from '../../../Components/Input';
 import Checkbox from '../../../Components/Checkbox';
 type SearchBarProps = InputProps;
-export const SearchContext=createContext(false);
+export const SearchContext = createContext(false);
 function SearchBar(props: SearchBarProps) {
   const { children, ...rest } = props;
   const [isChecked, setIsChecked] = useState(false);
@@ -12,7 +12,6 @@ function SearchBar(props: SearchBarProps) {
   const onCheckedChange = (v: boolean) => {
     setIsChecked(v);
   };
-
   return (
     <>
       <div className={styles['search-container']}>

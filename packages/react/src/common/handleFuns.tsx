@@ -42,7 +42,6 @@ export function handlePropsClassName(
  * 渲染组件的子节点
  * @param childNodes
  * @param specialProps
- * @param pageConfig
  * @param parentPropName
  * @param isOnlyNode
  */
@@ -141,7 +140,7 @@ function handleRequiredChildNodes(componentName: string) {
 export function handleChildNodes(
   specialProps: SelectedInfoBaseType,
   allState: any,
-  componentName:string,
+  componentName: string,
   children?: ChildNodesType,
 ) {
   const nodeProps: any = {};
@@ -207,8 +206,7 @@ export function handleModalTypeContainer(
   const { displayPropName, mounted } = mirrorModalField;
   if (mounted) {
     const { propName, type } = mounted;
-    const iframe = getIframe();
-    const mountedNode = iframe.contentDocument.body;
+    const mountedNode = getIframe().contentDocument.body;
     mountedProps[propName] =
       type === PROPS_TYPES.function ? () => mountedNode : mountedNode;
   }

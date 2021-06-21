@@ -106,15 +106,15 @@ export const reactContainers: any = {
 				addonAfter: '.com',
 				defaultValue: 'mysite',
 			}}],
-		'Input.TextArea': {
+		'Input.TextArea': [{
 			props: [{}],
-		},
-		'Input.Search': {
+		}],
+		'Input.Search': [{
 			props: [{}],
-		},
-		'Input.Password': {
+		}],
+		'Input.Password': [{
 			props: [{ visibilityToggle: true }],
-		},
+		}],
 		'Input.Group': null,
 		'InputNumber':[{props:{}}],
 		Radio:[{
