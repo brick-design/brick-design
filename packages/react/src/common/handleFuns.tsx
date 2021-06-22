@@ -31,11 +31,9 @@ export function handlePropsClassName(
   isLockTarget: boolean,
   className: any,
   animateClass: string,
-  isAllowAdd?: boolean,
 ) {
   return `${selectClassTarget + key} ${className} ${animateClass}  
-  ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}
-  ${!isLockTarget && isAllowAdd ? styles['allow-add'] : ''}`;
+  ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}`;
 }
 
 /**
@@ -68,6 +66,7 @@ function renderNodes(
       parentKey,
       parentPropName,
     };
+
     if (isStateDomain)
       return <StateDomainWrapper key={key} specialProps={specialProps} />;
 

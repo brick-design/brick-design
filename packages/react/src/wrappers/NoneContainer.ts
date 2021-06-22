@@ -15,7 +15,6 @@ import {
   getComponent,
   getDragKey,
   getDragSourceFromKey,
-  getIframe,
   getSelectedNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
@@ -28,7 +27,6 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
-  const iframe = useRef(getIframe()).current;
 
   const { pageConfig: PageDom } = useSelector<HookState, STATE_PROPS>(
     stateSelector,
@@ -56,8 +54,8 @@ function NoneContainer(allProps: CommonPropsType) {
 
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
-    if (isAddComponent.current){
-      setSelectedNode(getSelectedNode(uniqueKey, iframe));
+    if (isAddComponent.current) {
+      setSelectedNode(getSelectedNode(uniqueKey));
       isAddComponent.current = false;
     }
   }, [funParams, isSelected, item, dragKey]);

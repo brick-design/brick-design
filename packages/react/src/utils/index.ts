@@ -5,12 +5,13 @@ import {
   getComponentConfig,
   getBrickdConfig,
   ChildNodesType,
-  getSelector,
+  getSelector, getStore,
 } from '@brickd/core';
+
 export * from './caches';
 import { Edge, IE11OrLess } from '@brickd/utils';
-import { defaultPropName, selectClassTarget } from '../common/constants';
 import { getIframe } from './caches';
+import { defaultPropName, selectClassTarget } from '../common/constants';
 
 export const SPECIAL_STRING_CONSTANTS: any = {
   null: null,
@@ -47,8 +48,8 @@ export function formatUnit(target: string | null) {
 
 export const getSelectedNode = (
   key?: string | null,
-  iframe?: HTMLIFrameElement,
 ): HTMLElement | undefined => {
+  const iframe=getIframe();
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
@@ -248,10 +249,8 @@ export const dragSort = (
     if (compareKey === dragKey) continue;
     let childNode;
     for (nodeIndex; nodeIndex < parentNode.children.length; nodeIndex++) {
-      if (
-        parentNode.children[nodeIndex].className.includes(
-          selectClassTarget + compareKey,
-        )
+      const classNames=get(parentNode,`children.${nodeIndex}.className`,'');
+      if (typeof classNames==='string'&& classNames.includes(selectClassTarget + compareKey)
       ) {
         childNode = parentNode.children[nodeIndex];
         break;
@@ -376,10 +375,9 @@ export const getPropParentNodes = (
   propNodesPosition: PropNodesPosition,
   index = 0,
 ) => {
-  const iframe = getIframe();
   if (Array.isArray(childNodes)) {
     for (const childKey of childNodes) {
-      const node = getSelectedNode(`${childKey}-${index}`, iframe);
+      const node = getSelectedNode(`${childKey}-${index}`);
       if (node) {
         const parentNode = node.parentElement;
         parentNodes[defaultPropName] = parentNode;
@@ -391,7 +389,7 @@ export const getPropParentNodes = (
     each(childNodes, (nodes, propName) => {
       if (!parentNodes[propName]) {
         for (const key of nodes) {
-          const node = getSelectedNode(`${key}-${index}`, iframe);
+          const node = getSelectedNode(`${key}-${index}`);
           if (node) {
             const parentNode = node.parentElement;
             parentNodes[propName] = parentNode;
@@ -615,3 +613,5 @@ export const analysisTransformOrigin = (transformOrigin: string) => {
 
   return { top: formatUnit(position[0]), left: formatUnit(position[1]) };
 };
+
+export const getRootState=()=>getStore().getState();

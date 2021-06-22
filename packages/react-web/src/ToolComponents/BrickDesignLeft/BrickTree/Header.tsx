@@ -2,11 +2,11 @@ import React, { memo, useState } from 'react';
 import {
   SelectedInfoBaseType,
   useSelector,
-  onMouseOver,
   isEqualKey,
   clearHovered,
   clearSelectedStatus,
   selectComponent,
+  overTarget,
 } from '@brickd/react';
 import styles from './index.less';
 import {
@@ -96,7 +96,12 @@ function Header(props: HeaderProps) {
           }
         }}
         onMouseLeave={(e) => isHovered && clearHovered()}
-        onMouseOver={(e: any) => onMouseOver(e, sortItemKey, isSelected)}
+        onMouseOver={(e: any) => {
+          if (!isSelected) {
+            overTarget({
+              hoverKey: key,
+            });
+          }} }
         style={{ display: 'flex', flex: 1, alignItems: 'center', color }}
       >
         <Icon

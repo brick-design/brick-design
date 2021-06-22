@@ -1,4 +1,4 @@
-import {
+import React, {
   createElement,
   memo,
   useCallback,
@@ -8,10 +8,12 @@ import {
   useState,
 } from 'react';
 import {
+  addComponent,
   ChildNodesType,
   DropTargetType,
   getComponentConfig,
   getDropTarget,
+  getSelector,
   PageConfigType,
   ROOT,
   setDragSortCache,
@@ -24,7 +26,6 @@ import { defaultPropName } from 'common/constants';
 import {
   generateRequiredProps,
   getComponent,
-  getIframe,
   getSelectedNode,
   cloneChildNodes,
   dragSort,
@@ -69,34 +70,30 @@ function Container(allProps: CommonPropsType) {
 
   const controlUpdate = useCallback(
     (prevState: ContainerState, nextState: ContainerState) => {
-      const {
-        pageConfig: prevPageConfig,
-        dropTarget: prevDropTarget,
-      } = prevState;
-      const { pageConfig, dropTarget } = nextState;
-      return (
-        prevPageConfig[key] !== pageConfig[key] ||
-        (get(prevDropTarget, 'selectedKey') === key &&
-          get(dropTarget, 'selectedKey') !== key) ||
-        (get(prevDropTarget, 'selectedKey') !== key &&
-          get(dropTarget, 'selectedKey') === key)
-      );
+      const { pageConfig: prevPageConfig } = prevState;
+      const { pageConfig } = nextState;
+      if(!isEqual(get(prevPageConfig,key+'.childNodes'),get(pageConfig,key+'.childNodes'))){
+        if(pageConfig[key]){
+          const {childNodes}=pageConfig[key];
+          setChildren(childNodes);
+        }
+      }
+      return prevPageConfig[key] !== pageConfig[key];
     },
     [],
   );
 
-  const { pageConfig: PageDom, dropTarget } = useSelector<
-    ContainerState,
-    STATE_PROPS
-  >(['dropTarget', 'pageConfig'], controlUpdate);
-  const { selectedKey } = dropTarget || {};
+  const { pageConfig: PageDom } = useSelector<ContainerState, STATE_PROPS>(
+    ['pageConfig'],
+    controlUpdate,
+  );
   const pageConfig = PageDom[ROOT]
     ? PageDom
     : getDragSourceFromKey('vDOMCollection', {});
   const vNode = get(pageConfig, key, {}) as VirtualDOMType;
   const { childNodes, componentName } = vNode;
   const dragKey = getDragKey();
-  const isAddComponent = useRef(
+  const [isNewComponent,setIsNewComponent] = useState(
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
   // const dragOverOrigin=useRef()
@@ -155,7 +152,6 @@ function Container(allProps: CommonPropsType) {
       if (
         !isDropAble ||
         dragKey === operateSelectedKey ||
-        selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock
       )
@@ -193,8 +189,25 @@ function Container(allProps: CommonPropsType) {
         }
       }, 200);
     },
-    [setChildren, children, selectedKey],
+    [setChildren, children],
   );
+
+  const onDragLeave = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setTimeout(() => {
+      setChildren(childNodes);
+    }, 100);
+  };
+
+  const onDrop = useCallback((event: React.DragEvent) => {
+    event.stopPropagation();
+    const { selectedInfo } = getSelector(['selectedInfo']);
+    const dragKey = getDragKey();
+    if (get(selectedInfo,'selectedKey') === dragKey) return;
+    setOperateState({ dropNode: null });
+    addComponent();
+  }, []);
+
 
   useEffect(() => {
     if (!nodePropsConfig || isEmpty(propParentNodes.current)) return;
@@ -203,6 +216,8 @@ function Container(allProps: CommonPropsType) {
       propNameListeners[propName] = {
         dragOver: (event) => dragOver(event, propName),
         dragEnter: (event) => onDragEnter(event, propName),
+        onDragLeave,
+        onDrop
       };
       parentNode.addEventListener(
         'dragover',
@@ -210,7 +225,15 @@ function Container(allProps: CommonPropsType) {
       );
       parentNode.addEventListener(
         'dragenter',
-        get(propNameListeners, [propName, 'dragEnter']),
+        propNameListeners[propName].dragEnter,
+      );
+      parentNode.addEventListener(
+        'dragleave',
+        propNameListeners[propName].onDragLeave,
+      );
+      parentNode.addEventListener(
+        'drop',
+        propNameListeners[propName].onDrop,
       );
     });
 
@@ -222,18 +245,25 @@ function Container(allProps: CommonPropsType) {
         );
         parentNode.removeEventListener(
           'dragenter',
-          get(propNameListeners, [propName, 'dragEnter']),
+          propNameListeners[propName].dragEnter,
+        );
+        parentNode.removeEventListener(
+          'dragleave',
+          propNameListeners[propName].onDragLeave,
+        );
+        parentNode.removeEventListener(
+          'drop',
+          propNameListeners[propName].onDrop,
         );
       });
     };
-  }, []);
+  }, [onDragLeave,onDrop]);
 
   useEffect(() => {
-    if (dragKey && domTreeKeys.includes(dragKey)) return;
-    const iframe = getIframe();
-    if (isAddComponent.current) {
-      setSelectedNode(getSelectedNode(uniqueKey, iframe));
-      isAddComponent.current = false;
+    if (dragKey&&domTreeKeys.includes(dragKey)) return;
+    if (isNewComponent) {
+      setSelectedNode(getSelectedNode(uniqueKey));
+      setIsNewComponent(false);
     }
 
     if (
@@ -252,23 +282,30 @@ function Container(allProps: CommonPropsType) {
         index,
       );
     }
-  }, [childNodes, dragKey]);
+  }, [childNodes,isNewComponent,dragKey,setIsNewComponent]);
 
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
       event.preventDefault();
       const dragKey = getDragKey();
       const { isLock, isDropAble, operateSelectedKey } = getOperateState();
+      const { dropTarget } = getSelector<{ dropTarget: DropTargetType }>([
+        'dropTarget',
+      ]);
       if (
         !isDropAble ||
+        key !== get(dropTarget,'selectedKey') ||
         dragKey === operateSelectedKey ||
-        selectedKey !== key ||
         domTreeKeys.includes(dragKey) ||
         !isLock
-      )
+      ) {
+        if (key !== get(dropTarget,'selectedKey')&&!isEqual(children, childNodes)) {
+          setChildren(childNodes);
+        }
         return;
-      const isV = isVPropNodesPositionRef.current[defaultPropName];
+      }
 
+      const isV = isVPropNodesPositionRef.current[defaultPropName];
       if (isEmpty(children)) {
         if (nodePropsConfig) {
           setChildren({ [selectedPropName]: [dragKey] });
@@ -277,6 +314,7 @@ function Container(allProps: CommonPropsType) {
         }
         setDragSortCache([dragKey]);
       } else if (Array.isArray(children)) {
+
         if (children.length === 1 && children.includes(dragKey)) return;
         const newChildren = dragSort(
           children,
@@ -286,8 +324,9 @@ function Container(allProps: CommonPropsType) {
         );
         if (!isEqual(newChildren, children)) {
           setChildren(newChildren);
+          setDragSortCache(newChildren);
         }
-        setDragSortCache(newChildren);
+
       } else {
         const propChildren = get(children, selectedPropName, []);
 
@@ -302,7 +341,7 @@ function Container(allProps: CommonPropsType) {
         }
       }
     },
-    [children, setChildren, selectedKey, selectedPropName],
+    [children, setChildren, selectedPropName],
   );
 
   const onParentDragEnter = useCallback(
@@ -320,8 +359,9 @@ function Container(allProps: CommonPropsType) {
         domTreeKeys.includes(dragKey) ||
         dragKey === key ||
         (dragParentKey && dragParentKey === key)
-      )
+      ){
         return;
+      }
       let isDropAble = false;
       if (nodePropsConfig) {
         const { childNodesRule } = nodePropsConfig[selectedPropName];
@@ -332,8 +372,9 @@ function Container(allProps: CommonPropsType) {
         isDropAble = isAllowDrop(childNodesRule) && isAllowAdd(componentName);
       }
       isDropAble = Number.parseInt(index) === 0 && isDropAble;
+      const dropNode=event.target as HTMLElement;
       setOperateState({
-        dropNode: event.target as HTMLElement,
+        dropNode,
         isDropAble,
         index,
         isLock: true,
@@ -351,15 +392,6 @@ function Container(allProps: CommonPropsType) {
     },
     [childNodes, selectedPropName],
   );
-
-  const { index: selectedIndex } = getOperateState();
-
-  if (
-    (selectedKey !== key || selectedIndex !== index) &&
-    !isEqual(childNodes, children)
-  ) {
-    setChildren(childNodes);
-  }
 
   const onDragEnter = useCallback(
     (event: DragEvent, propName?: string) => {
@@ -380,9 +412,10 @@ function Container(allProps: CommonPropsType) {
         isAllowDrop(childNodesRule) &&
         (!isNeedJudgeFather() || isAllowAdd(componentName)) &&
         Number.parseInt(index) === 0;
+      const dropNode=propParentNodes.current[propName];
 
       setOperateState({
-        dropNode: propParentNodes.current[propName],
+        dropNode,
         isDropAble,
         index,
         isLock: true,
@@ -397,8 +430,6 @@ function Container(allProps: CommonPropsType) {
     },
     [childNodes],
   );
-
-  if (!isSelected && (!componentName || hidden)) return null;
 
   let modalProps: any = {};
   if (mirrorModalField) {
@@ -416,6 +447,17 @@ function Container(allProps: CommonPropsType) {
     }
   }
   const { className, animateClass, ...restProps } = props || {};
+  const childNodesProps = useMemo(
+    () =>
+      handleChildNodes(
+        specialProps,
+        { ...pageState, ...pageState.getPageState() },
+        componentName,
+        children,
+      ),
+    [children, pageState, pageState.getPageState(), specialProps],
+  );
+  if (!isSelected && (!componentName || hidden)) return null;
 
   return createElement(getComponent(componentName), {
     ...restProps,
@@ -423,19 +465,15 @@ function Container(allProps: CommonPropsType) {
       uniqueKey,
       domTreeKeys.includes(dragKey),
       className,
-      animateClass,
-      !!dragKey && isAllowAdd(componentName),
+      animateClass
     ),
     onDragEnter: onParentDragEnter,
     onDragOver: onParentDragOver,
+    onDragLeave,
+    onDrop,
     ...events,
     ...generateRequiredProps(componentName),
-    ...handleChildNodes(
-      specialProps,
-      { ...pageState, ...pageState.getPageState() },
-      componentName,
-      children,
-    ),
+    ...childNodesProps,
     draggable: true,
     /**
      * 设置组件id方便抓取图片

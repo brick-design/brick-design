@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import { BrickStore } from '@brickd/hooks';
 import {
-  addComponent,
   redo,
   undo,
   changePlatform,
@@ -17,18 +16,17 @@ import {
   clearHovered,
   getSelector,
 } from '@brickd/core';
+import ResizePolyfill from 'resize-observer-polyfill';
+import { isEmpty } from 'lodash';
 import BrickDesign, { BrickDesignProps } from './BrickDesign';
 import {
   OperateProvider,
   OperateStateType,
 } from './components/OperateProvider';
 import styles from './index.less';
-import { onDragover } from './common/events';
 import { useSelector } from './hooks/useSelector';
 import Guidelines from './components/Guidelines';
-import ResizePolyfill from 'resize-observer-polyfill';
-import { cleanCaches, getIframe, css } from './utils';
-import { isEmpty } from 'lodash';
+import { cleanCaches, getIframe, css} from './utils';
 
 interface PlatformsType {
   [platformName: string]: PlatformSizeType;
@@ -76,23 +74,10 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     };
   }, []);
 
-  const onDrop = useCallback((e: DragEvent) => {
-    e.stopPropagation();
-    const {selectedInfo}=getSelector(['selectedInfo'])
-    if(selectedInfo) return;
-    operateStore.setPageState({ dropNode: null });
-    addComponent();
-  }, []);
+
 
   useEffect(() => {
-    const { contentWindow } = getIframe();
-    contentWindow.addEventListener('dragover', onDragover);
-    contentWindow.addEventListener('drop', onDrop);
-    return () => {
-      contentWindow.removeEventListener('dragover', onDragover);
-      contentWindow.removeEventListener('drop', onDrop);
-      cleanCaches();
-    };
+     return  cleanCaches;
   }, []);
 
   const changeCanvasSize = useCallback(

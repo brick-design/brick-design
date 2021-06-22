@@ -1,4 +1,3 @@
-export * from './common/events';
 export * from './utils';
 export { default as BrickDesignCanvas } from './BrickDesignCanvas';
 export * from './BrickDesignCanvas';

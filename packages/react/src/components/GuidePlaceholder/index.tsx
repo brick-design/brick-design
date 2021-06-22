@@ -25,10 +25,9 @@ type SelectState = {
 };
 
 function getNode(key: string) {
-  const iframe = getIframe();
-  const selectedNode = getSelectedNode(`${key}-0`, iframe);
+  const selectedNode = getSelectedNode(`${key}-0`);
   if (selectedNode) {
-    const { contentWindow } = iframe;
+    const { contentWindow } = getIframe();
     const { innerWidth, innerHeight } = contentWindow;
     const { x, y } = selectedNode.getBoundingClientRect();
     const position: { left?: number; top?: number } = {};

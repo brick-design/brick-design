@@ -1,4 +1,5 @@
 import { each, get, isEmpty } from 'lodash';
+import { getStore, getWarn, getBrickdConfig } from './caches';
 import {
   BrickAction,
   ChildNodesType,
@@ -12,7 +13,6 @@ import {
 } from '../types';
 import { ReducerType } from '../reducers';
 import { legoState } from '../reducers/handlePageBrickdState';
-import { getStore, getWarn, getBrickdConfig } from './caches';
 
 /**
  * 根节点key
@@ -352,11 +352,11 @@ export function createActions(action: BrickAction) {
   return getStore().dispatch(action);
 }
 
-export function getPageState(isRoot?: boolean) {
+export function getPageState(isRoot?: boolean):BrickDesignStateType|StateType {
   const brickdState = getStore().getState();
-  if (isRoot) return brickdState;
+  if (isRoot) return brickdState as BrickDesignStateType;
   const layerName = get(brickdState, 'layerName');
-  return get(brickdState, layerName, legoState);
+  return get(brickdState, layerName, legoState) as StateType;
 }
 
 export function getSelector<T>(selector: STATE_PROPS[]): T {

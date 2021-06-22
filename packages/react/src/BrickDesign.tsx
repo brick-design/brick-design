@@ -11,12 +11,17 @@ import {
   PageConfigType,
   STATE_PROPS,
   getStore,
-  ROOT,
+  ROOT,addComponent,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
-import { getDragSourceFromKey, iframeSrcDoc, getIframe, getDragKey } from './utils'
+import {
+  getDragSourceFromKey,
+  iframeSrcDoc,
+  getIframe,
+  getDragKey, getRootState,
+} from './utils';
 import Distances from './components/Distances';
 import GuidePlaceholder from './components/GuidePlaceholder';
 import { useSelector } from './hooks/useSelector';
@@ -53,12 +58,31 @@ const controlUpdate = (
   return nextRootComponent !== prevRootComponent;
 };
 
+type LayerNameType={
+  layerName:string
+}
+
 function BrickDesign(brickdProps: BrickDesignProps) {
   const { onLoadEnd, pageName, options, operateStore, ...props } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     stateSelector,
     controlUpdate,
   );
+  useSelector<LayerNameType,string>(['layerName'],(prevState,nextState)=>{
+    if(prevState.layerName!==nextState.layerName){
+      operateStore.setPageState({
+        hoverNode: undefined,
+        selectedNode: undefined,
+        dropNode: undefined,
+        isModal: undefined,
+        operateHoverKey: undefined,
+        operateSelectedKey: undefined,
+        index: undefined,
+        isDropAble: undefined,
+        isLock: undefined});
+    }
+    return  false;
+  },undefined,true);
   const rootComponent = pageConfig[ROOT];
 
   const staticState = useMemo(() => ({ options, pageName }), [
@@ -68,7 +92,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
 
   const onMouseLeave = useCallback((event: Event) => {
     event.stopPropagation();
-    if(getDragKey()) return;
+    if (getDragKey()) return;
     clearHovered();
     operateStore.setPageState({
       hoverNode: null,
@@ -80,11 +104,13 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     const rootComponent = pageConfig[ROOT];
     if (!rootComponent) return null;
     const specialProps = { domTreeKeys: [ROOT], key: ROOT, parentKey: '' };
+    const {layerName}=getRootState();
     return (
       <StateDomainWrapper
         {...props}
         onMouseLeave={onMouseLeave}
         specialProps={specialProps}
+        key={layerName}
       />
     );
   }, []);
@@ -113,18 +139,15 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   );
 
   const onDragEnter = useCallback(() => {
-    if (rootComponent) return;
     componentMount(
       divContainer,
       renderComponent(getDragSourceFromKey('vDOMCollection', {})),
     );
-  }, [componentMount, divContainer, rootComponent]);
+  }, [componentMount]);
 
   const onDragLeave = useCallback(() => {
-    if (!rootComponent) {
       ReactDOM.unmountComponentAtNode(divContainer.current);
-    }
-  }, [divContainer.current, rootComponent]);
+  }, []);
 
   const onIframeLoad = useCallback(() => {
     const head = document.head.cloneNode(true);
@@ -136,15 +159,29 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     onLoadEnd && onLoadEnd();
   }, [designPage, onLoadEnd, componentMount]);
 
+
+  const onDragover=useCallback((e: any)=> {
+    e.preventDefault();
+  },[]);
+
   useEffect(() => {
-    const { contentWindow } = getIframe();
-    contentWindow.addEventListener('dragenter', onDragEnter);
-    contentWindow.addEventListener('dragleave', onDragLeave);
+    if(!rootComponent){
+      const { contentWindow } = getIframe();
+      contentWindow.addEventListener('dragover', onDragover);
+      contentWindow.addEventListener('drop', addComponent);
+      contentWindow.addEventListener('dragenter', onDragEnter);
+      contentWindow.addEventListener('dragleave', onDragLeave);
+    }
     return () => {
-      contentWindow.removeEventListener('dragenter', onDragEnter);
+      if(!rootComponent){
+        const { contentWindow } = getIframe();
+        contentWindow.removeEventListener('dragover', onDragover);
+        contentWindow.removeEventListener('drop', addComponent);
+        contentWindow.removeEventListener('dragenter', onDragEnter);
       contentWindow.removeEventListener('dragleave', onDragLeave);
+      }
     };
-  }, [onDragEnter, onDragLeave]);
+  }, [onDragEnter, onDragLeave,rootComponent]);
 
   useEffect(() => {
     if (divContainer.current) {

@@ -11,7 +11,7 @@ import {
   selectComponent,
   SelectedInfoBaseType,
   STATE_PROPS,
-} from '@brickd/core'
+} from '@brickd/core';
 import { isEmpty } from 'lodash';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
@@ -193,10 +193,10 @@ export function useEvents(
   const onMouseOver = useCallback(
     (event: Event) => {
       event.stopPropagation();
-     const {hoverNode}=getOperateState();
-      if (getDragKey()&&hoverNode) {
+      const { hoverNode } = getOperateState();
+      if (getDragKey() && hoverNode) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
-      } else if(!getDragKey()) {
+      } else if (!getDragKey()) {
         setOperateState({
           hoverNode: event.target as HTMLElement,
           operateHoverKey: key,
