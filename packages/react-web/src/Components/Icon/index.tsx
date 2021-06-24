@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import styles from './index.less';
 
-interface IconProps extends React.AllHTMLAttributes<any> {
+export interface IconProps extends React.AllHTMLAttributes<any> {
   icon?: string;
   iconClass?: string;
 }

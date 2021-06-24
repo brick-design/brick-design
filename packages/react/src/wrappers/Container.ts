@@ -355,7 +355,13 @@ function Container(allProps: CommonPropsType) {
         dragKey === key ||
         (dragParentKey && dragParentKey === key)
       ){
-        return;
+        setDropTarget(null);
+        return setOperateState({
+          dropNode:null,
+          isDropAble:false,
+          index,
+          isLock: true,
+        });
       }
       let isDropAble = false;
       if (nodePropsConfig) {
@@ -400,8 +406,15 @@ function Container(allProps: CommonPropsType) {
         (dragKey === operateSelectedKey &&
           dragParentKey &&
           dragParentKey !== key)
-      )
-        return;
+      ){
+        setDropTarget(null);
+        return setOperateState({
+          dropNode:null,
+          isDropAble:false,
+          index,
+          isLock: true,
+        });
+      }
       const { childNodesRule } = nodePropsConfig[propName];
       const isDropAble =
         isAllowDrop(childNodesRule) &&

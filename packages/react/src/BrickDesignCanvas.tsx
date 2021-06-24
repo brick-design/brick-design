@@ -128,7 +128,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const wheelEvent= useCallback((e:WheelEvent)=> {
     e.preventDefault();
     const {deltaX,deltaY}=e;
-    console.log('wheelEvent>>>>>>>>',deltaX,deltaY);
     if (Math.abs(deltaX) !== 0 && Math.abs(deltaY) !== 0) return false;
     if (e.ctrlKey) {
       scaleRef.current-=deltaY*0.005;
@@ -141,6 +140,15 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
       target.style.top=Number.parseInt(top)-deltaY*2+'px';
     }
     return  false;
+  },[]);
+
+  const wheelScale= useCallback((e:WheelEvent)=> {
+    e.preventDefault();
+    if (e.ctrlKey) {
+      scaleRef.current-=e.deltaY*0.005;
+      changeScale();
+      return false;
+    }
   },[]);
 
   const changeScale=useCallback(()=>{
@@ -174,13 +182,13 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('wheel', wheelEvent, { passive: false });
     contentWindow && contentWindow.addEventListener('keydown', onKeyDown);
-    contentWindow && contentWindow.addEventListener('wheel', wheelEvent, { passive: false });
+    contentWindow && contentWindow.addEventListener('wheel', wheelScale);
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('wheel', wheelEvent);
       contentWindow && contentWindow.removeEventListener('keydown', onKeyDown);
-      contentWindow && contentWindow.removeEventListener('wheel', wheelEvent);
+      contentWindow && contentWindow.removeEventListener('wheel', wheelScale);
 
     };
   }, [changeCanvasSize,wheelEvent]);

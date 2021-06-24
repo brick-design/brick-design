@@ -3,7 +3,7 @@ import { useDragMove } from '@brickd/hooks';
 import styles from './index.less';
 import Resizeable, { ResizeableProps, ResizeableRefType } from '../Resizeable';
 
-export type DragAndResizeRefType={
+export interface DragAndResizeRefType extends ResizeableRefType{
   onMoveStart:(event: MouseEvent|React.MouseEvent)=>void
 }
 
@@ -16,7 +16,9 @@ function DragAndResize(props: ResizeableProps,ref:Ref<DragAndResizeRefType>) {
   useImperativeHandle(ref,()=>({onMoveStart:(event:MouseEvent|React.MouseEvent)=>{
     onMoveStart(event);
       setIsDrag(true);
-  }}),[onMoveStart]);
+  },
+    ...moveDivRef.current
+  }),[onMoveStart]);
 
   const onMouseMove=(event:React.MouseEvent)=>{
     onMove(event);
