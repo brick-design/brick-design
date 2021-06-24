@@ -23,7 +23,7 @@ function StateDomainWrapper(props: any) {
   );
   const { state, api, componentName } =
     pageConfig[specialProps.key] ||
-    getDragSourceFromKey('vDOMCollection', {})[specialProps.key];
+    getDragSourceFromKey('template', {})[specialProps.key];
   const isContainerNode = useMemo(() => isContainer(componentName), []);
   const brickdStore = useRedux(state);
   const childProps = useGetProps(brickdStore.getPageState(), rest);

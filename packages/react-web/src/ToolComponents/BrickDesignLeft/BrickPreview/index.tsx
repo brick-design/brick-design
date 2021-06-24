@@ -2,14 +2,14 @@ import React, { memo, useCallback, useRef, useState } from 'react';
 import { map } from 'lodash';
 import Collapse, { Panel } from 'rc-collapse';
 import styles from './index.less';
-import SearchBar from '../Components/SearchBar';
-import { arrowIcon } from '../../../assets';
 import SearchResult, {
   CategoryInfoType,
   CategoryType,
   renderDragItem,
   SearchRefType,
 } from './SearchResult';
+import SearchBar from '../Components/SearchBar';
+import { arrowIcon } from '../../../assets';
 
 /**
  * 渲染折叠Header

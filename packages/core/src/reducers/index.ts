@@ -7,12 +7,7 @@ import {
   deleteComponent,
   onLayoutSortChange,
 } from './handleComponentSchema';
-import {
-  clearDragSource,
-  clearDropTarget,
-  getDragSource,
-  getDropTarget,
-} from './handleDragDrop';
+
 import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import { changeProps, resetProps } from './handleProps';
@@ -72,12 +67,6 @@ export const reducer: ReducerType = (prevState, action) => {
     case ACTION_TYPES.copyComponent:
       newState = copyComponent(state);
       break;
-    case ACTION_TYPES.getDragSource:
-      newState = getDragSource(state, payload);
-      break;
-    case ACTION_TYPES.getDropTarget:
-      newState = getDropTarget(state, payload);
-      break;
     case ACTION_TYPES.clearHovered:
       newState = clearHovered(state);
       break;
@@ -111,14 +100,8 @@ export const reducer: ReducerType = (prevState, action) => {
     case ACTION_TYPES.resetStyles:
       newState = resetStyles(state);
       break;
-    case ACTION_TYPES.clearDropTarget:
-      newState = clearDropTarget(state);
-      break;
     case ACTION_TYPES.resizeChange:
       newState = resizeChange(state, payload);
-      break;
-    case ACTION_TYPES.clearDragSource:
-      newState = clearDragSource(state);
       break;
     case ACTION_TYPES.setComponentState:
       newState = setComponentState(state, payload);

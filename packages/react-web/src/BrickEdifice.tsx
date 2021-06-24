@@ -1,6 +1,4 @@
 import React, { memo, useEffect } from 'react';
-import styles from './index.less';
-import ToolBar from './ToolComponents/ToolBar';
 import {
   BrickDesignCanvas,
   BrickDesignCanvasType,
@@ -8,9 +6,12 @@ import {
   initPageBrickdState,
   PageBrickdStateType,
 } from '@brickd/react';
+import styles from './index.less';
+import ToolBar from './ToolComponents/ToolBar';
 import BrickDesignLeft from './ToolComponents/BrickDesignLeft';
 import { BrickPreviewPropsType } from './ToolComponents/BrickDesignLeft/BrickPreview';
 import BrickDesignRight from './ToolComponents/BrickDesignRight';
+import Layers from './ToolComponents/Layers';
 
 require('rc-tabs/assets/index.css');
 require('rc-collapse/assets/index.css');
@@ -39,8 +40,9 @@ function BrickEdifice(props: BrickEdificeProps) {
       <div className={styles['brickd-container']}>
         <ToolBar />
         <BrickDesignCanvas className={styles['brickd-canvas']} {...rest}>
-          <BrickDesignLeft componentsCategory={componentsCategory} />
+          <Layers/>
           <BrickDesignRight />
+          <BrickDesignLeft componentsCategory={componentsCategory} />
         </BrickDesignCanvas>
       </div>
     </BrickProvider>

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@brickd/react": "^1.0.0-alpha.16",
+    "@brickd/hooks": "^1.0.0-alpha.16",
     "antd": "3.26.16",
     "lodash": "^4.17.15",
     "react": "^16.8.0",

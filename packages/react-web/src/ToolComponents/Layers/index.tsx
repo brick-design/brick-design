@@ -1,10 +1,11 @@
 import React, { memo, useRef, useState } from 'react';
-import styles from './index.less';
-import Pages from './Pages';
-import BrickTree from '../BrickTree';
-import Tips from '../../../Components/Tips';
-import { warnIcon } from '../../../assets';
 import { deleteLayers } from '@brickd/react';
+import Pages from './Pages';
+import BrickTree from './BrickTree';
+import styles from './index.less';
+import Tips from '../../Components/Tips';
+import { warnIcon } from '../../assets';
+import DragResizeBar from '../../Components/DragResizeBar';
 
 function Layers() {
   const [visible, setVisible] = useState(false);
@@ -25,7 +26,7 @@ function Layers() {
     setVisible(!visible);
   };
   return (
-    <div className={styles['container']}>
+    <DragResizeBar title={'Layers'} className={styles['container']} minWidth={212} minHeight={400}>
       <Pages onDelete={onDelete} />
       <BrickTree />
       <Tips
@@ -38,7 +39,7 @@ function Layers() {
         confirmText={'确定'}
         visible={visible}
       />
-    </div>
+    </DragResizeBar>
   );
 }
 

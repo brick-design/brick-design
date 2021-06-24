@@ -32,12 +32,12 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
 };
 
 export interface DragSourceType extends Partial<ParentNodeInfo> {
-  vDOMCollection?: PageConfigType;
+  template?: PageConfigType;
   dragKey?: string;
 }
 
 export interface DropTargetType {
-  selectedKey: string;
+  dropKey: string;
   propName?: string;
   domTreeKeys: string[];
   childNodeKeys: string[];
@@ -66,8 +66,6 @@ export type StateType = {
   undo: UndoRedoType[];
   redo: UndoRedoType[];
   hoverKey: null | string;
-  dragSource: DragSourceType | null;
-  dropTarget: null | DropTargetType;
   platformInfo: PlatformInfoType;
 };
 

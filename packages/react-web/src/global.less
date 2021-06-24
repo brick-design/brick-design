@@ -1,6 +1,6 @@
 @content-height: calc(100vh - 120px);
 @backGroundColor: rgb(222, 222, 228);
-@bgColor:rgb(247, 247, 247);
+@bgColor:rgb(45, 48, 50);
 @borderColor:#f2f2f2;
 
 .rotate180 {
@@ -9,4 +9,32 @@
 
 .rotate90 {
 	transform: rotate(90deg);
+}
+
+
+.icon-container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 39px;
+	cursor: pointer;
+	.icon-class{
+		width: 14px;
+		height: 14px;
+		user-select: none;
+	}
+}
+
+
+.drag-bar{
+	position: absolute;
+	top:4px;
+	height: 5px;
+	width: 35px;
+	border-radius:5px;
+	background-color: #bcbcbc;
+	&:hover{
+		background-color: #000;
+	}
 }

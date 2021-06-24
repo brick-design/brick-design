@@ -14,14 +14,20 @@
   transition: all 200ms;
 }
 
-.brickd-canvas {
-  border-width: 0;
-  -webkit-box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
-  box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
-  background-color: #fff;
-  display: inline-block;
-}
 
 .brick-design-container{
-  overflow: scroll;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  .brickd-canvas {
+    border-width: 0;
+    -webkit-box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28);
+    background-color: #fff;
+    display: inline-block;
+    position: absolute;
+  }
+
 }

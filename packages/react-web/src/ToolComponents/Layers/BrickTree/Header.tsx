@@ -34,7 +34,7 @@ interface HeaderProps {
   hasChildNodes: boolean;
 }
 
-function controlUpdate(prevState, nextState, key: string) {
+function controlUpdate() {
   return true;
 }
 
@@ -52,7 +52,7 @@ function Header(props: HeaderProps) {
   const [isCloseEye, setIsCloseEye] = useState(false);
   const { selectedInfo, hoverKey } = useSelector(
     ['selectedInfo', 'hoverKey'],
-    (prevState, nextState) => controlUpdate(prevState, nextState, key),
+    () => controlUpdate(),
   );
   const { propName: selectedPropName, selectedKey } = selectedInfo || {};
   const sortItemKey = propName ? `${key}${propName}` : key;
@@ -95,8 +95,8 @@ function Header(props: HeaderProps) {
             selectComponent({ ...specialProps, propName });
           }
         }}
-        onMouseLeave={(e) => isHovered && clearHovered()}
-        onMouseOver={(e: any) => {
+        onMouseLeave={() => isHovered && clearHovered()}
+        onMouseOver={() => {
           if (!isSelected) {
             overTarget({
               hoverKey: key,

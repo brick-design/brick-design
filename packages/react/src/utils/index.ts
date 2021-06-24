@@ -5,7 +5,7 @@ import {
   getComponentConfig,
   getBrickdConfig,
   ChildNodesType,
-  getSelector, getStore,
+  getSelector, getStore, getDragSource,
 } from '@brickd/core';
 
 export * from './caches';
@@ -406,16 +406,19 @@ export const getPropParentNodes = (
 
 export const getDragKey = () => getDragSourceFromKey('dragKey');
 export const getDragSourceFromKey = (propName: string, defaultValue?: any) =>
-  get(getSelector(['dragSource']), ['dragSource', propName], defaultValue);
+  get(getDragSource(), propName, defaultValue);
 export const getDragComponentName = (dragKey?: string) =>
   get(getSelector(['pageConfig']), [
     'pageConfig',
     dragKey || getDragKey(),
     'componentName',
-  ]);
+  ])||get(getDragSourceFromKey('template'),[dragKey || getDragKey(),
+    'componentName']);
 
 export const getVNode = (nodeKey: string) =>
-  get(getSelector(['pageConfig']), ['pageConfig', nodeKey], {});
+  get(getSelector(['pageConfig']), ['pageConfig', nodeKey])||
+  get(getDragSourceFromKey('template'),nodeKey)||{}
+;
 
 export function css(el): CSSStyleDeclaration {
   const style = el && el.style;

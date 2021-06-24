@@ -13,7 +13,7 @@ import {
   warn,
 } from '../utils';
 import { LayoutSortPayload } from '../actions';
-import { getDragSortCache } from '../utils/caches';
+import { getDragSortCache, getDragSource, getDropTarget, setDragSource, setDropTarget } from '../utils/caches';
 
 /**
  * 往画板或者容器组件添加组件
@@ -21,76 +21,69 @@ import { getDragSortCache } from '../utils/caches';
  * @returns {{pageConfig: *}}
  */
 export function addComponent(state: StateType): StateType {
-  const { undo, redo, pageConfig, dragSource, dropTarget } = state;
+  const { undo, redo, pageConfig } = state;
   /**
    * 如果没有拖拽的组件不做添加动作, 如果没有
    */
+  const dragSource=getDragSource(), dropTarget=getDropTarget();
   if (!dragSource || (!dropTarget && pageConfig[ROOT])) {
-    return { ...state, dragSource: null };
+    setDragSource(null);
+    return state;
   }
 
-  const { vDOMCollection, dragKey, parentKey, parentPropName } = dragSource;
+  const { template, dragKey, parentKey, parentPropName } = dragSource;
   /**
    * 如果没有root根节点，新添加的组件添加到root
    */
   if (!pageConfig[ROOT]) {
     undo.push({ pageConfig });
     redo.length = 0;
+    setDragSource(null);
+    setDropTarget(null);
     return {
       ...state,
-      pageConfig: vDOMCollection!,
-      dragSource: null,
-      dropTarget: null,
+      pageConfig: template,
       undo,
       redo,
     };
   }
   // eslint-disable-next-line prefer-const
-  let { selectedKey, propName, childNodeKeys } = dropTarget;
+  let { dropKey, propName, childNodeKeys } = dropTarget;
   /**
    * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
    * 添加之前的页面配置
    */
-  if (!selectedKey) {
-    /**
-     * 如果有parentKey说明是拖拽的是新添加的组件，
-     * 返回原先的state状态
-     */
-    if (!parentKey) {
-      return { ...state, ...undo.pop(), dragSource: null };
-    } else {
-      return { ...state, dragSource: null };
-    }
+  const dragSort=getDragSortCache();
+  if (
+    !dragSort ||
+    (parentKey === dropKey && isEqual(childNodeKeys, dragSort)) ||
+    handleRules(pageConfig)
+  ) {
+    setDragSource(null);
+    setDropTarget(null);
+    return state;
   }
 
-  if (
-    !getDragSortCache() ||
-    (parentKey === selectedKey && isEqual(childNodeKeys, getDragSortCache())) ||
-    handleRules(pageConfig, dragKey!, selectedKey, propName)
-  ) {
-    return { ...state, dragSource: null, dropTarget: null };
-  }
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
+  setDragSource(null);
+  setDropTarget(null);
   return {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {
       //添加新组件到指定容器中
-      update(oldConfigs, getLocation(selectedKey!, propName), () =>
-        getDragSortCache(),
-      );
+      template&&Object.assign(oldConfigs, template);
+      update(oldConfigs, getLocation(dropKey!, propName), () => dragSort);
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用
       if (
         parentKey &&
-        (parentKey !== selectedKey || parentPropName !== propName)
+        (parentKey !== dropKey || parentPropName !== propName)
       ) {
         update(oldConfigs, getLocation(parentKey), (childNodes) =>
           deleteChildNodesKey(childNodes, dragKey!, parentPropName),
         );
       }
     }),
-    dragSource: null,
-    dropTarget: null,
     undo,
     redo,
   };

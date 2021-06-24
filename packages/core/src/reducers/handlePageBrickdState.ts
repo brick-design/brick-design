@@ -8,8 +8,6 @@ export const legoState: StateType = {
   undo: [],
   redo: [],
   hoverKey: null,
-  dragSource: null,
-  dropTarget: null,
   platformInfo: { platformName: 'PC', size: [1920, 1080] },
 };
 
@@ -17,7 +15,7 @@ export function initPageBrickdState(
   state: BrickDesignStateType,
   payload: PageBrickdStateType,
 ): BrickDesignStateType {
-  let newState = {};
+  const newState = {};
   const layerName = Object.keys(payload)[0];
 
   each(payload, (v, k) => {

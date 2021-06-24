@@ -1,5 +1,5 @@
 import { each, get, isEmpty } from 'lodash';
-import { getStore, getWarn, getBrickdConfig } from './caches';
+import { getStore, getWarn, getBrickdConfig, getDragSource, getDropTarget } from './caches';
 import {
   BrickAction,
   ChildNodesType,
@@ -101,17 +101,16 @@ export function getLocation(key: string, propName?: string): string[] {
 
 /**
  * 生成新的Key
- * @param dragVDOMAndPropsConfig
  * @param rootKey
  */
 export const generateNewKey = (
-  vDOMCollection: PageConfigType,
+  template: PageConfigType,
   rootKey: number,
 ) => {
   const keyMap: { [key: string]: string } = {};
   const newVDOMCollection: PageConfigType = {};
   let newKey = rootKey;
-  each(vDOMCollection, (vDom, key) => {
+  each(template, (vDom, key) => {
     ++newKey;
     if (key === ROOT) {
       newKey = rootKey;
@@ -251,16 +250,16 @@ export function restObject(obj: any, field?: string) {
 
 export function handleRules(
   pageConfig: PageConfigType,
-  dragKey: string,
-  selectedKey: string,
-  propName?: string,
   isForbid?: boolean,
 ) {
   /**
    * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
    */
-  const dragComponentName = pageConfig[dragKey!].componentName;
-  const dropComponentName = pageConfig[selectedKey!].componentName;
+  const {dragKey,template}=getDragSource();
+  const {dropKey,propName}=getDropTarget();
+  const path=[dragKey,'componentName'];
+  const dragComponentName = get(pageConfig,path)||get(template,path);
+  const dropComponentName = pageConfig[dropKey].componentName;
   const { fatherNodesRule } = getComponentConfig(dragComponentName);
   const { nodePropsConfig, childNodesRule } = getComponentConfig(
     dropComponentName,

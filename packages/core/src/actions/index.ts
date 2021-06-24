@@ -1,5 +1,4 @@
 export * from './produceActions/componentSchema';
-export * from './produceActions/dragDrop';
 export * from './produceActions/hover';
 export * from './produceActions/platform';
 export * from './produceActions/props';

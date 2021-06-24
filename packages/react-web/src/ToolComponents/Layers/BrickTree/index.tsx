@@ -9,11 +9,8 @@ import {
 import SortTree from './SortTree';
 import styles from './index.less';
 
-interface BrickTreeProps {
-  className?: string;
-}
 
-function BrickTree(props: BrickTreeProps) {
+function BrickTree() {
   const { pageConfig } = useSelector<
     { pageConfig: PageConfigType },
     STATE_PROPS

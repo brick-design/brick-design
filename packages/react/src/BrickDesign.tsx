@@ -141,7 +141,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onDragEnter = useCallback(() => {
     componentMount(
       divContainer,
-      renderComponent(getDragSourceFromKey('vDOMCollection', {})),
+      renderComponent(getDragSourceFromKey('template', {})),
     );
   }, [componentMount]);
 

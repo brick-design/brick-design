@@ -5,7 +5,6 @@ import {
   STATE_PROPS,
   selectComponent,
 } from '@brickd/core';
-import { get } from 'lodash';
 import { useSelector } from './useSelector';
 import { getDragKey, isEqualKey } from '../utils';
 
@@ -24,7 +23,7 @@ export function useSelect(
   specialProps: SelectedInfoBaseType,
   isModal?: boolean,
 ): UseSelectType {
-  const { key, domTreeKeys: selfDomTreeKeys } = specialProps;
+  const { key} = specialProps;
 
   const controlUpdate = useCallback(
     (prevState: SelectType, nextState: SelectType) => {
@@ -36,8 +35,6 @@ export function useSelect(
       const { selectedKey, domTreeKeys = [], propName } =
         nextState.selectedInfo || {};
 
-      const prevDragKey = get(prevState, 'dragSource.dragKey');
-      const nextDragKey = get(nextState, 'dragSource.dragKey');
 
       if (
         (!prevSelectedKey && selectedKey) ||
@@ -60,16 +57,9 @@ export function useSelect(
           );
         } else {
           return (
-            propName !== prevPropName ||
-            selfDomTreeKeys.includes(prevDragKey) ||
-            selfDomTreeKeys.includes(nextDragKey)
+            propName !== prevPropName
           );
         }
-      } else {
-        return (
-          selfDomTreeKeys.includes(prevDragKey) ||
-          selfDomTreeKeys.includes(nextDragKey)
-        );
       }
     },
     [],
@@ -78,7 +68,7 @@ export function useSelect(
   const renderStatusRef = useRef(false);
 
   const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
-    ['selectedInfo', 'dragSource'],
+    ['selectedInfo'],
     controlUpdate,
   );
 

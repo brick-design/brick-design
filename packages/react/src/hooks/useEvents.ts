@@ -2,14 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   changeProps,
   changeStyles,
-  clearDragSource,
   clearSelectedStatus,
   getComponentConfig,
-  getDragSource,
   overTarget,
   ROOT,
   selectComponent,
-  SelectedInfoBaseType,
+  SelectedInfoBaseType, setDragSource,
   STATE_PROPS,
 } from '@brickd/core';
 import { isEmpty } from 'lodash';
@@ -116,7 +114,7 @@ export function useEvents(
       }
       setTimeout(
         () =>
-          getDragSource({
+          setDragSource({
             dragKey: key,
             parentKey,
             parentPropName,
@@ -301,7 +299,7 @@ export function useEvents(
       // actionSheetRef,
       changeBoxDisplay,
     } = getOperateState();
-    clearDragSource();
+    setDragSource(null);
     if (!isEmpty(positionResultRef.current)) {
       changeStyles({ style: positionResultRef.current });
       changeBoxDisplay('none');
@@ -316,8 +314,7 @@ export function useEvents(
   const onInput = useCallback((event: React.SyntheticEvent<any>) => {
     event.stopPropagation();
     const { changeOperationPanel } = getOperateState();
-    const result = (event.target as HTMLElement).innerHTML;
-    contentEditRef.current = result;
+    contentEditRef.current = (event.target as HTMLElement).innerHTML;
     changeOperationPanel();
   }, []);
 

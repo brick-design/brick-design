@@ -1,14 +1,4 @@
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
-import styles from './index.less';
-import Icon from '../../../Components/Icon';
-import {
-  addIcon,
-  arrowIcon,
-  rightIcon,
-  deleteIcon1,
-  copyIcon,
-} from '../../../assets';
-import Resizeable, { ResizeableRefType } from '../../../Components/Resizeable';
 import {
   createLayers,
   getStore,
@@ -17,6 +7,16 @@ import {
   copyLayers,
 } from '@brickd/react';
 import { map, isEqual, keys } from 'lodash';
+import styles from './index.less';
+import Icon from '../../Components/Icon';
+import {
+  addIcon,
+  arrowIcon,
+  rightIcon,
+  deleteIcon1,
+  copyIcon,
+} from '../../assets';
+import Resizeable, { ResizeableRefType } from '../../Components/Resizeable';
 
 interface LayerProp {
   layerName: string;
@@ -24,7 +24,7 @@ interface LayerProp {
   onDelete: (layerName: string) => void;
 }
 
-const LayerItem = memo(function (props: LayerProp) {
+const LayerItem = function (props: LayerProp) {
   const { layerName, onDelete } = props;
   const [isEdit, setIsEdit] = useState(false);
   const nameDivRef = useRef<HTMLDivElement>();
@@ -67,6 +67,7 @@ const LayerItem = memo(function (props: LayerProp) {
   return (
     <div onClick={changeLayerName} className={styles['layer-item']}>
       <img
+        alt=''
         style={{ visibility: isSelected ? 'visible' : 'hidden' }}
         src={rightIcon}
         className={styles['right-icon']}
@@ -95,7 +96,7 @@ const LayerItem = memo(function (props: LayerProp) {
       />
     </div>
   );
-});
+};
 
 interface PageProps {
   onDelete: (layerName: string) => void;
@@ -123,8 +124,7 @@ function Pages(props: PageProps) {
         setLayers(newLayers);
       }
     }
-    const unsubscribe = brickdStore.subscribe(checkForUpdates);
-    return unsubscribe;
+    return brickdStore.subscribe(checkForUpdates);
   }, [layers, setLayers]);
   const changeFold = useCallback(() => {
     if (!isFold) {

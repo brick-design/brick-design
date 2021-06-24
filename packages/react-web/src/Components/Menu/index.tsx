@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { map } from 'lodash';
 import styles from './index.less';
+
 export type MenuDataType = {
   menuName: string;
   onClick?: () => void;

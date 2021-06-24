@@ -6,15 +6,14 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { BrickStore } from '@brickd/hooks';
+import { BrickStore,  } from '@brickd/hooks';
 import {
   redo,
   undo,
   changePlatform,
   PlatformSizeType,
-  clearDropTarget,
   clearHovered,
-  getSelector,
+  getSelector, setDropTarget, getDropTarget,
 } from '@brickd/core';
 import ResizePolyfill from 'resize-observer-polyfill';
 import { isEmpty } from 'lodash';
@@ -36,6 +35,7 @@ export interface BrickDesignCanvasType extends BrickDesignProps {
   platforms?: PlatformsType;
 }
 
+
 const defaultPlatforms: PlatformsType = { PC: [1920, 1080] };
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
@@ -51,9 +51,11 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
     platformInfo: { platformName, size },
   } = useSelector(['platformInfo']);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [scale, setScale] = useState(0.5);
+  const scaleRef = useRef(0.5);
   const dndContainerRef = useRef<HTMLElement>();
+  const brickdCanvasRef=useRef<HTMLDivElement>();
   const selectedPlatform = platforms[platformName];
   const loadEnd = useCallback(() => {
     setIsLoading(true);
@@ -63,22 +65,9 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     onLoadEnd && onLoadEnd();
   }, [setIsLoading]);
 
-  useEffect(() => {
-    function onMouseWheel(mousewheel: WheelEvent) {
-      mousewheel.stopPropagation();
-      return false;
-    }
-    window.addEventListener('mousewheel', onMouseWheel);
-    return () => {
-      window.removeEventListener('mousewheel', onMouseWheel);
-    };
-  }, []);
 
+  useEffect(() => cleanCaches, []);
 
-
-  useEffect(() => {
-     return  cleanCaches;
-  }, []);
 
   const changeCanvasSize = useCallback(
     (isChangePage?: any) => {
@@ -134,6 +123,30 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     };
   });
 
+  // const {onMove,onMoveStart,onMoveEnd}=useDragMove(useCallback(()=>brickdCanvasRef.current),[])
+
+  const wheelEvent= useCallback((e:WheelEvent)=> {
+    e.preventDefault();
+    const {deltaX,deltaY}=e;
+    console.log('wheelEvent>>>>>>>>',deltaX,deltaY);
+    if (Math.abs(deltaX) !== 0 && Math.abs(deltaY) !== 0) return false;
+    if (e.ctrlKey) {
+      scaleRef.current-=deltaY*0.005;
+      changeScale();
+    } else {
+      const target=brickdCanvasRef.current;
+      const {top,left}=getComputedStyle(target);
+      target.style.transition='none';
+      target.style.left=Number.parseInt(left)-deltaX*2+'px';
+      target.style.top=Number.parseInt(top)-deltaY*2+'px';
+    }
+    return  false;
+  },[]);
+
+  const changeScale=useCallback(()=>{
+    brickdCanvasRef.current.style.transform= `scale(${scaleRef.current})`;
+  },[]);
+
   useEffect(() => {
     const { contentWindow } = getIframe() || {};
     function onKeyDown(keyEvent: KeyboardEvent) {
@@ -149,20 +162,31 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         } else if (key === 'u') {
           changeCanvasSize(true);
         } else if (key === '=') {
-          setScale(scale + 0.05);
+          scaleRef.current+=0.05;
+
         } else if (key === '-') {
-          setScale(scale - 0.05);
+          scaleRef.current-=0.05;
         }
+        changeScale();
         keyEvent.returnValue = false;
       }
     }
-    contentWindow && contentWindow.addEventListener('keydown', onKeyDown);
     window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('wheel', wheelEvent, { passive: false });
+    contentWindow && contentWindow.addEventListener('keydown', onKeyDown);
+    contentWindow && contentWindow.addEventListener('wheel', wheelEvent, { passive: false });
+
     return () => {
       window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('wheel', wheelEvent);
       contentWindow && contentWindow.removeEventListener('keydown', onKeyDown);
+      contentWindow && contentWindow.removeEventListener('wheel', wheelEvent);
+
     };
-  }, [changeCanvasSize, setScale, scale]);
+  }, [changeCanvasSize,wheelEvent]);
+
+
+
 
   const style = useMemo(
     () => ({
@@ -170,16 +194,16 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
       minWidth: size[0],
       height: size[1],
       minHeight: size[1],
-      transition: 'all 700ms',
-      transform: `scale(${scale})`,
+      transition: 'all 500ms',
+      transform: `scale(${scaleRef.current})`,
     }),
-    [size, scale],
+    [size],
   );
 
-  const cleanStatus = useCallback((e: React.DragEvent) => {
-    const { dropTarget, hoverKey } = getSelector(['dropTarget', 'hoverKey']);
-    if (!isEmpty(dropTarget)) {
-      clearDropTarget();
+  const cleanStatus = useCallback(() => {
+    const { hoverKey } = getSelector([ 'hoverKey']);
+    if (!isEmpty(getDropTarget())) {
+      setDropTarget(null);
       operateStore.setPageState({
         dropNode: null,
       });
@@ -201,12 +225,14 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
       >
         <div
           id="brickd-canvas"
+          ref={brickdCanvasRef}
           style={style}
           className={styles['brickd-canvas']}
         >
           {isLoading && (
             <>
-              <Guidelines scale={scale} operateStore={operateStore} />
+              <Guidelines scaleRef={scaleRef}
+                          operateStore={operateStore} />
             </>
           )}
           <BrickDesign

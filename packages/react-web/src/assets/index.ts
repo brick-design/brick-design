@@ -15,6 +15,7 @@ import moveIcon from './move-icon.svg';
 import closeEye from './close-eye.svg';
 import openEye from './open-eye.svg';
 import moreIcon from './more-icon.svg';
+
 export {
   arrowIcon,
   deleteIcon,

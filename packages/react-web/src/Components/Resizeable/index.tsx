@@ -11,8 +11,7 @@ import { css } from '@brickd/react';
 import styles from './index.less';
 import { ANIMATION_YES } from '../../utils';
 
-export interface ResizeableProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   left?: boolean;
   right?: boolean;
   top?: boolean;
@@ -27,7 +26,7 @@ export interface ResizeableProps
   maxHeight?: number;
   defaultHeight?: number;
   defaultWidth?: number;
-  [key: string]: any;
+  onResizeStart?:(event:React.MouseEvent|MouseEvent)=>void;
 }
 
 type OriginSizeType = {
@@ -46,7 +45,9 @@ export type ChangeFoldParam = {
 };
 
 export interface ResizeableRefType {
-  changeFold: (params: ChangeFoldParam) => void;
+  changeFold?: (params: ChangeFoldParam) => void;
+  onMouseMove?:(event: React.MouseEvent)=>void;
+  onMouseUp?:(event: React.MouseEvent)=>void;
   target: HTMLDivElement;
 }
 function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
@@ -67,6 +68,7 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     className,
     defaultHeight,
     defaultWidth,
+    onResizeStart,
     ...rest
   } = props;
   const originSizeRef = useRef<OriginSizeType>({
@@ -92,11 +94,12 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     resizeDivRef.current.style.transition = ANIMATION_YES;
   }, []);
 
-  const onMouseUp = useCallback(() => {
+  const onMouseUp = useCallback((event:MouseEvent|React.MouseEvent) => {
+    event.stopPropagation();
     originSizeRef.current.isResize = false;
   }, []);
 
-  const onMouseMove = useCallback((event: MouseEvent) => {
+  const onMouseMove = useCallback((event: MouseEvent|React.MouseEvent) => {
     event.stopPropagation();
     if (!originSizeRef.current.isResize) return;
     const { clientX, clientY } = event;
@@ -153,7 +156,8 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     resizeDivRef.current.style.transition = 'none';
   }, []);
 
-  const onResizeStart = useCallback(function (event: React.MouseEvent) {
+
+  const onMouseDown = useCallback(function (event: React.MouseEvent) {
     event.stopPropagation();
     const { width, height } = css(resizeDivRef.current);
     originSizeRef.current = {
@@ -163,46 +167,42 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
       height: Number.parseInt(height),
       isResize: true,
     };
+    onResizeStart&&onResizeStart(event);
   }, []);
 
   useImperativeHandle<ResizeableRefType, ResizeableRefType>(ref, () => ({
     changeFold,
+    onMouseMove,
+    onMouseUp,
     target: resizeDivRef.current,
   }));
 
   useEffect(() => {
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('mousemove', onMouseMove);
     if (defaultHeight) resizeDivRef.current.style.height = defaultHeight + 'px';
     if (defaultWidth) resizeDivRef.current.style.width = defaultWidth + 'px';
-
-    return () => {
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('mousemove', onMouseMove);
-    };
   }, []);
 
   return (
     <div
-      ref={resizeDivRef}
-      className={`${styles['container']} ${className}`}
       {...rest}
+      className={`${styles['container']} ${className}`}
+      ref={resizeDivRef}
     >
       {children}
       {left && (
-        <div className={styles['resize-left']} onMouseDown={onResizeStart} />
+        <div className={styles['resize-left']} onMouseDown={onMouseDown} />
       )}
       {right && (
-        <div className={styles['resize-right']} onMouseDown={onResizeStart} />
+        <div className={styles['resize-right']} onMouseDown={onMouseDown} />
       )}
       {top && (
-        <div className={styles['resize-top']} onMouseDown={onResizeStart} />
+        <div className={styles['resize-top']} onMouseDown={onMouseDown} />
       )}
       {bottom && (
-        <div className={styles['resize-bottom']} onMouseDown={onResizeStart} />
+        <div className={styles['resize-bottom']} onMouseDown={onMouseDown} />
       )}
       {topLeft && (
-        <div className={styles['resize-topLeft']} onMouseDown={onResizeStart} />
+        <div className={styles['resize-topLeft']} onMouseDown={onMouseDown} />
       )}
       {topRight && (
         <div

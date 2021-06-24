@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { forwardRef, memo, useEffect,  useRef } from 'react';
 import {
   DragSourceType,
   DropTargetType,
@@ -34,11 +34,12 @@ export type PositionSizeType = {
 
 type GuidelinesType = {
   operateStore: BrickStore<OperateStateType>;
-  scale: number;
+  scaleRef:{current:number}
 };
 
+
 function Guidelines(props: GuidelinesType) {
-  const { operateStore, scale } = props;
+  const { operateStore,scaleRef } = props;
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -54,14 +55,14 @@ function Guidelines(props: GuidelinesType) {
   const { dropNode } = getOperateState();
 
   useEffect(() => {
-    const { contentWindow } = iframe;
+    const { contentWindow, } = iframe;
     const renderGuideLines = () => {
       const { hoverNode, dropNode, isModal } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
         const { left, top, bottom, right } = getElementInfo(node, isModal);
         const { scrollY, scrollX } = contentWindow;
-        const positionSize = getScalePosition(canvas, canvasContainer, scale);
+        const positionSize = getScalePosition(canvas, canvasContainer,scaleRef.current);
         const { width, height } = positionSize;
 
         changeElPositionAndSize(topRef.current, {
@@ -95,9 +96,6 @@ function Guidelines(props: GuidelinesType) {
           isModal,
         );
       }
-      if (dropNode) {
-        setTimeout(renderGuideLines, 100);
-      }
     };
     const unSubscribe = setSubscribe(renderGuideLines);
 
@@ -106,7 +104,7 @@ function Guidelines(props: GuidelinesType) {
       unSubscribe();
       contentWindow.removeEventListener('scroll', renderGuideLines);
     };
-  }, [scale]);
+  }, []);
 
   const guidControl = !dropNode && hoverKey;
 
@@ -122,4 +120,4 @@ function Guidelines(props: GuidelinesType) {
   );
 }
 
-export default memo(Guidelines);
+export default memo(forwardRef(Guidelines));

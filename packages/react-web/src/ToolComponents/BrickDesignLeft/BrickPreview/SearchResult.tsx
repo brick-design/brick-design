@@ -5,9 +5,10 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import styles from './index.less';
 import { map, each } from 'lodash';
+import styles from './index.less';
 import DragAbleItem from './DragAbleItem';
+
 export interface ComponentDescType {
   desc?: string;
   img?: string;

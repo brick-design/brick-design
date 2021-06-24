@@ -3,6 +3,7 @@ import styles from './index.less';
 import { searchIcon } from '../../../assets';
 import Input, { InputProps } from '../../../Components/Input';
 import Checkbox from '../../../Components/Checkbox';
+
 type SearchBarProps = InputProps;
 export const SearchContext = createContext(false);
 function SearchBar(props: SearchBarProps) {

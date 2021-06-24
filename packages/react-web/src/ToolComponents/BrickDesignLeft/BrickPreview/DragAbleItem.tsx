@@ -1,6 +1,6 @@
 import React, { createElement, memo, useContext, useRef } from 'react';
 import { get } from 'lodash';
-import { getDragSource, getBrickdConfig } from '@brickd/react';
+import {getBrickdConfig, setDragSource } from '@brickd/react';
 import styles from './index.less';
 import { SearchContext } from '../Components/SearchBar';
 
@@ -51,7 +51,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
           style={{ backgroundColor: defaultColors[randomIndex] }}
           className={styles['placeholder-item']}
         >
-          <img src={img} />
+          <img alt='' src={img} />
         </div>
       );
     }
@@ -72,7 +72,7 @@ function DragAbleItem(props: DragAbleItemPropsType) {
           draggable
           onDragStart={(event: React.DragEvent) => {
             event.stopPropagation();
-            getDragSource(dragSource);
+            setDragSource(dragSource);
           }}
           className={styles['item']}
         >

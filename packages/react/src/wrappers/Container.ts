@@ -15,12 +15,11 @@ import {
   getDropTarget,
   getSelector,
   PageConfigType,
-  ROOT,
-  setDragSortCache,
+  setDragSortCache, setDropTarget,
   STATE_PROPS,
 } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
-import { getChildrenFields, VirtualDOMType } from '@brickd/utils';
+import { getChildrenFields } from '@brickd/utils';
 import { isEqual, get, each, keys, isEmpty, some } from 'lodash';
 import { defaultPropName } from 'common/constants';
 import {
@@ -37,7 +36,7 @@ import {
   isAllowAdd,
   isNeedJudgeFather,
   isAllowDrop,
-  PropNodesPosition,
+  PropNodesPosition, getVNode,
 } from '../utils';
 
 import {
@@ -83,24 +82,24 @@ function Container(allProps: CommonPropsType) {
     [],
   );
 
-  const { pageConfig: PageDom } = useSelector<ContainerState, STATE_PROPS>(
+  const { pageConfig } = useSelector<ContainerState, STATE_PROPS>(
     ['pageConfig'],
     controlUpdate,
   );
-  const pageConfig = PageDom[ROOT]
-    ? PageDom
-    : getDragSourceFromKey('vDOMCollection', {});
-  const vNode = get(pageConfig, key, {}) as VirtualDOMType;
+
+  const vNode = getVNode(key);
   const { childNodes, componentName } = vNode;
   const dragKey = getDragKey();
   const [isNewComponent,setIsNewComponent] = useState(
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
+
+  const pageConfigs:PageConfigType={...pageConfig,...getDragSourceFromKey('template',{})};
   // const dragOverOrigin=useRef()
   const { props, hidden, pageState } = useCommon(
     vNode,
     rest,
-    getChildrenFields(pageConfig, childNodes),
+    getChildrenFields(pageConfigs, childNodes),
   );
   const { index = 0 } = pageState;
   const uniqueKey = `${key}-${index}`;
@@ -122,8 +121,8 @@ function Container(allProps: CommonPropsType) {
   const isVPropNodesPositionRef = useRef<PropNodesPosition>({});
 
   const propParentNodes = useRef<PropParentNodes>({});
-  const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
-    pageConfig,
+  const isModal = useMemo(() => getIsModalChild(pageConfigs, domTreeKeys), [
+    pageConfigs,
     domTreeKeys,
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
@@ -289,19 +288,15 @@ function Container(allProps: CommonPropsType) {
       event.preventDefault();
       const dragKey = getDragKey();
       const { isLock, isDropAble, operateSelectedKey } = getOperateState();
-      const { dropTarget } = getSelector<{ dropTarget: DropTargetType }>([
-        'dropTarget',
-      ]);
+      const dropKey= get(getDropTarget(),'dropKey');
       if (
         !isDropAble ||
-        key !== get(dropTarget,'selectedKey') ||
+        key !== dropKey ||
         dragKey === operateSelectedKey ||
         domTreeKeys.includes(dragKey) ||
         !isLock
       ) {
-        if (key !== get(dropTarget,'selectedKey')&&!isEqual(children, childNodes)) {
-          setChildren(childNodes);
-        }
+
         return;
       }
 
@@ -381,9 +376,9 @@ function Container(allProps: CommonPropsType) {
       });
 
       if (!isDropAble) return;
-      getDropTarget({
+      setDropTarget({
         propName: selectedPropName,
-        selectedKey: key,
+        dropKey: key,
         domTreeKeys,
         childNodeKeys: Array.isArray(childNodes)
           ? childNodes
@@ -421,9 +416,9 @@ function Container(allProps: CommonPropsType) {
         isLock: true,
       });
       if (!isDropAble) return;
-      getDropTarget({
+      setDropTarget({
         propName,
-        selectedKey: key,
+        dropKey: key,
         domTreeKeys,
         childNodeKeys: get(childNodes, propName, []),
       });

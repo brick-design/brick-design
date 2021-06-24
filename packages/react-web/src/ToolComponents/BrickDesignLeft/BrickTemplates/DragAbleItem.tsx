@@ -1,5 +1,5 @@
 import React, { memo, useContext } from 'react';
-import { getDragSource, PageConfigType } from '@brickd/react';
+import {PageConfigType,setDragSource } from '@brickd/react';
 import styles from './index.less';
 import { SearchContext } from '../Components/SearchBar';
 
@@ -9,7 +9,7 @@ interface DragAbleItemPropsType {
 
 export interface TemplateType {
   img?: string;
-  vDOMCollection: PageConfigType;
+  template: PageConfigType;
   desc?: string;
   id?: string;
 }
@@ -21,7 +21,7 @@ export interface TemplateType {
  */
 function DragAbleItem(props: DragAbleItemPropsType) {
   const { item } = props;
-  const { vDOMCollection, img, desc } = item;
+  const { template, img, desc } = item;
   const isChecked = useContext(SearchContext);
   return (
     <div
@@ -32,10 +32,10 @@ function DragAbleItem(props: DragAbleItemPropsType) {
       <div className={styles['list-drag-container']}>
         <div
           draggable
-          onDragStart={() => getDragSource({ vDOMCollection })}
+          onDragStart={() => setDragSource({ template })}
           className={styles['item']}
         >
-          <img src={img} style={{ width: '100%', height: '100%' }} />
+          <img alt={desc} src={img} style={{ width: '100%', height: '100%' }} />
         </div>
       </div>
       <span className={`${styles['hidden-drag-name']} ${styles['drag-name']}`}>

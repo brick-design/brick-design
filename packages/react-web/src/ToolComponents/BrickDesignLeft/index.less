@@ -1,35 +1,8 @@
 @import "src/global";
+@import "../commonStyle";
 .left-container{
-  position: fixed;
-  display: flex;
-  top: 60px;
   left: 10px;
-  height: calc(100vh - 90px);;
-  width: 212px;
-  border-radius: 8px;
-  user-select: none;
-  background-color: #fff;
-  overflow: hidden;
-  box-shadow:3px 4px 5px 3px rgba(0,0,0, 0.15);
-.brickd-left-tabs{
-  display: flex;
-  width: 100%;
 
-  :global{
-    .rc-tabs-tab{
-      font-size: 12px;
-      font-weight: bold;
-      color: #aaa;
-    }
-    .rc-tabs-tab-active{
-      color: #333;
-    }
-    .rc-tabs-ink-bar{
-      background-color:rgb(51, 51, 51);
-      height: 2px !important;
-    }
-  }
-}
 }
 
 .drag-container{
@@ -118,3 +91,10 @@
 
   }
 }
+
+.tab-drag-bar{
+  position: static !important;
+  margin-top: 4px;
+
+}
+

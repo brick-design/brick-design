@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import Icon from '../Icon';
 import styles from './index.less';
+import Icon from '../Icon';
 
 interface TipsProps {
   cancelText?: string;

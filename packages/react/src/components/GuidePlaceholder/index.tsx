@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react';
 import {
-  DragSourceType,
-  DropTargetType,
+ getDropTarget,
   SelectedInfoType,
   STATE_PROPS,
 } from '@brickd/core';
@@ -19,9 +18,7 @@ import { useOperate } from '../../hooks/useOperate';
 
 type SelectState = {
   hoverKey: string | null;
-  dropTarget: DropTargetType | null;
   selectedInfo: SelectedInfoType | null;
-  dragSource: DragSourceType | null;
 };
 
 function getNode(key: string) {
@@ -49,14 +46,14 @@ function getNode(key: string) {
 function GuidePlaceholder() {
   const hoverNodeRef = useRef<any>();
 
-  const { hoverKey, dropTarget, selectedInfo } = useSelector<
+  const { hoverKey, selectedInfo } = useSelector<
     SelectState,
     STATE_PROPS
-  >(['hoverKey', 'dropTarget', 'selectedInfo']);
+  >(['hoverKey','selectedInfo']);
 
   const { getOperateState, setSubscribe, setOperateState } = useOperate(false);
   const { selectedKey } = selectedInfo || {};
-  const dropKey = get(dropTarget, 'selectedKey');
+  const dropKey = get(getDropTarget, 'dropKey');
   const { operateHoverKey, operateSelectedKey } = getOperateState();
 
   if (!dropKey && hoverKey !== operateHoverKey) {
@@ -70,7 +67,7 @@ function GuidePlaceholder() {
   }
 
   useEffect(() => {
-    const renderGuideLines = () => {
+    const renderGuidePlaceholder = () => {
       const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
       if (node) {
@@ -81,6 +78,7 @@ function GuidePlaceholder() {
           width,
           height,
         );
+        hoverNodeRef.current.style.zIndex=1000;
         if (dropNode) {
           if (isDropAble) {
             hoverNodeRef.current.style.borderColor = 'springgreen';
@@ -91,31 +89,23 @@ function GuidePlaceholder() {
           }
         }
         setPosition([hoverNodeRef.current], isModal);
-      }
-      if (dropNode) {
-        setTimeout(renderGuideLines, 100);
+      }else {
+        hoverNodeRef.current.style.zIndex=-1;
+
       }
     };
-    const unSubscribe = setSubscribe(renderGuideLines);
-    return () => {
-      unSubscribe();
-    };
+    return setSubscribe(renderGuidePlaceholder);
   }, []);
 
   const onTransitionEnd = useCallback(() => {
     setOperateState({ isLock: false });
   }, []);
-  const hoverNodeClass =
-    dropKey || hoverKey
-      ? dropKey
-        ? styles['drop-node']
-        : styles['hover-node']
-      : styles['guide-hidden'];
+
   return (
     <div
       onTransitionEnd={onTransitionEnd}
       ref={hoverNodeRef}
-      className={hoverNodeClass}
+      className={styles['hover-node']}
     />
   );
 }

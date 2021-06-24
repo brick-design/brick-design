@@ -1,24 +1,18 @@
 import { createElement, memo, useEffect, useRef } from 'react';
-import { ROOT, STATE_PROPS } from '@brickd/core';
 import { useCommon } from '@brickd/hooks';
-import { VirtualDOMType } from '@brickd/utils';
 import {
   CommonPropsType,
-  controlUpdate,
   handlePropsClassName,
-  HookState,
   propAreEqual,
-  stateSelector,
 } from '../common/handleFuns';
 import {
   generateRequiredProps,
   getComponent,
   getDragKey,
   getDragSourceFromKey,
-  getSelectedNode,
+  getSelectedNode, getVNode,
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
-import { useSelector } from '../hooks/useSelector';
 import { useEvents } from '../hooks/useEvents';
 
 function NoneContainer(allProps: CommonPropsType) {
@@ -27,16 +21,8 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
-
-  const { pageConfig: PageDom } = useSelector<HookState, STATE_PROPS>(
-    stateSelector,
-    (prevState, nextState) => controlUpdate(prevState, nextState, key),
-  );
   const { isSelected } = useSelect(specialProps);
-  const pageConfig = PageDom[ROOT]
-    ? PageDom
-    : getDragSourceFromKey('vDOMCollection', {});
-  const vNode = (pageConfig[key] || {}) as VirtualDOMType;
+  const vNode = getVNode(key);
   const { componentName } = vNode;
   const dragKey = getDragKey();
   const isAddComponent = useRef(
