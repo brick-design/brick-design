@@ -8,7 +8,7 @@ export const legoState: StateType = {
   undo: [],
   redo: [],
   hoverKey: null,
-  platformInfo: { platformName: 'PC', size: [1920, 1080] },
+  platformInfo: { platformName: 'PC', size: ['100%', '100%'] },
 };
 
 export function initPageBrickdState(

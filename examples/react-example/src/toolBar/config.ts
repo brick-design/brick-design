@@ -5,7 +5,7 @@ import {
 	deleteComponent, PlatformSizeType,
 	redo,
 	undo,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 export interface PlatformMenusType {
 	[platformName: string]: PlatformSizeType

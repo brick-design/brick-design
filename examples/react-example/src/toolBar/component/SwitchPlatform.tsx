@@ -3,7 +3,7 @@ import { Dropdown, Icon, Menu } from 'antd'
 import styles from '../style.less'
 import map from 'lodash/map'
 import { PlatformMenusType } from '../config'
-import { changePlatform, PlatformInfoType, PlatformSizeType } from '@brickd/react'
+import { changePlatform, PlatformInfoType, PlatformSizeType } from '@brickd/canvas'
 
 interface SwitchPlatformPropsType {
 	platformInfo?: PlatformInfoType
@@ -25,7 +25,7 @@ function SwitchPlatform(props: SwitchPlatformPropsType) {
 			platformName:isMobile?mobileModel:'PC',
 			size,
 		})
-	}, [isMobile, isVertical, mobileModel])
+	}, [isMobile, isVertical, menus, mobileModel])
 
 	const renderMenu = useCallback(() => {
 		return (
@@ -38,13 +38,13 @@ function SwitchPlatform(props: SwitchPlatformPropsType) {
 				})}
 			</Menu>
 		)
-	}, [mobileModel])
+	}, [menus, mobileModel])
 
 	const dropProps = isMobile ? {} : { visible: false }
 	return (
 		<div className={styles['switch-container']}>
 			<Dropdown
-				overlay={useMemo(() => renderMenu(), [mobileModel])}
+				overlay={useMemo(() => renderMenu(), [renderMenu])}
 				{...dropProps}
 				trigger={['hover']}
 			>

@@ -4,7 +4,7 @@ import {
 	NodePropsConfigType,
 	PROPS_TYPES,
 	PropsConfigType,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const commonNodePropsConfig: NodePropsConfigType = {
 	dateRender: {

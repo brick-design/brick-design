@@ -7,19 +7,19 @@ nav:
 ### 安装组件
 
 ```bash
-yarn add @brickd/react  @brickd/react-web @brickd/render
+yarn add @brickd/react  @brickd/components @brickd/render
 ```
 OR
 ```bash
-npm install @brickd/react @brickd/react-web @brickd/render
+npm install @brickd/react @brickd/components @brickd/render
 ```
-目前主要是三个库，其中核心库是@brickd/react库，该库包含了brick design的所有能力与功能。剩下的两个库算是扩展库，react-web实现了预览版面板组件、属性配置面板组件、样式配置面板组件，可以说是一个功能组件库集，
+目前主要是三个库，其中核心库是@brickd/react库，该库包含了brick design的所有能力与功能。剩下的两个库算是扩展库，components实现了预览版面板组件、属性配置面板组件、样式配置面板组件，可以说是一个功能组件库集，
 @brickd/render是一个渲染库，主要是将编辑操作完的也页面配置使用原始组件重新渲染，你可以不依赖这两个库，实现自己的功能库。
 ### 在项目中使用
 ```jsx | pure
 import { createElement } from 'react';
 import { BrickDesign, BrickTree, BrickProvider, useSelector, createActions,PROPS_TYPES } from '@brickd/react';
-import { BrickPreview } from '@brickd/react-web';
+import { BrickPreview } from '@brickd/components';
 import BrickRender from '@brickd/render';
 import * as Ants from 'antd/es';
 // 组件属性配置信息

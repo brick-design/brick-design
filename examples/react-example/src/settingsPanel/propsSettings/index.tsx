@@ -8,14 +8,14 @@ import each from 'lodash/each'
 import { DEFAULT_PROPS, TYPES_TO_COMPONENT } from './config'
 import styles from './index.less'
 import { filterProps } from '../../utils'
-import { SwitchMultiTypes } from '@brickd/react-web'
+import { SwitchMultiTypes } from '@brickd/components'
 import { FormComponentProps } from 'antd/lib/form'
 import {
 	changeProps,
 	PropInfoType,
 	PROPS_TYPES,
 	SelectedInfoType,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const FormItem = Form.Item
 

@@ -43,7 +43,7 @@ export interface DropTargetType {
   childNodeKeys: string[];
 }
 
-export type PlatformSizeType = [number, number];
+export type PlatformSizeType = [number|string, number|string];
 
 export interface PlatformInfoType {
   platformName?: string;

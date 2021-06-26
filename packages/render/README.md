@@ -6,8 +6,8 @@
 
 ```
 import {createElement} from 'react';
-import {BrickDesign,BrickTree,BrickProvider,} from '@brickd/react';
-import {BrickPreview} from '@brickd/react-web';
+import {BrickDesign,BrickTree,BrickProvider,} from '@brickd/canvas';
+import {BrickPreview} from '@brickd/components';
 import BrickRender from '@brickd/render';
 const plugins=[(vDom,componentSchema)=>vDom];
 const App = () => (

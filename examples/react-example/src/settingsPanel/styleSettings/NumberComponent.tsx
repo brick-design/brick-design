@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useEffect, useState } from 'react'
 import { Col, InputNumber, Row } from 'antd'
 import styles from './index.less'
-import { EnumComponent } from '@brickd/react-web'
+import { EnumComponent } from '@brickd/components'
 import { propsAreEqual } from '../../utils'
 
 const UNITS = ['px', '%', 'em', 'rem']
@@ -69,7 +69,7 @@ function NumberComponent(props: NumberComponentPropsType) {
 			100,
 		)
 		return () => clearTimeout(timer)
-	}, [number, unit,onChange])
+	}, [number, unit, onChange, outputValue])
 
 	return (
 		<Row className={styles['number-unit-container']}>

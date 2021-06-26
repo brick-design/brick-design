@@ -4,17 +4,17 @@
 
 ###  📦 Install
 ```sh
-yarn add @brickd/react  @brickd/react-web @brickd/render
+yarn add @brickd/canvas  @brickd/components @brickd/render
 ```
 OR
 ```sh
-npm install @brickd/react @brickd/react-web @brickd/render
+npm install @brickd/canvas @brickd/components @brickd/render
 ```
 ## Usage
 ```jsx
 import {createElement} from 'react';
-import {BrickDesign,BrickTree,BrickProvider,useSelector,createActions} from '@brickd/react';
-import {BrickPreview} from '@brickd/react-web';
+import {BrickDesign,BrickTree,BrickProvider,useSelector,createActions} from '@brickd/canvas';
+import {BrickPreview} from '@brickd/components';
 import BrickRender from '@brickd/render';
 const plugins=[(vDom,componentSchema)=>vDom];
 const customReducer=(state,action)=>{

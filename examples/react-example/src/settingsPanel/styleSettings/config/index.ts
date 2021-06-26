@@ -1,4 +1,4 @@
-import { TYPES_TO_COMPONENT } from '@brickd/react-web'
+import { TYPES_TO_COMPONENT } from '@brickd/components'
 import NumberComponent from '../NumberComponent'
 
 /**

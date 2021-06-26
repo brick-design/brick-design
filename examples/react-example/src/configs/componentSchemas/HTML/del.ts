@@ -1,4 +1,4 @@
-import { ComponentSchemaType, PROPS_TYPES } from '@brickd/react'
+import { ComponentSchemaType, PROPS_TYPES } from '@brickd/canvas'
 
 const del: ComponentSchemaType = {
 	propsConfig: {

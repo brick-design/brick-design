@@ -7,7 +7,7 @@ import {
 	SelectedInfoType,
 	STATE_PROPS,
 	useSelector,
-} from '@brickd/react'
+} from '@brickd/canvas'
 import get from 'lodash/get'
 
 const { TabPane } = Tabs

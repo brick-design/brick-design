@@ -1,7 +1,7 @@
 import { reactContainers } from './reactCategory'
 import * as Ants from 'antd/es'
 import componentSchemas from './componentSchemas'
-import { ConfigType } from '@brickd/react'
+import { ConfigType } from '@brickd/canvas'
 
 /**
  * 容器组件分类

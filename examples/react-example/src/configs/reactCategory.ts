@@ -1,4 +1,4 @@
-import { CategoryType } from '@brickd/react-web'
+import { CategoryType } from '@brickd/components'
 
 // @ts-ignore
 export const reactContainers: any = {

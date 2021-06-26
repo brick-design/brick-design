@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 import { TreeSelect as AntTreeSelect } from 'antd'
 
 const TreeSelect: ComponentSchemaType = {

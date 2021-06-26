@@ -1,6 +1,6 @@
 import Animate from '../Animate'
-import { TYPES_TO_COMPONENT as COMPONENT } from '@brickd/react-web'
-import { PROPS_TYPES } from '@brickd/react'
+import { TYPES_TO_COMPONENT as COMPONENT } from '@brickd/components'
+import { PROPS_TYPES } from '@brickd/canvas'
 
 /**
  * 默认属性

@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './index.less'
-import { useSelector } from '@brickd/react'
+import { useSelector } from '@brickd/canvas'
 import {BrickRender} from '@brickd/render'
 import config from './configs'
 

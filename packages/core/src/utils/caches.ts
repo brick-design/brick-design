@@ -52,6 +52,10 @@ let DRAG_SOURCE: DragSourceType | null=null;
 export const getDragSource = () => DRAG_SOURCE;
 export const setDragSource = (dragSource: DragSourcePayload | null) => {
   if(!dragSource) return DRAG_SOURCE=dragSource;
+  const RootState=STORE.getState();
+  const { layerName } = RootState;
+  console.log('layerName>>>>>>',layerName);
+  if(!layerName) return;
   let { template, dragKey } = dragSource;
   const { componentName, defaultProps, parentKey, parentPropName } = dragSource;
   /**
@@ -66,9 +70,7 @@ export const setDragSource = (dragSource: DragSourcePayload | null) => {
       },
     };
   }
-  console.log('STORE>>>>>>>',STORE);
-  const RootState=STORE.getState();
-  const { layerName } = RootState;
+
   const { pageConfig } = RootState[layerName] as StateType;
 
   /**

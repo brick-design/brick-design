@@ -8,8 +8,8 @@ import flattenDeep from 'lodash/flattenDeep'
 import map from 'lodash/map'
 import isEqual from 'lodash/isEqual'
 import keys from 'lodash/keys'
-import {PROPS_TYPES } from '@brickd/react'
-import {CategoryType} from '@brickd/react-web'
+import {PROPS_TYPES } from '@brickd/canvas'
+import {CategoryType} from '@brickd/components'
 
 export const SPECIAL_STRING_CONSTANTS: any = {
 	null: null,

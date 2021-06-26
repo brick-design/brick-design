@@ -1,0 +1,46 @@
+@import "src/global";
+.panel-container{
+  display: flex;
+  position: fixed !important;
+  flex-direction: column;
+  align-items: center;
+  top: 70px;
+  height: calc(100vh - 150px);;
+  width: 212px;
+  border-radius: 8px;
+  user-select: none;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow:3px 4px 5px 3px rgba(0,0,0, 0.15);
+  .brickd-tabs{
+    display: flex;
+    width: 100%;
+
+    :global{
+      .rc-tabs-tab{
+        font-size: 12px;
+        font-weight: bold;
+        color: #aaa;
+      }
+      .rc-tabs-tab-active{
+        color: #333;
+      }
+      .rc-tabs-ink-bar{
+        background-color:rgb(51, 51, 51);
+        height: 2px !important;
+      }
+    }
+  }
+}
+.tab-drag-bar{
+  margin-top: 5px;
+  width: 35px;
+  height: 5px;
+  border-radius:5px;
+  background-color: #bcbcbc;
+  cursor: move;
+  &:hover{
+    background-color: #000;
+  }
+
+}

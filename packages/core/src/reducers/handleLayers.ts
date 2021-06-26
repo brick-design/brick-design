@@ -1,7 +1,7 @@
+import { keys, each } from 'lodash';
+import { legoState } from './handlePageBrickdState';
 import { BrickDesignStateType } from '../types';
 import { CreateLayersPayload, RenameLayersPayload } from '../actions';
-import { legoState } from './handlePageBrickdState';
-import { keys, each } from 'lodash';
 
 export function createLayers(
   state: BrickDesignStateType,
@@ -22,10 +22,14 @@ export function deleteLayers(
   const { layerName } = payload;
   const { layerName: selectedLayerName } = state;
   delete state[layerName];
+  const layers= keys(state);
+  layers.pop();
+
+ const newLayerName= selectedLayerName === layerName ?layers[0]  : selectedLayerName;
   return {
     ...state,
-    layerName:
-      selectedLayerName === layerName ? keys(state).pop() : selectedLayerName,
+    layerName:newLayerName,
+
   };
 }
 
