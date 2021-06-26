@@ -1,7 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { formatUnit } from '@brickd/hooks';
 import styles from './index.less';
 import { useOperate } from '../../hooks/useOperate';
-import { css, firstToUpper, formatUnit } from '../../utils';
+import { css, firstToUpper } from '../../utils';
 import { MarginPosition } from './index';
 
 type MarginItemType = {

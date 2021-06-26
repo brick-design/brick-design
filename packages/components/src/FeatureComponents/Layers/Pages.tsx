@@ -4,7 +4,7 @@ import {
   getStore,
   changeLayer,
   useSelector,
-  copyLayers,
+  copyLayers, renameLayers,
 } from '@brickd/canvas';
 import { map, isEqual, keys } from 'lodash';
 import styles from './index.less';
@@ -26,8 +26,6 @@ interface LayerProp {
 
 const LayerItem = function (props: LayerProp) {
   const { layerName, onDelete } = props;
-  const [isEdit, setIsEdit] = useState(false);
-  const nameDivRef = useRef<HTMLDivElement>();
   const { layerName: selectLayerName } = useSelector(
     ['layerName'],
     undefined,
@@ -41,16 +39,23 @@ const LayerItem = function (props: LayerProp) {
     if (selectLayerName !== layerName) changeLayer({ layerName });
   }, [selectLayerName]);
   const changeEdit = useCallback(
-    (event: any) => {
+    (event: React.FormEvent) => {
       event.stopPropagation();
-      setIsEdit(!isEdit);
-      setTimeout(() => {
-        if (!isEdit) {
-          nameDivRef.current.focus();
-        }
-      }, 200);
+      const target=event.target as HTMLElement;
+      target.contentEditable='true';
+      target.focus();
     },
-    [isEdit, setIsEdit],
+    [],
+  );
+
+  const onBlur = useCallback(
+    (event: React.FormEvent) => {
+      event.stopPropagation();
+      const target=event.target as HTMLElement;
+      renameLayers({newLayerName:target.textContent,prevLayerName:layerName});
+      target.contentEditable='false';
+    },
+    [],
   );
 
   const copyPage = (e: React.MouseEvent) => {
@@ -73,10 +78,8 @@ const LayerItem = function (props: LayerProp) {
         className={styles['right-icon']}
       />
       <div
-        ref={nameDivRef}
-        onBlur={changeEdit}
+        onBlur={onBlur}
         onDoubleClick={changeEdit}
-        contentEditable={isEdit}
         style={{ fontWeight: isSelected ? 500 : 400 }}
         className={styles['layer-text']}
       >
@@ -110,10 +113,17 @@ function Pages(props: PageProps) {
   const [layers, setLayers] = useState<string[]>([]);
 
   const resizeRef = useRef<ResizeableRefType>();
+
   useEffect(() => {
     const layers = keys(brickdStore.getState());
     layers.shift();
     setLayers(layers);
+    addEventListener('mousemove',resizeRef.current.onResize);
+    addEventListener('mouseup',resizeRef.current.onResizeEnd);
+    return ()=>{
+      removeEventListener('mousemove',resizeRef.current.onResize);
+      removeEventListener('mouseup',resizeRef.current.onResizeEnd);
+    };
   }, []);
 
   useEffect(() => {
@@ -126,6 +136,7 @@ function Pages(props: PageProps) {
     }
     return brickdStore.subscribe(checkForUpdates);
   }, [layers, setLayers]);
+
   const changeFold = useCallback(() => {
     if (!isFold) {
       resizeRef.current.changeFold({ heightTarget: 40 });

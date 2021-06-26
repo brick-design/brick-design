@@ -1,8 +1,8 @@
 import React, { memo, useRef, useState } from 'react';
 import { deleteLayers } from '@brickd/canvas';
 import Pages from './Pages';
-import BrickTree from './BrickTree';
 import styles from './index.less';
+import BrickTree from '../BrickTree';
 import Tips from '../../Components/Tips';
 import { warnIcon, layersIcon } from '../../assets';
 import DragResizeBar from '../../Components/DragResizeBar';
@@ -29,7 +29,6 @@ function Layers() {
     <DragResizeBar title={'Layers'}
                    className={styles['container']}
                    minWidth={212}
-                   minHeight={400}
                    icon={layersIcon}
                    defaultShow
     >

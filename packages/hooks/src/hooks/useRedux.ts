@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { isEqual } from 'lodash';
-import { BrickStore } from '../utils';
+import { BrickStore } from '../utils/BrickStore';
 
 export function useRedux(propsState: any) {
   const brickStore = useRef(new BrickStore(propsState)).current;

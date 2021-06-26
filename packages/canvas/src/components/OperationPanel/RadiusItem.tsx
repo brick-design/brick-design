@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { isEmpty, each } from 'lodash';
 import { changeStyles } from '@brickd/core';
+import { formatUnit } from '@brickd/hooks';
 import styles from './index.less';
 import {
   changeElPositionAndSize,
   css,
-  formatUnit,
   getIframe,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';

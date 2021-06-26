@@ -11,17 +11,16 @@ import {
   STATE_PROPS,
 } from '@brickd/core';
 import { isEmpty } from 'lodash';
+import { formatUnit } from '@brickd/hooks';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
 import {
   changeElPositionAndSize,
   css,
   EXCLUDE_POSITION,
-  formatUnit,
   getDragKey,
   getIframe,
   getIsModalChild,
-  handleInputText,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
@@ -57,7 +56,6 @@ export function useEvents(
   } = props;
   const originalPositionRef = useRef<OriginalPosition>();
   const positionResultRef = useRef<any>();
-  const contentEditRef = useRef<any>();
   const { editAbleProp } = getComponentConfig(componentName);
   const { pageConfig } = useSelector<HookState, STATE_PROPS>(
     ['pageConfig'],
@@ -311,19 +309,18 @@ export function useEvents(
     getIframe().contentDocument.body.style.cursor = 'default';
   }, []);
 
-  const onInput = useCallback((event: React.SyntheticEvent<any>) => {
+  const onInput = useCallback((event: React.FormEvent) => {
     event.stopPropagation();
     const { changeOperationPanel } = getOperateState();
-    contentEditRef.current = (event.target as HTMLElement).innerHTML;
     changeOperationPanel();
   }, []);
 
-  const onBlur = useCallback((event: React.SyntheticEvent<any>) => {
+  const onBlur = useCallback((event: React.FormEvent) => {
     event.stopPropagation();
-    (event.target as HTMLElement).contentEditable = 'false';
-    if (contentEditRef.current === undefined) return;
+    const target=event.target as HTMLElement;
+    target.contentEditable = 'false';
     changeProps({
-      props: { [editAbleProp]: handleInputText(contentEditRef.current) },
+      props: { [editAbleProp]:target.textContent },
       isMerge: true,
     });
   }, []);

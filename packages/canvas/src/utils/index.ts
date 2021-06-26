@@ -10,6 +10,7 @@ import {
 
 export * from './caches';
 import { Edge, IE11OrLess } from '@brickd/utils';
+import { formatUnit } from '@brickd/hooks';
 import { getIframe } from './caches';
 import { defaultPropName, selectClassTarget } from '../common/constants';
 
@@ -42,9 +43,6 @@ export const isEqualKey = (key: string, selectKey?: string | null) => {
 export const getComponent = (componentName: string) =>
   get(getBrickdConfig().componentsMap, componentName, componentName);
 
-export function formatUnit(target: string | null) {
-  return isNaN(Number.parseInt(target)) ? null : Number.parseInt(target);
-}
 
 export const getSelectedNode = (
   key?: string | null,
@@ -603,13 +601,6 @@ export function getMatrix(transform: string) {
   return deg >= 360 ? 0 : deg;
 }
 
-export function handleInputText(text: string) {
-  return text
-    .replace('<div>', '\r')
-    .replace('<br/>', '\n')
-    .replace('</div>', '')
-    .replace(/&nbsp;|\u202F|\u00A0/g, ' ');
-}
 
 export const analysisTransformOrigin = (transformOrigin: string) => {
   const position = transformOrigin.split(' ');

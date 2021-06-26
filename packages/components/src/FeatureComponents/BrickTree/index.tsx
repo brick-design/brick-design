@@ -25,7 +25,9 @@ function BrickTree() {
 
   if (!pageConfig[ROOT]) return null;
   return (
-    <div onMouseLeave={onMouseLeave} className={styles['sort-container']}>
+    <div onMouseLeave={onMouseLeave}
+         onWheel={(event)=>event.stopPropagation()}
+         className={styles['sort-container']}>
       <SortTree
         disabled
         childNodes={[ROOT]}

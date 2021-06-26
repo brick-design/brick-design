@@ -7,7 +7,7 @@ import {
 } from '@brickd/canvas';
 import styles from './index.less';
 import SortItem from './SortItem';
-import ReactSortable from '../../../Components/ReactSortable';
+import ReactSortable from '../../Components/ReactSortable';
 
 interface SortTreePropsType {
   isFold?: boolean;

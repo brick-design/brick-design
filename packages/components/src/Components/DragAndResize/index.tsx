@@ -23,13 +23,13 @@ function DragAndResize(props: DragAndResizeProp,ref:Ref<DragAndResizeRefType>) {
 
   const onMouseMove=(event:React.MouseEvent)=>{
     onMove(event);
-    moveDivRef.current.onMouseMove(event);
+    moveDivRef.current.onResize(event);
   };
 
   const onMouseUp=(event:React.MouseEvent)=>{
     setIsDrag(false);
     onMoveEnd(event);
-    moveDivRef.current.onMouseUp(event);
+    moveDivRef.current.onResizeEnd();
     moveDivRef.current.target.style.pointerEvents='auto';
 
   };

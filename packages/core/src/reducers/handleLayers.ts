@@ -23,9 +23,9 @@ export function deleteLayers(
   const { layerName: selectedLayerName } = state;
   delete state[layerName];
   const layers= keys(state);
-  layers.pop();
+  layers.shift();
 
- const newLayerName= selectedLayerName === layerName ?layers[0]  : selectedLayerName;
+  const newLayerName= selectedLayerName === layerName ?layers[0]  : selectedLayerName;
   return {
     ...state,
     layerName:newLayerName,

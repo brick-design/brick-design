@@ -5,7 +5,6 @@ import {
   SelectedInfoType,
   STATE_PROPS,
 } from '@brickd/core';
-import { BrickStore } from '@brickd/hooks';
 import styles from './index.less';
 import { useSelector } from '../../hooks/useSelector';
 import {
@@ -16,7 +15,6 @@ import {
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
-import { OperateStateType } from '../OperateProvider';
 import { useZoom } from '../../hooks/useZoom';
 
 type SelectState = {
@@ -33,13 +31,9 @@ export type PositionSizeType = {
   left: number;
 };
 
-type GuidelinesType = {
-  operateStore: BrickStore<OperateStateType>;
-};
 
 
-function Guidelines(props: GuidelinesType) {
-  const { operateStore } = props;
+function Guidelines() {
   const topRef = useRef<any>();
   const bottomRef = useRef<any>();
   const leftRef = useRef<any>();
@@ -52,7 +46,7 @@ function Guidelines(props: GuidelinesType) {
   ).current;
   const { hoverKey } = useSelector<SelectState, STATE_PROPS>(['hoverKey']);
 
-  const { getOperateState, setSubscribe } = useOperate(false, operateStore);
+  const { getOperateState, setSubscribe } = useOperate();
   const { dropNode } = getOperateState();
 
   useEffect(() => {

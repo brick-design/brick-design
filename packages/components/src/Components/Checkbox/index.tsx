@@ -7,10 +7,12 @@ interface CheckboxProps {
   onChange?: (v: boolean) => void;
   uncheckedIcon?: string;
   checkedIcon?: string;
+  className?:string
+  iconClass?:string
 }
 
 function Checkbox(props: CheckboxProps) {
-  const { uncheckedIcon = listIcon, checkedIcon = prevIcon, onChange } = props;
+  const { uncheckedIcon = listIcon, checkedIcon = prevIcon, onChange,iconClass,...rest } = props;
   const [isChecked, setIsChecked] = useState(false);
 
   const changeChecked = () => {
@@ -18,10 +20,10 @@ function Checkbox(props: CheckboxProps) {
     onChange && onChange(!isChecked);
   };
   return (
-    <div onClick={changeChecked} className={styles['checkbox-container']}>
+    <div onClick={changeChecked} className={styles['checkbox-container']} {...rest} >
       <img
         src={isChecked ? checkedIcon : uncheckedIcon}
-        className={styles['icon']}
+        className={`${styles['icon']} ${iconClass}`}
       />
     </div>
   );

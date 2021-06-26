@@ -8,6 +8,7 @@ import {
 } from '@brickd/core';
 
 import { map, isEmpty } from 'lodash';
+import { formatUnit } from '@brickd/hooks';
 import ResizeItem, { positionStyles } from './ResizeItem';
 import styles from './index.less';
 import RadiusItem from './RadiusItem';
@@ -16,7 +17,6 @@ import { useSelector } from '../../hooks/useSelector';
 import {
   changeElPositionAndSize,
   css,
-  formatUnit,
   getElementInfo,
   getIframe,
   getMatrix,

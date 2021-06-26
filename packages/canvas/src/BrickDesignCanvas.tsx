@@ -37,7 +37,7 @@ export interface BrickDesignCanvasType extends BrickDesignProps {
 }
 
 
-const defaultPlatforms: PlatformsType = { PC: ['100%', '100%'] };
+const defaultPlatforms: PlatformsType = { PC: [1920, 1080] };
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
     onLoadEnd,
@@ -210,14 +210,14 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
 
   const style = useMemo(
     () => {
-      const {scale}=getZoomState();
+      const {scale=0.5}=getZoomState();
       return({
         width: size[0],
         minWidth: size[0],
         height: size[1],
         minHeight: size[1],
         transition: 'all 300ms',
-        transform: `scale(${scale}})`,
+        transform: `scale(${scale})`,
       });
     },
         [size]
@@ -257,8 +257,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         >
           {isLoading && (
             <>
-              <Guidelines
-                          operateStore={operateStore} />
+              <Guidelines/>
             </>
           )}
           <BrickDesign
