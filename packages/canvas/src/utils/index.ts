@@ -5,7 +5,7 @@ import {
   getComponentConfig,
   getBrickdConfig,
   ChildNodesType,
-  getSelector, getStore, getDragSource,
+  getSelector, getStore, getDragSource, getDropTarget,
 } from '@brickd/core';
 
 export * from './caches';
@@ -403,6 +403,7 @@ export const getPropParentNodes = (
 };
 
 export const getDragKey = () => getDragSourceFromKey('dragKey');
+export const getDropKey=()=>get(getDropTarget(),'dropKey');
 export const getDragSourceFromKey = (propName: string, defaultValue?: any) =>
   get(getDragSource(), propName, defaultValue);
 export const getDragComponentName = (dragKey?: string) =>

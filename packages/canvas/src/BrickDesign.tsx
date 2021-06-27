@@ -14,7 +14,7 @@ import {
   ROOT,addComponent,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
-import { BrickStore, StaticContextProvider } from '@brickd/hooks';
+import { BrickStore, StaticContextProvider,BrickObserverProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
 import {
   getDragSourceFromKey,
@@ -117,6 +117,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const componentMount = useCallback(
     (divContainer, designPage) => {
       ReactDOM.render(
+        <BrickObserverProvider>
         <StaticContextProvider value={staticState}>
           <OperateProvider value={operateStore}>
             <BrickContext.Provider value={getStore()}>
@@ -127,7 +128,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
               <GuidePlaceholder />
             </BrickContext.Provider>
           </OperateProvider>
-        </StaticContextProvider>,
+        </StaticContextProvider>
+        </BrickObserverProvider>,
         divContainer.current,
       );
     },

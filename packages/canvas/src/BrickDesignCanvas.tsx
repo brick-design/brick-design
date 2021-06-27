@@ -216,7 +216,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         minWidth: size[0],
         height: size[1],
         minHeight: size[1],
-        transition: 'all 300ms',
+        transition: 'all 500ms',
         transform: `scale(${scale})`,
       });
     },

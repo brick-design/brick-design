@@ -10,11 +10,15 @@ export * from './hooks/useGetProps';
 export * from './hooks/useForceRender';
 export * from './hooks/useDragMove';
 export * from './hooks/useResize';
+export * from './hooks/useBrickObserver';
 export * from './components/StaticContext';
 export * from './components/FunParamContext';
 export * from './components/BrickStoreContext';
 export * from './components/PropsContext';
 export * from './components/MapNodeContext';
+export * from './components/BrickObserverContext';
 export * from './utils/BrickStore';
+export * from './utils/BrickOberver';
 export * from './utils';
 export * from './types';
+

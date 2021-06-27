@@ -1,4 +1,4 @@
-import { createElement, memo, useEffect, useRef } from 'react';
+import React, { createElement, memo, useCallback, useEffect, useRef } from 'react';
 import { useCommon } from '@brickd/hooks';
 import {
   CommonPropsType,
@@ -14,6 +14,8 @@ import {
 } from '../utils';
 import { useSelect } from '../hooks/useSelect';
 import { useEvents } from '../hooks/useEvents';
+import { useOperate } from '../hooks/useOperate';
+import { useNewAddComponent } from '../hooks/useNewAddComponent';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -28,6 +30,8 @@ function NoneContainer(allProps: CommonPropsType) {
   const isAddComponent = useRef(
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
+  const { setOperateState } = useOperate();
+  useNewAddComponent(key);
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
@@ -37,7 +41,6 @@ function NoneContainer(allProps: CommonPropsType) {
     props,
     componentName,
   );
-
   useEffect(() => {
     if (dragKey && domTreeKeys.includes(dragKey)) return;
     if (isAddComponent.current) {
@@ -46,16 +49,28 @@ function NoneContainer(allProps: CommonPropsType) {
     }
   }, [funParams, isSelected, item, dragKey]);
 
+  const onDragEnter=useCallback((event:React.DragEvent)=>{
+    event.stopPropagation();
+    setOperateState({
+      dropNode:event.target as HTMLElement,
+      isDropAble:false,
+      index,
+      isLock: true,
+    });
+
+  },[]);
+
   if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
   return createElement(getComponent(componentName), {
     ...restProps,
     className: handlePropsClassName(
       uniqueKey,
-      !!dragKey,
+      false,
       className,
       animateClass,
     ),
+    onDragEnter,
     ...events,
     ...generateRequiredProps(componentName),
     draggable: true,

@@ -81,15 +81,15 @@ export function useResize(targetRef:RefObject<HTMLElement>){
 
 			if (
 				offsetX !== 0 &&
-				(minWidth === null || widthResult >= minWidth) &&
-				(maxWidth === null || widthResult <= maxWidth)
+				(typeof minWidth !=='number' || widthResult >= minWidth) &&
+				(typeof maxWidth !=='number' || widthResult <= maxWidth)
 			) {
 				targetRef.current.style.width = `${widthResult}px`;
 			}
 			if (
 				offsetY !== 0 &&
-				(minHeight === null || heightResult >= minHeight) &&
-				(maxHeight === null || heightResult <= maxHeight)
+				(typeof minHeight !=='number' || heightResult >= minHeight) &&
+				(typeof maxHeight !=='number' || heightResult <= maxHeight)
 			) {
 				targetRef.current.style.height = `${heightResult}px`;
 			}
@@ -118,7 +118,7 @@ export function useResize(targetRef:RefObject<HTMLElement>){
 					minWidth: formatUnit(minWidth),
 					minHeight: formatUnit(minHeight),
 					maxWidth: formatUnit(maxWidth),
-					maxHeight: formatUnit(maxHeight),
+					maxHeight:formatUnit(maxHeight),
 				};
 		},
 		[],

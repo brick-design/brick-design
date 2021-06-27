@@ -53,10 +53,6 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     topRight,
     bottomLeft,
     bottomRight,
-    minWidth,
-    minHeight,
-    maxWidth,
-    maxHeight,
     className,
     defaultHeight,
     defaultWidth,
@@ -146,7 +142,6 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
 
   return (
     <div
-      style={{minHeight,minWidth,maxHeight,maxWidth}}
       className={`${styles['container']} ${className}`}
       {...rest}
       ref={resizeDivRef}

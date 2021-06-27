@@ -61,8 +61,9 @@ function BarButton(props:BarButtonProps,ref:Ref<BarButtonRefType>){
 		target.style.transition='all 500ms';
 		target.style.visibility='hidden';
 		isShowRef.current=false;
-		iconRef.current.style.display='flex';
-		iconRef.current.style.transition='all 0 ease 1000ms';
+		setTimeout(()=>{
+			iconRef.current.style.display='flex';
+		},500);
 
 	},[]);
 
@@ -82,8 +83,9 @@ function BarButton(props:BarButtonProps,ref:Ref<BarButtonRefType>){
 	const onMouseLeave=useCallback((event:React.MouseEvent)=>{
 		event.stopPropagation();
 		if(isShowRef.current){
-			iconRef.current.style.display='none';
-			iconRef.current.style.transition='display 500ms';
+			setTimeout(()=>{
+				iconRef.current.style.display='none';
+			},500);
 		}
 	},[]);
 
