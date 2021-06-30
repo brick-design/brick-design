@@ -3,7 +3,7 @@ import styles from './index.less';
 import deleteIcon from '../../assets/delete-icon.svg';
 
 export interface InputProps extends React.InputHTMLAttributes<any> {
-  type?:
+  type?:'number'
     | 'button'
     | 'checkbox'
     | 'file'
@@ -13,7 +13,8 @@ export interface InputProps extends React.InputHTMLAttributes<any> {
     | 'radio'
     | 'reset'
     | 'submit'
-    | 'text';
+    | 'text'
+  ;
   onChange?: (v?: any) => void;
   closeStyle?: React.CSSProperties;
   closeAble?: boolean;

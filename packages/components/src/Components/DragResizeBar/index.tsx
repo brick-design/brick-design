@@ -8,10 +8,11 @@ import BarButton, { BarButtonProps, BarButtonRefType } from '../BarButton';
 
 export interface DragResizeBarType extends ResizeableProps,Omit<BarButtonProps, 'dragResizeRef'|'children'>{
 	title?:string
+	barStyle?:React.CSSProperties
 }
 
 function DragResizeBar(props:DragResizeBarType){
-	const {children,title,className,icon,...rest}=props;
+	const {children,title,className,icon,barStyle,...rest}=props;
 	const dragResizeRef=useRef<DragAndResizeRefType>();
 	const barButtonRef=useRef<BarButtonRefType>();
 
@@ -26,10 +27,10 @@ function DragResizeBar(props:DragResizeBarType){
 
 	return <BarButton ref={barButtonRef} icon={icon} dragResizeRef={dragResizeRef}>
 		<DragAndResize  bottom right left topLeft topRight bottomLeft bottomRight
-										style={{visibility:'hidden'}}
+										style={{visibility:'visible'}}
 										onWheel={(event)=>event.stopPropagation()}
 										className={`${styles['container']} ${className}`} {...rest} ref={dragResizeRef}>
-		<div onMouseDown={onMoveStart}  className={styles['bar']}>
+		<div onMouseDown={onMoveStart} style={barStyle}  className={styles['bar']}>
 			<span>{title}</span>
 			<Icon
 				onMouseDown={(event)=>event.stopPropagation()}

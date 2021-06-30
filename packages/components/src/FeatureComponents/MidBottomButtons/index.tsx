@@ -6,7 +6,7 @@ import Icon from '../../Components/Icon';
 import { openEye, saveIcon } from '../../assets';
 
 
-function HandleButtons(){
+function MidBottomButtons(){
 
 	return <div className={styles['container']}>
 		<UndoRedo isUndo/>
@@ -27,4 +27,4 @@ function HandleButtons(){
 	</div>;
 }
 
-export default memo(HandleButtons);
+export default memo(MidBottomButtons);

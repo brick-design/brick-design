@@ -15,7 +15,7 @@ import {
   clearSelectedStatus,
   selectComponent,
 } from './handleSelectedComponent';
-import { changeStyles, resetStyles, resizeChange } from './handleStyles';
+import { changeStyles, resizeChange } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
 import { setApi, setComponentState } from './handleComponetStateApi';
 import { setStateDomain, restStateDomain } from './handleStateDomain';
@@ -96,9 +96,6 @@ export const reducer: ReducerType = (prevState, action) => {
       break;
     case ACTION_TYPES.resetProps:
       newState = resetProps(state);
-      break;
-    case ACTION_TYPES.resetStyles:
-      newState = resetStyles(state);
       break;
     case ACTION_TYPES.resizeChange:
       newState = resizeChange(state, payload);

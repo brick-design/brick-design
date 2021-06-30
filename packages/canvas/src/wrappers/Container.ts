@@ -52,6 +52,7 @@ import { useSelector } from '../hooks/useSelector';
 import { useOperate } from '../hooks/useOperate';
 import { useEvents } from '../hooks/useEvents';
 import { useNewAddComponent } from '../hooks/useNewAddComponent';
+import { useStyleProps } from '../hooks/useStyleProps';
 /**
  * 所有的容器组件名称
  */
@@ -213,7 +214,6 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName: string) => {
       event.preventDefault();
       if(interceptDragOver()) return;
-      setTimeout(() => {
         const childNodeKeys = get(children, propName, []);
         const isV = isVPropNodesPositionRef.current[propName];
         if (!childNodeKeys.length) {
@@ -237,14 +237,13 @@ function Container(allProps: CommonPropsType) {
             event,
             isV,
           );
-          const renderChildren = cloneChildNodes(childNodes);
+          const renderChildren = cloneChildNodes(childNodes)||{};
           renderChildren[propName] = newChildren;
           if (!isEqual(renderChildren, children)) {
             setChildren(renderChildren);
           }
           setDragSortCache(newChildren);
         }
-      }, 200);
     },
     [setChildren, children],
   );
@@ -253,7 +252,7 @@ function Container(allProps: CommonPropsType) {
     event.stopPropagation();
     setTimeout(() => {
       setChildren(childNodes);
-    }, 100);
+    }, 50);
   };
 
   const onDrop = useCallback((event: React.DragEvent) => {
@@ -451,16 +450,17 @@ function Container(allProps: CommonPropsType) {
       ),
     [children, pageState, pageState.getPageState(), specialProps],
   );
-  if (!isSelected && (!componentName || hidden)) return null;
 
+  const styleProps=useStyleProps(componentName,specialProps,handlePropsClassName(
+    uniqueKey,
+    domTreeKeys.includes(dragKey),
+    className,
+    animateClass
+  ));
+  if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {
+    ...styleProps,
     ...restProps,
-    className: handlePropsClassName(
-      uniqueKey,
-      domTreeKeys.includes(dragKey),
-      className,
-      animateClass
-    ),
     onDragEnter: onParentDragEnter,
     onDragOver: onParentDragOver,
     onDragLeave,

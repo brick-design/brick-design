@@ -7,6 +7,12 @@ const span: ComponentSchemaType = {
 			label: '文本内容',
 			type: PROPS_TYPES.string,
 		},
+		className: {
+			type: PROPS_TYPES.cssClass,
+		},
+		style:{
+			type: PROPS_TYPES.style,
+		},
 	},
 }
 

@@ -16,6 +16,7 @@ import { useSelect } from '../hooks/useSelect';
 import { useEvents } from '../hooks/useEvents';
 import { useOperate } from '../hooks/useOperate';
 import { useNewAddComponent } from '../hooks/useNewAddComponent';
+import { useStyleProps } from '../hooks/useStyleProps';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -59,17 +60,18 @@ function NoneContainer(allProps: CommonPropsType) {
     });
 
   },[]);
-
-  if (!isSelected && (!componentName || hidden)) return null;
   const { className, animateClass, ...restProps } = props || {};
+
+  const styleProps= useStyleProps(componentName,specialProps,handlePropsClassName(
+    uniqueKey,
+    false,
+    className,
+    animateClass,
+  ));
+  if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {
+    ...styleProps,
     ...restProps,
-    className: handlePropsClassName(
-      uniqueKey,
-      false,
-      className,
-      animateClass,
-    ),
     onDragEnter,
     ...events,
     ...generateRequiredProps(componentName),

@@ -27,6 +27,7 @@
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149"
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^17.0.11"
   }
 }

@@ -19,6 +19,12 @@ const img: ComponentSchemaType = {
 			label: '规定图像的宽度',
 			type: PROPS_TYPES.string,
 		},
+		className: {
+			type: PROPS_TYPES.cssClass,
+		},
+		style:{
+			type: PROPS_TYPES.style,
+		},
 	},
 }
 export default img

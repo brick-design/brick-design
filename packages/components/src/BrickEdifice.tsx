@@ -9,15 +9,11 @@ import {
 } from '@brickd/canvas';
 import { BrickStore } from '@brickd/hooks';
 import styles from './index.less';
-import BrickDesignLeft from './FeatureComponents/BrickDesignLeft';
-import { BrickPreviewPropsType } from './FeatureComponents/BrickDesignLeft/BrickPreview';
-import BrickDesignRight from './FeatureComponents/BrickDesignRight';
-import Layers from './FeatureComponents/Layers';
 import Users, { UserType } from './FeatureComponents/Users';
-import Icon from './Components/Icon';
-import { downloadIcon, dragIcon, uploadIcon } from './assets';
-import Styles from './FeatureComponents/Styles';
-import HandleButtons from './FeatureComponents/HandleButtons';
+
+import TopLeftButtons from './FeatureComponents/TopLeftButtons';
+import MidBottomButtons from './FeatureComponents/MidBottomButtons';
+import BottomLeftButtons, { BottomLeftButtonsType } from './FeatureComponents/BottomLeftButtons';
 
 require('rc-tabs/assets/index.css');
 require('rc-collapse/assets/index.css');
@@ -30,7 +26,7 @@ const users:UserType[]=[{id:1,img:'https://img0.baidu.com/it/u=3434365774,334288
 
 interface BrickEdificeProps
   extends BrickDesignCanvasType,
-    BrickPreviewPropsType {
+    BottomLeftButtonsType {
   initBrickdState?: PageBrickdStateType;
 }
 function BrickEdifice(props: BrickEdificeProps) {
@@ -43,7 +39,7 @@ function BrickEdifice(props: BrickEdificeProps) {
     ...rest
   } = props;
   const zoomStore= useRef(new BrickStore({scale:0.5})).current;
-
+  const bdCanvasRef=useRef<HTMLDivElement>();
 
   useEffect(() => {
     initBrickdState && initPageBrickdState(initBrickdState);
@@ -52,21 +48,11 @@ function BrickEdifice(props: BrickEdificeProps) {
   return (
     <ZoomProvider value={zoomStore}>
     <BrickProvider config={config} warn={warn} customReducer={customReducer}>
-        <BrickDesignCanvas className={styles['brickd-canvas']} {...rest}>
+        <BrickDesignCanvas ref={bdCanvasRef} className={styles['brickd-canvas']} {...rest}>
           <Users users={users}/>
-          <div className={styles['top-left-bar']}>
-          <Layers/>
-            <Icon icon={uploadIcon} className={styles['icon-Menu']} iconClass={styles['icon-class']}/>
-            <Icon icon={downloadIcon} className={styles['icon-Menu']} iconClass={styles['icon-class']}/>
-            <Icon icon={dragIcon} className={styles['icon-Menu']} iconClass={styles['icon-class']}/>
-
-          </div>
-          <div className={styles['bottom-left-bar']}>
-            <BrickDesignLeft componentsCategory={componentsCategory} />
-            <BrickDesignRight />
-            <Styles/>
-          </div>
-          <HandleButtons/>
+          <TopLeftButtons dragTarget={bdCanvasRef}/>
+          <MidBottomButtons/>
+          <BottomLeftButtons componentsCategory={componentsCategory}/>
         </BrickDesignCanvas>
     </BrickProvider>
     </ZoomProvider>

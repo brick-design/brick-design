@@ -1,15 +1,13 @@
 import React, { memo, useCallback, useRef, useState } from 'react';
-import { map } from 'lodash';
-import Collapse, { Panel } from 'rc-collapse';
 import styles from './index.less';
 import SearchResult, {
-  CategoryInfoType,
   CategoryType,
   renderDragItem,
   SearchRefType,
 } from './SearchResult';
 import SearchBar from '../Components/SearchBar';
 import { arrowIcon } from '../../../assets';
+import { NCollapse } from '../../../Components';
 
 /**
  * 渲染折叠Header
@@ -37,7 +35,6 @@ export interface BrickPreviewPropsType {
 
 function BrickPreview(props: BrickPreviewPropsType) {
   const { componentsCategory } = props;
-  const [openKeys = [], setOpenKeys] = useState<string[]>([]);
   const searchRef = useRef<SearchRefType>();
   const [isShowSearch, setIsShowSearch] = useState(false);
   /**
@@ -60,36 +57,14 @@ function BrickPreview(props: BrickPreviewPropsType) {
   return (
     <div className={styles['container']}>
       <SearchBar onChange={onChange}>
-        <div
+        <NCollapse
           style={{ display: !isShowSearch ? 'flex' : 'none' }}
           className={styles['fold-container']}
-        >
-          <Collapse
-            activeKey={openKeys}
-            style={{ backgroundColor: '#fff', border: 0 }}
-            onChange={(newOpenKeys: any) => setOpenKeys(newOpenKeys)}
-          >
-            {map(
-              componentsCategory,
-              (categoryInfo: CategoryInfoType, categoryName) => {
-                const isFold = openKeys.includes(categoryName);
-                return (
-                  <Panel
-                    headerClass={styles['fold-panel-header']}
-                    style={{ border: 0, padding: 0 }}
-                    header={renderHeader(categoryName, isFold)}
-                    key={categoryName}
-                    showArrow={false}
-                  >
-                    <div className={styles['fold-content']}>
-                      {map(categoryInfo, renderDragItem)}
-                    </div>
-                  </Panel>
-                );
-              },
-            )}
-          </Collapse>
-        </div>
+          collapseClass={styles['collapse-class']}
+          header={renderHeader}
+          renderItem={renderDragItem}
+          categories={componentsCategory}
+        />
         <SearchResult
           componentsCategory={componentsCategory}
           ref={searchRef}

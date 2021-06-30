@@ -199,8 +199,14 @@ export function deleteChildNodesKey(
 
 export function getComponentConfig(
   componentName?: string,
-): ComponentSchemaType {
-  if (!componentName) return;
+  key?:string
+): ComponentSchemaType{
+  if(key){
+    const {pageConfig}=getSelector(['pageConfig']);
+    componentName=get(pageConfig,key+'.componentName');
+  }
+
+  if (!componentName) return {propsConfig:{}};
   const componentSchemasMap = get(getBrickdConfig(), ['componentSchemasMap']);
   if (!componentSchemasMap) {
     error('Component configuration information set not found！! !');
@@ -255,11 +261,11 @@ export function handleRules(
   /**
    * 获取当前拖拽组件的父组件约束，以及属性节点配置信息
    */
-  const {dragKey,template}=getDragSource();
-  const {dropKey,propName}=getDropTarget();
+  const {dragKey,template}=getDragSource()||{};
+  const {dropKey,propName}=getDropTarget()||{};
   const path=[dragKey,'componentName'];
   const dragComponentName = get(pageConfig,path)||get(template,path);
-  const dropComponentName = pageConfig[dropKey].componentName;
+  const dropComponentName = get(pageConfig,[dropKey,'componentName']);
   const { fatherNodesRule } = getComponentConfig(dragComponentName);
   const { nodePropsConfig, childNodesRule } = getComponentConfig(
     dropComponentName,
@@ -352,7 +358,9 @@ export function createActions(action: BrickAction) {
 }
 
 export function getPageState(isRoot?: boolean):BrickDesignStateType|StateType {
-  const brickdState = getStore().getState();
+  const store=getStore();
+  if(!store) return legoState;
+  const brickdState = store.getState();
   if (isRoot) return brickdState as BrickDesignStateType;
   const layerName = get(brickdState, 'layerName');
   return get(brickdState, layerName, legoState) as StateType;

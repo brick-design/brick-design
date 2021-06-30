@@ -1,3 +1,4 @@
+import React from 'react';
 import { Action } from 'redux';
 import { ActionType, VirtualDOMType } from '@brickd/utils';
 import { PropsConfigType } from './ComponentSchemaTypes';
@@ -29,6 +30,7 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
   propName?: string;
   props?: any;
   propsConfig: PropsConfigType;
+  selectedStyleProp?:string
 };
 
 export interface DragSourceType extends Partial<ParentNodeInfo> {
@@ -60,9 +62,19 @@ export interface BrickAction extends Action<string> {
 
 export type UndoRedoType = Partial<Omit<StateType, 'undo' | 'redo'>>;
 
+type StylePropType={
+  classPropName?:string
+  value:React.CSSProperties
+}
+
+export type StyleSheetType={
+  [key:string]:{[key:string]:StylePropType}
+}
 export type StateType = {
   pageConfig: PageConfigType;
   selectedInfo: SelectedInfoType | null;
+  styleSheet?:StyleSheetType;
+  templates?:any;
   undo: UndoRedoType[];
   redo: UndoRedoType[];
   hoverKey: null | string;

@@ -51,10 +51,10 @@ function DragAbleItem(props: DragAbleItemPropsType) {
           style={{ backgroundColor: defaultColors[randomIndex] }}
           className={styles['placeholder-item']}
         >
-          <img alt='' src={img} />
+          {img?<img className={styles['item-img']} alt='' src={img} />:componentName}
         </div>
       );
-    }
+    };
     return createElement(
       get(getBrickdConfig().componentsMap, componentName, componentName),
       defaultProps,
@@ -84,6 +84,6 @@ function DragAbleItem(props: DragAbleItemPropsType) {
       </span>
     </div>
   );
-}
+};
 
 export default memo(DragAbleItem, () => true);

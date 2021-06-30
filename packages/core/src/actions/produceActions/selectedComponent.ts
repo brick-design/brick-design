@@ -4,6 +4,7 @@ import { SelectedInfoBaseType } from '../../types';
 
 export type SelectComponentPayload = SelectedInfoBaseType & {
   propName?: string;
+  selectedStyleProp?:string
 };
 export const selectComponent = (payload: SelectComponentPayload) =>
   createActions({

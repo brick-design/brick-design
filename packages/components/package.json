@@ -25,11 +25,12 @@
     "@brickd/hooks": "^1.0.0-alpha.16",
     "antd": "3.26.16",
     "lodash": "^4.17.15",
+    "rc-collapse": "^2.0.0",
+    "rc-field-form": "^1.21.1",
+    "rc-tabs": "^11.9.1",
     "react": "^16.8.0",
     "react-color": "^2.18.0",
-    "sortablejs": "^1.10.2",
-    "rc-collapse": "^2.0.0",
-    "rc-tabs": "^11.9.1"
+    "sortablejs": "^1.10.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0"

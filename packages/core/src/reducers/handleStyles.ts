@@ -1,8 +1,7 @@
 import produce from 'immer';
-import { update } from 'lodash';
+import { update,merge } from 'lodash';
 import { StateType } from '../types';
 import { ResizePayload, stylePayload } from '../actions';
-import { restObject } from '../utils';
 
 /**
  * 样式改变时调用
@@ -14,41 +13,16 @@ export function changeStyles(
   state: StateType,
   payload: stylePayload,
 ): StateType {
-  const { undo, redo, selectedInfo, pageConfig } = state;
+  const { undo, redo, selectedInfo,styleSheet } = state;
   if (!selectedInfo) return state;
   const { style } = payload;
-  undo.push({ pageConfig });
+  const {selectedKey,selectedStyleProp}=selectedInfo;
+  undo.push({ styleSheet });
   redo.length = 0;
   return {
     ...state,
-    pageConfig: produce(pageConfig, (oldConfigs) => {
-      const config = oldConfigs[selectedInfo.selectedKey];
-      if (config.props) {
-        config.props.style = { ...config.props.style, ...style };
-      } else {
-        config.props = { style };
-      }
-    }),
-    undo,
-    redo,
-  };
-}
-
-export function resetStyles(state: StateType): StateType {
-  const { selectedInfo, undo, pageConfig, redo } = state;
-  if (!selectedInfo) return state;
-  const { props, selectedKey } = selectedInfo;
-  undo.push({ pageConfig });
-  redo.length = 0;
-  return {
-    ...state,
-    pageConfig: produce(pageConfig, (oldConfigs) => {
-      const config = oldConfigs[selectedKey];
-      if (props && props.style) {
-        config.props.style = props.style;
-      } else {
-        config.props = restObject(config.props, 'style');
-      }
+    styleSheet:produce(styleSheet,(oldStyleSheet)=>{
+      update(oldStyleSheet,[selectedKey,selectedStyleProp,'value'],()=>style);
     }),
     undo,
     redo,
@@ -56,24 +30,21 @@ export function resetStyles(state: StateType): StateType {
 }
 
 export function resizeChange(state: StateType, payload: ResizePayload) {
-  const { pageConfig, undo, redo, selectedInfo } = state;
+  const {undo, redo, selectedInfo,styleSheet } = state;
   if (!selectedInfo) return state;
-  const { selectedKey } = selectedInfo;
+  const { selectedKey,selectedStyleProp } = selectedInfo;
   const { width, height } = payload;
   if (width || height) {
-    undo.push({ pageConfig });
+    undo.push({ styleSheet });
     redo.length = 0;
   }
 
   return {
     ...state,
-    pageConfig: produce(pageConfig, (oldConfigs) => {
-      if (width) {
-        update(oldConfigs[selectedKey], 'props.style.width', () => width);
-      }
-      if (height) {
-        update(oldConfigs[selectedKey], 'props.style.height', () => height);
-      }
-    }),
+    styleSheet:produce(styleSheet,(oldStyleSheet)=>{
+    update(oldStyleSheet,[selectedKey,selectedStyleProp,'value'],(value)=>merge(value,payload));
+  }),
+  undo,
+    redo,
   };
 }

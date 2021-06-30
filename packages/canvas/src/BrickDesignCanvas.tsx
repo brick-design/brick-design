@@ -1,7 +1,8 @@
 import React, {
-  memo,
+  forwardRef,
+  memo, Ref,
   useCallback,
-  useEffect,
+  useEffect, useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -38,7 +39,10 @@ export interface BrickDesignCanvasType extends BrickDesignProps {
 
 
 const defaultPlatforms: PlatformsType = { PC: [1920, 1080] };
-function BrickDesignCanvas(props: BrickDesignCanvasType) {
+
+
+
+function BrickDesignCanvas(props: BrickDesignCanvasType,ref:Ref<HTMLDivElement>) {
   const {
     onLoadEnd,
     platforms = defaultPlatforms,
@@ -66,7 +70,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     onLoadEnd && onLoadEnd();
   }, [setIsLoading]);
 
-
+  useImperativeHandle(ref,()=>brickdCanvasRef.current);
   useEffect(() =>{
     const unSubscribe= setSubscribe(changeScale);
     return()=>{
@@ -131,34 +135,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   });
 
   // const {onMove,onMoveStart,onMoveEnd}=useDragMove(useCallback(()=>brickdCanvasRef.current),[])
-
-  const wheelEvent= useCallback((e:React.WheelEvent)=> {
-    e.preventDefault();
-    const {deltaX,deltaY}=e;
-    if (Math.abs(deltaX) !== 0 && Math.abs(deltaY) !== 0) return false;
-    const {scale}=getZoomState();
-    if (e.ctrlKey) {
-      setZoomState({scale:scale-deltaY*0.005});
-    } else {
-      const target=brickdCanvasRef.current;
-      const {top,left}=getComputedStyle(target);
-      target.style.transition='none';
-      target.style.left=Number.parseInt(left)-deltaX*2+'px';
-      target.style.top=Number.parseInt(top)-deltaY*2+'px';
-    }
-    return  false;
-  },[]);
-
-  const wheelScale= useCallback((e:WheelEvent)=> {
-    if (e.ctrlKey) {
-      e.preventDefault();
-      const {scale}=getZoomState();
-      setZoomState({scale:scale-e.deltaY*0.005});
-      return false;
-    }
-  },[]);
-
-
   const changeScale=useCallback(()=>{
     const {scale}=getZoomState();
     brickdCanvasRef.current.style.transform= `scale(${scale})`;
@@ -192,7 +168,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     addEventListener('keydown', onKeyDown);
     if(contentWindow) {
       contentWindow.addEventListener('keydown', onKeyDown);
-      contentWindow && contentWindow.addEventListener('wheel', wheelScale,{ passive: false });
 
     }
 
@@ -200,10 +175,9 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
      removeEventListener('keydown', onKeyDown);
       if(contentWindow){
      contentWindow.removeEventListener('keydown', onKeyDown);
-     contentWindow.removeEventListener('wheel', wheelScale);
       }
     };
-  }, [changeCanvasSize,wheelEvent]);
+  }, [changeCanvasSize]);
 
 
 
@@ -244,7 +218,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   return (
     <OperateProvider value={operateStore}>
       <div
-        onWheel={wheelEvent}
         onDragEnter={cleanStatus}
         className={`${styles['brick-design-container']} ${className}`}
         id="brickd-canvas-container"
@@ -272,4 +245,4 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   );
 }
 
-export default memo(BrickDesignCanvas);
+export default memo(forwardRef(BrickDesignCanvas));

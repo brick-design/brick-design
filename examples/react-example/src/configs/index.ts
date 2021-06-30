@@ -2,7 +2,7 @@ import { reactContainers } from './reactCategory'
 import * as Ants from 'antd/es'
 import componentSchemas from './componentSchemas'
 import { ConfigType } from '@brickd/canvas'
-
+import Demo from '../Demo'
 /**
  * 容器组件分类
  */
@@ -11,6 +11,7 @@ export const CONTAINER_CATEGORY = { ...reactContainers, HTMLTag: {
 		a: null,
 		span: null,
 		del:null,
+		'Demo':null,
 		img: [{
 			props: {
 				style: { height: '100%',width:'100%' },
@@ -25,7 +26,7 @@ export const CONTAINER_CATEGORY = { ...reactContainers, HTMLTag: {
  * 否则设计面板渲染的页面将是无样式的效果
  */
 const config: ConfigType = {
-	componentsMap: Ants,
+	componentsMap: {...Ants,Demo},
 	componentSchemasMap:componentSchemas,
 }
 

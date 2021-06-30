@@ -15,6 +15,8 @@ export enum PROPS_TYPES {
   enum = 'enum',
   json = 'json',
   boolean = 'boolean',
+  style='style',
+  cssClass='cssClass'
 }
 
 export enum NODE_PROPS_TYPES {

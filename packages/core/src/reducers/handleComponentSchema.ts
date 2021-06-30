@@ -27,19 +27,17 @@ export function addComponent(state: StateType): StateType {
    */
   const dragSource=getDragSource(), dropTarget=getDropTarget();
   if (!dragSource || (!dropTarget && pageConfig[ROOT])) {
-    setDragSource(null);
     return state;
   }
 
   const { template, dragKey, parentKey, parentPropName } = dragSource;
+  setDragSource(null);
   /**
    * 如果没有root根节点，新添加的组件添加到root
    */
   if (!pageConfig[ROOT]) {
     undo.push({ pageConfig });
     redo.length = 0;
-    setDragSource(null);
-    setDropTarget(null);
     return {
       ...state,
       pageConfig: template,
@@ -49,6 +47,7 @@ export function addComponent(state: StateType): StateType {
   }
   // eslint-disable-next-line prefer-const
   let { dropKey, propName, childNodeKeys } = dropTarget;
+  setDropTarget(null);
   /**
    * 如果有root根节点，并且即没有选中的容器组件也没有drop的目标，那么就要回退到drag目标，
    * 添加之前的页面配置
@@ -59,15 +58,12 @@ export function addComponent(state: StateType): StateType {
     (parentKey === dropKey && isEqual(childNodeKeys, dragSort)) ||
     handleRules(pageConfig)
   ) {
-    setDragSource(null);
-    setDropTarget(null);
     return state;
   }
 
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
-  setDragSource(null);
-  setDropTarget(null);
+
   return {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {

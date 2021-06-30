@@ -40,3 +40,30 @@
 		height: 20px;
 	}
 }
+
+.tabs-container{
+	:global{
+		.rc-tabs-tab{
+			font-size: 12px;
+			font-weight: bold;
+			color: #aaa;
+		}
+		.rc-tabs-tab-active{
+			color: #333;
+		}
+		.rc-tabs-ink-bar{
+			background-color:rgb(51, 51, 51);
+			height: 2px !important;
+		}
+		.rc-tabs-nav-operations{
+			display: none!important;
+		}
+		.rc-tabs-nav-measure-ping-top::before, .rc-tabs-nav-wrap-ping-top::before,
+		.rc-tabs-nav-measure-ping-bottom::after, .rc-tabs-nav-wrap-ping-bottom::after{
+			border: 0!important;
+		}
+		.rc-tabs-nav-operations{
+			display: none!important;
+		}
+	}
+}

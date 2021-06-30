@@ -22,7 +22,6 @@ export default {
   redo: `redo`,
   changePlatform: `changePlatform`,
   resetProps: 'resetProps',
-  resetStyles: 'resetStyles',
   removeState: 'removeState',
   setApi: 'setApi',
   setComponentState: 'setComponentState',

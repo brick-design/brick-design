@@ -12,8 +12,10 @@ const a: ComponentSchemaType = {
 			type: PROPS_TYPES.string,
 		},
 		className: {
-			label: '类名',
-			type: PROPS_TYPES.string,
+			type: PROPS_TYPES.cssClass,
+		},
+		style:{
+			type: PROPS_TYPES.style,
 		},
 		onClick: {
 			label: '点击事件',

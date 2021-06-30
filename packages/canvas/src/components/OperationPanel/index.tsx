@@ -7,7 +7,7 @@ import {
   STATE_PROPS,
 } from '@brickd/core';
 
-import { map, isEmpty } from 'lodash';
+import { map } from 'lodash';
 import { formatUnit } from '@brickd/hooks';
 import ResizeItem, { positionStyles } from './ResizeItem';
 import styles from './index.less';
@@ -187,7 +187,6 @@ function OperationPanel() {
   }
 
   const onMouseUp = useCallback(() => {
-    if (isEmpty(sizeResultRef.current)) return;
     const { selectedNode } = getOperateState();
     setIsShowSizeTip(false);
     originSizeRef.current = undefined;

@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react';
-import flattenDeep from 'lodash/flattenDeep';
-import map from 'lodash/map';
-import { PROPS_TYPES } from '@brickd/canvas';
-import each from 'lodash/each';
-import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
+import { PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
+import {each,map,flattenDeep,isEmpty,isEqual} from 'lodash';
+
 
 export function usePrevious<T>(value: any) {
   const ref = useRef<T>();
@@ -80,3 +77,14 @@ export const propsAreEqual = (prevProps: any, nextProps: any) =>
 
 
 export const ANIMATION_YES = 'all 200ms';
+
+export const getCssClassProps=(propsConfig:PropsConfigType)=>{
+  const cssClassProps= { };
+  each(propsConfig,(config,propName)=>{
+    const {type}=config;
+    if(type===PROPS_TYPES.style||type===PROPS_TYPES.cssClass){
+      cssClassProps[propName]=config;
+    }
+  });
+  return cssClassProps;
+};

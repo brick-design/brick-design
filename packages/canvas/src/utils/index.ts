@@ -56,6 +56,16 @@ export const getSelectedNode = (
   }
 };
 
+export const getNodeFromClassName=(className:string)=>{
+  const iframe=getIframe();
+  if(iframe){
+    const {contentDocument}=iframe;
+    return contentDocument!.getElementsByClassName(
+      className,
+    )[0] as HTMLElement;
+  }
+};
+
 export function generateCSS(
   left?: number,
   top?: number,

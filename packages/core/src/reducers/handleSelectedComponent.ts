@@ -14,7 +14,7 @@ export function selectComponent(
   payload: SelectComponentPayload,
 ): StateType {
   const { undo, redo, selectedInfo, pageConfig } = state;
-  const { propName, domTreeKeys, key, parentKey, parentPropName } = payload;
+  const { propName, domTreeKeys, key, parentKey, parentPropName,selectedStyleProp } = payload;
   // if (selectedInfo) {
   //   const { selectedKey, propName: selectedPropName } = selectedInfo;
   //   if (
@@ -61,6 +61,7 @@ export function selectComponent(
       parentPropName,
       props,
       propsConfig,
+      selectedStyleProp
     },
     undo,
     redo,
