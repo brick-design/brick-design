@@ -21,8 +21,8 @@ export function changeStyles(
   redo.length = 0;
   return {
     ...state,
-    styleSheet:produce(styleSheet,(oldStyleSheet)=>{
-      update(oldStyleSheet,[selectedKey,selectedStyleProp,'value'],()=>style);
+    styleSheet:produce(styleSheet||{},(oldStyleSheet)=>{
+      oldStyleSheet[selectedKey+selectedStyleProp]=style;
     }),
     undo,
     redo,
@@ -41,8 +41,8 @@ export function resizeChange(state: StateType, payload: ResizePayload) {
 
   return {
     ...state,
-    styleSheet:produce(styleSheet,(oldStyleSheet)=>{
-    update(oldStyleSheet,[selectedKey,selectedStyleProp,'value'],(value)=>merge(value,payload));
+    styleSheet:produce(styleSheet||{},(oldStyleSheet)=>{
+    update(oldStyleSheet,[selectedKey+selectedStyleProp],(value)=>merge(value,payload));
   }),
   undo,
     redo,

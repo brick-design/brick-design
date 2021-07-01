@@ -12,11 +12,12 @@ interface SelectType {
   selectedInfo: SelectedInfoType;
 }
 
-interface UseSelectType {
+export interface UseSelectType {
   isSelected: boolean;
   selectedDomKeys?: string[];
   propName?: string;
   lockedKey: string;
+  selectedStyleProp?:string
 }
 
 export function useSelect(
@@ -31,10 +32,10 @@ export function useSelect(
         selectedKey: prevSelectedKey,
         propName: prevPropName,
         domTreeKeys: prevDomTreeKeys = [],
+        selectedStyleProp:prevSelectedStyleProp
       } = prevState.selectedInfo || {};
-      const { selectedKey, domTreeKeys = [], propName } =
+      const { selectedKey, domTreeKeys = [], propName ,selectedStyleProp} =
         nextState.selectedInfo || {};
-
 
       if (
         (!prevSelectedKey && selectedKey) ||
@@ -55,7 +56,9 @@ export function useSelect(
           return (
             isEqualKey(key, prevSelectedKey) || isEqualKey(key, selectedKey)
           );
-        } else {
+        } else if(prevSelectedStyleProp!==selectedStyleProp){
+          return true;
+        }else {
           return (
             propName !== prevPropName
           );
@@ -72,7 +75,7 @@ export function useSelect(
     controlUpdate,
   );
 
-  const { selectedKey, domTreeKeys: selectedDomKeys, propName } =
+  const { selectedKey, domTreeKeys: selectedDomKeys, propName,selectedStyleProp } =
     selectedInfo || {};
   const isSelected = isEqualKey(key, selectedKey);
 
@@ -90,5 +93,5 @@ export function useSelect(
     }
   });
 
-  return { selectedDomKeys, isSelected, propName, lockedKey: selectedKey };
+  return { selectedDomKeys, isSelected, propName, lockedKey: selectedKey,selectedStyleProp };
 }

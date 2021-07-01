@@ -14,6 +14,7 @@ import { isEmpty } from 'lodash';
 import { formatUnit } from '@brickd/hooks';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
+import { UseSelectType } from './useSelect';
 import {
   changeElPositionAndSize,
   css,
@@ -25,7 +26,7 @@ import {
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
 
-type OriginalPosition = {
+export type OriginalPosition = {
   originalX: number;
   originalY: number;
   originalMarginLeft: number;
@@ -42,12 +43,13 @@ type OriginalPosition = {
 
 export function useEvents(
   specialProps: SelectedInfoBaseType,
-  isSelected: boolean,
+  selectedInfo: UseSelectType,
   props: any,
   componentName: string,
   propName?: string,
   index?: number,
 ) {
+  const {isSelected,selectedStyleProp}=selectedInfo;
   const { key, domTreeKeys, parentKey, parentPropName } = specialProps;
   const {
     onMouseOver: onMouseOverFun,
@@ -71,7 +73,7 @@ export function useEvents(
 
   const setSelectedNode = useCallback(
     (selectedNode: HTMLElement) => {
-      selectComponent({ ...specialProps, propName });
+      selectComponent({ ...specialProps, propName,selectedStyleProp:'className' });
       setOperateState({
         selectedNode: selectedNode,
         operateSelectedKey: key,
@@ -97,9 +99,42 @@ export function useEvents(
     [onDoubleClickFn, setSelectedNode],
   );
 
+
+  const onClick = useCallback(
+    (event: Event) => {
+      event && event.stopPropagation();
+      clearSelectedStatus();
+      setOperateState({ selectedNode: null });
+      onClickFn && onClickFn();
+    },
+    [onClickFn, isSelected],
+  );
+
+  const onMouseOver = useCallback(
+    (event: Event) => {
+      event.stopPropagation();
+      const { hoverNode } = getOperateState();
+      if (getDragKey() && hoverNode) {
+        setOperateState({ hoverNode: null, operateHoverKey: null });
+      } else if (!getDragKey()) {
+        setOperateState({
+          hoverNode: event.target as HTMLElement,
+          operateHoverKey: key,
+        });
+        overTarget({
+          hoverKey: key,
+        });
+      }
+      if (typeof onMouseOverFun === 'function') onMouseOverFun();
+    },
+    [onMouseOverFun],
+  );
+
   const onDragStart = useCallback(
     (event: React.DragEvent) => {
       event.stopPropagation();
+      if(selectedStyleProp!=='className') return;
+
       getIframe().contentDocument.body.style.cursor = 'move';
       if (!isSelected) {
         dragImg.style.width = '10px';
@@ -173,37 +208,7 @@ export function useEvents(
         targetNode.style.transition = 'none';
       }
     },
-    [isSelected],
-  );
-
-  const onClick = useCallback(
-    (event: Event) => {
-      event && event.stopPropagation();
-      clearSelectedStatus();
-      setOperateState({ selectedNode: null });
-      onClickFn && onClickFn();
-    },
-    [onClickFn, isSelected],
-  );
-
-  const onMouseOver = useCallback(
-    (event: Event) => {
-      event.stopPropagation();
-      const { hoverNode } = getOperateState();
-      if (getDragKey() && hoverNode) {
-        setOperateState({ hoverNode: null, operateHoverKey: null });
-      } else if (!getDragKey()) {
-        setOperateState({
-          hoverNode: event.target as HTMLElement,
-          operateHoverKey: key,
-        });
-        overTarget({
-          hoverKey: key,
-        });
-      }
-      if (typeof onMouseOverFun === 'function') onMouseOverFun();
-    },
-    [onMouseOverFun],
+    [isSelected,selectedStyleProp],
   );
 
   const onDrag = useCallback((event: React.DragEvent) => {

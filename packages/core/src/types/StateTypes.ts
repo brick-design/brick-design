@@ -62,13 +62,10 @@ export interface BrickAction extends Action<string> {
 
 export type UndoRedoType = Partial<Omit<StateType, 'undo' | 'redo'>>;
 
-type StylePropType={
-  classPropName?:string
-  value:React.CSSProperties
-}
+
 
 export type StyleSheetType={
-  [key:string]:{[key:string]:StylePropType}
+  [key:string]:React.CSSProperties
 }
 export type StateType = {
   pageConfig: PageConfigType;

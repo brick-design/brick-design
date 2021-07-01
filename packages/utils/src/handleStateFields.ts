@@ -1,4 +1,4 @@
-import { each, isPlainObject } from 'lodash';
+import { each, isPlainObject ,get } from 'lodash';
 import { ChildNodesType, PageConfigType } from './types';
 
 export const ALL_PROPS = '$all';
@@ -40,7 +40,7 @@ export function getChildrenFields(
   const resultFields = [];
   const getFields = (childNodes: string[]) => {
     each(childNodes, (nodeKey) => {
-      const { loop } = pageConfig[nodeKey];
+      const { loop } = get(pageConfig,[nodeKey])||{};
       if (typeof loop === 'string') {
         resultFields.push(...getStateFields({ loop }));
       }

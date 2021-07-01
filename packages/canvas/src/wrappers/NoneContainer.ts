@@ -24,7 +24,8 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
-  const { isSelected } = useSelect(specialProps);
+  const selectedInfo = useSelect(specialProps);
+  const  { isSelected }=selectedInfo;
   const vNode = getVNode(key);
   const { componentName } = vNode;
   const dragKey = getDragKey();
@@ -38,7 +39,7 @@ function NoneContainer(allProps: CommonPropsType) {
   const uniqueKey = `${key}-${index}`;
   const { setSelectedNode, ...events } = useEvents(
     specialProps,
-    isSelected,
+    selectedInfo,
     props,
     componentName,
   );
@@ -67,7 +68,7 @@ function NoneContainer(allProps: CommonPropsType) {
     false,
     className,
     animateClass,
-  ));
+  ),selectedInfo);
   if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {
     ...styleProps,

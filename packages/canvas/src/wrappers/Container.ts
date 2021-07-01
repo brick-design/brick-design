@@ -127,10 +127,11 @@ function Container(allProps: CommonPropsType) {
     domTreeKeys,
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
-  const { selectedDomKeys, isSelected, propName } = useSelect(
+  const selectedInfo = useSelect(
     specialProps,
     !!mirrorModalField,
   );
+  const { selectedDomKeys, isSelected, propName }=selectedInfo;
   let selectedPropName = prevPropName.current;
   if (propName && isSelected) {
     prevPropName.current = propName;
@@ -138,7 +139,7 @@ function Container(allProps: CommonPropsType) {
   }
   const { setSelectedNode, ...events } = useEvents(
     specialProps,
-    isSelected,
+    selectedInfo,
     props,
     componentName,
     selectedPropName,
@@ -248,14 +249,14 @@ function Container(allProps: CommonPropsType) {
     [setChildren, children],
   );
 
-  const onDragLeave = (event: React.MouseEvent) => {
+  const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
     event.stopPropagation();
     setTimeout(() => {
       setChildren(childNodes);
     }, 50);
   };
 
-  const onDrop = useCallback((event: React.DragEvent) => {
+  const onDrop = useCallback((event: React.DragEvent|MouseEvent) => {
     event.stopPropagation();
     const { selectedInfo } = getSelector(['selectedInfo']);
     const dragKey = getDragKey();
@@ -268,52 +269,13 @@ function Container(allProps: CommonPropsType) {
 
   useEffect(() => {
     if (!nodePropsConfig || isEmpty(propParentNodes.current)) return;
-    const propNameListeners = {};
     each(propParentNodes.current, (parentNode, propName) => {
-      propNameListeners[propName] = {
-        dragOver: (event) => dragOver(event, propName),
-        dragEnter: (event) => onDragEnter(event, propName),
-        onDragLeave,
-        onDrop
-      };
-      parentNode.addEventListener(
-        'dragover',
-        propNameListeners[propName].dragOver,
-      );
-      parentNode.addEventListener(
-        'dragenter',
-        propNameListeners[propName].dragEnter,
-      );
-      parentNode.addEventListener(
-        'dragleave',
-        propNameListeners[propName].onDragLeave,
-      );
-      parentNode.addEventListener(
-        'drop',
-        propNameListeners[propName].onDrop,
-      );
+      parentNode.ondragover=(event) => dragOver(event, propName);
+      parentNode.ondragenter=(event) => onDragEnter(event, propName);
+      parentNode.ondragleave=onDragLeave;
+      parentNode.ondrop=onDrop;
     });
 
-    return () => {
-      each(propParentNodes.current, (parentNode, propName) => {
-        parentNode.removeEventListener(
-          'dragover',
-          propNameListeners[propName].dragOver,
-        );
-        parentNode.removeEventListener(
-          'dragenter',
-          propNameListeners[propName].dragEnter,
-        );
-        parentNode.removeEventListener(
-          'dragleave',
-          propNameListeners[propName].onDragLeave,
-        );
-        parentNode.removeEventListener(
-          'drop',
-          propNameListeners[propName].onDrop,
-        );
-      });
-    };
   }, [onDragLeave,onDrop]);
 
   useEffect(() => {
@@ -456,7 +418,7 @@ function Container(allProps: CommonPropsType) {
     domTreeKeys.includes(dragKey),
     className,
     animateClass
-  ));
+  ),selectedInfo);
   if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {
     ...styleProps,

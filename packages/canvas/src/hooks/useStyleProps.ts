@@ -2,14 +2,21 @@ import { useCallback, useEffect, useRef } from 'react';
 import { getComponentConfig, PROPS_TYPES, selectComponent, SelectedInfoBaseType } from '@brickd/core';
 import {each} from 'lodash';
 import { useOperate } from './useOperate';
+import { useMouseMove } from './useMouseMove';
+import { UseSelectType } from './useSelect';
 import {  getNodeFromClassName } from '../utils';
 
-export function useStyleProps(componentName:string,specialProps:SelectedInfoBaseType,className:string){
+export function useStyleProps(componentName:string,
+															specialProps:SelectedInfoBaseType,
+															className:string,
+															selectedInfo:UseSelectType){
 	const {key}=specialProps;
 	const {propsConfig}=getComponentConfig(componentName);
 	const {setOperateState}=useOperate();
 	const stylePropsNodeRef=useRef<any>({});
 	const styleProps:any={};
+	const {isSelected,selectedStyleProp}=selectedInfo;
+	const {onMouseDown,onMove,onMoveEnd}=useMouseMove(isSelected,key);
 	each(propsConfig,(config,propName)=>{
 		const {type}=config;
 
@@ -21,7 +28,7 @@ export function useStyleProps(componentName:string,specialProps:SelectedInfoBase
 	const onHover=useCallback((event:MouseEvent)=>{
 		event.stopPropagation();
 		setOperateState({hoverNode:event.target as HTMLElement});
-	},[]);
+	},[isSelected]);
 
 	const onDoubleClick=useCallback((event:MouseEvent,propName:string)=>{
 		event.stopPropagation();
@@ -40,21 +47,20 @@ export function useStyleProps(componentName:string,specialProps:SelectedInfoBase
 				stylePropsNodeRef.current[propName]=getNodeFromClassName(className);
 			}
 		});
-		each(stylePropsNodeRef.current,(node,propName)=>{
+		each(stylePropsNodeRef.current,(node:HTMLElement,propName)=>{
 			stylePropsListeners[propName]={
 				onDoubleClick:(event:MouseEvent)=>onDoubleClick(event,propName)
 			};
-			node.addEventListener('hover',onHover);
-			node.addEventListener('doubleClick',stylePropsListeners[propName].onDoubleClick);
-
+			node.onmouseover=onHover;
+			node.ondblclick=(event:MouseEvent)=>onDoubleClick(event,propName);
+			if(isSelected&&selectedStyleProp===propName){
+				node.draggable=false;
+				node.onmousedown=onMouseDown;
+				node.onmousemove=onMove;
+				node.onmouseup=onMoveEnd;
+				node.ondragstart=()=>false;
+			}
 		});
-		return()=>{
-			each(stylePropsNodeRef.current,(node,propName)=>{
-				node.removeEventListener('hover',onHover);
-				node.removeEventListener('doubleClick',stylePropsListeners[propName].onDoubleClick);
-
-			});
-		};
 	});
 
 	styleProps.className=key+'className'+' '+className;
