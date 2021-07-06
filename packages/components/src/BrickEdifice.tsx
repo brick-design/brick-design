@@ -39,7 +39,6 @@ function BrickEdifice(props: BrickEdificeProps) {
     ...rest
   } = props;
   const zoomStore= useRef(new BrickStore({scale:0.5})).current;
-  const bdCanvasRef=useRef<HTMLDivElement>();
 
   useEffect(() => {
     initBrickdState && initPageBrickdState(initBrickdState);
@@ -48,9 +47,9 @@ function BrickEdifice(props: BrickEdificeProps) {
   return (
     <ZoomProvider value={zoomStore}>
     <BrickProvider config={config} warn={warn} customReducer={customReducer}>
-        <BrickDesignCanvas ref={bdCanvasRef} className={styles['brickd-canvas']} {...rest}>
+        <BrickDesignCanvas className={styles['brickd-canvas']} {...rest}>
           <Users users={users}/>
-          <TopLeftButtons dragTarget={bdCanvasRef}/>
+          <TopLeftButtons/>
           <MidBottomButtons/>
           <BottomLeftButtons componentsCategory={componentsCategory}/>
         </BrickDesignCanvas>

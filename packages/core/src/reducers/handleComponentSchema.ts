@@ -53,6 +53,7 @@ export function addComponent(state: StateType): StateType {
    * 添加之前的页面配置
    */
   const dragSort=getDragSortCache();
+  console.log('dragSort>>>>>>',dragSort);
   if (
     !dragSort ||
     (parentKey === dropKey && isEqual(childNodeKeys, dragSort)) ||
@@ -63,7 +64,7 @@ export function addComponent(state: StateType): StateType {
 
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
-
+  console.log('parentKey>>>>>>>',template);
   return {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {

@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import produce from 'immer';
 
 import { StateType } from '../types';
@@ -27,7 +28,12 @@ export function changeProps(
         const originalProps = oldConfigs[selectedKey].props;
         oldConfigs[selectedKey].props = { ...originalProps, ...props };
       } else {
+        const style = get(oldConfigs, [selectedKey, 'props', 'style']);
+        if (style) {
+          oldConfigs[selectedKey].props = { ...props, style };
+        } else {
           oldConfigs[selectedKey].props = props;
+        }
       }
     }),
     undo,
@@ -48,7 +54,12 @@ export function resetProps(state: StateType): StateType {
   return {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {
-      oldConfigs[selectedKey].props = props;
+      const style = get(oldConfigs, [selectedKey, 'props', 'style']);
+      if (style) {
+        oldConfigs[selectedKey].props = { ...props, style };
+      } else {
+        oldConfigs[selectedKey].props = props;
+      }
     }),
     undo,
     redo,

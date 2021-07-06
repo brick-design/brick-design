@@ -53,6 +53,7 @@ function NoneContainer(allProps: CommonPropsType) {
 
   const onDragEnter=useCallback((event:React.DragEvent)=>{
     event.stopPropagation();
+    if(dragKey===key) return;
     setOperateState({
       dropNode:event.target as HTMLElement,
       isDropAble:false,
@@ -65,7 +66,7 @@ function NoneContainer(allProps: CommonPropsType) {
 
   const styleProps= useStyleProps(componentName,specialProps,handlePropsClassName(
     uniqueKey,
-    false,
+    dragKey===key,
     className,
     animateClass,
   ),selectedInfo);

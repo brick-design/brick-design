@@ -6,10 +6,10 @@ import { Checkbox, Icon } from '../../Components';
 import { downloadIcon, dragIcon, uploadIcon } from '../../assets';
 
 interface TopLeftButtonsProp{
-	dragTarget:RefObject<HTMLDivElement>
+	canvasRef?:RefObject<HTMLDivElement>
 }
 function TopLeftButtons(props:TopLeftButtonsProp){
-	const {dragTarget}=props;
+	const {canvasRef}=props;
 	const [isDragMove,setIsDragMove]=useState<boolean>();
 	const {getZoomState,setZoomState}=useZoom();
 	const wheelEvent= useCallback((e:WheelEvent,isGlobal?:boolean)=> {
@@ -21,7 +21,7 @@ function TopLeftButtons(props:TopLeftButtonsProp){
 			return  false;
 		} else if(isDragMove||isGlobal) {
 			e.preventDefault();
-			const target=dragTarget.current;
+			const target=canvasRef.current;
 			const {top,left}=getComputedStyle(target);
 			target.style.transition='none';
 			target.style.left=Number.parseInt(left)-deltaX*2+'px';

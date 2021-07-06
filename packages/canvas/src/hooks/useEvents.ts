@@ -104,7 +104,7 @@ export function useEvents(
     (event: Event) => {
       event && event.stopPropagation();
       clearSelectedStatus();
-      setOperateState({ selectedNode: null });
+      setOperateState({ selectedNode: null,operateSelectedKey:null });
       onClickFn && onClickFn();
     },
     [onClickFn, isSelected],
@@ -133,28 +133,24 @@ export function useEvents(
   const onDragStart = useCallback(
     (event: React.DragEvent) => {
       event.stopPropagation();
-      if(selectedStyleProp!=='className') return;
-
-      getIframe().contentDocument.body.style.cursor = 'move';
       if (!isSelected) {
         dragImg.style.width = '10px';
         dragImg.style.height = '10px';
         event.dataTransfer.setDragImage(dragImg, 0, 0);
+        console.log('drag+++++++++>>>>>>');
+        setDragSource({
+          dragKey: key,
+          parentKey,
+          parentPropName,
+        });
       } else {
         dragImg.style.width = '0px';
         dragImg.style.height = '0px';
         event.dataTransfer.setDragImage(dragImg, 0, 0);
       }
-      setTimeout(
-        () =>
-          setDragSource({
-            dragKey: key,
-            parentKey,
-            parentPropName,
-          }),
-        0,
-      );
-      if (isSelected && key !== ROOT) {
+
+
+      if (isSelected && key !== ROOT&&selectedStyleProp==='className') {
         const { clientX, clientY, target } = event;
         const targetNode = target as HTMLElement;
         const {

@@ -1,8 +1,9 @@
 import React, {
+  Children, cloneElement,
   forwardRef,
-  memo, Ref,
+  memo,
   useCallback,
-  useEffect, useImperativeHandle,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -42,7 +43,7 @@ const defaultPlatforms: PlatformsType = { PC: [1920, 1080] };
 
 
 
-function BrickDesignCanvas(props: BrickDesignCanvasType,ref:Ref<HTMLDivElement>) {
+function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
     onLoadEnd,
     platforms = defaultPlatforms,
@@ -70,7 +71,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType,ref:Ref<HTMLDivElement>)
     onLoadEnd && onLoadEnd();
   }, [setIsLoading]);
 
-  useImperativeHandle(ref,()=>brickdCanvasRef.current);
   useEffect(() =>{
     const unSubscribe= setSubscribe(changeScale);
     return()=>{
@@ -134,7 +134,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType,ref:Ref<HTMLDivElement>)
     };
   });
 
-  // const {onMove,onMoveStart,onMoveEnd}=useDragMove(useCallback(()=>brickdCanvasRef.current),[])
   const changeScale=useCallback(()=>{
     const {scale}=getZoomState();
     brickdCanvasRef.current.style.transform= `scale(${scale})`;
@@ -239,7 +238,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType,ref:Ref<HTMLDivElement>)
             onLoadEnd={loadEnd}
           />
         </div>
-        {children}
+        {Children.map(children,(child:any)=>cloneElement(child,{canvasRef:brickdCanvasRef}))}
       </div>
     </OperateProvider>
   );

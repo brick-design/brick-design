@@ -168,8 +168,8 @@ function Container(allProps: CommonPropsType) {
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
       event.preventDefault();
-
       if(interceptDragOver()) return;
+      const dragKey = getDragKey();
       const isV = isVPropNodesPositionRef.current[defaultPropName];
       if (isEmpty(children)) {
         if (nodePropsConfig) {
@@ -215,7 +215,8 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName: string) => {
       event.preventDefault();
       if(interceptDragOver()) return;
-        const childNodeKeys = get(children, propName, []);
+      const dragKey = getDragKey();
+      const childNodeKeys = get(children, propName, []);
         const isV = isVPropNodesPositionRef.current[propName];
         if (!childNodeKeys.length) {
           if (isEmpty(children)) {
@@ -261,7 +262,7 @@ function Container(allProps: CommonPropsType) {
     const { selectedInfo } = getSelector(['selectedInfo']);
     const dragKey = getDragKey();
     if (get(selectedInfo,'selectedKey') === dragKey) return;
-    setOperateState({ dropNode: null });
+    setOperateState({ dropNode: null,hoverNode:null });
     addComponent();
     executeSubject();
   }, []);
@@ -306,6 +307,7 @@ function Container(allProps: CommonPropsType) {
   const interceptDragEnter=useCallback(()=>{
     const dragKey = getDragKey();
     const { operateSelectedKey } = getOperateState();
+    console.log('interceptDragEnter>>>>>',domTreeKeys,key,operateSelectedKey,dragKey);
     if (
       domTreeKeys.includes(dragKey) ||
       dragKey === key ||
@@ -325,7 +327,10 @@ function Container(allProps: CommonPropsType) {
   const onParentDragEnter = useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
+      console.log('onParentDragEnter>>>>>>>>>',key);
+
       if(interceptDragEnter()) return;
+
       let isDropAble;
       if (nodePropsConfig) {
         const { childNodesRule } = nodePropsConfig[selectedPropName];

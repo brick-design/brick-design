@@ -8,24 +8,32 @@ interface RadioType extends IconProps{
 	value?:string
 	selectedStyle?:React.CSSProperties
 	unselectedStyle?:React.CSSProperties
+	selectedIcon?:string
+	unselectedIcon?:string
 }
 function Radio(props:RadioType){
-	const {onChange,targetValue,value,selectedStyle,unselectedStyle,...rest}=props;
+	const {onChange,targetValue,value,selectedStyle,unselectedStyle,selectedIcon,unselectedIcon,...rest}=props;
 	const onClick=()=>{
 		onChange&&onChange(value?targetValue:undefined);
 	};
-	return <Icon onClick={onClick} style={targetValue===value?selectedStyle:unselectedStyle} {...rest}/>;
+	const isSelected=targetValue===value;
+	return <Icon onClick={onClick}
+							 style={isSelected?selectedStyle:unselectedStyle}
+							 {...rest}
+							 icon={isSelected?selectedIcon:unselectedIcon}
+							/>;
 }
 
 interface RadioGroupProp extends RadioType{
-	radioData:[];
+	radioData:RadioType[];
 }
 
 function RadioGroup(props:RadioGroupProp){
 	const {radioData,...rest}=props;
 
 	return map(radioData,(v)=>{
-		return <Radio targetValue={v}  {...rest} key={v}/>;
+		const {value,...radoRest}=v;
+		return <Radio targetValue={value} {...radoRest}  {...rest} key={value}/>;
 	});
 }
 Radio.RadioGroup=RadioGroup;
