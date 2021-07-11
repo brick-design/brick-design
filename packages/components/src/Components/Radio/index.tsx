@@ -1,4 +1,4 @@
-import React,{memo} from 'react';
+import React from 'react';
 import {map} from 'lodash';
 import Icon,{ IconProps }  from '../Icon';
 
@@ -25,17 +25,18 @@ function Radio(props:RadioType){
 }
 
 interface RadioGroupProp extends RadioType{
-	radioData:RadioType[];
+	radioData:string[];
 }
 
 function RadioGroup(props:RadioGroupProp){
 	const {radioData,...rest}=props;
 
-	return map(radioData,(v)=>{
-		const {value,...radoRest}=v;
-		return <Radio targetValue={value} {...radoRest}  {...rest} key={value}/>;
-	});
+	return <div>
+		{map(radioData,(v)=>{
+			return <Radio targetValue={v}  {...rest} key={v}/>;
+		})}
+	</div>;
 }
 Radio.RadioGroup=RadioGroup;
 
-export default memo(Radio);
+export default Radio;

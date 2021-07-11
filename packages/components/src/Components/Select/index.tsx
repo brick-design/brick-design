@@ -1,15 +1,10 @@
 import React,{memo} from 'react';
-import SelectDialog, { SelectDialogProps } from './SelectDialog';
 
-
-type SelectProps = SelectDialogProps
-
-function Select(props:SelectProps){
+function Select(props:React.HTMLProps<HTMLSelectElement>){
 	const {value,...rest}=props;
-	return <div>
-<span>value</span>
-<SelectDialog {...rest} value={value}/>
-	</div>;
+	return <select {...rest}>
+<option>value</option>
+	</select>;
 }
 
 export default memo(Select);

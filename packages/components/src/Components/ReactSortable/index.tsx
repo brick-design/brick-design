@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { forwardRef, memo, Ref, useEffect, useImperativeHandle, useRef } from 'react';
 import SortableJS from 'sortablejs';
 
 interface StoreType {
@@ -11,10 +11,11 @@ const store: StoreType = {
   activeComponent: null,
 };
 
-function Sortable(props: any) {
+export type SortableProps=any&React.HTMLProps<HTMLDivElement>
+function Sortable(props: SortableProps,ref:Ref<HTMLDivElement>) {
   const { options = {}, onChange, ...rest } = props;
   const sortRef = useRef();
-
+  useImperativeHandle(ref,()=>sortRef.current);
   useEffect(() => {
     ['onChoose', 'onAdd', 'onUpdate'].forEach((name) => {
       const eventHandler = options[name];
@@ -51,4 +52,4 @@ function Sortable(props: any) {
   return <div {...rest} ref={sortRef} />;
 }
 
-export default memo(Sortable);
+export default memo(forwardRef(Sortable));

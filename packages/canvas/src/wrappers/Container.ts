@@ -252,9 +252,7 @@ function Container(allProps: CommonPropsType) {
 
   const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
     event.stopPropagation();
-    setTimeout(() => {
-      setChildren(childNodes);
-    }, 50);
+    setChildren(childNodes);
   };
 
   const onDrop = useCallback((event: React.DragEvent|MouseEvent) => {
@@ -307,7 +305,6 @@ function Container(allProps: CommonPropsType) {
   const interceptDragEnter=useCallback(()=>{
     const dragKey = getDragKey();
     const { operateSelectedKey } = getOperateState();
-    console.log('interceptDragEnter>>>>>',domTreeKeys,key,operateSelectedKey,dragKey);
     if (
       domTreeKeys.includes(dragKey) ||
       dragKey === key ||
@@ -327,8 +324,6 @@ function Container(allProps: CommonPropsType) {
   const onParentDragEnter = useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
-      console.log('onParentDragEnter>>>>>>>>>',key);
-
       if(interceptDragEnter()) return;
 
       let isDropAble;

@@ -1,14 +1,15 @@
 import React,{memo} from 'react';
-import Input from '../Input';
+import styles from './index.less';
 
-interface InputNumberProps{
-	onChange:(v?:number)=>void
-}
+type InputNumberProps = React.HTMLProps<HTMLInputElement>
 
 function InputNumber (props:InputNumberProps){
 	const {...rest}=props;
 
-	return <Input closeAble={false} type={'number'} {...rest}/>;
+	return <input className={styles['input-number']}
+								defaultValue={0}
+								type={'number'}
+								{...rest}/>;
 }
 
 export default memo(InputNumber);

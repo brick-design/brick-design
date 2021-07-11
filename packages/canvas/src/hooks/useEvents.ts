@@ -137,18 +137,16 @@ export function useEvents(
         dragImg.style.width = '10px';
         dragImg.style.height = '10px';
         event.dataTransfer.setDragImage(dragImg, 0, 0);
-        console.log('drag+++++++++>>>>>>');
-        setDragSource({
-          dragKey: key,
-          parentKey,
-          parentPropName,
-        });
       } else {
         dragImg.style.width = '0px';
         dragImg.style.height = '0px';
         event.dataTransfer.setDragImage(dragImg, 0, 0);
       }
-
+      setDragSource({
+        dragKey: key,
+        parentKey,
+        parentPropName,
+      });
 
       if (isSelected && key !== ROOT&&selectedStyleProp==='className') {
         const { clientX, clientY, target } = event;
