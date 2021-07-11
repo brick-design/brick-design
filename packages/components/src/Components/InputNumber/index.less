@@ -1,18 +1,30 @@
 @import "src/global";
-
-  .input-number{
-    flex: none;
-    display: block;
-    border-radius: 3px;
-    width: 55px;
-    font-size: 12px;
-    text-align: end;
-    border:1px #00000000 solid;
-    outline:none;
-    &:hover,&:focus{
-      border:1px @borderColor solid;
-    }
-    .focusClass{
-      border:1px @borderColor solid;
-    }
+.container{
+  display: flex;
+  align-items: center;
+  .icon{
+    font-size: 16px;
+    padding: 3px;
+    cursor: pointer;
   }
+  .input-number{
+    width: 45px;
+    font-size: 12px;
+    text-align: center;
+    appearance: none;
+    border:none;
+    outline:none;
+    border-bottom:1px @borderColor solid;
+    &:hover,&:focus{
+      border-bottom:1px @select-border-Color solid;
+    }
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+
+  }
+}
+

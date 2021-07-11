@@ -1,21 +1,37 @@
-import React,{memo} from 'react';
+import React, { memo, useState } from 'react';
 import {Field} from "rc-field-form";
 import { FieldProps } from 'rc-field-form/es/Field';
 import styles from './index.less';
+import Checkbox from '../Checkbox';
+import Icon from '../Icon';
+import Dropdown from '../Dropdown';
+import { moreIcon } from '../../assets';
 
 export interface FormItemProps{
     isShowLabel?:string
-    renderFormItem?:(v:any,k:string)=>any
+    renderFormItem?:(v:any,k:string,isExpression?:boolean,menu?:string)=>any
     config?:any
 }
 
 
 function FormItem(props:FormItemProps&FieldProps){
     const {name,isShowLabel=true,renderFormItem,config,...rest}=props;
-    const {style,renderComponent}=renderFormItem(config,name as string);
+    const [isExpression,setIsExpression]=useState(false);
+    const [menu,setMenu]=useState<string>();
+    const {style,renderComponent,menus,isHidden,expressionIconStyle}=renderFormItem(config,name as string,isExpression,menu);
     return <div style={style} className={styles['form-item-container']}>
-        {isShowLabel&&<span className={styles['label']}>{name}</span>}
-        <Field name={name} {...rest}>
+        {isShowLabel&&<div className={styles['title']}>
+            <span className={styles['label']}>{name}</span>
+            <div className={styles['handle-container']}>
+                {!isHidden&&<Checkbox style={expressionIconStyle} onChange={(v)=>setIsExpression(v)}
+                  className={`${styles['icon-none']} ${styles['icon-flex']}`}/>}
+            {!!menus&&<Dropdown className={styles['drop-down']} setMenu={setMenu} menus={menus}>
+                <Icon icon={moreIcon}/>
+            </Dropdown>}
+            </div>
+
+        </div>}
+        <Field  name={name} {...rest}>
             {(control) =>React.cloneElement(renderComponent, { ...control })}
         </Field>
     </div>;

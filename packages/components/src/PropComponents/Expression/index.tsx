@@ -1,4 +1,5 @@
 import React,{memo} from 'react';
+import styles from './index.less';
 import { Input } from '../../Components';
 
 interface ExpressionProps{
@@ -11,12 +12,17 @@ interface ExpressionProps{
 		onChange&&onChange(v?`{{${v}}}`:undefined);
 	};
 	const newValue=value;
-
-	return <div>
-		<span>{'{{'}</span>
-		<Input  onChange={onInputChange} value={newValue} placeholder={'请输入js表达式'}/>
-		<span>{'}}'}</span>
-	</div>;
+	return<Input
+		onChange={onInputChange}
+						value={newValue}
+						placeholder={'请输入js表达式'}
+						closeAble={false}
+						addonBefore={<span>{'{{'}</span>}
+						addonAfter={<span>{'}}'}</span>}
+		className={styles['input-container']}
+		focusClass={styles['focus-class']}
+		inputClass={styles['inputClass']}
+		/>;
 }
 
 export default memo(Expression);

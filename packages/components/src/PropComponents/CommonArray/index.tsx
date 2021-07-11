@@ -12,7 +12,7 @@ interface StringArrayProps{
 
 
 function CommonArray(props:StringArrayProps){
-	const {value=[],onChange}=props;
+	const {value=[],onChange,isNumber}=props;
 	const forceRender=useForceRender();
 	const [inputValue,setInputValue]=useState<string>();
 	const isFocusRef=useRef(false);
@@ -20,8 +20,12 @@ function CommonArray(props:StringArrayProps){
 	const inputRef=useRef<HTMLInputElement>();
 	const change = (event: any) => {
 		const value=event.target.value;
-		setInputValue(value);
-		inputContainerRef.current.style.width=value.length*7+'px';
+		if(isNumber&&!/\d+/.test(value)){
+			return setInputValue('');
+		}
+			setInputValue(value);
+			inputContainerRef.current.style.width=value.length*7+'px';
+
 	};
 
 
@@ -42,7 +46,6 @@ function CommonArray(props:StringArrayProps){
 	const onKeyDown=(event:React.KeyboardEvent)=>{
 		event.stopPropagation();
 		const { key } = event;
-		console.log('key>>>>>>',key);
 		if(key==='Enter'){
 			if(inputValue&&!value.includes(inputValue)){
 				value.push(inputValue);

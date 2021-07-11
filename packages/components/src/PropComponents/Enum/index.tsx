@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import styles from '../../index.less';
+import styles from './index.less';
 import { propsAreEqual } from '../../utils';
 import { Select,Radio } from '../../Components';
 
@@ -10,21 +10,20 @@ interface EnumComponentPropsType  {
 
 const Enum = forwardRef(function Component(
   props: EnumComponentPropsType,
-  ref: any,
 ) {
   const { enumData, ...rest } = props;
-  if(enumData.length>4){
+  if(enumData.length>3){
     return (
       <Select
-        ref={ref}
-        style={{ width: '100%', height: 24 }}
-        className={styles.select}
+        className={styles['select']}
+        enumData={enumData}
         {...rest}
       />
     );
   }
-  return  <Radio.RadioGroup
+  return  <Radio
     radioData={enumData}
+    className={styles['radio']}
     {...rest}
   />;
 

@@ -1,12 +1,9 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { getComponentConfig, getSelector, PROPS_TYPES, PropsConfigType, useSelector } from '@brickd/canvas';
-import { each, get} from 'lodash';
-import { PropInfoType } from '@brickd/core';
-import Switch from 'rc-switch';
+import { getComponentConfig, getSelector, PROPS_TYPES, PropsConfigType,PropInfoType, useSelector } from '@brickd/canvas';
+import { each, get,isEmpty} from 'lodash';
 import styles from './index.less';
+import PropItem from './PropItem';
 import NForm from '../../../Components/NForm';
-import { Input, InputNumber } from '../../../Components';
-import { CommonArray,  ObjectArray, ObjectValue } from '../../../PropComponents';
 
 const handlePropsConfig=(propsConfig:PropsConfigType)=>{
 	const firstConfig={};
@@ -39,50 +36,31 @@ function Props(){
 	const {propsConfig}=getComponentConfig(componentName);
 	const formConfig=useMemo(()=>handlePropsConfig(propsConfig),[propsConfig]);
 
-	const renderFormItem=useCallback((config:PropInfoType)=>{
+	const renderFormItem=useCallback((config:PropInfoType,key?:string,isExpression?:boolean,menu?:string)=>{
 		const {type}=config;
-		// const propsKeys=keys(formConfig);
-		// const isDouble=propsKeys.indexOf(key)%2>0;
-		const subStyle:React.CSSProperties={justifyContent:'space-between',height:22};
-		let renderComponent,style:React.CSSProperties={flexDirection:'column',alignItems:'flex-start'};
-		switch (type) {
-			case PROPS_TYPES.boolean:
-				renderComponent=<Switch className={styles['switch']}/>;
-				style=subStyle;
-				break;
-			case PROPS_TYPES.number:
-				renderComponent=<InputNumber/>;
-				style=subStyle;
-				break;
-			case PROPS_TYPES.string:
-				renderComponent=<Input className={styles['input-container']}
-															 closeStyle={{width:10,height:10 }}
-															 focusClass={styles['focus-class']}
-				/>;
-				break;
-			case PROPS_TYPES.stringArray:
-				renderComponent=<CommonArray/>;
-				break;
-			case PROPS_TYPES.numberArray:
-				renderComponent=<CommonArray isNumber/>;
-				break;
-			case PROPS_TYPES.enum:
-				renderComponent=<div/>;
-				break;
-			case PROPS_TYPES.object:
-				renderComponent=<ObjectValue/>;
-				break;
-			case PROPS_TYPES.objectArray:
-				renderComponent=<ObjectArray/>;
-				break;
-			default:
-				renderComponent=<div/>;
-				style=subStyle;
+		const menus=Array.isArray(type)&&type;
+
+		const subStyle:React.CSSProperties={justifyContent:'flex-end',height:22};
+		let style:React.CSSProperties={flexDirection:'column',alignItems:'flex-start'};
+		const renderComponent=<PropItem config={config} isExpression={isExpression} menu={menu}/>;
+		let expressionIconStyle:React.CSSProperties={};
+		if(isExpression) return {style,renderComponent};
+		if(!Array.isArray(type)){
+			switch (type) {
+				case PROPS_TYPES.boolean:
+				case PROPS_TYPES.number:
+					style=subStyle;
+					expressionIconStyle={marginRight:10};
+					break;
+			}
 		}
 
-		return{style,renderComponent};
-	},[formConfig]);
 
+		return{style,renderComponent,menus,expressionIconStyle};
+	},[]);
+	if(isEmpty(formConfig)) return <div className={styles['empty']}>
+		请选中任意组件进行属性操作
+	</div>;
 	return <NForm className={styles['container']} renderFormItem={renderFormItem} initialValues={props} formConfig={formConfig} />;
 }
 

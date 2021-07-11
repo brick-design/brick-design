@@ -30,8 +30,10 @@ import zoomInIcon from './zoom-in.svg';
 import zoomOutIcon from './zoom-out.svg';
 import zoom11Icon from './zoom-11.svg';
 import saveIcon from './save-icon.svg';
+import arrowLineIcon from './arrow-line-icon.svg';
 
 export {
+  arrowLineIcon,
   arrowIcon,
   deleteIcon,
   listIcon,

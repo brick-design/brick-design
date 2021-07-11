@@ -9,7 +9,6 @@ export interface NFormProps extends FormProps,Omit<FormItemProps, 'config'>{
 }
 
 
-
 function NForm(props:NFormProps){
 	const {formConfig,renderFormItem,isShowLabel,...rest}=props;
 	return <Form {...rest}>

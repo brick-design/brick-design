@@ -88,3 +88,23 @@ export const getCssClassProps=(propsConfig:PropsConfigType)=>{
   });
   return cssClassProps;
 };
+
+export const getValueType=(v:any)=>{
+  if(typeof v==='string'){
+    return PROPS_TYPES.string;
+  }else if(typeof v==='number'){
+    return PROPS_TYPES.number;
+  }else if(typeof v==='boolean'){
+    return PROPS_TYPES.boolean;
+  }else if(Array.isArray(v)){
+    if(v.some((sv)=>typeof sv==='string')){
+      return PROPS_TYPES.stringArray;
+    }else if(v.some((sv)=>typeof sv==='number')){
+      return PROPS_TYPES.numberArray;
+    }else{
+      return PROPS_TYPES.objectArray;
+    }
+  }else{
+    return PROPS_TYPES.object;
+  }
+};

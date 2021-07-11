@@ -1,50 +1,43 @@
-import React,{memo} from 'react';
-import Form, { Field } from 'rc-field-form';
-import {map} from 'lodash';
-import { FieldProps } from 'rc-field-form/es/Field';
+import React, { useCallback,memo } from 'react';
+import { PropInfoType, PROPS_TYPES } from '@brickd/canvas';
+import PropItem from './PropItem';
 import styles from './index.less';
-import CommonArray from '../CommonArray';
-import { CodeEditor, Input, InputNumber, Radio } from '../../Components';
+import {NForm } from '../../Components';
 
 interface ObjectValueProps{
 	value?:any
-}
-
-export interface FormItemProps extends FieldProps{
-	value?:any
-}
-
-function FieldItem({name,value, ...restProps }:FormItemProps){
-	let   renderItem=<div/>;
-	if(typeof value==='string'){
-		renderItem=<Input/>;
-	}else if(typeof value==='number'){
-		renderItem=<InputNumber/>;
-	}else if(typeof value==='boolean'){
-		renderItem=<Radio/>;
-	}else if(value instanceof Array&&value.some((v)=> typeof v==='string')){
-		renderItem=<CommonArray/>;
-	}else if(value instanceof Array&&value.some((v)=> typeof v==='number')){
-		renderItem=<CommonArray isNumber/>;
-	}else if(value instanceof Array&&value.some((v)=> typeof v==='object')||typeof value==='object'){
-		renderItem=<CodeEditor/>;
-	}
-
-	return  <div className={styles['Item-container']}>
-		<span>{name}</span>
-		<Field {...restProps}>
-		{renderItem}
-	</Field>
-	</div>;
+	onChange?:(v:any)=>void
+	childPropsConfig?:any
 }
 
 function ObjectValue(props:ObjectValueProps){
-	const {value}=props;
+	const {childPropsConfig}=props;
+	const renderFormItem=useCallback((config:PropInfoType)=>{
+		const {type}=config;
+		const subStyle:React.CSSProperties={justifyContent:'space-between',height:22,paddingRight:0};
+		let style:React.CSSProperties={flexDirection:'column',alignItems:'flex-start',paddingRight:0};
+		const renderComponent=<PropItem config={config}/>;
+		if(!Array.isArray(type)){
+			switch (type) {
+				case PROPS_TYPES.boolean:
+					style=subStyle;
+					break;
+				case PROPS_TYPES.number:
+					style=subStyle;
+					break;
+			}
+		}
 
 
-	return <Form>
-		{map(value,(item,key)=><FieldItem name={key} key={key} value={item}/>)}
-	</Form>;
+		return{style,renderComponent,isHidden:true};
+	},[]);
+
+
+	return <NForm
+		className={styles['container']}
+		formConfig={childPropsConfig}
+		renderFormItem={renderFormItem}
+	/>;
 }
 
 export default memo(ObjectValue);

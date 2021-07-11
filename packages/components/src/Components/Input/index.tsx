@@ -1,4 +1,4 @@
-import React, { useState, memo, useImperativeHandle, forwardRef, useRef } from 'react';
+import React, { useState, memo, useImperativeHandle, forwardRef, useRef, ReactNode } from 'react';
 import { useForceRender } from '@brickd/hooks';
 import styles from './index.less';
 import deleteIcon from '../../assets/delete-icon.svg';
@@ -21,6 +21,8 @@ export interface InputProps extends React.InputHTMLAttributes<any> {
   closeAble?: boolean;
   inputClass?:string;
   focusClass?:string
+  addonAfter?:ReactNode
+  addonBefore?:ReactNode
 }
 function Input(props: InputProps, ref: any) {
   const {
@@ -32,6 +34,8 @@ function Input(props: InputProps, ref: any) {
     inputClass,
     focusClass,
     defaultValue,
+    addonAfter,
+    addonBefore,
     ...rest
   } = props;
   const [value, setValue] = useState(defaultValue);
@@ -67,6 +71,7 @@ function Input(props: InputProps, ref: any) {
   };
   return (
     <div className={`${styles['container']} ${className} ${isFocusRef.current&&focusClass}`}>
+      {!!addonBefore&&addonBefore}
       <input
         type={type || 'text'}
         className={`${styles['common-input']} ${inputClass}`}
@@ -76,6 +81,7 @@ function Input(props: InputProps, ref: any) {
         onChange={change}
         value={value}
       />
+      {!!addonAfter&&addonAfter}
       {!!value&&isFocusRef.current && closeAble && (
         <img
           src={deleteIcon}

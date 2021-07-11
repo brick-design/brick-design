@@ -1,3 +1,4 @@
+@import "src/global";
 .form-item-container{
   display: flex;
   align-items: center;
@@ -6,7 +7,37 @@
   padding-left: 10px;
   padding-right: 10px;
   .label{
-    font-size: 12px;
-    margin-right: 10px;
+    font-size: 13px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .title{
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .icon-none{
+    display: none;
+    width: 15px;
+    height: 15px;
+    &:hover{
+      background-color: #00000000;
+    }
+  }
+  &:hover{
+    .icon-flex{
+      display: flex;
+    }
+  }
+  .drop-down{
+    margin-left: 10px;
+  }
+  .handle-container{
+    display: flex;
+    align-items: center;
   }
 }

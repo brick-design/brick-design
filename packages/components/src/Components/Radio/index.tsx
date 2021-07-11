@@ -1,42 +1,52 @@
-import React from 'react';
+import React,{memo} from 'react';
 import {map} from 'lodash';
-import Icon,{ IconProps }  from '../Icon';
+import styles from './index.less';
 
-interface RadioType extends IconProps{
+interface RadioType{
 	onChange?:(value:any)=>void
 	targetValue?:string
 	value?:string
 	selectedStyle?:React.CSSProperties
 	unselectedStyle?:React.CSSProperties
-	selectedIcon?:string
-	unselectedIcon?:string
+	isFirst?:boolean
+	isLast?:boolean
 }
 function Radio(props:RadioType){
-	const {onChange,targetValue,value,selectedStyle,unselectedStyle,selectedIcon,unselectedIcon,...rest}=props;
+	const {onChange,targetValue,value,selectedStyle,unselectedStyle,
+		isFirst,isLast,
+		...rest}=props;
 	const onClick=()=>{
 		onChange&&onChange(value?targetValue:undefined);
 	};
 	const isSelected=targetValue===value;
-	return <Icon onClick={onClick}
+	return <span onClick={onClick}
+							 className={`${styles['radio-item']} 
+							 ${isFirst&&styles['isFirst']} 
+							 ${isLast&&styles['isLast']}
+							 ${isSelected&&styles['isSelected']}
+							 `}
 							 style={isSelected?selectedStyle:unselectedStyle}
 							 {...rest}
-							 icon={isSelected?selectedIcon:unselectedIcon}
-							/>;
+	>{targetValue}</span>;
 }
 
 interface RadioGroupProp extends RadioType{
 	radioData:string[];
+	className?:string
 }
 
 function RadioGroup(props:RadioGroupProp){
-	const {radioData,...rest}=props;
+	const {radioData,className,...rest}=props;
 
-	return <div>
-		{map(radioData,(v)=>{
-			return <Radio targetValue={v}  {...rest} key={v}/>;
+	return <div className={`${styles['radio-group']} ${className}`}>
+		{map(radioData,(v,index)=>{
+
+			return <Radio targetValue={v}
+										isFirst={index===0}
+										isLast={radioData.length-1===index}
+										{...rest}
+										key={v}/>;
 		})}
 	</div>;
 }
-Radio.RadioGroup=RadioGroup;
-
-export default Radio;
+export default memo(RadioGroup);
