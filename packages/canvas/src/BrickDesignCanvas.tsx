@@ -218,7 +218,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     <OperateProvider value={operateStore}>
       <div
         onDragEnter={cleanStatus}
-        className={`${styles['brick-design-container']} ${className}`}
+        className={`${styles['brick-design-container']} ${className} ${styles['canvas-mouse']}`}
         id="brickd-canvas-container"
       >
         <div

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { each, get } from 'lodash';
 import {
   PageConfigType,
@@ -620,3 +620,38 @@ export const analysisTransformOrigin = (transformOrigin: string) => {
 };
 
 export const getRootState=()=>getStore().getState();
+
+
+export function getDragAngle(event:React.MouseEvent|MouseEvent,centerX:number,centerY:number) {
+  return  Math.atan2(event.clientY-centerY, event.clientX-centerX);
+}
+
+export function getDegToRad(transform:string){
+
+  // const deg=getMatrix(transform)*Math.PI/180;
+  let deg=getMatrix(transform);
+  if(deg>250){
+    deg=-(deg-180);
+  }else if(deg>0&&deg<90){
+    deg=-deg;
+  }
+  return  deg*Math.PI/180;
+}
+
+export function getFatherRotate(selectedNode:any,rotate=0){
+  if(selectedNode.parentNode){
+    const {transform}=css(selectedNode.parentNode)||{};
+    if(!transform) return rotate;
+    rotate+=getMatrix(transform);
+    return  getFatherRotate(selectedNode.parentNode,rotate);
+  }
+  return rotate;
+}
+
+
+export const getTransform=(Transform:string,fatherRotate:number)=>{
+  const deg=getMatrix(Transform);
+
+  return `rotate(${deg+fatherRotate}deg)`;
+
+};

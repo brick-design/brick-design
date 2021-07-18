@@ -161,6 +161,7 @@ function RadiusItem(props: ItemProps) {
   );
   const onMouseDown = useCallback(
     (event: React.MouseEvent<HTMLSpanElement>) => {
+      event.stopPropagation();
       const { selectedNode } = getOperateState();
       const { radius, onRadiusStart } = props;
       if (iframe) {
@@ -183,7 +184,7 @@ function RadiusItem(props: ItemProps) {
           width: formatUnit(width),
           height: formatUnit(height),
         };
-        onRadiusStart(radiusStyles[radius].cursor);
+        onRadiusStart('canvas-radius');
         setSelected(true);
         // showBaseboard(iframe, baseboardRef.current);
       }

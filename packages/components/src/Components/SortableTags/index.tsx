@@ -6,13 +6,16 @@ import { SortableProps } from '../ReactSortable';
 
 interface SortItemProps{
 	value:string
-	onDelete:(key:string)=>void
+	onDeleteItem?:(key:string)=>void
+	onTagClick?:(key:string)=>void
+
+
 }
 function SortItem(props:SortItemProps){
-	const {value,onDelete}=props;
+	const {value,onDeleteItem}=props;
 	const onClick=useCallback((event:React.MouseEvent)=>{
 		event.stopPropagation();
-		onDelete(value);
+		onDeleteItem(value);
 	},[]);
 
 	return <div className={styles['sort-item']} id={value}>
@@ -21,7 +24,7 @@ function SortItem(props:SortItemProps){
 	</div>;
 }
 
-interface SortableTagsProps extends SortableProps{
+interface SortableTagsProps extends SortableProps,SortItemProps{
 	className?:string
 	sortData:any[];
 	onSortChange:(sortData:any[])=>void
@@ -29,7 +32,7 @@ interface SortableTagsProps extends SortableProps{
 }
 
 function SortableTags(props:SortableTagsProps,ref:Ref<HTMLDivElement>){
-	const {sortData,onSortChange,className,extra,...rest}=props;
+	const {sortData,onSortChange,className,extra,onDeleteItem,...rest}=props;
 
 	const onSortData=(sortKeys: string[])=>{
 		const index=sortKeys.indexOf('extra-item');
@@ -38,6 +41,7 @@ function SortableTags(props:SortableTagsProps,ref:Ref<HTMLDivElement>){
 	};
 
 	const onDelete=useCallback((value:string)=>{
+		onDeleteItem&&onDeleteItem(value);
 		const index=  sortData.findIndex((data)=>data===value);
 		sortData.splice(index,1);
 		onSortChange&&onSortChange(sortData);
@@ -56,7 +60,7 @@ function SortableTags(props:SortableTagsProps,ref:Ref<HTMLDivElement>){
 		onChange={onSortData}
 		{...rest}
 	>
-		{map(sortData,(item)=><SortItem onDelete={onDelete} value={item} key={item}/>)}
+		{map(sortData,(item)=><SortItem onDeleteItem={onDelete} value={item} key={item}/>)}
 		{!!extra&&extra}
 	</ReactSortable>;
 }

@@ -324,6 +324,7 @@ function Container(allProps: CommonPropsType) {
   const onParentDragEnter = useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
+      setDragSortCache(null);
       if(interceptDragEnter()) return;
 
       let isDropAble;
@@ -360,6 +361,7 @@ function Container(allProps: CommonPropsType) {
   const onDragEnter = useCallback(
     (event: DragEvent, propName?: string) => {
       event.stopPropagation();
+      setDragSortCache(null);
       if(interceptDragEnter()) return;
 
       const { childNodesRule } = nodePropsConfig[propName];

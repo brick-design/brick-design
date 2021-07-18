@@ -8,9 +8,10 @@ export const changeStyles = (payload: stylePayload) =>
     payload,
   });
 
-export type ResizePayload = {
+export type VisualizedStylesPayload = {
   width?: string;
   height?: string;
+  transform?:string
 };
-export const resizeChange = (payload: ResizePayload) =>
-  createActions({ type: ACTION_TYPES.resizeChange, payload });
+export const changeVisualizedStyles = (payload: VisualizedStylesPayload) =>
+  createActions({ type: ACTION_TYPES.changeVisualizedStyles, payload });

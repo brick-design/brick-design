@@ -14,7 +14,7 @@ export default {
   clearChildNodes: `clearChildNodes`,
   deleteComponent: `deleteComponent`,
   changeStyles: `changeStyles`,
-  resizeChange: 'resizeChange',
+  changeVisualizedStyles: 'changeVisualizedStyles',
   changeProps: `changeProps`,
   overTarget: `overTarget`,
   clearHovered: `clearHovered`,

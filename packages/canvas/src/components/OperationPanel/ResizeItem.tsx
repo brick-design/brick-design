@@ -1,6 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, RefObject, useRef } from 'react';
 import styles from './index.less';
-import { Direction } from './index';
+import { useOperate } from '../../hooks/useOperate';
+import { css, getFatherRotate, getTransform } from '../../utils';
+import { getMouseIcon, Direction, setCursor } from '../../common/mouseIcons';
 
 interface ItemProps {
   onResizeStart: (
@@ -16,35 +18,27 @@ const resizeV = ['left', 'right'];
 export const positionStyles: { [key: string]: React.CSSProperties } = {
   top: {
     top: '-1px',
-    cursor: 'row-resize',
   },
   right: {
     right: '-1px',
-    cursor: 'col-resize',
   },
   bottom: {
     bottom: '-1px',
-    cursor: 'row-resize',
   },
   left: {
     left: '-1px',
-    cursor: 'col-resize',
   },
   topRight: {
     left: 0,
-    cursor: 'ne-resize',
   },
   bottomRight: {
     left: 0,
-    cursor: 'se-resize',
   },
   bottomLeft: {
     right: 0,
-    cursor: 'sw-resize',
   },
   topLeft: {
     right: 0,
-    cursor: 'nw-resize',
   },
 };
 
@@ -53,54 +47,89 @@ const containerPositionStyles: { [key: string]: React.CSSProperties } = {
     right: '-9px',
     top: '-6px',
     transform: 'rotate(-45deg)',
-    cursor: 'wait',
   },
   bottomRight: {
     right: '-9px',
     bottom: '-6px',
     transform: 'rotate(45deg)',
-    cursor: 'wait',
   },
   bottomLeft: {
     left: '-9px',
     bottom: '-6px',
     transform: 'rotate(-45deg)',
-    cursor: 'wait',
   },
   topLeft: {
     left: '-9px',
     top: '-6px',
     transform: 'rotate(45deg)',
-    cursor: 'wait',
   },
 };
 
 function ResizeItem(props: ItemProps) {
   const { onResizeStart, direction } = props;
+  const { getOperateState } = useOperate();
+  const rotateRef=useRef<HTMLDivElement>();
+  const sizeRef=useRef<HTMLDivElement>();
   let className = styles['resize-item'];
   if (resizeV.includes(direction)) {
     className = styles['resize-item-v'];
   } else if (resizeH.includes(direction)) {
     className = styles['resize-item-h'];
   }
+
+  const onRotateHover=(event:React.MouseEvent)=>{
+    event.stopPropagation();
+    renderMouse(rotateRef,true);
+
+  };
+
+
+  const renderMouse=(divRef:RefObject<HTMLDivElement>,isRotate?:boolean)=>{
+    const {selectedNode}=getOperateState();
+    const {
+      transform,
+    } = css(selectedNode);
+
+    const {sizeSvg,rotateSvg}=getMouseIcon(direction,getTransform(transform,getFatherRotate(selectedNode)));
+    const svg=isRotate?rotateSvg:sizeSvg;
+    divRef.current.style.cssText=`
+    ${divRef.current.style.cssText}    
+    ${setCursor(svg)}
+`;
+  };
+
+  const onSizeHover=(event:React.MouseEvent)=>{
+    event.stopPropagation();
+    renderMouse(sizeRef);
+  };
+
+
   if (resizeV.includes(direction) || resizeH.includes(direction)) {
     return (
-      <span
+      <div
+        ref={sizeRef}
         draggable={false}
+        onMouseOver={onSizeHover}
         style={positionStyles[direction]}
         onMouseDown={(e) => onResizeStart(e, direction)}
         className={className}
       />
     );
   }
+
+
   return (
     <div
+      ref={rotateRef}
+      onMouseOver={onRotateHover}
       draggable={false}
       style={containerPositionStyles[direction]}
       className={styles['item-container']}
       onMouseDown={(e) => onResizeStart(e, direction, true)}
     >
-      <span
+      <div
+        ref={sizeRef}
+        onMouseOver={onSizeHover}
         draggable={false}
         style={positionStyles[direction]}
         onMouseDown={(e) => onResizeStart(e, direction)}

@@ -20,7 +20,7 @@
 
 .baseboard {
 	position: absolute;
-	z-index: 100;
+	z-index: 10000;
 	top: 0;
 	left: 0;
 	height: 100%;
@@ -28,7 +28,6 @@
 	background-color: @transparent;
 	display: none;
 	pointer-events: auto;
-
 }
 
 .size-tip-width {
@@ -62,7 +61,7 @@
 
 .resize-item-h{
 	position: absolute;
-	height: 1px;
+	height: 2px;
 	width: 100%;
 	background-color: @transparent;
 	pointer-events: auto;
@@ -70,7 +69,7 @@
 .resize-item-v{
 	position: absolute;
 	height: 100%;
-	width: 1px;
+	width: 2px;
 	background-color: @transparent;
 	pointer-events: auto;
 }
@@ -82,7 +81,6 @@
 	background-color: transparent;
 	z-index: 1000;
 	pointer-events: auto;
-	border-radius: 4px;
 }
 
 .brickd-radius-container {
@@ -113,6 +111,7 @@
 	border: 1px @selectColor solid;
 	pointer-events: auto;
 	display: flex;
+	.canvas-radius()
 }
 
 .radius-item-checked{

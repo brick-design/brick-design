@@ -53,7 +53,7 @@ function PropItem(props:PropItem){
 			renderComponent=<ObjectValue  childPropsConfig={childPropsConfig} {...rest}/>;
 			break;
 		case PROPS_TYPES.objectArray:
-			renderComponent=<ObjectArray {...rest}/>;
+			renderComponent=<ObjectArray childPropsConfig={childPropsConfig as any[]} {...rest}/>;
 			break;
 		default:
 			renderComponent=<div/>;

@@ -1,7 +1,7 @@
 import produce from 'immer';
 import { update,merge } from 'lodash';
 import { StateType } from '../types';
-import { ResizePayload, stylePayload } from '../actions';
+import { VisualizedStylesPayload, stylePayload } from '../actions';
 
 /**
  * 样式改变时调用
@@ -46,7 +46,7 @@ export function changeStyles(
   };
 }
 
-export function resizeChange(state: StateType, payload: ResizePayload) {
+export function changeVisualizedStyles(state: StateType, payload: VisualizedStylesPayload) {
   const {undo, redo, selectedInfo,styleSheet,pageConfig } = state;
   if (!selectedInfo) return state;
   const { selectedKey,selectedStyleProp, } = selectedInfo;

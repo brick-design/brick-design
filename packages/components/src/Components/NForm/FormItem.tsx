@@ -18,12 +18,12 @@ function FormItem(props:FormItemProps&FieldProps){
     const {name,isShowLabel=true,renderFormItem,config,...rest}=props;
     const [isExpression,setIsExpression]=useState(false);
     const [menu,setMenu]=useState<string>();
-    const {style,renderComponent,menus,isHidden,expressionIconStyle}=renderFormItem(config,name as string,isExpression,menu);
+    const {style,renderComponent,menus,isHidden,headerStyle}=renderFormItem(config,name as string,isExpression,menu);
     return <div style={style} className={styles['form-item-container']}>
-        {isShowLabel&&<div className={styles['title']}>
+        {isShowLabel&&<div style={headerStyle} className={styles['title']}>
             <span className={styles['label']}>{name}</span>
             <div className={styles['handle-container']}>
-                {!isHidden&&<Checkbox style={expressionIconStyle} onChange={(v)=>setIsExpression(v)}
+                {!isHidden&&<Checkbox onChange={(v)=>setIsExpression(v)}
                   className={`${styles['icon-none']} ${styles['icon-flex']}`}/>}
             {!!menus&&<Dropdown className={styles['drop-down']} setMenu={setMenu} menus={menus}>
                 <Icon icon={moreIcon}/>

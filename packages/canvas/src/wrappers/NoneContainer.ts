@@ -1,5 +1,6 @@
 import React, { createElement, memo, useCallback, useEffect, useRef } from 'react';
 import { useCommon } from '@brickd/hooks';
+import { setDragSortCache } from '@brickd/core';
 import {
   CommonPropsType,
   handlePropsClassName,
@@ -53,7 +54,8 @@ function NoneContainer(allProps: CommonPropsType) {
 
   const onDragEnter=useCallback((event:React.DragEvent)=>{
     event.stopPropagation();
-    if(dragKey===key) return;
+    setDragSortCache(null);
+    if(getDragKey()===key) return;
     setOperateState({
       dropNode:event.target as HTMLElement,
       isDropAble:false,

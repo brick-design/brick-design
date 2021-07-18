@@ -20,7 +20,7 @@ import {
   getDragSourceFromKey,
   iframeSrcDoc,
   getIframe,
-  getDragKey, getRootState,
+  getDragKey, getRootState, setIframe,
 } from './utils';
 import Distances from './components/Distances';
 import GuidePlaceholder from './components/GuidePlaceholder';
@@ -32,6 +32,7 @@ import {
 } from './components/OperateProvider';
 import OperationPanel from './components/OperationPanel';
 import BoxModel from './components/BoxModel';
+import styles from './index.less';
 /**
  * 鼠标离开设计区域清除hover状态
  */
@@ -64,6 +65,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     ['pageConfig'],
     controlUpdate,
   );
+  const iframeRef=useRef<HTMLIFrameElement>();
   useSelector<LayerNameType,string>(['layerName'],(prevState,nextState)=>{
     if(prevState.layerName!==nextState.layerName){
       operateStore.setPageState({
@@ -187,11 +189,14 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     if (divContainer.current) {
       componentMount(divContainer, designPage);
     }
+    setIframe(iframeRef.current);
   }, [componentMount, designPage]);
 
   return (
     <iframe
       id="dnd-iframe"
+      ref={iframeRef}
+      className={styles['canvas-mouse']}
       style={{ border: 0, width: '100%', height: '100%' }}
       srcDoc={iframeSrcDoc}
       onLoad={onIframeLoad}

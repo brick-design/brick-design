@@ -12,14 +12,14 @@ function GuidePlaceholder() {
   const hoverNodeRef = useRef<any>();
   const { getOperateState, setSubscribe, setOperateState } = useOperate(false);
 
-  console.log('dropKey>>>>>>>>',3);
 
   useEffect(() => {
     const renderGuidePlaceholder = () => {
-      const { hoverNode, dropNode, isModal, isDropAble } = getOperateState();
+      const { hoverNode, dropNode,selectedNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
+      console.log('node>>>>>>',dropNode);
 
-      if (node) {
+      if (node&&node!==selectedNode) {
         const { left, top, width, height } = getElementInfo(node, isModal);
         hoverNodeRef.current.style.cssText = generateCSS(
           left,
