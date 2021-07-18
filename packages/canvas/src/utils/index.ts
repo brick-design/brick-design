@@ -630,10 +630,8 @@ export function getDegToRad(transform:string){
 
   // const deg=getMatrix(transform)*Math.PI/180;
   let deg=getMatrix(transform);
-  if(deg>250){
-    deg=-(deg-180);
-  }else if(deg>0&&deg<90){
-    deg=-deg;
+  if(228<deg&&deg<=360){
+    deg=deg-360;
   }
   return  deg*Math.PI/180;
 }
@@ -651,7 +649,7 @@ export function getFatherRotate(selectedNode:any,rotate=0){
 
 export const getTransform=(Transform:string,fatherRotate:number)=>{
   const deg=getMatrix(Transform);
-
+  console.log('getTransform>>>>>>>>',deg,fatherRotate);
   return `rotate(${deg+fatherRotate}deg)`;
 
 };

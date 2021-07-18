@@ -17,8 +17,6 @@ function GuidePlaceholder() {
     const renderGuidePlaceholder = () => {
       const { hoverNode, dropNode,selectedNode, isModal, isDropAble } = getOperateState();
       const node = dropNode || hoverNode;
-      console.log('node>>>>>>',dropNode);
-
       if (node&&node!==selectedNode) {
         const { left, top, width, height } = getElementInfo(node, isModal);
         hoverNodeRef.current.style.cssText = generateCSS(

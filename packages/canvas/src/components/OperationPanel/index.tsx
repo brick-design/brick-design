@@ -276,6 +276,7 @@ function OperationPanel() {
     selectedNode.style.transition = 'none';
    const changeDeg=getDragAngle(event,centerX,centerY);
    const degResult=changeDeg-mouseRotate;
+   console.log('changeAngle>>>>>>',degResult);
        const transform=`rotate(${degResult}rad)`;
     styleResultRef.current.transform=transform;
     selectedNode.style.transform=transform;
@@ -315,7 +316,6 @@ function OperationPanel() {
         const centerX=rect.left + rect.width / 2;
         const centerY=rect.top + rect.height / 2;
         getDegToRad(transform);
-
         originSizeRef.current = {
           x: event.clientX,
           y: event.clientY,
@@ -331,7 +331,6 @@ function OperationPanel() {
           mouseRotate: getDragAngle(event,centerX,centerY)-getDegToRad(transform),
           isRotate
         };
-        console.log('changeOperationPanel>>>>>>>>',fatherRotateRef.current);
         const {sizeSvg,rotateSvg}=getMouseIcon(direction,getTransform(transform,fatherRotateRef.current));
         showBaseboard(isRotate?rotateSvg:sizeSvg);
       }
