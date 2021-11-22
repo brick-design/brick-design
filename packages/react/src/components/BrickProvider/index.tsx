@@ -19,9 +19,7 @@ interface BrickProviderType {
 export const BrickContext = createContext(null);
 function BrickProvider(props: BrickProviderType) {
   const { config, customReducer, children, warn } = props;
-  useEffect(() => {
-    return () => cleanStateCache;
-  }, []);
+  useEffect(() => cleanStateCache, []);
   if (!getStore()) {
     createLegoStore(config, customReducer, warn);
   }
