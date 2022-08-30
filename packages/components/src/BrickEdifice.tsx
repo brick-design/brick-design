@@ -14,6 +14,7 @@ import Users, { UserType } from './FeatureComponents/Users';
 import TopLeftButtons from './FeatureComponents/TopLeftButtons';
 import MidBottomButtons from './FeatureComponents/MidBottomButtons';
 import BottomLeftButtons, { BottomLeftButtonsType } from './FeatureComponents/BottomLeftButtons';
+import DragMove from './FeatureComponents/DragMove';
 
 require('rc-tabs/assets/index.css');
 require('rc-collapse/assets/index.css');
@@ -50,6 +51,7 @@ function BrickEdifice(props: BrickEdificeProps) {
     <ZoomProvider value={zoomStore}>
     <BrickProvider config={config} warn={warn} customReducer={customReducer}>
         <BrickDesignCanvas className={styles['brickd-canvas']} {...rest}>
+          <DragMove/>
           <Users users={users}/>
           <TopLeftButtons/>
           <MidBottomButtons/>
