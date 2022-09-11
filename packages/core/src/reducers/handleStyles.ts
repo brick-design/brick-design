@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { update,merge } from 'lodash';
+import { update,merge,get } from 'lodash';
 import { StateType } from '../types';
 import { VisualizedStylesPayload, stylePayload } from '../actions';
 
@@ -23,8 +23,8 @@ export function changeStyles(
     return {
       ...state,
       pageConfig: produce(pageConfig, (oldConfigs) => {
-        const config = oldConfigs[selectedInfo.selectedKey];
-        if (config.props) {
+        const config = oldConfigs[selectedKey];
+        if (get(config.props,'style')) {
           config.props.style = { ...config.props.style, ...style };
         } else {
           config.props = { style };

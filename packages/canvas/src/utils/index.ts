@@ -51,7 +51,7 @@ export const getSelectedNode = (
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
-      selectClassTarget + key,
+      selectClassTarget + key+'-0',
     )[0] as HTMLElement;
   }
 };
@@ -181,6 +181,7 @@ export const getParentNodeRealRect = (parent: Element) => {
   return { left, right, top, bottom, height, width, realHeight, realWidth };
 };
 
+
 export function getChildNodesRects(
   nodeRectsMapRef: any,
   childNodes: ChildNodesType,
@@ -215,15 +216,15 @@ export function getChildNodesRects(
   nodeRectsMapRef.current = nodeRectsMap as NodeRectsMapType;
 }
 
-export const cloneChildNodes = (childNodes?: ChildNodesType) => {
-  if (!childNodes) return undefined;
-  if (Array.isArray(childNodes)) return [...childNodes];
-  const newChildNodes = {};
-  for (const propName of Object.keys(childNodes)) {
-    newChildNodes[propName] = [...childNodes[propName]];
-  }
-  return newChildNodes;
-};
+// export const cloneChildNodes = (childNodes?: ChildNodesType) => {
+//   if (!childNodes) return undefined;
+//   if (Array.isArray(childNodes)) return [...childNodes];
+//   const newChildNodes = {};
+//   for (const propName of Object.keys(childNodes)) {
+//     newChildNodes[propName] = [...childNodes[propName]];
+//   }
+//   return newChildNodes;
+// };
 
 export interface RealRect {
   realWidth: number;
@@ -235,6 +236,16 @@ export interface RealRect {
   height: number;
   width: number;
 }
+
+
+export const bridgeStore={
+
+  renderPlaceholder:null,
+  changePosition:(rect)=>{
+    this.renderPlaceholder&&this.renderPlaceholder(rect);
+  }
+
+};
 
 export type NodeRectsMapType = { [key: string]: RealRect };
 export const dragSort = (

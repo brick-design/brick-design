@@ -5,11 +5,11 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
+  // useState,
 } from 'react';
 import {
   addComponent,
-  ChildNodesType,
+  // ChildNodesType,
   DropTargetType,
   getComponentConfig,
   getDropTarget,
@@ -18,15 +18,19 @@ import {
   setDragSortCache, setDropTarget,
   STATE_PROPS,
 } from '@brickd/core';
-import { useCommon } from '@brickd/hooks';
+import { useCommon,
+  // useForceRender
+} from '@brickd/hooks';
 import { getChildrenFields } from '@brickd/utils';
-import { isEqual, get, each, keys, isEmpty, some } from 'lodash';
+import { isEqual, get,
+  each,
+  keys, isEmpty, some } from 'lodash';
 import { defaultPropName } from 'common/constants';
 import {
   generateRequiredProps,
   getComponent,
-  getSelectedNode,
-  cloneChildNodes,
+  // getSelectedNode,
+  // cloneChildNodes,
   dragSort,
   getPropParentNodes,
   getDragKey,
@@ -51,7 +55,7 @@ import { useChildNodes } from '../hooks/useChildNodes';
 import { useSelector } from '../hooks/useSelector';
 import { useOperate } from '../hooks/useOperate';
 import { useEvents } from '../hooks/useEvents';
-import { useNewAddComponent } from '../hooks/useNewAddComponent';
+// import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
 /**
  * 所有的容器组件名称
@@ -67,18 +71,16 @@ function Container(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
-
+ // const forceRender=useForceRender();
   const controlUpdate = useCallback(
     (prevState: ContainerState, nextState: ContainerState) => {
       const { pageConfig: prevPageConfig } = prevState;
       const { pageConfig } = nextState;
-      if(!isEqual(get(prevPageConfig,key+'.childNodes'),get(pageConfig,key+'.childNodes'))){
-        if(pageConfig[key]){
-          const {childNodes}=pageConfig[key];
-          setChildren(childNodes);
-        }
-      }
-      return prevPageConfig[key] !== pageConfig[key];
+      // if(!isEqual(get(prevPageConfig,key+'.childNodes'),get(pageConfig,key+'.childNodes'))){
+      //   // forceRender();
+      //   console.log('forceRender.>>>>>>>>>>',);
+      // }
+      return prevPageConfig[key] !== pageConfig[key]||!isEqual(get(prevPageConfig,key+'.childNodes'),get(pageConfig,key+'.childNodes'));
     },
     [],
   );
@@ -90,11 +92,13 @@ function Container(allProps: CommonPropsType) {
 
   const vNode = getVNode(key);
   const { childNodes, componentName } = vNode;
-  const dragKey = getDragKey();
-  const [isNewComponent,setIsNewComponent] = useState(
-    !getDragSourceFromKey('parentKey') && dragKey === key,
-  );
-  const executeSubject=useNewAddComponent(key);
+  // const dragKey = getDragKey();
+  console.log('childNodes>>>>>>>>>',childNodes,);
+
+  // const [isNewComponent,setIsNewComponent] = useState(
+  //   !getDragSourceFromKey('parentKey') && dragKey === key,
+  // );
+  // const executeSubject=useNewAddComponent(key);
 
   const pageConfigs:PageConfigType={...pageConfig,...getDragSourceFromKey('template',{})};
   // const dragOverOrigin=useRef()
@@ -106,9 +110,9 @@ function Container(allProps: CommonPropsType) {
   const { index = 0 } = pageState;
   const uniqueKey = `${key}-${index}`;
   useChildNodes({ childNodes, componentName, specialProps });
-  const [children, setChildren] = useState<ChildNodesType | undefined>(
-    childNodes,
-  );
+  // const [children, setChildren] = useState<ChildNodesType | undefined>(
+  //   childNodes,
+  // );
   const { mirrorModalField, nodePropsConfig, childNodesRule } = useMemo(
     () => getComponentConfig(componentName),
     [],
@@ -171,42 +175,42 @@ function Container(allProps: CommonPropsType) {
       if(interceptDragOver()) return;
       const dragKey = getDragKey();
       const isV = isVPropNodesPositionRef.current[defaultPropName];
-      if (isEmpty(children)) {
-        if (nodePropsConfig) {
-          setChildren({ [selectedPropName]: [dragKey] });
-        } else {
-          setChildren([dragKey]);
-        }
+      console.log('onParentDragOver>>>>>>>>',dragKey,childNodes);
+      if (isEmpty(childNodes)) {
+        // if (nodePropsConfig) {
+        //   // setChildren({ [selectedPropName]: [dragKey] });
+        // } else {
+        //   // setChildren([dragKey]);
+        // }
         setDragSortCache([dragKey]);
-      } else if (Array.isArray(children)) {
-
-        if (children.length === 1 && children.includes(dragKey)) return;
+      } else if (Array.isArray(childNodes)) {
+        if (childNodes.length === 1 && childNodes.includes(dragKey)) return;
         const newChildren = dragSort(
-          children,
+          childNodes,
           event.target as HTMLElement,
           event,
           isV,
         );
-        if (!isEqual(newChildren, children)) {
-          setChildren(newChildren);
+        if (!isEqual(newChildren, childNodes)) {
+          // setChildren(newChildren);
           setDragSortCache(newChildren);
         }
 
       } else {
-        const propChildren = get(children, selectedPropName, []);
+        const propChildren = get(childNodes, selectedPropName, []);
 
         if (!propChildren.includes(dragKey)) {
-          const newChildren = cloneChildNodes(children);
+          // const newChildren = cloneChildNodes(childNodes);
           const childrenResult = [dragKey, ...propChildren];
           setDragSortCache(childrenResult);
-          newChildren[selectedPropName] = childrenResult;
-          setChildren(newChildren);
+          // newChildren[selectedPropName] = childrenResult;
+          // setChildren(newChildren);
         } else {
           setDragSortCache(propChildren);
         }
       }
     },
-    [children, setChildren, selectedPropName],
+    [selectedPropName,childNodes],
   );
 
 
@@ -214,18 +218,19 @@ function Container(allProps: CommonPropsType) {
   const dragOver = useCallback(
     (event: DragEvent, propName: string) => {
       event.preventDefault();
+      console.log('dragOver>>>>>>>>',);
       if(interceptDragOver()) return;
       const dragKey = getDragKey();
-      const childNodeKeys = get(children, propName, []);
+      const childNodeKeys = get(childNodes, propName, []);
         const isV = isVPropNodesPositionRef.current[propName];
         if (!childNodeKeys.length) {
-          if (isEmpty(children)) {
-            setChildren({ [propName]: [dragKey] });
-          } else {
-            const newChildren = cloneChildNodes(childNodes);
-            newChildren[propName] = [dragKey];
-            setChildren(newChildren);
-          }
+          // if (isEmpty(childNodes)) {
+          //   // setChildren({ [propName]: [dragKey] });
+          // } else {
+          //   const newChildren = cloneChildNodes(childNodes);
+          //   newChildren[propName] = [dragKey];
+          //   // setChildren(newChildren);
+          // }
           setDragSortCache([dragKey]);
         } else if (
           childNodeKeys.length === 1 &&
@@ -239,21 +244,21 @@ function Container(allProps: CommonPropsType) {
             event,
             isV,
           );
-          const renderChildren = cloneChildNodes(childNodes)||{};
-          renderChildren[propName] = newChildren;
-          if (!isEqual(renderChildren, children)) {
-            setChildren(renderChildren);
-          }
+          // const renderChildren = cloneChildNodes(childNodes)||{};
+          // renderChildren[propName] = newChildren;
+          // if (!isEqual(renderChildren, childNodes)) {
+          //   // setChildren(renderChildren);
+          // }
           setDragSortCache(newChildren);
         }
     },
-    [setChildren, children],
+    [childNodes],
   );
 
-  const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
-    event.stopPropagation();
-    setChildren(childNodes);
-  };
+  // const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
+  //   event.stopPropagation();
+  //   // setChildren(childNodes);
+  // };
 
   const onDrop = useCallback((event: React.DragEvent|MouseEvent) => {
     event.stopPropagation();
@@ -262,7 +267,7 @@ function Container(allProps: CommonPropsType) {
     if (get(selectedInfo,'selectedKey') === dragKey) return;
     setOperateState({ dropNode: null,hoverNode:null });
     addComponent();
-    executeSubject();
+    // executeSubject();
   }, []);
 
 
@@ -271,18 +276,18 @@ function Container(allProps: CommonPropsType) {
     each(propParentNodes.current, (parentNode, propName) => {
       parentNode.ondragover=(event) => dragOver(event, propName);
       parentNode.ondragenter=(event) => onDragEnter(event, propName);
-      parentNode.ondragleave=onDragLeave;
+      // parentNode.ondragleave=onDragLeave;
       parentNode.ondrop=onDrop;
     });
 
-  }, [onDragLeave,onDrop]);
+  }, [onDrop]);
 
   useEffect(() => {
-    if (dragKey&&domTreeKeys.includes(dragKey)) return;
-    if (isNewComponent) {
-      setSelectedNode(getSelectedNode(uniqueKey));
-      setIsNewComponent(false);
-    }
+    // if (dragKey&&domTreeKeys.includes(dragKey)) return;
+    // if (isNewComponent) {
+    //   setSelectedNode(getSelectedNode(uniqueKey));
+    //   setIsNewComponent(false);
+    // }
 
     if (
       (Array.isArray(childNodes) &&
@@ -300,7 +305,7 @@ function Container(allProps: CommonPropsType) {
         index,
       );
     }
-  }, [childNodes,isNewComponent,dragKey,setIsNewComponent]);
+  }, [childNodes]);
 
   const interceptDragEnter=useCallback(()=>{
     const dragKey = getDragKey();
@@ -336,7 +341,7 @@ function Container(allProps: CommonPropsType) {
       } else {
         isDropAble = isAllowDrop(childNodesRule) && isAllowAdd(componentName);
       }
-      isDropAble = Number.parseInt(index) === 0 && isDropAble;
+      // isDropAble = Number.parseInt(index) === 0 && isDropAble;
       const dropNode=event.target as HTMLElement;
       setOperateState({
         dropNode,
@@ -362,13 +367,13 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName?: string) => {
       event.stopPropagation();
       setDragSortCache(null);
+
       if(interceptDragEnter()) return;
 
       const { childNodesRule } = nodePropsConfig[propName];
       const isDropAble =
         isAllowDrop(childNodesRule) &&
-        (!isNeedJudgeFather() || isAllowAdd(componentName)) &&
-        Number.parseInt(index) === 0;
+        (!isNeedJudgeFather() || isAllowAdd(componentName));
       const dropNode=propParentNodes.current[propName];
 
       setOperateState({
@@ -410,14 +415,14 @@ function Container(allProps: CommonPropsType) {
         specialProps,
         { ...pageState, ...pageState.getPageState() },
         componentName,
-        children,
+        childNodes,
       ),
-    [children, pageState, pageState.getPageState(), specialProps],
+    [childNodes,pageState, pageState.getPageState(), specialProps],
   );
 
   const styleProps=useStyleProps(componentName,specialProps,handlePropsClassName(
     uniqueKey,
-    domTreeKeys.includes(dragKey),
+    // false,
     className,
     animateClass
   ),selectedInfo);
@@ -427,15 +432,12 @@ function Container(allProps: CommonPropsType) {
     ...restProps,
     onDragEnter: onParentDragEnter,
     onDragOver: onParentDragOver,
-    onDragLeave,
+    // onDragLeave,
     onDrop,
     ...events,
     ...generateRequiredProps(componentName),
     ...childNodesProps,
     draggable: true,
-    /**
-     * 设置组件id方便抓取图片
-     */
     ...modalProps,
   });
 }

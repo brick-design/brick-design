@@ -4,7 +4,7 @@ import {
   changeStyles,
   clearSelectedStatus,
   getComponentConfig,
-  overTarget,
+  // overTarget,
   ROOT,
   selectComponent,
   SelectedInfoBaseType, setDragSource,
@@ -73,7 +73,7 @@ export function useEvents(
 
   const setSelectedNode = useCallback(
     (selectedNode: HTMLElement) => {
-      selectComponent({ ...specialProps, propName,selectedStyleProp:'className' });
+      selectComponent({ ...specialProps, propName });
       setOperateState({
         selectedNode: selectedNode,
         operateSelectedKey: key,
@@ -113,21 +113,22 @@ export function useEvents(
   const onMouseOver = useCallback(
     (event: Event) => {
       event.stopPropagation();
-      const { hoverNode } = getOperateState();
-      if (getDragKey() && hoverNode) {
+      // const { hoverNode } = getOperateState();
+      const dragKey=getDragKey();
+      if (dragKey && dragKey===key||isSelected) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
-      } else if (!getDragKey()) {
+      } else {
         setOperateState({
           hoverNode: event.target as HTMLElement,
           operateHoverKey: key,
         });
-        overTarget({
-          hoverKey: key,
-        });
+        // overTarget({
+        //   hoverKey: key,
+        // });
       }
       if (typeof onMouseOverFun === 'function') onMouseOverFun();
     },
-    [onMouseOverFun],
+    [onMouseOverFun,isSelected],
   );
 
   const onDragStart = useCallback(
@@ -148,7 +149,7 @@ export function useEvents(
         parentPropName,
       });
 
-      if (isSelected && key !== ROOT&&selectedStyleProp==='className') {
+      if (isSelected && key !== ROOT&&!selectedStyleProp) {
         const { clientX, clientY, target } = event;
         const targetNode = target as HTMLElement;
         const {

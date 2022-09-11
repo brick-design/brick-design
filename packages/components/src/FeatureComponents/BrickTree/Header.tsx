@@ -1,13 +1,12 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   SelectedInfoBaseType,
   useSelector,
   isEqualKey,
-  clearHovered,
   clearSelectedStatus,
   selectComponent,
-  overTarget, css,
-  useOperate
+   css,
+  useOperate, getSelectedNode,
 } from '@brickd/canvas';
 import styles from './index.less';
 import {
@@ -47,8 +46,8 @@ function Header(props: HeaderProps) {
     componentName,
     hasChildNodes,
   } = props;
-  const {getOperateState,setOperateState}=useOperate();
-  const { selectedInfo, hoverKey } = useSelector(['selectedInfo', 'hoverKey']);
+  const {getOperateState,setOperateState,setSubscribe}=useOperate();
+  const { selectedInfo} = useSelector(['selectedInfo']);
   const { propName: selectedPropName, selectedKey } = selectedInfo || {};
   const sortItemKey = propName ? `${key}${propName}` : key;
   const displayRef=useRef<string>();
@@ -56,13 +55,25 @@ function Header(props: HeaderProps) {
     sortItemKey,
     selectedPropName ? `${selectedKey}${selectedPropName}` : selectedKey,
   );
-  const isHovered = isEqualKey(sortItemKey, hoverKey);
+  const [isHovered,setIsHovered]=useState(false);
+  // const isHovered = isEqualKey(sortItemKey, hoverKey);
   const color = isSelected ? selectedColor : unSelectedColor;
 
   const lockNode = (event: React.MouseEvent) => {
     event.stopPropagation();
 
   };
+
+  const changeStatus=()=>{
+    const { operateHoverKey } = getOperateState();
+    setIsHovered(isEqualKey(sortItemKey, operateHoverKey));
+  };
+
+  useEffect(()=>{
+   const unSubscribe=setSubscribe(changeStatus);
+   return unSubscribe;
+  });
+
 
   const onCloseEye = useCallback((v:boolean) => {
     // eslint-disable-next-line prefer-const
@@ -92,11 +103,9 @@ function Header(props: HeaderProps) {
           : {}
       }
       className={styles['header-container']}
-      onMouseLeave={() => isHovered && clearHovered()}
+      onMouseLeave={() => isHovered && setOperateState({hoverNode:null,operateHoverKey:null})}
       onMouseOver={() => {
-          !isSelected&&overTarget({
-            hoverKey: key,
-          });
+          !isSelected&&setOperateState({hoverNode:getSelectedNode(key),operateHoverKey:key});
       } }
 
     >
@@ -105,8 +114,11 @@ function Header(props: HeaderProps) {
           event.stopPropagation();
           if (isSelected) {
             clearSelectedStatus();
+            setOperateState({selectedNode:null,operateSelectedKey:null});
           } else {
             selectComponent({ ...specialProps, propName });
+            setOperateState({selectedNode:getSelectedNode(key),operateSelectedKey:key});
+
           }
         }}
         style={{ display: 'flex', flex: 1, alignItems: 'center', color }}

@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useEffect,  useRef } from 'react';
-import {
-  DragSourceType,
-  DropTargetType,
-  SelectedInfoType,
-  STATE_PROPS,
-} from '@brickd/core';
+// import {
+//   DragSourceType,
+//   DropTargetType,
+//   SelectedInfoType,
+//   // STATE_PROPS,
+// } from '@brickd/core';
 import styles from './index.less';
-import { useSelector } from '../../hooks/useSelector';
+// import { useSelector } from '../../hooks/useSelector';
 import {
   changeElPositionAndSize,
   getElementInfo,
@@ -17,12 +17,12 @@ import {
 import { useOperate } from '../../hooks/useOperate';
 import { useZoom } from '../../hooks/useZoom';
 
-type SelectState = {
-  hoverKey: string | null;
-  dropTarget: DropTargetType | null;
-  selectedInfo: SelectedInfoType | null;
-  dragSource: DragSourceType | null;
-};
+// type SelectState = {
+//   hoverKey: string | null;
+//   dropTarget: DropTargetType | null;
+//   selectedInfo: SelectedInfoType | null;
+//   dragSource: DragSourceType | null;
+// };
 
 export type PositionSizeType = {
   width: number;
@@ -44,10 +44,10 @@ function Guidelines() {
   const canvasContainer = useRef(
     document.getElementById('brickd-canvas-container'),
   ).current;
-  const { hoverKey } = useSelector<SelectState, STATE_PROPS>(['hoverKey']);
-
+  // const { hoverKey } = useSelector<SelectState, STATE_PROPS>(['hoverKey']);
   const { getOperateState, setSubscribe } = useOperate();
   const { dropNode } = getOperateState();
+  // console.log('hoverKey>>>>>>>>',hoverKey,dropNode);
 
   useEffect(() => {
     const { contentWindow, } = iframe;
@@ -102,7 +102,7 @@ function Guidelines() {
     };
   }, []);
 
-  const guidControl = !dropNode && hoverKey;
+  const guidControl = !dropNode;
 
   const guidH = guidControl ? styles['guide-h'] : styles['guide-hidden'];
   const guidV = guidControl ? styles['guide-v'] : styles['guide-hidden'];

@@ -3,7 +3,6 @@ import styles from './index.less';
 import {
   generateCSS,
   getElementInfo,
-
   setPosition,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';

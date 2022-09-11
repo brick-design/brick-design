@@ -3,7 +3,7 @@ import {
   PageConfigType,
   VisualizedStylesPayload,
   SelectedInfoType,
-  STATE_PROPS, changeVisualizedStyles,
+  STATE_PROPS,changeStyles,
 } from '@brickd/core';
 
 import { map } from 'lodash';
@@ -195,7 +195,7 @@ function OperationPanel() {
     operationPanelRef.current.style.pointerEvents = 'none';
     operationPanelRef.current.style.transition = DEFAULT_ANIMATION;
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
-    changeVisualizedStyles(styleResultRef.current);
+    changeStyles({style:styleResultRef.current});
     styleResultRef.current = {};
   }, [setIsShowSizeTip]);
 
@@ -276,7 +276,6 @@ function OperationPanel() {
     selectedNode.style.transition = 'none';
    const changeDeg=getDragAngle(event,centerX,centerY);
    const degResult=changeDeg-mouseRotate;
-   console.log('changeAngle>>>>>>',degResult);
        const transform=`rotate(${degResult}rad)`;
     styleResultRef.current.transform=transform;
     selectedNode.style.transform=transform;

@@ -12,7 +12,7 @@ import { each, isEmpty, isEqual, map } from 'lodash';
 import { FunParamContextProvider } from '@brickd/hooks';
 
 import { resolveMapping, isPureVariable } from '@brickd/utils';
-import styles from './style.less';
+// import styles from './style.less';
 import { selectClassTarget } from './constants';
 
 import {
@@ -27,12 +27,18 @@ import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
 
 export function handlePropsClassName(
   key: string,
-  isLockTarget: boolean,
+  // isLockTarget: boolean,
   className: any,
   animateClass: string,
 ) {
-  return `${selectClassTarget + key} ${className} ${animateClass}  
-  ${isLockTarget ? styles['forbid-event'] : styles['allow-event']}`;
+  const style=`${selectClassTarget + key} ${className} ${animateClass}`;
+  // if(isLockTarget){
+  //   style+=' '+styles['forbid-event'];
+  // }else {
+  //   style+=' '+styles['allow-event'];
+  //
+  // }
+  return style;
 }
 
 /**

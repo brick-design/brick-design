@@ -22,7 +22,6 @@ function renderHeader(category:string,isFold:boolean){
 
 	return <div className={styles['style-header']}>
 		{category}
-
 	</div>;
 }
 function StylePanel(props:StylePanelProps){

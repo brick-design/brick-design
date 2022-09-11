@@ -16,7 +16,7 @@ import {
 import { useSelect } from '../hooks/useSelect';
 import { useEvents } from '../hooks/useEvents';
 import { useOperate } from '../hooks/useOperate';
-import { useNewAddComponent } from '../hooks/useNewAddComponent';
+// import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
 
 function NoneContainer(allProps: CommonPropsType) {
@@ -34,7 +34,7 @@ function NoneContainer(allProps: CommonPropsType) {
     !getDragSourceFromKey('parentKey') && dragKey === key,
   );
   const { setOperateState } = useOperate();
-  useNewAddComponent(key);
+  // useNewAddComponent(key);
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
@@ -68,7 +68,7 @@ function NoneContainer(allProps: CommonPropsType) {
 
   const styleProps= useStyleProps(componentName,specialProps,handlePropsClassName(
     uniqueKey,
-    dragKey===key,
+    // dragKey===key,
     className,
     animateClass,
   ),selectedInfo);

@@ -243,7 +243,7 @@ function RadiusItem(props: ItemProps) {
           changeElPositionAndSize(nodeRef.current, { bottom, right: bottom });
           break;
       }
-      nodeRef.current.dataset.radius = `radius:${radiusNum}`;
+      nodeRef.current.dataset.radius = `R:${radiusNum}`;
     }
   }, []);
 
@@ -262,10 +262,14 @@ function RadiusItem(props: ItemProps) {
     };
   }, [onMouseMove, onMouseUp]);
 
+  const onClick=(event: React.MouseEvent<HTMLSpanElement>) =>{
+    event.stopPropagation();
+    setChecked(!checked);
+  };
   const { radius } = props;
   return (
     <span
-      onClick={() => setChecked(!checked)}
+      onClick={onClick}
       draggable={false}
       ref={nodeRef}
       style={radiusStyles[radius]}
