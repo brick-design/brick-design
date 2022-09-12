@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { PropInfoType, PROPS_TYPES } from '@brickd/canvas';
 import Switch from 'rc-switch';
 import styles from './index.less';
@@ -19,10 +19,18 @@ interface PropItem {
   [key: string]: any;
 }
 function PropItem(props: PropItem) {
-  const { isExpression, menu, config, ...rest } = props;
-  const { value } = props;
+  const { isExpression, menu, config,setIsExpression, ...rest } = props;
   const { enumData, type, childPropsConfig } = config || {};
   let switchCase = menu || type;
+  const expressionRex=/^\$\{.+\}$/;
+  const {value}=props;
+
+  useEffect(()=>{
+    if(expressionRex.test(value)){
+      setIsExpression(true);
+    }
+  },[setIsExpression,value]);
+
   if (Array.isArray(type) && !menu) {
     if (value) {
       switchCase = getValueType(value);

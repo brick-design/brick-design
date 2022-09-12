@@ -22,10 +22,11 @@ function Radio(props: RadioType) {
     isLast,
     ...rest
   } = props;
-  const onClick = () => {
-    onChange && onChange(value ? targetValue : undefined);
-  };
   const isSelected = targetValue === value;
+
+  const onClick = () => {
+    onChange && onChange(!value||!isSelected ? targetValue : undefined);
+  };
   return (
     <span
       onClick={onClick}
@@ -49,7 +50,7 @@ interface RadioGroupProp extends RadioType {
 
 function RadioGroup(props: RadioGroupProp) {
   const { radioData, className, ...rest } = props;
-
+  console.log('RadioGroup>>>>>>>',rest);
   return (
     <div className={`${styles['radio-group']} ${className}`}>
       {map(radioData, (v, index) => {

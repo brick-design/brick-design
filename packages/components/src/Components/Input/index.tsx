@@ -4,7 +4,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useRef,
-  ReactNode,
+  ReactNode, useEffect,
 } from 'react';
 import { useForceRender } from '@brickd/hooks';
 import styles from './index.less';
@@ -43,9 +43,10 @@ function Input(props: InputProps, ref: any) {
     defaultValue,
     addonAfter,
     addonBefore,
+    value:v,
     ...rest
   } = props;
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(v||defaultValue);
   const forceRender = useForceRender();
   const isFocusRef = useRef(false);
   useImperativeHandle(
@@ -56,13 +57,19 @@ function Input(props: InputProps, ref: any) {
     [setValue],
   );
 
+  useEffect(()=>{
+    if(value===undefined){
+      setValue(v);
+    }
+  },[v,value,setValue]);
   const change = (event: any) => {
     const value = event.target.value;
     setValue(value);
     onChange && onChange(value);
   };
 
-  const clean = () => {
+  const clean = (event:any) => {
+    event.stopPropagation();
     setValue('');
     onChange && onChange(undefined);
   };
@@ -74,7 +81,7 @@ function Input(props: InputProps, ref: any) {
 
   const onBlur = () => {
     isFocusRef.current = false;
-    forceRender();
+    setTimeout(forceRender,200);
   };
   return (
     <div

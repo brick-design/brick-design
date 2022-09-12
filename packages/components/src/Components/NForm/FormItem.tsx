@@ -54,7 +54,10 @@ function FormItem(props: FormItemProps & FieldProps) {
         </div>
       )}
       <Field name={name} {...rest}>
-        {(control) => React.cloneElement(renderComponent, { ...control })}
+        {(control) =>{
+          control.setIsExpression=setIsExpression;
+          return React.cloneElement(renderComponent, control);
+        } }
       </Field>
     </div>
   );

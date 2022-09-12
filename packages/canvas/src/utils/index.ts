@@ -660,7 +660,6 @@ export function getFatherRotate(selectedNode:any,rotate=0){
 
 export const getTransform=(Transform:string,fatherRotate:number)=>{
   const deg=getMatrix(Transform);
-  console.log('getTransform>>>>>>>>',deg,fatherRotate);
   return `rotate(${deg+fatherRotate}deg)`;
 
 };

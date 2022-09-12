@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { getComponentConfig, getSelector, PROPS_TYPES, PropsConfigType,PropInfoType, useSelector,changeProps } from '@brickd/canvas';
 import { each, get,isEmpty} from 'lodash';
 import styles from './index.less';
@@ -33,9 +33,14 @@ function Props(){
 	const {pageConfig}=getSelector(['pageConfig']);
 	const {selectedKey}=selectedInfo||{};
 	const {componentName,props}=get(pageConfig,selectedKey,{});
+	const nFormRef=useRef<any>();
 	const {propsConfig}=getComponentConfig(componentName);
 	const formConfig=useMemo(()=>handlePropsConfig(propsConfig),[propsConfig]);
-
+	useEffect(()=>{
+		if(nFormRef.current){
+			nFormRef.current.setFieldsValue(props);
+		}
+	},[props]);
 	const renderFormItem=useCallback((config:PropInfoType,key?:string,isExpression?:boolean,menu?:string)=>{
 		const {type}=config;
 		const menus=Array.isArray(type)&&type;
@@ -68,9 +73,10 @@ function Props(){
 
 		return{style,renderComponent,menus,headerStyle};
 	},[]);
+
 	const onValuesChange=(changedValues, values)=>{
+		console.log('onValuesChange>>>>>>>>>',values);
 		changeProps({isMerge:true,props:values});
-		console.log('onFieldsChange>>>>>>>>',changedValues, values);
 	};
 	if(isEmpty(formConfig)) return <div className={styles['empty']}>
 		请选中任意组件进行属性操作
@@ -78,7 +84,7 @@ function Props(){
 	return <NForm className={styles['container']}
 								renderFormItem={renderFormItem}
 								onValuesChange={onValuesChange}
-								initialValues={props}
+								ref={nFormRef}
 								formConfig={formConfig} />;
 }
 

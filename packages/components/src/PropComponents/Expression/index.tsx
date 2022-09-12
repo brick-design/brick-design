@@ -8,10 +8,15 @@ interface ExpressionProps {
 }
 function Expression(props: ExpressionProps) {
   const { onChange, value } = props;
+  // const rex=/^(\${).+(})$/;
   const onInputChange = (v) => {
-    onChange && onChange(v ? `{{${v}}}` : undefined);
+    onChange && onChange(v ? `\${${v}}` : undefined);
   };
-  const newValue = value;
+  let  newValue = '';
+  if(value){
+    newValue=value.replace('${','');
+    newValue=newValue.replace('}','');
+  }
   return (
     <Input
       onChange={onInputChange}
