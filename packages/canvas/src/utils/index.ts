@@ -242,7 +242,7 @@ export const bridgeStore={
 
   renderPlaceholder:null,
   changePosition:(rect)=>{
-    this.renderPlaceholder&&this.renderPlaceholder(rect);
+    // this.renderPlaceholder&&this.renderPlaceholder(rect);
   }
 
 };

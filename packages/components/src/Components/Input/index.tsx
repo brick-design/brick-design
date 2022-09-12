@@ -1,10 +1,18 @@
-import React, { useState, memo, useImperativeHandle, forwardRef, useRef, ReactNode } from 'react';
+import React, {
+  useState,
+  memo,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+  ReactNode,
+} from 'react';
 import { useForceRender } from '@brickd/hooks';
 import styles from './index.less';
 import deleteIcon from '../../assets/delete-icon.svg';
 
 export interface InputProps extends React.InputHTMLAttributes<any> {
-  type?:'number'
+  type?:
+    | 'number'
     | 'button'
     | 'checkbox'
     | 'file'
@@ -14,15 +22,14 @@ export interface InputProps extends React.InputHTMLAttributes<any> {
     | 'radio'
     | 'reset'
     | 'submit'
-    | 'text'
-  ;
+    | 'text';
   onChange?: (v?: any) => void;
   closeStyle?: React.CSSProperties;
   closeAble?: boolean;
-  inputClass?:string;
-  focusClass?:string
-  addonAfter?:ReactNode
-  addonBefore?:ReactNode
+  inputClass?: string;
+  focusClass?: string;
+  addonAfter?: ReactNode;
+  addonBefore?: ReactNode;
 }
 function Input(props: InputProps, ref: any) {
   const {
@@ -39,8 +46,8 @@ function Input(props: InputProps, ref: any) {
     ...rest
   } = props;
   const [value, setValue] = useState(defaultValue);
-  const forceRender=useForceRender();
-  const isFocusRef=useRef(false);
+  const forceRender = useForceRender();
+  const isFocusRef = useRef(false);
   useImperativeHandle(
     ref,
     () => ({
@@ -50,7 +57,7 @@ function Input(props: InputProps, ref: any) {
   );
 
   const change = (event: any) => {
-    const value=event.target.value;
+    const value = event.target.value;
     setValue(value);
     onChange && onChange(value);
   };
@@ -60,18 +67,22 @@ function Input(props: InputProps, ref: any) {
     onChange && onChange(undefined);
   };
 
-  const onFocus=()=>{
-    isFocusRef.current=true;
+  const onFocus = () => {
+    isFocusRef.current = true;
     forceRender();
   };
 
-  const onBlur=()=>{
-    isFocusRef.current=false;
+  const onBlur = () => {
+    isFocusRef.current = false;
     forceRender();
   };
   return (
-    <div className={`${styles['container']} ${className} ${isFocusRef.current&&focusClass}`}>
-      {!!addonBefore&&addonBefore}
+    <div
+      className={`${styles['container']} ${className} ${
+        isFocusRef.current && focusClass
+      }`}
+    >
+      {!!addonBefore && addonBefore}
       <input
         type={type || 'text'}
         className={`${styles['common-input']} ${inputClass}`}
@@ -81,8 +92,8 @@ function Input(props: InputProps, ref: any) {
         onChange={change}
         value={value}
       />
-      {!!addonAfter&&addonAfter}
-      {!!value&&isFocusRef.current && closeAble && (
+      {!!addonAfter && addonAfter}
+      {!!value && isFocusRef.current && closeAble && (
         <img
           src={deleteIcon}
           style={closeStyle}

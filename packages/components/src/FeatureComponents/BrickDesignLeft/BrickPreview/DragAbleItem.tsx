@@ -1,6 +1,6 @@
 import React, { createElement, memo, useContext, useRef } from 'react';
 import { get } from 'lodash';
-import {getBrickdConfig, setDragSource } from '@brickd/canvas';
+import { getBrickdConfig, setDragSource } from '@brickd/canvas';
 import styles from './index.less';
 import { SearchContext } from '../Components/SearchBar';
 
@@ -51,10 +51,14 @@ function DragAbleItem(props: DragAbleItemPropsType) {
           style={{ backgroundColor: defaultColors[randomIndex] }}
           className={styles['placeholder-item']}
         >
-          {img?<img className={styles['item-img']} alt='' src={img} />:componentName}
+          {img ? (
+            <img className={styles['item-img']} alt="" src={img} />
+          ) : (
+            componentName
+          )}
         </div>
       );
-    };
+    }
     return createElement(
       get(getBrickdConfig().componentsMap, componentName, componentName),
       defaultProps,
@@ -84,6 +88,6 @@ function DragAbleItem(props: DragAbleItemPropsType) {
       </span>
     </div>
   );
-};
+}
 
 export default memo(DragAbleItem, () => true);

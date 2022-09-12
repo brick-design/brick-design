@@ -1,22 +1,23 @@
-@import "src/global";
-.container{
+@import 'src/global';
+.container {
   display: flex;
   align-items: center;
-  .icon{
+  .icon {
     font-size: 16px;
     padding: 3px;
     cursor: pointer;
   }
-  .input-number{
+  .input-number {
     width: 45px;
     font-size: 12px;
     text-align: center;
     appearance: none;
-    border:none;
-    outline:none;
-    border-bottom:1px @borderColor solid;
-    &:hover,&:focus{
-      border-bottom:1px @select-border-Color solid;
+    border: none;
+    outline: none;
+    border-bottom: 1px @borderColor solid;
+    &:hover,
+    &:focus {
+      border-bottom: 1px @select-border-Color solid;
     }
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -24,7 +25,5 @@
       appearance: none;
       margin: 0;
     }
-
   }
 }
-

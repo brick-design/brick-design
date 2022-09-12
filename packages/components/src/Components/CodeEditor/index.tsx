@@ -1,7 +1,7 @@
-import React,{memo} from 'react';
+import React, { memo } from 'react';
 
-function CodeEditor(){
-	return <div/>;
+function CodeEditor() {
+  return <div />;
 }
 
 export default memo(CodeEditor);

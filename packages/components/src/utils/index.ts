@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
-import {each,map,flattenDeep,isEmpty,isEqual} from 'lodash';
-
+import { each, map, flattenDeep, isEmpty, isEqual } from 'lodash';
 
 export function usePrevious<T>(value: any) {
   const ref = useRef<T>();
@@ -75,36 +74,35 @@ export const filterProps = (value: any) => {
 export const propsAreEqual = (prevProps: any, nextProps: any) =>
   isEqual(prevProps.value, nextProps.value);
 
-
 export const ANIMATION_YES = 'all 200ms';
 
-export const getCssClassProps=(propsConfig:PropsConfigType)=>{
-  const cssClassProps= { };
-  each(propsConfig,(config,propName)=>{
-    const {type}=config;
-    if(type===PROPS_TYPES.style||type===PROPS_TYPES.cssClass){
-      cssClassProps[propName]=config;
+export const getCssClassProps = (propsConfig: PropsConfigType) => {
+  const cssClassProps = {};
+  each(propsConfig, (config, propName) => {
+    const { type } = config;
+    if (type === PROPS_TYPES.style || type === PROPS_TYPES.cssClass) {
+      cssClassProps[propName] = config;
     }
   });
   return cssClassProps;
 };
 
-export const getValueType=(v:any)=>{
-  if(typeof v==='string'){
+export const getValueType = (v: any) => {
+  if (typeof v === 'string') {
     return PROPS_TYPES.string;
-  }else if(typeof v==='number'){
+  } else if (typeof v === 'number') {
     return PROPS_TYPES.number;
-  }else if(typeof v==='boolean'){
+  } else if (typeof v === 'boolean') {
     return PROPS_TYPES.boolean;
-  }else if(Array.isArray(v)){
-    if(v.some((sv)=>typeof sv==='string')){
+  } else if (Array.isArray(v)) {
+    if (v.some((sv) => typeof sv === 'string')) {
       return PROPS_TYPES.stringArray;
-    }else if(v.some((sv)=>typeof sv==='number')){
+    } else if (v.some((sv) => typeof sv === 'number')) {
       return PROPS_TYPES.numberArray;
-    }else{
+    } else {
       return PROPS_TYPES.objectArray;
     }
-  }else{
+  } else {
     return PROPS_TYPES.object;
   }
 };

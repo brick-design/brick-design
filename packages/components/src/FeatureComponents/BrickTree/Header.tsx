@@ -1,12 +1,12 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect,  useState } from 'react';
 import {
   SelectedInfoBaseType,
   useSelector,
   isEqualKey,
   clearSelectedStatus,
   selectComponent,
-   css,
-  useOperate, getSelectedNode,
+  useOperate,
+  getSelectedNode,
 } from '@brickd/canvas';
 import styles from './index.less';
 import {
@@ -35,7 +35,6 @@ interface HeaderProps {
   hasChildNodes: boolean;
 }
 
-
 function Header(props: HeaderProps) {
   const {
     specialProps,
@@ -46,50 +45,35 @@ function Header(props: HeaderProps) {
     componentName,
     hasChildNodes,
   } = props;
-  const {getOperateState,setOperateState,setSubscribe}=useOperate();
-  const { selectedInfo} = useSelector(['selectedInfo']);
+  const { getOperateState, setOperateState, setSubscribe,executeKeyListener } = useOperate();
+  const { selectedInfo } = useSelector(['selectedInfo']);
   const { propName: selectedPropName, selectedKey } = selectedInfo || {};
   const sortItemKey = propName ? `${key}${propName}` : key;
-  const displayRef=useRef<string>();
   const isSelected = isEqualKey(
     sortItemKey,
     selectedPropName ? `${selectedKey}${selectedPropName}` : selectedKey,
   );
-  const [isHovered,setIsHovered]=useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   // const isHovered = isEqualKey(sortItemKey, hoverKey);
   const color = isSelected ? selectedColor : unSelectedColor;
 
   const lockNode = (event: React.MouseEvent) => {
     event.stopPropagation();
-
   };
 
-  const changeStatus=()=>{
+  const changeStatus = () => {
     const { operateHoverKey } = getOperateState();
     setIsHovered(isEqualKey(sortItemKey, operateHoverKey));
   };
 
-  useEffect(()=>{
-   const unSubscribe=setSubscribe(changeStatus);
-   return unSubscribe;
+  useEffect(() => {
+    const unSubscribe = setSubscribe(changeStatus);
+    return unSubscribe;
   });
 
-
-  const onCloseEye = useCallback((v:boolean) => {
-    // eslint-disable-next-line prefer-const
-    let {hoverNode,selectedNode}=getOperateState();
-    hoverNode=isSelected?selectedNode:hoverNode;
-    if(hoverNode){
-      const {display}=css(hoverNode);
-      if(v) {
-        displayRef.current=display;
-        hoverNode.style.display='none';
-      }else {
-        hoverNode.style.display=displayRef.current;
-      }
-      setOperateState({hoverNode:isSelected?null:hoverNode,selectedNode});
-    }
-  },[]);
+  const onCloseEye = useCallback(() => {
+    executeKeyListener(key);
+  }, []);
 
   return (
     <div
@@ -103,22 +87,29 @@ function Header(props: HeaderProps) {
           : {}
       }
       className={styles['header-container']}
-      onMouseLeave={() => isHovered && setOperateState({hoverNode:null,operateHoverKey:null})}
+      onMouseLeave={() =>
+        isHovered && setOperateState({ hoverNode: null, operateHoverKey: null })
+      }
       onMouseOver={() => {
-          !isSelected&&setOperateState({hoverNode:getSelectedNode(key),operateHoverKey:key});
-      } }
-
+        !isSelected &&
+          setOperateState({
+            hoverNode: getSelectedNode(key),
+            operateHoverKey: key,
+          });
+      }}
     >
       <div
         onClick={(event) => {
           event.stopPropagation();
           if (isSelected) {
             clearSelectedStatus();
-            setOperateState({selectedNode:null,operateSelectedKey:null});
+            setOperateState({ selectedNode: null, operateSelectedKey: null });
           } else {
             selectComponent({ ...specialProps, propName });
-            setOperateState({selectedNode:getSelectedNode(key),operateSelectedKey:key});
-
+            setOperateState({
+              selectedNode: getSelectedNode(key),
+              operateSelectedKey: key,
+            });
           }
         }}
         style={{ display: 'flex', flex: 1, alignItems: 'center', color }}
@@ -146,12 +137,12 @@ function Header(props: HeaderProps) {
         // icon={isLock ? lockClose : lockOpen}
         icon={lockClose}
       />
-      <Checkbox
+      {!propName&&<Checkbox
         onChange={onCloseEye}
         checkedIcon={closeEye}
         uncheckedIcon={openEye}
         className={styles['item-icon']}
-      />
+      />}
       <Icon icon={moreIcon} className={styles['item-icon']} />
     </div>
   );

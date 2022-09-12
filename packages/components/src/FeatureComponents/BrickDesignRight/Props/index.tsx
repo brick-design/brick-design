@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { getComponentConfig, getSelector, PROPS_TYPES, PropsConfigType,PropInfoType, useSelector } from '@brickd/canvas';
+import { getComponentConfig, getSelector, PROPS_TYPES, PropsConfigType,PropInfoType, useSelector,changeProps } from '@brickd/canvas';
 import { each, get,isEmpty} from 'lodash';
 import styles from './index.less';
 import PropItem from './PropItem';
@@ -68,10 +68,18 @@ function Props(){
 
 		return{style,renderComponent,menus,headerStyle};
 	},[]);
+	const onValuesChange=(changedValues, values)=>{
+		changeProps({isMerge:true,props:values});
+		console.log('onFieldsChange>>>>>>>>',changedValues, values);
+	};
 	if(isEmpty(formConfig)) return <div className={styles['empty']}>
 		请选中任意组件进行属性操作
 	</div>;
-	return <NForm className={styles['container']} renderFormItem={renderFormItem} initialValues={props} formConfig={formConfig} />;
+	return <NForm className={styles['container']}
+								renderFormItem={renderFormItem}
+								onValuesChange={onValuesChange}
+								initialValues={props}
+								formConfig={formConfig} />;
 }
 
 export default memo(Props);

@@ -1,5 +1,5 @@
 import React, { memo, useContext } from 'react';
-import {PageConfigType,setDragSource } from '@brickd/canvas';
+import { PageConfigType, setDragSource } from '@brickd/canvas';
 import styles from './index.less';
 import { SearchContext } from '../Components/SearchBar';
 

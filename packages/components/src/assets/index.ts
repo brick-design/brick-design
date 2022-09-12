@@ -65,5 +65,5 @@ export {
   zoomInIcon,
   zoomOutIcon,
   zoom11Icon,
-  saveIcon
+  saveIcon,
 };

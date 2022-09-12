@@ -57,6 +57,7 @@ import { useOperate } from '../hooks/useOperate';
 import { useEvents } from '../hooks/useEvents';
 // import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
+import { useEye } from '../hooks/useEye';
 /**
  * 所有的容器组件名称
  */
@@ -93,8 +94,6 @@ function Container(allProps: CommonPropsType) {
   const vNode = getVNode(key);
   const { childNodes, componentName } = vNode;
   // const dragKey = getDragKey();
-  console.log('childNodes>>>>>>>>>',childNodes,);
-
   // const [isNewComponent,setIsNewComponent] = useState(
   //   !getDragSourceFromKey('parentKey') && dragKey === key,
   // );
@@ -107,6 +106,7 @@ function Container(allProps: CommonPropsType) {
     rest,
     getChildrenFields(pageConfigs, childNodes),
   );
+  const isShow= useEye(key);
   const { index = 0 } = pageState;
   const uniqueKey = `${key}-${index}`;
   useChildNodes({ childNodes, componentName, specialProps });
@@ -175,7 +175,6 @@ function Container(allProps: CommonPropsType) {
       if(interceptDragOver()) return;
       const dragKey = getDragKey();
       const isV = isVPropNodesPositionRef.current[defaultPropName];
-      console.log('onParentDragOver>>>>>>>>',dragKey,childNodes);
       if (isEmpty(childNodes)) {
         // if (nodePropsConfig) {
         //   // setChildren({ [selectedPropName]: [dragKey] });
@@ -218,7 +217,6 @@ function Container(allProps: CommonPropsType) {
   const dragOver = useCallback(
     (event: DragEvent, propName: string) => {
       event.preventDefault();
-      console.log('dragOver>>>>>>>>',);
       if(interceptDragOver()) return;
       const dragKey = getDragKey();
       const childNodeKeys = get(childNodes, propName, []);
@@ -424,8 +422,9 @@ function Container(allProps: CommonPropsType) {
     uniqueKey,
     // false,
     className,
-    animateClass
-  ),selectedInfo);
+    animateClass,
+    isShow
+  ),selectedInfo,);
   if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {
     ...styleProps,

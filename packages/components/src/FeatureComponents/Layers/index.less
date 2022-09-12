@@ -1,23 +1,21 @@
-@import "../../global";
-.container{
+@import '../../global';
+.container {
   display: flex;
   flex-direction: column;
   top: 70px;
   left: 235px;
   width: 212px;
-  max-height: calc(100vh - 150px);;
+  max-height: calc(100vh - 150px);
   border-radius: 8px;
 }
 
-
-
-.page-container{
+.page-container {
   position: relative;
   display: flex;
   flex-direction: column;
   border-top: 1px solid @borderColor;
   border-bottom: 1px solid @borderColor;
-  .page-content{
+  .page-content {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -25,72 +23,68 @@
     background-color: @bgColor;
   }
 
-  .layer-item{
+  .layer-item {
     display: flex;
     align-items: center;
     min-height: 30px;
     padding-left: 16px;
     padding-right: 8px;
-    .right-icon{
-      width:8px ;
+    .right-icon {
+      width: 8px;
       height: 8px;
       margin-right: 8px;
     }
-    .layer-text{
+    .layer-text {
       display: flex;
-      flex:1;
+      flex: 1;
       align-items: center;
       height: 100%;
       color: #333;
       font-size: 12px;
     }
-    .hover-icon{
+    .hover-icon {
       display: none;
     }
 
-    .icon-size{
+    .icon-size {
       width: 10px;
       height: 10px;
     }
-    &:hover{
+    &:hover {
       background-color: @backGroundColor;
-      .hover-icon{
+      .hover-icon {
         display: flex;
-        width:20px ;
-        height:20px;
+        width: 20px;
+        height: 20px;
       }
     }
   }
-
 }
-.header-container{
+.header-container {
   display: flex;
   height: 40px;
   align-items: center;
   justify-content: space-between;
-  background-color:@bgColor ;
+  background-color: @bgColor;
   font-size: 12px;
   padding-left: 18px;
   padding-right: 5px;
   user-select: none;
-  .header-name{
+  .header-name {
     font-weight: bold;
   }
-  .header-right{
+  .header-right {
     display: flex;
     align-items: center;
-    .add-icon{
+    .add-icon {
       width: 24px;
       height: 24px;
       cursor: pointer;
       border-radius: 3px;
       user-select: none;
-      &:hover{
+      &:hover {
         background-color: @backGroundColor;
       }
     }
-
   }
 }
-
-

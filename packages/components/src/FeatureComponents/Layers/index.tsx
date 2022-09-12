@@ -26,11 +26,12 @@ function Layers() {
     setVisible(!visible);
   };
   return (
-    <DragResizeBar title={'Layers'}
-                   className={styles['container']}
-                   minWidth={212}
-                   icon={layersIcon}
-                   defaultShow
+    <DragResizeBar
+      title={'Layers'}
+      className={styles['container']}
+      minWidth={212}
+      icon={layersIcon}
+      defaultShow
     >
       <Pages onDelete={onDelete} />
       <BrickTree />

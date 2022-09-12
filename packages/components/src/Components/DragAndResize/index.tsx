@@ -1,41 +1,62 @@
-import React, { forwardRef, memo, Ref, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  memo,
+  Ref,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { useDragMove } from '@brickd/hooks';
 import styles from './index.less';
 import Resizeable, { ResizeableProps, ResizeableRefType } from '../Resizeable';
 
-export interface DragAndResizeRefType extends ResizeableRefType{
-  onMoveStart:(event: MouseEvent|React.MouseEvent)=>void
+export interface DragAndResizeRefType extends ResizeableRefType {
+  onMoveStart: (event: MouseEvent | React.MouseEvent) => void;
 }
-export type DragAndResizeProp=ResizeableProps
+export type DragAndResizeProp = ResizeableProps;
 
-function DragAndResize(props: DragAndResizeProp,ref:Ref<DragAndResizeRefType>) {
-  const moveDivRef = useRef<ResizeableRefType>({target:null,changeFold:_=>_});
-  const getTarget=useCallback(()=>moveDivRef.current.target as HTMLElement,[]);
-  const [isDrag,setIsDrag]=useState(false);
-  const {onMove,onMoveEnd,onMoveStart}=useDragMove(getTarget);
+function DragAndResize(
+  props: DragAndResizeProp,
+  ref: Ref<DragAndResizeRefType>,
+) {
+  const moveDivRef = useRef<ResizeableRefType>({
+    target: null,
+    changeFold: (_) => _,
+  });
+  const getTarget = useCallback(
+    () => moveDivRef.current.target as HTMLElement,
+    [],
+  );
+  const [isDrag, setIsDrag] = useState(false);
+  const { onMove, onMoveEnd, onMoveStart } = useDragMove(getTarget);
 
-  useImperativeHandle(ref,()=>({onMoveStart:(event:MouseEvent|React.MouseEvent)=>{
-    onMoveStart(event);
-      setIsDrag(true);
-  },
-    ...moveDivRef.current
-  }),[onMoveStart]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      onMoveStart: (event: MouseEvent | React.MouseEvent) => {
+        onMoveStart(event);
+        setIsDrag(true);
+      },
+      ...moveDivRef.current,
+    }),
+    [onMoveStart],
+  );
 
-  const onMouseMove=(event:React.MouseEvent)=>{
+  const onMouseMove = (event: React.MouseEvent) => {
     onMove(event);
     moveDivRef.current.onResize(event);
   };
 
-  const onMouseUp=(event:React.MouseEvent)=>{
+  const onMouseUp = (event: React.MouseEvent) => {
     setIsDrag(false);
     onMoveEnd(event);
     moveDivRef.current.onResizeEnd();
-    moveDivRef.current.target.style.pointerEvents='auto';
-
+    moveDivRef.current.target.style.pointerEvents = 'auto';
   };
-  const onResizeStart=()=>{
+  const onResizeStart = () => {
     setIsDrag(true);
-    moveDivRef.current.target.style.pointerEvents='none';
+    moveDivRef.current.target.style.pointerEvents = 'none';
   };
 
   return (
@@ -46,7 +67,7 @@ function DragAndResize(props: DragAndResizeProp,ref:Ref<DragAndResizeRefType>) {
         style={{ display: isDrag ? 'flex' : 'none' }}
         className={styles['placeholder-border']}
       />
-      <Resizeable  onResizeStart={onResizeStart} {...props} ref={moveDivRef}/>
+      <Resizeable onResizeStart={onResizeStart} {...props} ref={moveDivRef} />
     </>
   );
 }

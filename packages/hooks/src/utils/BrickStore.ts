@@ -1,6 +1,15 @@
 import { each } from 'lodash';
 
 type ListenerType = () => void;
+
+const unListener=(listeners:ListenerType[],listener:ListenerType)=>{
+  const index = listeners.indexOf(listener);
+  listeners.splice(index, 1);
+};
+
+const executeListener=(listeners:ListenerType[])=>{
+  each(listeners, (listener) => listener());
+};
 export class BrickStore<T> {
   constructor(propState?: T) {
     this.state = propState || ({} as T);
@@ -8,7 +17,7 @@ export class BrickStore<T> {
   isPageStore = true;
   state: T;
   listeners: ListenerType[] = [];
-  listenerMap: { [key: string]: ListenerType } = {};
+  listenerMap: { [key: string]: ListenerType[] } = {};
   getPageState = (): T => this.state;
   setPageState = (newState: T, isReplace?: boolean, executeKey?: string) => {
     if (isReplace) {
@@ -16,10 +25,10 @@ export class BrickStore<T> {
     } else {
       this.state = { ...this.state, ...newState };
     }
-    each(this.listeners, (listener) => listener());
+    executeListener(this.listeners);
 
     if (executeKey && this.listenerMap[executeKey]) {
-      this.listenerMap[executeKey]();
+      executeListener(this.listenerMap[executeKey]);
     }
   };
 
@@ -28,7 +37,11 @@ export class BrickStore<T> {
     if (!key) {
       this.listeners.push(listener);
     } else {
-      this.listenerMap[key] = listener;
+      if(this.listenerMap[key]){
+        (this.listenerMap[key]).push(listener);
+      }else {
+        this.listenerMap[key]=[listener];
+      }
     }
     return () => {
       if (!isSubscribed) {
@@ -36,23 +49,25 @@ export class BrickStore<T> {
       }
       isSubscribed = false;
       if (!key) {
-        const index = this.listeners.indexOf(listener);
-        this.listeners.splice(index, 1);
+        unListener(this.listeners,listener);
       } else {
-        delete this.listenerMap[key];
+        unListener(this.listenerMap[key],listener);
+        if(!this.listenerMap[key].length){
+          delete this.listenerMap[key];
+        }
       }
     };
   };
 
   executeKeyListener = (selectedKey?: string) => {
-    each(this.listenerMap, (listener, key) => {
-      if (selectedKey) {
-        if (selectedKey === key) {
-          listener();
-        }
-      } else {
-        listener();
-      }
-    });
+    if(selectedKey){
+      console.log('this.listenerMap[selectedKey]>>>>>>>',selectedKey,this.listenerMap[selectedKey].length);
+      executeListener(this.listenerMap[selectedKey]);
+    }else {
+      each(this.listenerMap, (listeners) => {
+        executeListener(listeners);
+      });
+    }
+
   };
 }

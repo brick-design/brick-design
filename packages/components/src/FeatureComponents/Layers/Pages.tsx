@@ -4,7 +4,8 @@ import {
   getStore,
   changeLayer,
   useSelector,
-  copyLayers, renameLayers,
+  copyLayers,
+  renameLayers,
 } from '@brickd/canvas';
 import { map, isEqual, keys } from 'lodash';
 import styles from './index.less';
@@ -38,25 +39,22 @@ const LayerItem = function (props: LayerProp) {
   const changeLayerName = useCallback(() => {
     if (selectLayerName !== layerName) changeLayer({ layerName });
   }, [selectLayerName]);
-  const changeEdit = useCallback(
-    (event: React.FormEvent) => {
-      event.stopPropagation();
-      const target=event.target as HTMLElement;
-      target.contentEditable='true';
-      target.focus();
-    },
-    [],
-  );
+  const changeEdit = useCallback((event: React.FormEvent) => {
+    event.stopPropagation();
+    const target = event.target as HTMLElement;
+    target.contentEditable = 'true';
+    target.focus();
+  }, []);
 
-  const onBlur = useCallback(
-    (event: React.FormEvent) => {
-      event.stopPropagation();
-      const target=event.target as HTMLElement;
-      renameLayers({newLayerName:target.textContent,prevLayerName:layerName});
-      target.contentEditable='false';
-    },
-    [],
-  );
+  const onBlur = useCallback((event: React.FormEvent) => {
+    event.stopPropagation();
+    const target = event.target as HTMLElement;
+    renameLayers({
+      newLayerName: target.textContent,
+      prevLayerName: layerName,
+    });
+    target.contentEditable = 'false';
+  }, []);
 
   const copyPage = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -72,7 +70,7 @@ const LayerItem = function (props: LayerProp) {
   return (
     <div onClick={changeLayerName} className={styles['layer-item']}>
       <img
-        alt=''
+        alt=""
         style={{ visibility: isSelected ? 'visible' : 'hidden' }}
         src={rightIcon}
         className={styles['right-icon']}
@@ -118,11 +116,11 @@ function Pages(props: PageProps) {
     const layers = keys(brickdStore.getState());
     layers.shift();
     setLayers(layers);
-    addEventListener('mousemove',resizeRef.current.onResize);
-    addEventListener('mouseup',resizeRef.current.onResizeEnd);
-    return ()=>{
-      removeEventListener('mousemove',resizeRef.current.onResize);
-      removeEventListener('mouseup',resizeRef.current.onResizeEnd);
+    addEventListener('mousemove', resizeRef.current.onResize);
+    addEventListener('mouseup', resizeRef.current.onResizeEnd);
+    return () => {
+      removeEventListener('mousemove', resizeRef.current.onResize);
+      removeEventListener('mouseup', resizeRef.current.onResizeEnd);
     };
   }, []);
 

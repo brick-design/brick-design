@@ -18,6 +18,7 @@ import { useEvents } from '../hooks/useEvents';
 import { useOperate } from '../hooks/useOperate';
 // import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
+import { useEye } from '../hooks/useEye';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -36,6 +37,7 @@ function NoneContainer(allProps: CommonPropsType) {
   const { setOperateState } = useOperate();
   // useNewAddComponent(key);
   const { props, hidden, pageState } = useCommon(vNode, rest);
+  const isShow= useEye(key);
   const { index = 0, funParams, item } = pageState;
   const uniqueKey = `${key}-${index}`;
   const { setSelectedNode, ...events } = useEvents(
@@ -71,6 +73,7 @@ function NoneContainer(allProps: CommonPropsType) {
     // dragKey===key,
     className,
     animateClass,
+    isShow
   ),selectedInfo);
   if (!isSelected && (!componentName || hidden)) return null;
   return createElement(getComponent(componentName), {

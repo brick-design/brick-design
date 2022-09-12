@@ -1,31 +1,31 @@
-@import "src/global";
-.left-container{
+@import 'src/global';
+.left-container {
   left: 10px;
   background-color: white;
 }
 
-.drag-container{
+.drag-container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 60px;
-  height:60px;
+  height: 60px;
   padding: 5px;
-  margin:5px;
+  margin: 5px;
   border-radius: 4px;
   overflow: hidden;
   background: @borderColor;
   transition: all 500ms;
-  .hidden-drag-name{
+  .hidden-drag-name {
     visibility: hidden;
     position: absolute;
     bottom: 0;
     font-size: 12px;
     color: #333333;
   }
-  &:hover{
-    .drag-name{
+  &:hover {
+    .drag-name {
       visibility: visible;
       position: absolute;
       bottom: 0;
@@ -34,7 +34,7 @@
     }
   }
 
-  .list-drag-container{
+  .list-drag-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -53,7 +53,7 @@
     }
   }
 }
-.list-container{
+.list-container {
   display: flex;
   width: 100%;
   align-items: center;
@@ -61,18 +61,18 @@
   padding-bottom: 3px;
   padding-left: 5px;
   transition: all 800ms;
-  .drag-name{
+  .drag-name {
     font-size: 12px;
     color: #333333;
     margin-left: 16px;
   }
-  .list-drag-container{
+  .list-drag-container {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     width: 28px;
-    height:28px;
+    height: 28px;
     border-radius: 4px;
     border: 1px solid transparent;
     overflow: hidden;
@@ -87,7 +87,5 @@
       transform: scale(0.25);
       cursor: pointer;
     }
-
   }
 }
-

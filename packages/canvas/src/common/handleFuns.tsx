@@ -15,6 +15,7 @@ import { resolveMapping, isPureVariable } from '@brickd/utils';
 // import styles from './style.less';
 import { selectClassTarget } from './constants';
 
+import styles from './style.less';
 import {
   generateRequiredProps,
   getComponent,
@@ -30,8 +31,13 @@ export function handlePropsClassName(
   // isLockTarget: boolean,
   className: any,
   animateClass: string,
+  isShow:boolean
 ) {
-  const style=`${selectClassTarget + key} ${className} ${animateClass}`;
+  console.log('isShow>>>>>>>',isShow);
+  let style=`${selectClassTarget + key} ${className} ${animateClass}`;
+  if(!isShow){
+    style=' '+styles['hidden-component'];
+  }
   // if(isLockTarget){
   //   style+=' '+styles['forbid-event'];
   // }else {

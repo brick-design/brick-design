@@ -100,7 +100,10 @@ function SortItem(props: SortItemPropsType) {
     propChildNodes,
   } = props;
 
-  const { selectedInfo, pageConfig } = useSelector(['selectedInfo', 'pageConfig']);
+  const { selectedInfo, pageConfig } = useSelector([
+    'selectedInfo',
+    'pageConfig',
+  ]);
   const { domTreeKeys: nextSDTKeys } = selectedInfo || {};
 
   const vDom = pageConfig[key];

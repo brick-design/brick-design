@@ -1,32 +1,31 @@
-@import "src/global";
-.panel-container{
+@import 'src/global';
+.panel-container {
   display: flex;
   position: fixed !important;
   flex-direction: column;
   align-items: center;
   top: 70px;
-  height: calc(100vh - 150px);;
+  height: calc(100vh - 150px);
   width: 212px;
   border-radius: 8px;
   user-select: none;
   background-color: #fff;
   overflow: hidden;
-  box-shadow:3px 4px 5px 3px rgba(0,0,0, 0.15);
-  .brickd-tabs{
+  box-shadow: 3px 4px 5px 3px rgba(0, 0, 0, 0.15);
+  .brickd-tabs {
     display: flex;
     width: 100%;
-    .tabs-container()
+    .tabs-container();
   }
 }
-.tab-drag-bar{
+.tab-drag-bar {
   margin-top: 5px;
   width: 35px;
   height: 5px;
-  border-radius:5px;
+  border-radius: 5px;
   background-color: #bcbcbc;
   cursor: move;
-  &:hover{
+  &:hover {
     background-color: #000;
   }
-
 }
