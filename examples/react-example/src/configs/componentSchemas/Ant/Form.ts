@@ -21,14 +21,12 @@ const Form: ComponentSchemaType = {
 			tip:
 				'（3.14.0 新增，之前的版本只能设置到 FormItem 上。）label 标签布局，同 <Col> 组件，设置 span offset 值，如 {span: 3, offset: 12} 或 sm: {span: 3, offset: 12}',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		wrapperCol: {
 			label: '输入控件设置布局样式',
 			tip:
 				'3.14.0 新增，之前的版本只能设置到 FormItem 上。）需要为输入控件设置布局样式时，使用该属性，用法同 labelCol',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		colon: {
 			label: '是否实现冒号',
@@ -102,14 +100,12 @@ const Item: ComponentSchemaType = {
 			tip:
 				'label标签布局同 <Col> 组件设置span offset值，如{span: 3, offset: 12} 或 sm:{span: 3, offset: 12}。在 3.14.0 之后，你可以通过 Form 的 labelCol 进行统一设置。当和 Form 同时设置时，以 FormItem 为准。',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		wrapperCol: {
 			label: '输入控件设置布局样式',
 			tip:
 				'需要为输入控件设置布局样式时，使用该属性，用法同 labelCol。在 3.14.0 之后，你可以通过 Form 的 wrapperCol 进行统一设置。当和 Form 同时设置时，以 FormItem 为准。',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		labelAlign: {
 			label: 'label 标签的文本对齐方式',

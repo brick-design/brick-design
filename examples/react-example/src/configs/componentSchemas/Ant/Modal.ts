@@ -41,7 +41,6 @@ const Modal: ComponentSchemaType = {
 		bodyStyle: {
 			label: 'Modal body样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		cancelText: {
 			label: '取消按钮文字',
@@ -98,7 +97,6 @@ const Modal: ComponentSchemaType = {
 		maskStyle: {
 			label: '遮罩样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		okText: {
 			label: '确认按钮文字',
@@ -114,7 +112,6 @@ const Modal: ComponentSchemaType = {
 			label: '设置浮层样式',
 			tip: '可用于设置浮层的样式，调整浮层位置等',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		width: {
 			label: '宽度',

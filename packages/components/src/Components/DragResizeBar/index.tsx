@@ -37,7 +37,7 @@ function DragResizeBar(props: DragResizeBarType) {
         topRight
         bottomLeft
         bottomRight
-        style={{ visibility: 'visible' }}
+        // style={{ visibility: 'visible' }}
         onWheel={(event) => event.stopPropagation()}
         className={`${styles['container']} ${className}`}
         {...rest}

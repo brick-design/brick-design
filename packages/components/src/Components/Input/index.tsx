@@ -11,18 +11,6 @@ import styles from './index.less';
 import deleteIcon from '../../assets/delete-icon.svg';
 
 export interface InputProps extends React.InputHTMLAttributes<any> {
-  type?:
-    | 'number'
-    | 'button'
-    | 'checkbox'
-    | 'file'
-    | 'hidden'
-    | 'image'
-    | 'password'
-    | 'radio'
-    | 'reset'
-    | 'submit'
-    | 'text';
   onChange?: (v?: any) => void;
   closeStyle?: React.CSSProperties;
   closeAble?: boolean;

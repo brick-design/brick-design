@@ -32,14 +32,14 @@ function NCollapse<T, F, D>(props: NCollapseProps<T, F, D>) {
     collapseClass,
   } = props;
   const [openKeys = [], setOpenKeys] = useState<any[]>([]);
-
+  const onChange=(keys:any)=>{setOpenKeys(keys);};
   return (
     <div style={style} className={`${styles['fold-container']} ${className}`}>
       <Collapse
         className={collapseClass}
         activeKey={openKeys}
         style={{ border: 0 }}
-        onChange={setOpenKeys}
+        onChange={onChange}
       >
         {map(categories, (categoryInfo, categoryName) => {
           const isFold = openKeys.includes(categoryName);

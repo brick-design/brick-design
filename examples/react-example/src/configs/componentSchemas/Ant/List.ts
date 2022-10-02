@@ -30,7 +30,6 @@ const List: ComponentSchemaType = {
 		dataSource: {
 			label: '数据源',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [{}],
 		},
 		size: {
 			label: '控件大小',

@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
-import { each, map, flattenDeep, isEmpty, isEqual } from 'lodash';
+import { ChildNodesType, PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
+import { each, map, flattenDeep, isEmpty, isEqual,get } from 'lodash';
+
+/**
+ * 检验是否为合法表达式
+ */
+export   const expressionRex=/^\$\{.+\}$/;
+
 
 export function usePrevious<T>(value: any) {
   const ref = useRef<T>();
@@ -105,4 +111,33 @@ export const getValueType = (v: any) => {
   } else {
     return PROPS_TYPES.object;
   }
+};
+
+/**
+ * 拆分属性配置信息
+ * 将普通属性与事件属性拆分
+ * @param propsConfig
+ */
+export const splitPropsConfig=(propsConfig:PropsConfigType,childNodes?:ChildNodesType)=>{
+  const firstConfig={};
+  const secondConfig={};
+  each(propsConfig,(config,key)=>{
+    const {type}=config;
+    if(Array.isArray(childNodes)&&childNodes.length&&key==='children'){
+      return;
+    }else if(get(childNodes,key,[]).length){
+      return;
+    }
+    switch (type){
+      case PROPS_TYPES.function:
+      case PROPS_TYPES.style:
+      case PROPS_TYPES.cssClass:
+        secondConfig[key]=config;
+        break;
+      default:
+        firstConfig[key]=config;
+    }
+  });
+
+  return {firstConfig,secondConfig};
 };

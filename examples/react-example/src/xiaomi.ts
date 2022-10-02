@@ -104,7 +104,7 @@ const data: PageConfigType = {
 	3: {
 		componentName: 'img',
 		props: {
-			src:'https://img1.baidu.com/it/u=3158286195,1796439950&fm=26&fmt=auto&gp=0.jpg',
+			src:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimage2.cqcb.com%2Fd%2Ffile%2Fvision%2Fai%2F2021-10-10%2F50c16225e9099dad3534a37f7e7673fe.jpeg&refer=http%3A%2F%2Fimage2.cqcb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1667221982&t=454f6d298aa7a1d0a11e739e1e6c6880',
 			style: {
 				width: 55,
 				height: 55,

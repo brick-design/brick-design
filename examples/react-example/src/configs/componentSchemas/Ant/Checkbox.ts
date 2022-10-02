@@ -58,8 +58,7 @@ const Group: ComponentSchemaType = {
 		options: {
 			label: '指定可选项',
 			type: [PROPS_TYPES.stringArray, PROPS_TYPES.objectArray],
-			childPropsConfig: [
-				{
+			childPropsConfig: {
 					label: {
 						label: 'label',
 						type: PROPS_TYPES.string,
@@ -73,7 +72,6 @@ const Group: ComponentSchemaType = {
 						type: PROPS_TYPES.boolean,
 					},
 				},
-			],
 		},
 		value: {
 			label: '指定选中的选项',

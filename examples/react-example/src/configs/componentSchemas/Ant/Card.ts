@@ -42,13 +42,11 @@ const Card: ComponentSchemaType = {
 			label: '标题样式',
 			tip: '自定义标题区域样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		bodyStyle: {
 			label: '内容样式',
 			tip: '内容区域自定义样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		bordered: {
 			label: '是否有边框',
@@ -74,14 +72,13 @@ const Card: ComponentSchemaType = {
 			label: '页签标题列表',
 			tip: '页签标题列表',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [
+			childPropsConfig:
 				{
 					key: {
 						label: 'key',
 						type: PROPS_TYPES.string,
 					},
 				},
-			],
 		},
 		title: {
 			label: '卡片标题',
@@ -93,8 +90,10 @@ const Card: ComponentSchemaType = {
 			enumData: ['default', 'small'],
 		},
 		type: {
-			label: '卡片类型，可设置为 inner 或 不设置',
-			type: PROPS_TYPES.string,
+			label: '卡片类型',
+			tip:'可设置为 inner 或 不设置',
+			type: PROPS_TYPES.enum,
+			enumData:['inner']
 		},
 	},
 }

@@ -23,7 +23,6 @@
   "dependencies": {
     "@brickd/canvas": "^1.0.0-alpha.16",
     "@brickd/hooks": "^1.0.0-alpha.16",
-    "antd": "3.26.16",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",
     "rc-field-form": "^1.21.1",
@@ -31,12 +30,20 @@
     "rc-tabs": "^11.9.1",
     "react": "^16.8.0",
     "react-color": "^2.18.0",
-    "sortablejs": "^1.10.2"
+    "sortablejs": "^1.10.2",
+    "codemirror": "^6.0.1",
+    "@codemirror/commands": "^6.1.0",
+    "@codemirror/state": "^6.1.1",
+    "@codemirror/theme-one-dark": "^6.0.0",
+    "@uiw/codemirror-extensions-basic-setup": "4.12.3",
+    "@codemirror/lang-javascript": "^6.0.2",
+    "@uiw/codemirror-theme-okaidia": "^4.12.3"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@types/sortablejs": "^1.10.4"
+    "@types/sortablejs": "^1.10.4",
+    "@types/lodash": "^4.14.149"
   }
 }

@@ -13,7 +13,6 @@ const Icon: ComponentSchemaType = {
 			label: '图标样式',
 			tip: '设置图标的样式，例如 fontSize 和 color',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		theme: {
 			label: '图标风格',

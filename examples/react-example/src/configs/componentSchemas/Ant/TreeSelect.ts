@@ -50,7 +50,6 @@ const TreeSelect: ComponentSchemaType = {
 		dropdownStyle: {
 			label: '下拉菜单的样式',
 			type: [PROPS_TYPES.json, PROPS_TYPES.objectArray],
-			childPropsConfig: {},
 		},
 		filterTreeNode: {
 			label: '是否根据输入项进行筛选',
@@ -148,12 +147,10 @@ const TreeSelect: ComponentSchemaType = {
 			tip:
 				'treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（value 在整个树范围内唯一）',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [{}],
 		},
 		treeDataSimpleMode: {
 			label: 'treeDataSimpleMode',
 			type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
-			childPropsConfig: {},
 		},
 		treeDefaultExpandAll: {
 			label: '树节点展开',

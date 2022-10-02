@@ -14,8 +14,9 @@ import {
   undo,
   changePlatform,
   PlatformSizeType,
-  clearHovered,
-  getSelector, setDropTarget, getDropTarget,
+  // getSelector,
+  setDropTarget,
+  getDropTarget,
 } from '@brickd/core';
 import ResizePolyfill from 'resize-observer-polyfill';
 import { isEmpty } from 'lodash';
@@ -160,16 +161,14 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         } else if (key === '-') {
           scale-=0.05;
         }
-        setZoomState({scale});
+        setZoomState({scale:scale||0});
         keyEvent.returnValue = false;
       }
     }
     addEventListener('keydown', onKeyDown);
     if(contentWindow) {
       contentWindow.addEventListener('keydown', onKeyDown);
-
     }
-
     return () => {
      removeEventListener('keydown', onKeyDown);
       if(contentWindow){
@@ -189,7 +188,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         minWidth: size[0],
         height: size[1],
         minHeight: size[1],
-        transition: 'all 500ms',
+        transition: 'all 200ms',
         transform: `scale(${scale})`,
       });
     },
@@ -198,20 +197,19 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   );
 
   const cleanStatus = useCallback(() => {
-    const { hoverKey } = getSelector([ 'hoverKey']);
+    // const { hoverKey } = getSelector([ 'hoverKey']);
     if (!isEmpty(getDropTarget())) {
       setDropTarget(null);
       operateStore.setPageState({
         dropNode: null,
       });
     }
-    if (hoverKey) {
-      clearHovered();
-      operateStore.setPageState({
-        hoverNode: null,
-        operateHoverKey: null,
-      });
-    }
+    // if (hoverKey) {
+    //   operateStore.setPageState({
+    //     hoverNode: null,
+    //     operateHoverKey: null,
+    //   });
+    // }
   }, []);
   // eslint-disable-next-line no-constant-condition
   return (

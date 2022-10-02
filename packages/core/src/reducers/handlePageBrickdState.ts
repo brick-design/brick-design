@@ -7,7 +7,6 @@ export const legoState: StateType = {
   selectedInfo: null, // 选中组件的信息
   undo: [],
   redo: [],
-  hoverKey: null,
   platformInfo: { platformName: 'PC', size: ['100%', '100%'] },
 };
 

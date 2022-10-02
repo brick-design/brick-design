@@ -16,8 +16,6 @@ export default {
   changeStyles: `changeStyles`,
   changeVisualizedStyles: 'changeVisualizedStyles',
   changeProps: `changeProps`,
-  overTarget: `overTarget`,
-  clearHovered: `clearHovered`,
   undo: `undo`,
   redo: `redo`,
   changePlatform: `changePlatform`,

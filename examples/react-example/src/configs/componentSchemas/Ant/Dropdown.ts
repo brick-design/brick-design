@@ -36,7 +36,6 @@ const Dropdown: ComponentSchemaType = {
 		overlayStyle: {
 			label: '下拉根元素的样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		placement: {
 			label: '菜单弹出位置',

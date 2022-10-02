@@ -20,7 +20,7 @@ export interface PropInfoType {
   //当类型为object或者objectArray时，我们定义该类型的值为子属性值，子属性类型完全与配置完全与属性配置一样
   //当类型为object时其配置信息为一个类型为PropsConfigType的对象
   //当类型为objectArray时其配置为一个类型为PropsConfigType的数组对象
-  childPropsConfig?: PropsConfigType | PropsConfigType[];
+  childPropsConfig?: PropsConfigType;
   //表示该属性是否为添加属性，在属性设置面板中类型为object的属性，可以动态添加和删除子属性，
   // 只有属性面板中动态添加的属性才会有这个字段，组件原始配置信息，不需要配置此字段
   isAdd?: boolean;
@@ -35,7 +35,7 @@ export interface PropInfoType {
   // 属性的默认值
   defaultValue?: any;
   // 类型为number并且属性值为number+单位比如 12px，12%等可以设置此属性为true
-  hasUnit?: boolean;
+  unit?: string;
   // 类型为string时有时会是颜色这时设置此值为true就可以使用颜色面板
   isShowColor?: boolean;
   inputColProps?: any;

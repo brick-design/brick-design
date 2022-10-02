@@ -63,6 +63,6 @@ export function useStyleProps(componentName:string,
 		});
 	});
 
-	styleProps.className=key+'className'+' '+className;
+	styleProps.className=key+'brick-design'+' '+className;
 	return styleProps;
 }

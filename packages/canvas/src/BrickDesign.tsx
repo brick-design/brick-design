@@ -7,7 +7,6 @@ import React, {
   useRef,
 } from 'react';
 import {
-  clearHovered,
   PageConfigType,
   STATE_PROPS,
   getStore,
@@ -33,6 +32,7 @@ import {
 import OperationPanel from './components/OperationPanel';
 import BoxModel from './components/BoxModel';
 import styles from './index.less';
+import { ZoomProvider } from './components/ZoomProvider';
 /**
  * 鼠标离开设计区域清除hover状态
  */
@@ -60,7 +60,7 @@ type LayerNameType={
 }
 
 function BrickDesign(brickdProps: BrickDesignProps) {
-  const { onLoadEnd, pageName, options, operateStore, ...props } = brickdProps;
+  const { onLoadEnd, pageName, options, operateStore,zoomStore, ...props } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     ['pageConfig'],
     controlUpdate,
@@ -91,7 +91,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onMouseLeave = useCallback((event: Event) => {
     event.stopPropagation();
     if (getDragKey()) return;
-    clearHovered();
     operateStore.setPageState({
       hoverNode: null,
       operateHoverKey: null,
@@ -120,6 +119,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     (divContainer, designPage) => {
       ReactDOM.render(
         <BrickObserverProvider>
+          <ZoomProvider value={zoomStore}>
         <StaticContextProvider value={staticState}>
           <OperateProvider value={operateStore}>
             <BrickContext.Provider value={getStore()}>
@@ -131,6 +131,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
             </BrickContext.Provider>
           </OperateProvider>
         </StaticContextProvider>
+          </ZoomProvider>
         </BrickObserverProvider>,
         divContainer.current,
       );

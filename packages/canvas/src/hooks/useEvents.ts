@@ -22,6 +22,7 @@ import {
   getDragKey,
   getIframe,
   getIsModalChild,
+  // getSelectedNode,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
@@ -82,6 +83,10 @@ export function useEvents(
     },
     [propName],
   );
+
+  // useEffect(()=>{
+  //   setSelectedNode(getSelectedNode(key));
+  // },[]);
 
   const onDoubleClick = useCallback(
     (e: Event) => {
@@ -336,7 +341,6 @@ export function useEvents(
     onClick,
     onMouseOver,
     onDragStart,
-    setSelectedNode,
     getOperateState,
     onDrag,
     onDragEnd,

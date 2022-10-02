@@ -33,17 +33,18 @@ export function handlePropsClassName(
   animateClass: string,
   isShow:boolean
 ) {
-  console.log('isShow>>>>>>>',isShow);
-  let style=`${selectClassTarget + key} ${className} ${animateClass}`;
+  let style=`${selectClassTarget + key}`;
   if(!isShow){
-    style=' '+styles['hidden-component'];
+    style+=' '+styles['hidden-component'];
   }
-  // if(isLockTarget){
-  //   style+=' '+styles['forbid-event'];
-  // }else {
-  //   style+=' '+styles['allow-event'];
-  //
-  // }
+
+  if(className){
+    style+=' '+className;
+  }
+
+  if(animateClass){
+    style+=' '+animateClass;
+  }
   return style;
 }
 

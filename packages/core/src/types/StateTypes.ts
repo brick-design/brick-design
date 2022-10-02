@@ -74,7 +74,6 @@ export type StateType = {
   templates?:any;
   undo: UndoRedoType[];
   redo: UndoRedoType[];
-  hoverKey: null | string;
   platformInfo: PlatformInfoType;
 };
 

@@ -7,5 +7,7 @@ node_modules
 .idea
 dist
 lib
+/examples/react-example/build
 .jest-cache
 coverage
+

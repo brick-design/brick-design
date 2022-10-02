@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { each, get } from 'lodash';
+import { each, get,isEqual,isEmpty } from 'lodash';
 import {
   PageConfigType,
   getComponentConfig,
@@ -9,7 +9,7 @@ import {
 } from '@brickd/core';
 
 export * from './caches';
-import { Edge, IE11OrLess } from '@brickd/utils';
+import { Edge, IE11OrLess, VirtualDOMType } from '@brickd/utils';
 import { formatUnit } from '@brickd/hooks';
 import { getIframe } from './caches';
 import { defaultPropName, selectClassTarget } from '../common/constants';
@@ -51,10 +51,11 @@ export const getSelectedNode = (
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
-      selectClassTarget + key+'-0',
+      selectClassTarget + key,
     )[0] as HTMLElement;
   }
 };
+
 
 export const getNodeFromClassName=(className:string)=>{
   const iframe=getIframe();
@@ -65,6 +66,12 @@ export const getNodeFromClassName=(className:string)=>{
     )[0] as HTMLElement;
   }
 };
+
+export function setCss(target:HTMLElement,css:any){
+  each(css,(v,k)=>{
+    target.style[k]=v;
+  });
+}
 
 export function generateCSS(
   left?: number,
@@ -135,7 +142,6 @@ export function generateRequiredProps(componentName: string) {
 }
 
 export type PropParentNodes = { [propName: string]: HTMLElement };
-export type PropNodesPosition = { [propName: string]: boolean };
 export const getNodeRealRect = (element: Element) => {
   if (!element) return;
   const eleCSS = css(element);
@@ -238,160 +244,262 @@ export interface RealRect {
 }
 
 
-export const bridgeStore={
-
+export const placeholderBridgeStore={
+  prevRects:null,
   renderPlaceholder:null,
-  changePosition:(rect)=>{
-    // this.renderPlaceholder&&this.renderPlaceholder(rect);
+  changePosition(rects:PlaceholderPositionType){
+    if(!isEqual(this.prevRects,rects)){
+      this.prevRects=rects;
+      this.renderPlaceholder&&this.renderPlaceholder(rects);
+    }
   }
 
 };
 
+export type PlaceholderRect= {
+  height?:number
+  left?:number
+  top?:number
+  width?:number
+  isEmptyChild?:boolean
+}
+
+export type PlaceholderPositionType={
+  node1?:PlaceholderRect,
+  node2?:PlaceholderRect,
+  node3?:PlaceholderRect
+}
+
 export type NodeRectsMapType = { [key: string]: RealRect };
+
+export const classNameTemplate='brick-design';
+
+export const getParentKeyNodes=(parent:Element,key:string)=>{
+  return  parent.getElementsByClassName(key+classNameTemplate);
+};
+
+export const getParentKeyNodesRect=(parent:Element,key:string)=>{
+ const nodes= getParentKeyNodes(parent,key);
+   if(!nodes.length||EXCLUDE_POSITION.includes(get(css(nodes[0]), 'position'))){
+    return {};
+  }else if(nodes.length===1){
+    return  getNodeRealRect(nodes[0]);
+  }else  {
+    const first=getNodeRealRect(nodes[0]);
+    const last=getNodeRealRect(nodes[nodes.length-1]);
+    return {
+      left:first.left,top:first.top,width:last.left-first.left+first.width,height:last.top-first.top+first.height,
+      realWidth:last.left-first.left+first.realWidth,realHeight:last.top-first.top+first.realHeight
+    };
+  }
+
+};
+
 export const dragSort = (
   compareChildren: string[] = [],
   parentNode: Element,
   dragOffset: DragEvent,
-  isVertical?: boolean,
 ) => {
+  const isV=isVertical(parentNode);
+  const placeholderPosition:PlaceholderPositionType={};
   const dragKey = getDragKey();
   if (!dragKey) return compareChildren;
-  const {
-    realWidth: parentWidth,
-    realHeight: parentHeight,
-  } = getParentNodeRealRect(parentNode);
+  // const {
+  //   realWidth: parentWidth,
+  //   realHeight: parentHeight,
+  //   left:parentLeft,
+  //   top:parentTop
+  // } = getParentNodeRealRect(parentNode);
   const { clientX, clientY } = dragOffset;
-  const newChildren = [];
-  let nodeIndex = 0;
-  for (let index = 0; index < compareChildren.length; index++) {
-    const compareKey = compareChildren[index];
-    if (compareKey === dragKey) continue;
-    let childNode;
-    for (nodeIndex; nodeIndex < parentNode.children.length; nodeIndex++) {
-      const classNames=get(parentNode,`children.${nodeIndex}.className`,'');
-      if (typeof classNames==='string'&& classNames.includes(selectClassTarget + compareKey)
-      ) {
-        childNode = parentNode.children[nodeIndex];
-        break;
-      }
+  let newChildren = [];
+  let lastNodeRect:any={};
+  let firstNodeRect:any={};
+ const restChildren=()=>{
+     placeholderPosition.node1=null;
+     placeholderPosition.node2=null;
+     placeholderPosition.node3=null;
+     newChildren=compareChildren;
+ };
+  for ( let i = 0; i <compareChildren.length ; i++) {
+    const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+    if(!isEmpty(rect)){
+      firstNodeRect=rect;
+      firstNodeRect.index=i;
+      break;
     }
 
-    if (EXCLUDE_POSITION.includes(get(css(childNode), 'position'))) {
+  }
+  for ( let i = compareChildren.length-1; i >=0 ; i--) {
+    const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+    if(!isEmpty(rect)){
+      lastNodeRect=rect;
+      lastNodeRect.index=i;
+      break;
+    }
+  }
+
+  const getNode1Rect=(index)=>{
+    if(index>=firstNodeRect.index){
+      for (let i=index;i>=firstNodeRect.index;i--){
+       const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+        if(!isEmpty(rect)){
+          const {realWidth,left,top,realHeight}=getParentKeyNodesRect(parentNode,compareChildren[index]);
+          if(!isV){
+            return {width:left-firstNodeRect.left+realWidth};
+          }else {
+            return {height:top-firstNodeRect.top+realHeight};
+          }
+        }
+      }
+
+    }else {
+      return {width: 0,height: 0};
+    }
+  };
+
+  const getNode3Rect=(index)=>{
+    if(index<=lastNodeRect.index){
+      for ( let i = index; i <=lastNodeRect.index ; i++) {
+        const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+        if(!isEmpty(rect)){
+          const {left,top}=rect;
+          if(!isV){
+            return {width:lastNodeRect.left-left+lastNodeRect.realWidth};
+          }else {
+            return {height:lastNodeRect.top-top+lastNodeRect.realHeight};
+          }
+        }
+      }
+    }
+    return {width: 0,height: 0};
+  };
+  for (let index = 0; index < compareChildren.length; index++) {
+    const compareKey = compareChildren[index];
+    // if (compareKey === dragKey) continue;
+    if (EXCLUDE_POSITION.includes(get(css(getParentKeyNodes(parentNode,compareKey)[0]), 'position'))) {
       newChildren.push(compareKey);
       continue;
     }
-    const childRect = getNodeRealRect(childNode);
+    const childRect = getParentKeyNodesRect(parentNode,compareKey);
     if (!childRect) {
       newChildren.push(compareKey);
       continue;
     }
-    const { left, top, realWidth, realHeight, width, height } = childRect;
+
+    const { left, top, width, height } = childRect;
     const offsetLeft = clientX - left;
     const offsetTop = clientY - top;
-    const offsetW = parentWidth - realWidth;
-    const offsetH = parentHeight - realHeight;
-    if (!isVertical) {
-      if (offsetW > 0) {
-        if (offsetLeft > 0) {
-          if (offsetLeft <= width * 0.5) {
-            newChildren.push(dragKey, ...compareChildren.slice(index));
+    // const offsetW = parentWidth - realWidth;
+    // const offsetH = parentHeight - realHeight;
+    if (!isV) {
+      if (offsetLeft > 0) {
+        if (offsetLeft <= width * 0.5) {
+          if(dragKey===compareKey||dragKey===compareChildren[index-1]){
+            restChildren();
             break;
-          } else if (offsetLeft < width && offsetLeft > width * 0.5) {
-            newChildren.push(
-              compareKey,
-              dragKey,
-              ...compareChildren.slice(index + 1),
-            );
-            break;
-          } else {
-            newChildren.push(compareKey);
           }
-        } else {
+          placeholderPosition.node1=getNode1Rect(index-1);
+          placeholderPosition.node2={height};
+          placeholderPosition.node3=getNode3Rect(index);
           newChildren.push(dragKey, ...compareChildren.slice(index));
-
           break;
+        } else if (offsetLeft < width && offsetLeft > width * 0.5) {
+          if(dragKey===compareKey||dragKey===compareChildren[index + 1]){
+            restChildren();
+            break;
+          }
+          placeholderPosition.node1=getNode1Rect(index);
+          placeholderPosition.node2={height};
+          placeholderPosition.node3=getNode3Rect(index+1);
+
+          newChildren.push(
+            compareKey,
+            dragKey,
+            ...compareChildren.slice(index + 1),
+          );
+          break;
+        } else {
+          if(dragKey!==compareKey)
+          newChildren.push(compareKey);
+          if(index===compareChildren.length-1){
+            newChildren.push(dragKey);
+            placeholderPosition.node1=getNode1Rect(index);
+            placeholderPosition.node2={height};
+            placeholderPosition.node3=getNode3Rect(index+1);
+          }
         }
       } else {
-        if (offsetTop > 0) {
-          if (offsetTop < height * 0.5) {
-            newChildren.push(dragKey, ...compareChildren.slice(index));
-
-            break;
-          } else if (offsetTop < height && offsetTop > height * 0.5) {
-            newChildren.push(
-              compareKey,
-              dragKey,
-              ...compareChildren.slice(index + 1),
-            );
-
-            break;
-          } else {
-            newChildren.push(compareKey);
-          }
-        } else {
-          newChildren.push(dragKey, ...compareChildren.slice(index));
-
+        if(dragKey===compareKey||dragKey===compareChildren[index-1]){
+          restChildren();
           break;
         }
+        placeholderPosition.node1=getNode1Rect(index-1);
+        placeholderPosition.node2={height};
+        placeholderPosition.node3=getNode3Rect(index);
+        newChildren.push(dragKey, ...compareChildren.slice(index));
+        break;
       }
+
     } else {
-      if (offsetH > 0) {
-        if (offsetTop > 0) {
-          if (offsetTop <= height * 0.5) {
-            newChildren.push(dragKey, ...compareChildren.slice(index));
-
+      if (offsetTop > 0) {
+        if (offsetTop <= height * 0.5) {
+          if(dragKey===compareKey||dragKey===compareChildren[index-1]){
+            restChildren();
             break;
-          } else if (offsetTop < height && offsetTop > height * 0.5) {
-            newChildren.push(
-              compareKey,
-              dragKey,
-              ...compareChildren.slice(index + 1),
-            );
-            break;
-          } else {
-            newChildren.push(compareKey);
           }
-        } else {
+          placeholderPosition.node1=getNode1Rect(index-1);
+          placeholderPosition.node2={width};
+          placeholderPosition.node3=getNode3Rect(index);
           newChildren.push(dragKey, ...compareChildren.slice(index));
-
           break;
+        } else if (offsetTop < height && offsetTop > height * 0.5) {
+          if(dragKey===compareKey||dragKey===compareChildren[index + 1]){
+            restChildren();
+            break;
+          }
+          placeholderPosition.node1=getNode1Rect(index);
+          placeholderPosition.node2={width};
+          placeholderPosition.node3=getNode3Rect(index+1);
+
+          newChildren.push(
+            compareKey,
+            dragKey,
+            ...compareChildren.slice(index + 1),
+          );
+          break;
+        } else {
+          if(dragKey!==compareKey)
+            newChildren.push(compareKey);
+          if(index===compareChildren.length-1){
+            newChildren.push(dragKey);
+            placeholderPosition.node1=getNode1Rect(index);
+            placeholderPosition.node2={width};
+            placeholderPosition.node3=getNode3Rect(index+1);
+          }
         }
       } else {
-        if (offsetLeft > 0) {
-          if (offsetLeft < width * 0.5) {
-            newChildren.push(dragKey, ...compareChildren.slice(index));
-
-            break;
-          } else if (offsetLeft < width && offsetLeft > width * 0.5) {
-            newChildren.push(
-              compareKey,
-              dragKey,
-              ...compareChildren.slice(index + 1),
-            );
-
-            break;
-          } else {
-            newChildren.push(compareKey);
-          }
-        } else {
-          newChildren.push(dragKey, ...compareChildren.slice(index));
-
+        if(dragKey===compareKey||dragKey===compareChildren[index-1]){
+          restChildren();
           break;
         }
+        placeholderPosition.node1=getNode1Rect(index);
+        placeholderPosition.node2={height};
+        placeholderPosition.node3=getNode3Rect(index+1);
+        newChildren.push(dragKey, ...compareChildren.slice(index));
+        break;
       }
     }
   }
   if (!newChildren.includes(dragKey)) {
     newChildren.push(dragKey);
   }
-
+  placeholderBridgeStore.changePosition(placeholderPosition);
   return [...new Set(newChildren)];
 };
 
 export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
-  propNodesPosition: PropNodesPosition,
   index = 0,
 ) => {
   if (Array.isArray(childNodes)) {
@@ -400,7 +508,6 @@ export const getPropParentNodes = (
       if (node) {
         const parentNode = node.parentElement;
         parentNodes[defaultPropName] = parentNode;
-        propNodesPosition[defaultPropName] = isVertical(parentNode);
         break;
       }
     }
@@ -412,21 +519,33 @@ export const getPropParentNodes = (
           if (node) {
             const parentNode = node.parentElement;
             parentNodes[propName] = parentNode;
-            propNodesPosition[propName] = isVertical(parentNode);
             break;
           }
         }
       }
     });
   }
-
-  return parentNodes;
 };
-
+/**
+ * 获取拖拽组件的key
+ */
 export const getDragKey = () => getDragSourceFromKey('dragKey');
+/**
+ * 获取拖放组件的key
+ */
 export const getDropKey=()=>get(getDropTarget(),'dropKey');
+
+/**
+ * 从拖拽源中获取指定的属性值
+ * @param propName
+ * @param defaultValue
+ */
 export const getDragSourceFromKey = (propName: string, defaultValue?: any) =>
   get(getDragSource(), propName, defaultValue);
+/**
+ * 获取拖拽组件的组件名
+ * @param dragKey
+ */
 export const getDragComponentName = (dragKey?: string) =>
   get(getSelector(['pageConfig']), [
     'pageConfig',
@@ -434,10 +553,13 @@ export const getDragComponentName = (dragKey?: string) =>
     'componentName',
   ])||get(getDragSourceFromKey('template'),[dragKey || getDragKey(),
     'componentName']);
-
+/**
+ * 获取指定key 的虚拟dom
+ * @param nodeKey
+ */
 export const getVNode = (nodeKey: string) =>
-  get(getSelector(['pageConfig']), ['pageConfig', nodeKey])||
-  get(getDragSourceFromKey('template'),nodeKey)||{}
+  (get(getSelector(['pageConfig']), ['pageConfig', nodeKey])||
+  get(getDragSourceFromKey('template'),nodeKey)||{}) as VirtualDOMType
 ;
 
 export function css(el): CSSStyleDeclaration {

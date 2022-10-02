@@ -19,7 +19,7 @@ import {
   getElementInfo, getFatherRotate,
   getIframe,
   setPosition,
-  getTransform,
+  getTransform, getSelectedNode,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
@@ -44,10 +44,6 @@ export enum MarginPosition {
   bottom = 'bottom',
 }
 
-const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
-  const { selectedInfo } = nextState;
-  return prevState.selectedInfo !== selectedInfo;
-};
 
 type OriginSizeType = {
   x: number;
@@ -67,11 +63,24 @@ type OriginSizeType = {
 
 function OperationPanel() {
   const iframe = useRef(getIframe()).current;
+  const { getOperateState, setSubscribe, setOperateState } = useOperate();
+
+  const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
+    const { selectedInfo } = nextState;
+    const {operateSelectedKey}=getOperateState();
+    if(prevState.selectedInfo&&!selectedInfo){
+      setOperateState({operateSelectedKey:null,selectedNode:null});
+    }else if(!prevState.selectedInfo&&selectedInfo&&!operateSelectedKey) {
+      const {selectedKey}=selectedInfo;
+      setOperateState({operateSelectedKey:selectedKey,selectedNode:getSelectedNode(selectedKey+'-0')});
+
+    }
+    return prevState.selectedInfo !== selectedInfo;
+  };
   const { selectedInfo } = useSelector<ResizeState, STATE_PROPS>(
     ['selectedInfo'],
     controlUpdate,
   );
-  const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const { selectedKey } = selectedInfo || {};
   const resizeRef = useRef<HTMLDivElement>();
   const operationPanelRef = useRef<HTMLDivElement>();

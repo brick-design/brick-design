@@ -34,10 +34,10 @@ export type PositionSizeType = {
 
 
 function Guidelines() {
-  const topRef = useRef<any>();
-  const bottomRef = useRef<any>();
-  const leftRef = useRef<any>();
-  const rightRef = useRef<any>();
+  const topRef = useRef<HTMLDivElement>();
+  const bottomRef = useRef<HTMLDivElement>();
+  const leftRef = useRef<HTMLDivElement>();
+  const rightRef = useRef<HTMLDivElement>();
   const iframe = useRef(getIframe()).current;
   const {getZoomState}=useZoom();
   const canvas = useRef(document.getElementById('brickd-canvas')).current;
@@ -50,7 +50,7 @@ function Guidelines() {
   // console.log('hoverKey>>>>>>>>',hoverKey,dropNode);
 
   useEffect(() => {
-    const { contentWindow, } = iframe;
+    const { contentWindow } = iframe;
     const renderGuideLines = () => {
       const { hoverNode, dropNode, isModal } = getOperateState();
       const node = dropNode || hoverNode;

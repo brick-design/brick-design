@@ -8,7 +8,6 @@ import {
   onLayoutSortChange,
 } from './handleComponentSchema';
 
-import { clearHovered, overTarget } from './handleHover';
 import { changePlatform } from './handlePlatform';
 import { changeProps, resetProps } from './handleProps';
 import {
@@ -66,12 +65,6 @@ export const reducer: ReducerType = (prevState, action) => {
       break;
     case ACTION_TYPES.copyComponent:
       newState = copyComponent(state);
-      break;
-    case ACTION_TYPES.clearHovered:
-      newState = clearHovered(state);
-      break;
-    case ACTION_TYPES.overTarget:
-      newState = overTarget(state, payload);
       break;
     case ACTION_TYPES.changePlatform:
       newState = changePlatform(state, payload);

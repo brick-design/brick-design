@@ -29,11 +29,12 @@ function FormItem(props: FormItemProps & FieldProps) {
     isHidden,
     headerStyle,
   } = renderFormItem(config, name as string, isExpression, menu);
+  const {label}=config||{};
   return (
     <div style={style} className={styles['form-item-container']}>
       {isShowLabel && (
         <div style={headerStyle} className={styles['title']}>
-          <span className={styles['label']}>{name}</span>
+          <span className={styles['label']}>{label||name}</span>
           <div className={styles['handle-container']}>
             {!isHidden && (
               <Checkbox

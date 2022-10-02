@@ -8,16 +8,18 @@ const img: ComponentSchemaType = {
 			type: PROPS_TYPES.string,
 		},
 		src: {
-			label: '上传图像',
+			label: '图像链接',
 			type: PROPS_TYPES.string,
 		},
 		height: {
-			label: '规定图像的高度',
-			type: PROPS_TYPES.string,
+			label: '高度',
+			type: PROPS_TYPES.number,
+			unit: 'px',
 		},
 		width: {
-			label: '规定图像的宽度',
-			type: PROPS_TYPES.string,
+			label: '宽度',
+			type: PROPS_TYPES.number,
+			unit: 'px',
 		},
 		className: {
 			type: PROPS_TYPES.cssClass,

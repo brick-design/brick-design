@@ -72,8 +72,7 @@ const Group: ComponentSchemaType = {
 		options: {
 			label: '以配置形式设置子元素',
 			type: [PROPS_TYPES.stringArray, PROPS_TYPES.objectArray],
-			childPropsConfig: [
-				{
+			childPropsConfig: {
 					label: {
 						label: 'label',
 						type: PROPS_TYPES.string,
@@ -87,7 +86,6 @@ const Group: ComponentSchemaType = {
 						type: PROPS_TYPES.boolean,
 					},
 				},
-			],
 		},
 		size: {
 			label: '大小',
