@@ -108,7 +108,7 @@ export function useEvents(
   const onClick = useCallback(
     (event: Event) => {
       event && event.stopPropagation();
-      clearSelectedStatus();
+      isSelected&&clearSelectedStatus();
       setOperateState({ selectedNode: null,operateSelectedKey:null });
       onClickFn && onClickFn();
     },
@@ -304,7 +304,7 @@ export function useEvents(
     } = getOperateState();
     setDragSource(null);
     if (!isEmpty(positionResultRef.current)) {
-      changeStyles({ style: positionResultRef.current });
+      changeStyles({ style: positionResultRef.current,isMerge:true });
       changeBoxDisplay('none');
       positionResultRef.current = {};
     }

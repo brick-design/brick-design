@@ -166,7 +166,7 @@ export function useMouseMove(isSelected:boolean,key:string){
 			changeBoxDisplay,
 		} = getOperateState();
 		if (!isEmpty(positionResultRef.current)) {
-			changeStyles({ style: positionResultRef.current });
+			changeStyles({ style: positionResultRef.current,isMerge:true});
 			changeBoxDisplay('none');
 			positionResultRef.current = {};
 		}

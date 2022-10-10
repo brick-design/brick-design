@@ -203,7 +203,7 @@ function OperationPanel() {
     operationPanelRef.current.style.pointerEvents = 'none';
     operationPanelRef.current.style.transition = DEFAULT_ANIMATION;
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
-    changeStyles({style:styleResultRef.current});
+    changeStyles({style:styleResultRef.current,isMerge:true});
     styleResultRef.current = {};
   }, [setIsShowSizeTip]);
 

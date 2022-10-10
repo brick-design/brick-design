@@ -15,7 +15,7 @@ export function changeStyles(
 ): StateType {
   const { undo, redo, selectedInfo,styleSheet,pageConfig} = state;
   if (!selectedInfo) return state;
-  const { style } = payload;
+  const { style,isMerge } = payload;
   const {selectedKey,selectedStyleProp}=selectedInfo;
   if(!selectedStyleProp){
     undo.push({ pageConfig });
@@ -24,10 +24,14 @@ export function changeStyles(
       ...state,
       pageConfig: produce(pageConfig, (oldConfigs) => {
         const config = oldConfigs[selectedKey];
-        if (get(config.props,'style')) {
+        if (get(config.props,'style')&&isMerge) {
           config.props.style = { ...config.props.style, ...style };
         } else {
-          config.props = { style };
+          if(config.props){
+            config.props.style=style;
+          }else {
+            config.props = { style };
+          }
         }
       }),
       undo,

@@ -43,11 +43,8 @@ function SortableTags(props: SortableTagsProps, ref: Ref<HTMLDivElement>) {
     onDeleteItem,
     ...rest
   } = props;
-  console.log('sortData1>>>>>>>',sortData);
   const onSortData = (sortKeys: string[]) => {
     const index = sortKeys.indexOf('extra-item');
-    console.log('onSortData>>>>>>>',sortKeys);
-
     sortKeys.splice(index, 1);
     onSortChange && onSortChange(sortKeys);
   };
@@ -61,8 +58,6 @@ function SortableTags(props: SortableTagsProps, ref: Ref<HTMLDivElement>) {
       }else {
         newSortData=undefined;
       }
-      console.log('newSortData>>>>>>',newSortData);
-
       onSortChange && onSortChange(newSortData);
     },
     [sortData],

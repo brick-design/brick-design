@@ -80,7 +80,8 @@ function Props({isCommon}:PropsType){
 	},[]);
 
 	const onValuesChange=(changedValues, values)=>{
-		changeProps({isMerge:true,props:values});
+		console.log('changedValues>>>>>>>',changedValues,values);
+		changeProps({isMerge:true,props:changedValues});
 	};
 
 	if(!componentName|| isEmpty(formConfig)){

@@ -50,7 +50,6 @@ interface RadioGroupProp extends RadioType {
 
 function RadioGroup(props: RadioGroupProp) {
   const { radioData, className, ...rest } = props;
-  console.log('RadioGroup>>>>>>>',rest);
   return (
     <div className={`${styles['radio-group']} ${className}`}>
       {map(radioData, (v, index) => {

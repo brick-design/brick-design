@@ -1,7 +1,7 @@
 import ACTION_TYPES from '../actionTypes';
 import { createActions } from '../../utils';
 
-export type stylePayload = { style: any };
+export type stylePayload = { style: any,isMerge?:boolean };
 export const changeStyles = (payload: stylePayload) =>
   createActions({
     type: ACTION_TYPES.changeStyles,

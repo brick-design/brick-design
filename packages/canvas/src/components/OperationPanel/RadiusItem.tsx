@@ -196,7 +196,7 @@ function RadiusItem(props: ItemProps) {
     const { selectedNode } = getOperateState();
     // hiddenBaseboard(baseboardRef.current);
     originRadiusRef.current = undefined;
-    changeStyles({ style: radiusResultRef.current });
+    changeStyles({ style: radiusResultRef.current,isMerge:true });
     radiusResultRef.current = {};
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
     setSelected(false);
