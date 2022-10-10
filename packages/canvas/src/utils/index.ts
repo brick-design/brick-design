@@ -301,6 +301,7 @@ export const dragSort = (
   dragOffset: DragEvent,
 ) => {
   const isV=isVertical(parentNode);
+  console.log('isV>>>>>>>',isV);
   const placeholderPosition:PlaceholderPositionType={};
   const dragKey = getDragKey();
   if (!dragKey) return compareChildren;
@@ -353,7 +354,7 @@ export const dragSort = (
       }
 
     }else {
-      return {width: 0,height: 0};
+      return {};
     }
   };
 
@@ -371,7 +372,7 @@ export const dragSort = (
         }
       }
     }
-    return {width: 0,height: 0};
+    return {};
   };
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
@@ -482,9 +483,9 @@ export const dragSort = (
           restChildren();
           break;
         }
-        placeholderPosition.node1=getNode1Rect(index);
-        placeholderPosition.node2={height};
-        placeholderPosition.node3=getNode3Rect(index+1);
+        placeholderPosition.node1=getNode1Rect(index-1);
+        placeholderPosition.node2={width};
+        placeholderPosition.node3=getNode3Rect(index);
         newChildren.push(dragKey, ...compareChildren.slice(index));
         break;
       }

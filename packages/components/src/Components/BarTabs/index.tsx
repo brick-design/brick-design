@@ -44,7 +44,7 @@ function BarTabs(props: BarTabsProp) {
           className={styles['brickd-tabs']}
           style={{ border: 0 }}
           activeKey={activeKey}
-          tabBarStyle={{ height: 39 }}
+          // tabBarStyle={{ height: 39 }}
           tabBarGutter={16}
           tabBarExtraContent={
             <Icon

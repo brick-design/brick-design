@@ -22,7 +22,7 @@ import { useOperate } from '../hooks/useOperate';
 // import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
 import { useEye } from '../hooks/useEye';
-import { useSelector } from '../hooks/useSelector';
+// import { useSelector } from '../hooks/useSelector';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -35,7 +35,6 @@ function NoneContainer(allProps: CommonPropsType) {
   const  { isSelected }=selectedInfo;
   const vNode = getVNode(key);
   const { componentName } = vNode;
-  useSelector(['']);
   const { setOperateState } = useOperate();
   // useNewAddComponent(key);
   const { props, hidden, pageState } = useCommon(vNode, rest);

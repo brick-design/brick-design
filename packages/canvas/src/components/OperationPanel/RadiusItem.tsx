@@ -62,7 +62,7 @@ const computePosition = (r: number) => {
 function RadiusItem(props: ItemProps) {
   const originRadiusRef = useRef<OriginRadiusType>();
   const radiusResultRef = useRef({});
-  const nodeRef = useRef<HTMLElement>();
+  const nodeRef = useRef<HTMLDivElement>();
   const iframe = useRef(getIframe()).current;
   const { getOperateState, setSubscribe, executeKeyListener } = useOperate();
   const [selected, setSelected] = useState(false);
@@ -161,7 +161,6 @@ function RadiusItem(props: ItemProps) {
   );
   const onMouseDown = useCallback(
     (event: React.MouseEvent<HTMLSpanElement>) => {
-      event.stopPropagation();
       const { selectedNode } = getOperateState();
       const { radius, onRadiusStart } = props;
       if (iframe) {
@@ -262,16 +261,16 @@ function RadiusItem(props: ItemProps) {
     };
   }, [onMouseMove, onMouseUp]);
 
-  const onClick=(event: React.MouseEvent<HTMLSpanElement>) =>{
+  const onLock=(event: React.MouseEvent) =>{
     event.stopPropagation();
     setChecked(!checked);
   };
   const { radius } = props;
   return (
-    <span
-      onClick={onClick}
+    <div
       draggable={false}
-      ref={nodeRef}
+      ref= {nodeRef}
+      onClick={onLock}
       style={radiusStyles[radius]}
       onMouseDown={onMouseDown}
       className={`${styles['radius-item']} ${

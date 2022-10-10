@@ -120,7 +120,7 @@ export function useEvents(
       event.stopPropagation();
       // const { hoverNode } = getOperateState();
       const dragKey=getDragKey();
-      if (dragKey && dragKey===key||isSelected) {
+      if (dragKey && dragKey===key) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
       } else {
         setOperateState({

@@ -23,11 +23,6 @@ require('rc-switch/assets/index.css');
 
 const users: UserType[] = [
   {
-    id: 1,
-    img:
-      'https://img0.baidu.com/it/u=3434365774,3342884301&fm=26&fmt=auto&gp=0.jpg',
-  },
-  {
     id: 2,
     img:
       'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic3.zhimg.com%2F50%2Fv2-6f1c492cbdfe3c24aae44e935a796d5a_hd.jpg&refer=http%3A%2F%2Fpic3.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1627221393&t=d5b06091574cfeaad248f24803a57a07',

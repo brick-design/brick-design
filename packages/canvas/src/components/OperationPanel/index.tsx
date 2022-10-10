@@ -64,7 +64,6 @@ type OriginSizeType = {
 function OperationPanel() {
   const iframe = useRef(getIframe()).current;
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
-
   const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
     const { selectedInfo } = nextState;
     const {operateSelectedKey}=getOperateState();
@@ -185,7 +184,7 @@ function OperationPanel() {
       unSubscribe();
       contentWindow.removeEventListener('mouseup', onMouseUp);
       contentWindow.removeEventListener('mousemove', onMouseMove);
-      contentWindow.removeEventListener('mousemove', onMouseUp);
+      contentWindow.removeEventListener('mouseleave', onMouseUp);
       contentWindow.removeEventListener('resize', changeSize);
       contentWindow.removeEventListener('animationend', changeSize);
     };

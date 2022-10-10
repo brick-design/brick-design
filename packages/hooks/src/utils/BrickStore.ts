@@ -61,7 +61,6 @@ export class BrickStore<T> {
 
   executeKeyListener = (selectedKey?: string) => {
     if(selectedKey){
-      console.log('this.listenerMap[selectedKey]>>>>>>>',selectedKey,this.listenerMap[selectedKey].length);
       executeListener(this.listenerMap[selectedKey]);
     }else {
       each(this.listenerMap, (listeners) => {
