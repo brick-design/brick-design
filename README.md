@@ -21,6 +21,8 @@
 >
 >command/control+U      全局查看与窗口查看切换
 >
+>command/control+D+触摸板    拖拽画布移动，缩放
+>
 >command/control+z      撤销
 >
 >command/control+shift+z    回退
