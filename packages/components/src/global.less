@@ -1,0 +1,89 @@
+@content-height: calc(100vh - 120px);
+@backGroundColor: rgb(222, 222, 228);
+@bgColor:rgb(247, 247, 247);
+@borderColor: #f2f2f2;
+@select-border-Color: #388bfe;
+@transparent: #00000000;
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 39px;
+  cursor: pointer;
+  .icon-class {
+    width: 14px;
+    height: 14px;
+    user-select: none;
+  }
+}
+
+.icon-Menu {
+  width: 45px;
+  height: 35px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  margin-right: 5px;
+  box-shadow: 3px 4px 5px 3px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  .icon-class {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.tabs-container {
+  :global {
+    .rc-tabs-tab {
+      font-size: 12px;
+      font-weight: bold;
+      color: #aaa;
+    }
+    .rc-tabs-tab-active {
+      color: #333;
+    }
+    .rc-tabs-ink-bar {
+      background-color: rgb(51, 51, 51);
+      height: 2px !important;
+    }
+    .rc-tabs-nav-operations {
+      display: none !important;
+    }
+    .rc-tabs-nav-measure-ping-top::before,
+    .rc-tabs-nav-wrap-ping-top::before,
+    .rc-tabs-nav-measure-ping-bottom::after,
+    .rc-tabs-nav-wrap-ping-bottom::after {
+      border: 0 !important;
+    }
+    .rc-tabs-nav-operations {
+      display: none !important;
+    }
+  }
+}
+
+.common-input {
+  padding: 0;
+  border: none;
+  text-align: left;
+  outline: none;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+  width: 100%;
+  color: rgba(0, 0, 0, 0.8);
+  font-family: PingFangSC-Medium, PingFang SC;
+  &::placeholder {
+    font-weight: 400;
+    font-family: PingFangSC-Regular, PingFang SC;
+    color: rgba(0, 0, 0, 0.3);
+  }
+}

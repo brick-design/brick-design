@@ -1,0 +1,32 @@
+@import 'src/global';
+.container {
+  display: flex;
+  align-items: center;
+  .icon {
+    font-size: 16px;
+    padding: 3px;
+    cursor: pointer;
+  }
+  .unit{
+    font-size: 12px;
+  }
+  .input-number {
+    width: 45px;
+    font-size: 12px;
+    text-align: center;
+    appearance: none;
+    border: none;
+    outline: none;
+    border-bottom: 1px @borderColor solid;
+    &:hover,
+    &:focus {
+      border-bottom: 1px @select-border-Color solid;
+    }
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+  }
+}

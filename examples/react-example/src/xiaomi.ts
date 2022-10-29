@@ -104,11 +104,11 @@ const data: PageConfigType = {
 	3: {
 		componentName: 'img',
 		props: {
-			src: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.canva.cn%2Flearn%2Fwp-content%2Fuploads%2Fsites%2F17%2F2019%2F11%2F1000.png&refer=http%3A%2F%2Fwww.canva.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1618299431&t=e9fd3262b900bd370391699d178994bd',
+			src:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimage2.cqcb.com%2Fd%2Ffile%2Fvision%2Fai%2F2021-10-10%2F50c16225e9099dad3534a37f7e7673fe.jpeg&refer=http%3A%2F%2Fimage2.cqcb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1667221982&t=454f6d298aa7a1d0a11e739e1e6c6880',
 			style: {
 				width: 55,
 				height: 55,
-				marginRight: 199,
+				marginRight: 199
 			},
 		},
 

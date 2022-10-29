@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Menu: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -47,6 +47,7 @@ const Menu: ComponentSchemaType = {
 			tip: '现在支持垂直、水平、和内嵌模式三种',
 			type: PROPS_TYPES.enum,
 			enumData: ['vertical', 'vertical-right', 'horizontal', 'inline'],
+			defaultValue:'vertical'
 		},
 		multiple: {
 			label: '是否允许多选',

@@ -4,7 +4,7 @@ import {
 	NodePropsConfigType,
 	PROPS_TYPES,
 	PropsConfigType,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const commonNodePropsConfig: NodePropsConfigType = {
 	dateRender: {
@@ -51,7 +51,6 @@ const commonPropsConfig: PropsConfigType = {
 	locale: {
 		label: '国际化配置',
 		type: PROPS_TYPES.object,
-		childPropsConfig: {},
 	},
 	mode: {
 		label: '日期面板的状态',
@@ -70,7 +69,6 @@ const commonPropsConfig: PropsConfigType = {
 	popupStyle: {
 		label: '额外的弹出日历样式',
 		type: PROPS_TYPES.object,
-		childPropsConfig: {},
 	},
 	size: {
 		label: '输入框大小',
@@ -112,7 +110,6 @@ const DatePicker: ComponentSchemaType = {
 		showTime: {
 			label: '增加时间选择功能',
 			type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
-			childPropsConfig: {},
 		},
 		showToday: {
 			label: '是否展示“今天”按钮',
@@ -208,7 +205,6 @@ const RangePicker: ComponentSchemaType = {
 		ranges: {
 			label: '预设时间范围快捷选择',
 			type: [PROPS_TYPES.object, PROPS_TYPES.function],
-			childPropsConfig: {},
 		},
 		separator: {
 			label: '设置分隔符',
@@ -217,7 +213,6 @@ const RangePicker: ComponentSchemaType = {
 		showTime: {
 			label: '增加时间选择功能',
 			type: [PROPS_TYPES.boolean, PROPS_TYPES.object],
-			childPropsConfig: {},
 		},
 		// value: {
 		//   type: PROPS_TYPES.string,

@@ -22,9 +22,9 @@ footer: Open-source MIT Licensed | Copyright © 2020-present<br />Powered by sel
 
 ## 轻松上手
 ```bash
-yarn add @brickd/react  @brickd/react-web @brickd/render
+yarn add @brickd/react  @brickd/components @brickd/render
 ```
 OR
 ```bash
-npm install @brickd/react @brickd/react-web @brickd/render
+npm install @brickd/react @brickd/components @brickd/render
 ```

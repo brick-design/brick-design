@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Dropdown: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -36,7 +36,6 @@ const Dropdown: ComponentSchemaType = {
 		overlayStyle: {
 			label: '下拉根元素的样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		placement: {
 			label: '菜单弹出位置',

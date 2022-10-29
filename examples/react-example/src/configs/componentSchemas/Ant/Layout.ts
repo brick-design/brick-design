@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Layout: ComponentSchemaType = {
 	propsConfig: {
@@ -86,7 +86,7 @@ const Sider: ComponentSchemaType = {
 		width: {
 			label: '宽度',
 			type: PROPS_TYPES.number,
-			hasUnit: true,
+			unit: 'px',
 		},
 		onCollapse: {
 			label: '收起时的回调函数',
@@ -104,7 +104,6 @@ const Sider: ComponentSchemaType = {
 			label: 'trigger 的样式',
 			tip: '指定当 collapsedWidth 为 0 时出现的特殊 trigger 的样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 	},
 }

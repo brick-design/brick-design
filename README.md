@@ -12,7 +12,7 @@
 ![brickd3](https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif)
 
 ## 描述
-准备使用mobx重构,redux版不在维护。
+基于React组件之间原始约束设计，还原真实开发中组件编码过程，所见即所得。当前版本还在开发中，新功能持续更新.....欢迎关注！
 
 ### 快捷键
 >command/control+"+"    放大
@@ -20,8 +20,6 @@
 >command/control+"-"    缩小
 >
 >command/control+U      全局查看与窗口查看切换
->
->command/control+D+触摸板    拖拽画布移动，缩放
 >
 >command/control+z      撤销
 >

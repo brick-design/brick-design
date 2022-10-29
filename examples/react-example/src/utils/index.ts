@@ -8,8 +8,8 @@ import flattenDeep from 'lodash/flattenDeep'
 import map from 'lodash/map'
 import isEqual from 'lodash/isEqual'
 import keys from 'lodash/keys'
-import {PROPS_TYPES } from '@brickd/react'
-import {CategoryType} from '@brickd/react-web'
+import {PROPS_TYPES } from '@brickd/canvas'
+import {CategoryType} from '@brickd/components'
 
 export const SPECIAL_STRING_CONSTANTS: any = {
 	null: null,
@@ -42,20 +42,6 @@ export const formatSpecialProps = (props: any, propsConfig: any) => {
 		}
 	})
 	return nextProps
-}
-
-/**
- * 用于获取组件名字数组
- * @param data
- * @returns {Array}
- */
-export function flattenDeepArray(data: CategoryType) {
-	return flattenDeep(
-		map(data, (v, k) => {
-			if (v && v.components) return map(v.components, (_, subK) => subK)
-			return k
-		}),
-	)
 }
 
 /**

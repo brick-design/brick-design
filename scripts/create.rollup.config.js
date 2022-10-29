@@ -25,7 +25,7 @@ export function createConfig(pakg, name) {
 			{
 				name,
 				format: 'umd',
-				file: path.resolve(__dirname, `dist/umd/${name}.min.js`),
+				file: path.resolve(__dirname, `dist/umd/index.min.js`),
 				plugins: [
 					terser(),
 				],

@@ -1,3 +1,4 @@
+import { PageConfigType } from '@brickd/core'
 
 const images=[
 	'https://t7.baidu.com/it/u=3435942975,1552946865&fm=193&f=GIF',
@@ -43,12 +44,11 @@ const slidMenuData=[
 
 const stepData=[1,2,3,4]
 
-export default {
+const data:PageConfigType= {
 	'0': {
 		componentName: 'Layout',
 		props: {
 			style: {
-				width: null,
 				height: '100%',
 			},
 		},
@@ -73,12 +73,6 @@ export default {
 	},
 	'2': {
 		componentName: 'Layout.Header',
-		props: {
-			style: {
-				width: null,
-				height: null,
-			},
-		},
 		childNodes: ['3', '4'],
 	},
 	'3': {
@@ -186,7 +180,6 @@ export default {
 				paddingBottom: '24px',
 				paddingLeft: '24px',
 				paddingRight: '24px',
-				width: null,
 				height: '100%',
 			},
 		},
@@ -394,3 +387,5 @@ export default {
 	},
 
 }
+
+export default data

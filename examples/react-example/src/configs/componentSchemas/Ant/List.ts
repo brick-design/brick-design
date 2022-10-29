@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const List: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -30,7 +30,6 @@ const List: ComponentSchemaType = {
 		dataSource: {
 			label: '数据源',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [{}],
 		},
 		size: {
 			label: '控件大小',

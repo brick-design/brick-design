@@ -769,7 +769,7 @@ export function dataMapping(
         ...from,
       };
     } else if (key.includes('$') && typeof value === 'string') {
-        ret[key.substring(1)] = createStr2Function(value, from);
+      ret[key.substring(1)] = createStr2Function(value, from);
     } else if (key === '&') {
       const v =
         isPlainObject(value) &&

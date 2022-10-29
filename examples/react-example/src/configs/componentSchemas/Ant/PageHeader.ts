@@ -5,7 +5,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const PageHeader: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -42,7 +42,7 @@ const PageHeader: ComponentSchemaType = {
 		tags: {
 			label: 'title 旁的 tag 列表',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [Tag.propsConfig],
+			childPropsConfig: Tag.propsConfig,
 		},
 		breadcrumb: {
 			label: '面包屑的配置',

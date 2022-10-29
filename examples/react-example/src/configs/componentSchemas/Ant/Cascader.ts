@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Option = {
 	value: {
@@ -108,7 +108,7 @@ const Cascader: ComponentSchemaType = {
 		options: {
 			label: '可选数据源',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [Option],
+			childPropsConfig: Option,
 		},
 		placeholder: {
 			label: '输入框占位文本',

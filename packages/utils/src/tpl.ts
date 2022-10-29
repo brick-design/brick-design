@@ -36,7 +36,7 @@ export function filter(
 const EVAL_CACHE: { [key: string]: Function } = {};
 
 // 缓存一下提升性能
-export const FUN_EVAL_CACHE =new WeakMap<any,{[js:string]:Function}>();
+export const FUN_EVAL_CACHE = new WeakMap<any, { [js: string]: Function }>();
 
 let customEvalExpressionFn: (expression: string, data?: any) => boolean;
 export function setCustomEvalExpression(
@@ -111,25 +111,28 @@ export function evalJS(js: string, data: object): any {
     return null;
   }
 }
-const defaultData={};
-export function createStr2Function(js: string, data: object=defaultData): any {
+const defaultData = {};
+export function createStr2Function(
+  js: string,
+  data: object = defaultData,
+): any {
   try {
     let fun;
-    const tempFunMap=FUN_EVAL_CACHE.get(data);
-    if(tempFunMap&&tempFunMap[js]) return tempFunMap[js];
-    if(js.includes('function')){
-      fun=  new Function(`return ${js}`)();
-    }else {
-      fun=new Function(js);
+    const tempFunMap = FUN_EVAL_CACHE.get(data);
+    if (tempFunMap && tempFunMap[js]) return tempFunMap[js];
+    if (js.includes('function')) {
+      fun = new Function(`return ${js}`)();
+    } else {
+      fun = new Function(js);
     }
-    const funResult=fun.bind(data);
-    if(tempFunMap){
-      FUN_EVAL_CACHE.set(data,{...tempFunMap,[js]:funResult});
-    }else {
-      FUN_EVAL_CACHE.set(data,{[js]:funResult});
+    const funResult = fun.bind(data);
+    if (tempFunMap) {
+      FUN_EVAL_CACHE.set(data, { ...tempFunMap, [js]: funResult });
+    } else {
+      FUN_EVAL_CACHE.set(data, { [js]: funResult });
     }
 
-    return  funResult;
+    return funResult;
   } catch (e) {
     console.warn(js, e);
     return undefined;

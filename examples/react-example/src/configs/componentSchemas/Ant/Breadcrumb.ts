@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Breadcrumb: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -26,8 +26,7 @@ const Breadcrumb: ComponentSchemaType = {
 		routes: {
 			label: 'router 的路由栈信息',
 			type: PROPS_TYPES.objectArray,
-			childPropsConfig: [
-				{
+			childPropsConfig: {
 					location: {
 						label: 'location',
 						type: PROPS_TYPES.string,
@@ -39,8 +38,7 @@ const Breadcrumb: ComponentSchemaType = {
 					children: {
 						label: 'children',
 						type: PROPS_TYPES.objectArray,
-						childPropsConfig: [
-							{
+						childPropsConfig: {
 								location: {
 									label: 'location',
 									type: PROPS_TYPES.string,
@@ -50,10 +48,8 @@ const Breadcrumb: ComponentSchemaType = {
 									type: PROPS_TYPES.string,
 								},
 							},
-						],
 					},
 				},
-			],
 		},
 	},
 }

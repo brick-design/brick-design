@@ -1,0 +1,29 @@
+@import 'src/global';
+.container {
+  position: fixed;
+  user-select: none;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: -2px 4px 5px 3px rgba(0, 0, 0, 0.15);
+  .bar {
+    display: flex;
+    height: 39px;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+
+    span {
+      position: absolute;
+      left: 16px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+}
+
+.icon-container1 {
+  position: absolute;
+  right: 0;
+}

@@ -1,0 +1,21 @@
+@import '../../../global';
+@import '../index';
+
+.template-container {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+  flex-direction: column;
+}
+
+.result-container {
+  overflow: auto;
+  background: #fff;
+  height: calc(100vh - 160px);
+
+  .item-container {
+    display: flex;
+    overflow: auto;
+    flex-wrap: wrap;
+  }
+}

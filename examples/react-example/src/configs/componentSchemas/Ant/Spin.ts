@@ -1,4 +1,4 @@
-import { PROPS_TYPES } from '@brickd/react'
+import { PROPS_TYPES } from '@brickd/canvas'
 
 export default {
 	propsConfig: {

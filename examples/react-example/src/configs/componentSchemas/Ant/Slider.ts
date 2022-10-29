@@ -1,4 +1,4 @@
-import { ComponentSchemaType, PROPS_TYPES } from '@brickd/react'
+import { ComponentSchemaType, PROPS_TYPES } from '@brickd/canvas'
 
 const Slider: ComponentSchemaType = {
 	isNonContainer:true,
@@ -36,7 +36,6 @@ const Slider: ComponentSchemaType = {
 			tip:
 				'刻度标记，key 的类型必须为 number 且取值在闭区间 min, max 内，每个标签可以单独设置样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		max: {
 			label: '最大值',

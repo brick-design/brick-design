@@ -1,0 +1,33 @@
+@import 'src/global';
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  .switch {
+    width: 30px;
+    height: 15px;
+  }
+  .input-container {
+    margin-top: 5px;
+    border-bottom: 1px @borderColor solid;
+    width: 100%;
+
+    font-size: 12px;
+    &:hover {
+      border-bottom-color: #388bfe;
+    }
+  }
+  .focus-class {
+    border-bottom-color: @select-border-Color;
+  }
+
+  :global {
+    .rc-switch-checked:after {
+      left: 15px;
+    }
+    .rc-switch:after {
+      width: 11px;
+      height: 11px;
+    }
+  }
+}

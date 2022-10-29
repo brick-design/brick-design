@@ -2,7 +2,7 @@ import {
 	ComponentSchemaType,
 	NODE_PROPS_TYPES,
 	PROPS_TYPES,
-} from '@brickd/react'
+} from '@brickd/canvas'
 
 const Drawer: ComponentSchemaType = {
 	nodePropsConfig: {
@@ -46,13 +46,11 @@ const Drawer: ComponentSchemaType = {
 		maskStyle: {
 			label: '遮罩样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		style: {
 			label: 'Drawer 的样式',
 			tip: '可用于设置 Drawer 的样式',
 			type: PROPS_TYPES.object,
-			childPropsConfig: {},
 		},
 		title: {
 			label: '标题',

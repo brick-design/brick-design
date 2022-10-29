@@ -1,0 +1,61 @@
+@import 'src/global';
+.container {
+  position: absolute;
+  align-self: center;
+  justify-content: center;
+  top: 80px;
+  width: 180px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: hidden;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+  .title-container {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon {
+      width: 12px;
+      height: 12px;
+    }
+    .title {
+      margin-left: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+  }
+  .content {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  .btn-container {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .btn-cancel {
+      height: 25px;
+      width: 56px;
+      font-size: 12px;
+      border-radius: 15px;
+      border: 1px solid #bcbcbc;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .btn-confirm {
+      height: 25px;
+      width: 56px;
+      font-size: 12px;
+      color: #fff;
+      border-radius: 15px;
+      border-width: 0;
+      background-color: red;
+      cursor: pointer;
+    }
+  }
+}

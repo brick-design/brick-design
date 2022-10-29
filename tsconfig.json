@@ -4,11 +4,11 @@
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@brickd/react": [
-        "packages/react/src/index"
+      "@brickd/canvas": [
+        "packages/canvas/src/index"
       ],
-      "@brickd/react/*": [
-        "packages/react/src/*"
+      "@brickd/canvas/*": [
+        "packages/canvas/src/*"
       ],
       "@brickd/core": [
         "packages/core/src/index"
@@ -16,17 +16,11 @@
       "@brickd/core/*": [
         "packages/core/src/*"
       ],
-      "@brickd/react-web": [
-        "packages/react-web/src/index"
+      "@brickd/components": [
+        "packages/components/src/index"
       ],
-      "@brickd/react-web/*": [
-        "packages/react-web/src/*"
-      ],
-      "@brickd/render": [
-        "packages/render/src/index"
-      ],
-      "@brickd/render/*": [
-        "packages/render/src/*"
+      "@brickd/components/*": [
+        "packages/components/src/*"
       ],
       "@brickd/utils": [
         "packages/utils/src/index"

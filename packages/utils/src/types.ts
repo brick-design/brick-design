@@ -166,8 +166,28 @@ export type PropsNodeType = {
 export type ChildNodesType = string[] | PropsNodeType;
 
 export type PropsType = {
-  style?:CSSProperties
+  style?: CSSProperties;
   [propName: string]: ActionType | any;
+};
+
+type FunType = {
+  lifeCycle?:
+    | 'init'
+    | 'didMount'
+    | 'willUnmount'
+    | 'willUpdate'
+    | 'didUpdate'[];
+  funContent: string;
+};
+
+export type MethodsType = FunType[];
+
+export const LIFE_CYCLE = {
+  init: 'init',
+  didMount: 'didMount',
+  willUnmount: 'willUnmount',
+  willUpdate: 'willUpdate',
+  didUpdate: 'didUpdate',
 };
 
 export interface VirtualDOMType {
@@ -179,9 +199,7 @@ export interface VirtualDOMType {
   condition?: string;
   isStateDomain?: boolean;
   propFields?: string[];
-  methods?: {
-    [key: string]: string;
-  };
+  methods?: MethodsType;
   loop?: string | any[];
   fileName?: string;
   [custom: string]: any;

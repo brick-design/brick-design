@@ -1,0 +1,40 @@
+@import 'src/global';
+.container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  .drop-dialog {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 10px 0;
+    .menu {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 25px;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-bottom: 1px @borderColor solid;
+    }
+    .isLast {
+      border-bottom: 0;
+    }
+    .selected {
+      background-color: #7f7f7f;
+      font-weight: bold;
+    }
+  }
+  &:hover {
+    .show-dialog {
+      display: flex;
+    }
+  }
+}
