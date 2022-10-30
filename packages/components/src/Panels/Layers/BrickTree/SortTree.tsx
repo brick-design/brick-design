@@ -3,7 +3,8 @@ import {  map } from 'lodash';
 import {
   NodeProps,
   onLayoutSortChange,
-  SelectedInfoBaseType,
+  SelectedInfoBaseType, useOperate,
+  onDragBrickTree
 } from '@brickd/canvas';
 import styles from './index.less';
 import SortItem from './SortItem';
@@ -68,6 +69,7 @@ function SortTree(props: SortTreePropsType) {
     specialProps: { key },
     propName,
   } = props;
+  const { setOperateState } = useOperate();
 
   /**
    * 拖拽排序
@@ -89,8 +91,25 @@ function SortTree(props: SortTreePropsType) {
         dragInfo,
       });
     },
+
     [],
   );
+
+  const onChange=useCallback(
+    function (sortKeys: string[], evt) {
+      /**
+       * 获取拖住节点的信息
+       * @type {any}
+       */
+      const dragInfo = JSON.parse(evt.clone.dataset.special);
+      onDragBrickTree(dragInfo.key,sortKeys,key,setOperateState,propName);
+    },
+    [],
+  );
+  const onEnd=()=>{
+    setOperateState({dropNode:null,isDropAble:null});
+  };
+
   return (
     <ReactSortable
       className={styles['sort-able']}
@@ -105,7 +124,9 @@ function SortTree(props: SortTreePropsType) {
         ghostClass: styles['item-background'],
         swapThreshold: 0.5,
       }}
-      onChange={layoutSortChange}
+      onSortEnd={layoutSortChange}
+      onChange={onChange}
+      onEnd={onEnd}
     >
       {map(childNodes, (key) => renderSortItems(key, props))}
     </ReactSortable>

@@ -335,7 +335,7 @@ function Container(allProps: CommonPropsType) {
 
   useEffect(()=>{
     if(!selfNodeRef.current){
-      selfNodeRef.current= getSelectedNode(key+'-'+index);
+      selfNodeRef.current= getSelectedNode(key,index);
     }
     if(selfNodeRef.current){
       selfNodeRef.current.ondragenter=onParentDragEnter;

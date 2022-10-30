@@ -46,12 +46,13 @@ export const getComponent = (componentName: string) =>
 
 export const getSelectedNode = (
   key?: string | null,
+  index=0
 ): HTMLElement | undefined => {
   const iframe=getIframe();
   if (iframe && key) {
     const { contentDocument } = iframe;
     return contentDocument!.getElementsByClassName(
-      selectClassTarget + key,
+      selectClassTarget + key+'-'+index,
     )[0] as HTMLElement;
   }
 };
@@ -295,13 +296,63 @@ export const getParentKeyNodesRect=(parent:Element,key:string)=>{
 
 };
 
+const getFirstNodeRect=(dragKeys:string[],parentNode:Element)=>{
+  for ( let index = 0; index <dragKeys.length ; index++) {
+    const rect=getParentKeyNodesRect(parentNode,dragKeys[index]);
+    if(!isEmpty(rect)){
+     return  {...rect,index};
+    }
+  }
+  return  {};
+};
+
+const getLastNodeRect=(dragKeys:string[],parentNode:Element)=>{
+  for ( let index = dragKeys.length-1; index >=0 ; index--) {
+    const rect=getParentKeyNodesRect(parentNode,dragKeys[index]);
+    if(!isEmpty(rect)){
+      return  {...rect,index};
+    }
+  }
+  return {};
+};
+
+
+const getPlaceholder1Rect=(index,firstNodeRect,parentNode,compareChildren)=>{
+  if(index>=firstNodeRect.index){
+    for (let i=index;i>=firstNodeRect.index;i--){
+      const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+      console.log('getPlaceholder1Rect>>>>>>',index,rect,compareChildren);
+      if(!isEmpty(rect)){
+        const {realWidth,left,top,realHeight}=getParentKeyNodesRect(parentNode,compareChildren[index]);
+          return {height:top-firstNodeRect.top+realHeight,width:left-firstNodeRect.left+realWidth,realHeight,realWidth};
+      }
+    }
+
+  }else {
+    return {};
+  }
+};
+
+const getPlaceholder3Rect=(index,lastNodeRect,parentNode,compareChildren)=>{
+  if(index<=lastNodeRect.index){
+    for ( let i = index; i <=lastNodeRect.index ; i++) {
+      const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
+      if(!isEmpty(rect)){
+        const {left,top,realHeight,realWidth}=rect;
+          return {width:lastNodeRect.left-left+lastNodeRect.realWidth,height:lastNodeRect.top-top+lastNodeRect.realHeight
+          ,realHeight,realWidth};
+      }
+    }
+  }
+  return {};
+};
+
 export const dragSort = (
   compareChildren: string[] = [],
   parentNode: Element,
   dragOffset: DragEvent,
 ) => {
   const isV=isVertical(parentNode);
-  console.log('isV>>>>>>>',isV);
   const placeholderPosition:PlaceholderPositionType={};
   const dragKey = getDragKey();
   if (!dragKey) return compareChildren;
@@ -313,67 +364,23 @@ export const dragSort = (
   // } = getParentNodeRealRect(parentNode);
   const { clientX, clientY } = dragOffset;
   let newChildren = [];
-  let lastNodeRect:any={};
-  let firstNodeRect:any={};
+  const lastNodeRect=getLastNodeRect(compareChildren,parentNode);
+  const firstNodeRect=getFirstNodeRect(compareChildren,parentNode);
  const restChildren=()=>{
      placeholderPosition.node1=null;
      placeholderPosition.node2=null;
      placeholderPosition.node3=null;
      newChildren=compareChildren;
  };
-  for ( let i = 0; i <compareChildren.length ; i++) {
-    const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
-    if(!isEmpty(rect)){
-      firstNodeRect=rect;
-      firstNodeRect.index=i;
-      break;
-    }
 
-  }
-  for ( let i = compareChildren.length-1; i >=0 ; i--) {
-    const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
-    if(!isEmpty(rect)){
-      lastNodeRect=rect;
-      lastNodeRect.index=i;
-      break;
-    }
-  }
+ const getNode1Rect=(index)=>{
+   return getPlaceholder1Rect(index,firstNodeRect,parentNode,compareChildren);
+ };
 
-  const getNode1Rect=(index)=>{
-    if(index>=firstNodeRect.index){
-      for (let i=index;i>=firstNodeRect.index;i--){
-       const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
-        if(!isEmpty(rect)){
-          const {realWidth,left,top,realHeight}=getParentKeyNodesRect(parentNode,compareChildren[index]);
-          if(!isV){
-            return {width:left-firstNodeRect.left+realWidth};
-          }else {
-            return {height:top-firstNodeRect.top+realHeight};
-          }
-        }
-      }
+ const getNode3Rect=(index)=>{
+   return getPlaceholder3Rect(index,lastNodeRect,parentNode,compareChildren);
+ };
 
-    }else {
-      return {};
-    }
-  };
-
-  const getNode3Rect=(index)=>{
-    if(index<=lastNodeRect.index){
-      for ( let i = index; i <=lastNodeRect.index ; i++) {
-        const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
-        if(!isEmpty(rect)){
-          const {left,top}=rect;
-          if(!isV){
-            return {width:lastNodeRect.left-left+lastNodeRect.realWidth};
-          }else {
-            return {height:lastNodeRect.top-top+lastNodeRect.realHeight};
-          }
-        }
-      }
-    }
-    return {};
-  };
   for (let index = 0; index < compareChildren.length; index++) {
     const compareKey = compareChildren[index];
     // if (compareKey === dragKey) continue;
@@ -498,6 +505,64 @@ export const dragSort = (
   return [...new Set(newChildren)];
 };
 
+export const onDragBrickTree=(dragKey:string,sortKeys:string[],parentKey:string,setOperateState,propName)=>{
+  let parentNode=getSelectedNode(parentKey);
+  const placeholderPosition:PlaceholderPositionType={};
+  let childNodes=get(getVNode(parentKey),'childNodes') as string[];
+  if(!Array.isArray(childNodes)&&propName){
+    childNodes=get(childNodes,'propName');
+  }
+
+  if(isEqual(childNodes,sortKeys)) return   placeholderBridgeStore.changePosition(placeholderPosition);
+  if(sortKeys.length>1){
+    const childKey=sortKeys.find((v)=>v!==dragKey);
+    parentNode=getSelectedNode(childKey).parentNode as HTMLElement;
+  }
+  setOperateState({
+    dropNode:parentNode,
+    isDropAble:true,
+    index:0,
+    isLock: true,
+  });
+  const isV=isVertical(parentNode);
+  const dragIndex=sortKeys.findIndex((v)=>v===dragKey);
+  const firstNodeRect=getFirstNodeRect(childNodes,parentNode);
+  const lastNodeRect=getLastNodeRect(childNodes,parentNode);
+
+  const getNode1Rect=(index)=>{
+    return getPlaceholder1Rect(index,firstNodeRect,parentNode,childNodes);
+  };
+
+  const getNode3Rect=(index)=>{
+    return getPlaceholder3Rect(index,lastNodeRect,parentNode,childNodes);
+  };
+
+  const getNode2Rect=()=>{
+    if(isV){
+      return {width:get(placeholderPosition.node1,'realWidth')||get(placeholderPosition.node3,'realWidth')};
+    }else {
+      return {height:get(placeholderPosition.node1,'realHeight')||get(placeholderPosition.node3,'realHeight')};
+    }
+  };
+
+
+  if(dragIndex>0&&dragIndex<sortKeys.length-1){
+      placeholderPosition.node1=getNode1Rect(dragIndex);
+      placeholderPosition.node3=getNode3Rect(dragIndex+1);
+      placeholderPosition.node2=getNode2Rect();
+    }else if(dragIndex===0&&sortKeys.length>1){
+      placeholderPosition.node3=getNode3Rect(dragIndex);
+      placeholderPosition.node2=getNode2Rect();
+    }else if(dragIndex>0&&dragIndex===sortKeys.length-1){
+      placeholderPosition.node1=getNode1Rect(dragIndex);
+      placeholderPosition.node2=getNode2Rect();
+    }else if(sortKeys.length===1){
+      placeholderPosition.node2=getNode2Rect();
+    }
+  placeholderBridgeStore.changePosition(placeholderPosition);
+
+};
+
 export const getPropParentNodes = (
   childNodes: ChildNodesType,
   parentNodes: PropParentNodes,
@@ -505,7 +570,7 @@ export const getPropParentNodes = (
 ) => {
   if (Array.isArray(childNodes)) {
     for (const childKey of childNodes) {
-      const node = getSelectedNode(`${childKey}-${index}`);
+      const node = getSelectedNode(childKey,index);
       if (node) {
         const parentNode = node.parentElement;
         parentNodes[defaultPropName] = parentNode;
@@ -516,7 +581,7 @@ export const getPropParentNodes = (
     each(childNodes, (nodes, propName) => {
       if (!parentNodes[propName]) {
         for (const key of nodes) {
-          const node = getSelectedNode(`${key}-${index}`);
+          const node = getSelectedNode(key,index);
           if (node) {
             const parentNode = node.parentElement;
             parentNodes[propName] = parentNode;

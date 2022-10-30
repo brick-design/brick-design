@@ -12,7 +12,7 @@ import {
   ROOT,
   warn,
 } from '../utils';
-import { LayoutSortPayload } from '../actions';
+import { LayoutSortPayload, OperatePayload } from '../actions';
 import { getDragSortCache, getDragSource, getDropTarget, setDragSource, setDropTarget } from '../utils/caches';
 
 /**
@@ -60,8 +60,6 @@ export function addComponent(state: StateType): StateType {
   ) {
     return state;
   }
-console.log();
-
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
   return {
@@ -90,20 +88,22 @@ console.log();
  * @param state
  * @returns {{pageConfig: *}}
  */
-export function copyComponent(state: StateType): StateType {
+export function copyComponent(state: StateType,payload:OperatePayload): StateType {
   const { undo, redo, pageConfig, selectedInfo } = state;
+  const {key}=payload;
+
   /**
    * 未选中组件不做任何操作
    */
-  if (!selectedInfo) {
+  if (!selectedInfo&&!key) {
     warn('Please select the node you want to copy');
     return state;
   }
-  if (selectedInfo.selectedKey === ROOT) {
+  if (get(selectedInfo,'selectedKey') === ROOT||key===ROOT) {
     warn('Prohibit copying root node');
     return state;
   }
-  const { selectedKey, parentPropName, parentKey } = selectedInfo;
+  const { selectedKey, parentPropName, parentKey } = selectedInfo||{};
   undo.push({ pageConfig });
   redo.length = 0;
   const newKey = getNewKey(pageConfig);
@@ -112,10 +112,10 @@ export function copyComponent(state: StateType): StateType {
     pageConfig: produce(pageConfig, (oldState) => {
       update(
         oldState,
-        getLocation(parentKey!, parentPropName),
+        getLocation(parentKey!||payload.parentKey, parentPropName||payload.parentPropName),
         (childNodes) => [...childNodes, `${newKey}`],
       );
-      copyConfig(oldState, selectedKey, newKey);
+      copyConfig(oldState, selectedKey||key, newKey);
     }),
     undo,
     redo,
@@ -168,16 +168,17 @@ export function onLayoutSortChange(
  * @param state
  * @returns {{propsSetting: *, pageConfig: *, selectedInfo: *}}
  */
-export function deleteComponent(state: StateType): StateType {
+export function deleteComponent(state: StateType,payload:OperatePayload): StateType {
+  const {key}=payload;
   const { undo, redo, pageConfig, selectedInfo } = state;
   /**
    * 未选中组件将不做任何操作
    */
-  if (!selectedInfo) {
+  if (!selectedInfo&&!key) {
     warn('Please select the components you want to delete');
     return state;
   }
-  const { selectedKey, parentKey, parentPropName } = selectedInfo;
+  const { selectedKey, parentKey, parentPropName } = selectedInfo||{};
   undo.push({ pageConfig, selectedInfo });
 
   redo.length = 0;
@@ -187,21 +188,21 @@ export function deleteComponent(state: StateType): StateType {
       /**
        * 如果选中的是根节点说明要删除整个页面
        */
-      if (selectedKey === ROOT) {
+      if (selectedKey === ROOT||key===ROOT) {
         return {};
       } else {
         // 删除选中组件在其父组件中的引用
-        update(oldState, getLocation(parentKey), (childNodes) =>
-          deleteChildNodesKey(childNodes, selectedKey, parentPropName),
+        update(oldState, getLocation(parentKey||payload.parentKey), (childNodes) =>
+          deleteChildNodesKey(childNodes, selectedKey, parentPropName||payload.parentPropName),
         );
-        const childNodes = oldState[selectedKey].childNodes;
+        const childNodes = oldState[selectedKey||key].childNodes;
         /**
          * 如果childNodes有值，就遍历childNodes删除其中的子节点
          */
         if (childNodes) {
           deleteChildNodes(oldState, childNodes);
         }
-        delete oldState[selectedKey];
+        delete oldState[selectedKey||key];
       }
     }),
     selectedInfo: null,
@@ -216,9 +217,10 @@ export function deleteComponent(state: StateType): StateType {
  * @returns {{undo: *, pageConfig, redo: *}}
  */
 
-export function clearChildNodes(state: StateType): StateType {
+export function clearChildNodes(state: StateType,payload:OperatePayload): StateType {
   const { pageConfig, selectedInfo, undo, redo } = state;
-  if (!selectedInfo) {
+  const {key}=payload;
+  if (!selectedInfo||!key) {
     warn(
       'Please select the component or property you want to clear the child nodes',
     );

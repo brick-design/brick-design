@@ -55,16 +55,16 @@ export const reducer: ReducerType = (prevState, action) => {
       newState = addComponent(state);
       break;
     case ACTION_TYPES.clearChildNodes:
-      newState = clearChildNodes(state);
+      newState = clearChildNodes(state,payload);
       break;
     case ACTION_TYPES.onLayoutSortChange:
       newState = onLayoutSortChange(state, payload);
       break;
     case ACTION_TYPES.deleteComponent:
-      newState = deleteComponent(state);
+      newState = deleteComponent(state,payload);
       break;
     case ACTION_TYPES.copyComponent:
-      newState = copyComponent(state);
+      newState = copyComponent(state,payload);
       break;
     case ACTION_TYPES.changePlatform:
       newState = changePlatform(state, payload);
