@@ -32,7 +32,6 @@ import { BrickAction, BrickDesignStateType, StateType } from '../types';
 export type ReducerType = Reducer<BrickDesignStateType, BrickAction>;
 export const reducer: ReducerType = (prevState, action) => {
   const { type, payload } = action;
-  console.log('reducer>>>>>>>>>',action);
   switch (type) {
     case ACTION_TYPES.createLayers:
       return createLayers(prevState, payload);

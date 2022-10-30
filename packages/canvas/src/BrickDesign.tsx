@@ -16,10 +16,9 @@ import ReactDOM from 'react-dom';
 import { BrickStore, StaticContextProvider,BrickObserverProvider } from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
 import {
-  getDragSourceFromKey,
   iframeSrcDoc,
   getIframe,
-  getDragKey, getRootState, setIframe,
+  getDragKey, getRootState, setIframe, placeholderBridgeStore,
 } from './utils';
 import Distances from './components/Distances';
 import GuidePlaceholder from './components/GuidePlaceholder';
@@ -142,13 +141,23 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onDragEnter = useCallback(() => {
     const {layerName}=getRootState();
     if(!layerName) return;
-    componentMount(
-      divContainer,
-      renderComponent(getDragSourceFromKey('template', {})),
-    );
-  }, [componentMount]);
+    const {contentDocument}=getIframe();
+    placeholderBridgeStore.changePosition({node2:{
+      width:contentDocument.body.scrollWidth,
+        height:contentDocument.body.scrollHeight,
+        isEmptyChild:true
+      }});
+    operateStore.setPageState({
+      dropNode:contentDocument.body,
+      isDropAble:true
+    });
+  }, []);
 
   const onDragLeave = useCallback(() => {
+    operateStore.setPageState({
+      dropNode:null,
+      isDropAble:false
+    });
       ReactDOM.unmountComponentAtNode(divContainer.current);
   }, []);
 
@@ -166,12 +175,17 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onDragover=useCallback((e: any)=> {
     e.preventDefault();
   },[]);
-
+  const onDrop=useCallback(()=>{
+    addComponent();
+    operateStore.setPageState({
+      dropNode:null
+    });
+  },[]);
   useEffect(() => {
     if(!rootComponent){
       const { contentWindow } = getIframe();
       contentWindow.addEventListener('dragover', onDragover);
-      contentWindow.addEventListener('drop', addComponent);
+      contentWindow.addEventListener('drop', onDrop);
       contentWindow.addEventListener('dragenter', onDragEnter);
       contentWindow.addEventListener('dragleave', onDragLeave);
     }
@@ -179,7 +193,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
       if(!rootComponent){
         const { contentWindow } = getIframe();
         contentWindow.removeEventListener('dragover', onDragover);
-        contentWindow.removeEventListener('drop', addComponent);
+        contentWindow.removeEventListener('drop', onDrop);
         contentWindow.removeEventListener('dragenter', onDragEnter);
       contentWindow.removeEventListener('dragleave', onDragLeave);
       }

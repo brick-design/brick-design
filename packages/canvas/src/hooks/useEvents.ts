@@ -21,8 +21,7 @@ import {
   EXCLUDE_POSITION,
   getDragKey,
   getIframe,
-  getIsModalChild,
-  // getSelectedNode,
+  getIsModalChild, getSelectedNode,
 } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
@@ -84,9 +83,10 @@ export function useEvents(
     [propName],
   );
 
-  // useEffect(()=>{
-  //   setSelectedNode(getSelectedNode(key));
-  // },[]);
+  useEffect(()=>{
+    if(isSelected)
+    setSelectedNode(getSelectedNode(key));
+  },[]);
 
   const onDoubleClick = useCallback(
     (e: Event) => {

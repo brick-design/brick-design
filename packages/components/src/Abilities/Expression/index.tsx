@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
-import { useOperate } from '@brickd/canvas';
+// import { useOperate } from '@brickd/canvas';
 import styles from './index.less';
+import SelectTree from './SelectTree';
 import { Input } from '../../Components';
 import { expressionRex } from '../../utils';
 
@@ -10,8 +11,8 @@ interface ExpressionProps {
 }
 function Expression(props: ExpressionProps) {
   const { onChange, value } = props;
-  const {getOperateState}=useOperate();
-  const {}=getOperateState();
+  // const {getOperateState}=useOperate();
+  // const {pageState}=getOperateState();
   // const rex=/^(\${).+(})$/;
   const onInputChange = (v) => {
     onChange && onChange(v ? `\${${v}}` : undefined);
@@ -21,7 +22,12 @@ function Expression(props: ExpressionProps) {
     newValue=value.replace('${','');
     newValue=newValue.replace('}','');
   }
+
+  const onSelectTreeChange=(path:string)=>{
+
+  };
   return (
+    <div className={styles['container']}>
     <Input
       onChange={onInputChange}
       value={newValue}
@@ -34,6 +40,8 @@ function Expression(props: ExpressionProps) {
       inputClass={styles['inputClass']}
       type={'text'}
     />
+      <SelectTree data={{1:{2:5},3:{6:7} }} onChange={onSelectTreeChange}/>
+    </div>
   );
 }
 

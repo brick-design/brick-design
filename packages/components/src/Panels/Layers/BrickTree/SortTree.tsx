@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { isEqual, map } from 'lodash';
+import {  map } from 'lodash';
 import {
   NodeProps,
   onLayoutSortChange,
@@ -77,16 +77,11 @@ function SortTree(props: SortTreePropsType) {
    */
   const layoutSortChange = useCallback(
     function (sortKeys: string[], evt) {
-      if (isEqual(childNodes, sortKeys) || sortKeys.length < childNodes.length)
-        return;
       /**
        * 获取拖住节点的信息
        * @type {any}
        */
-      let dragInfo: any;
-      if (sortKeys.length > childNodes.length) {
-        dragInfo = JSON.parse(evt.clone.dataset.special);
-      }
+       const dragInfo = JSON.parse(evt.clone.dataset.special);
       onLayoutSortChange({
         sortKeys,
         parentKey: key,
@@ -94,7 +89,7 @@ function SortTree(props: SortTreePropsType) {
         dragInfo,
       });
     },
-    [childNodes],
+    [],
   );
   return (
     <ReactSortable

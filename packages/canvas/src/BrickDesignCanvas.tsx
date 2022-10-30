@@ -154,6 +154,9 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             redo();
           }
         } else if (key === 'u') {
+          brickdCanvasRef.current.style.transition='all 200ms';
+          brickdCanvasRef.current.style.top='auto';
+          brickdCanvasRef.current.style.left='auto';
           changeCanvasSize(true);
         } else if (key === '=') {
           scale+=0.05;

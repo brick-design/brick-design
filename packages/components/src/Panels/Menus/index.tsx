@@ -3,7 +3,7 @@ import styles from './index.less';
 import DragResizeBar from '../../Components/DragResizeBar';
 import { stylesIcon } from '../../assets';
 
-export default function OperateMenus(){
+export default function Menus(){
 
 	return <DragResizeBar
 		title={'Styles'}

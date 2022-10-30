@@ -86,6 +86,8 @@ function ResizeItem(props: ItemProps) {
 
   const renderMouse=(divRef:RefObject<HTMLDivElement>,isRotate?:boolean)=>{
     const {selectedNode}=getOperateState();
+    const cssStyle=css(selectedNode);
+    if(!cssStyle) return;
     const {
       transform,
     } = css(selectedNode);

@@ -21,13 +21,14 @@ function StateDomainWrapper(props: any) {
     (prevState, nextState) =>
       controlUpdate(prevState, nextState, specialProps.key),
   );
-  const { state, api, componentName } =
-    pageConfig[specialProps.key] ||
+  const vNode=pageConfig[specialProps.key] ||
     getDragSourceFromKey('template', {})[specialProps.key];
-  const isContainerNode = useMemo(() => isContainer(componentName), []);
+  const { state, api, componentName } =vNode||{};
   const brickdStore = useRedux(state);
   const childProps = useGetProps(brickdStore.getPageState(), rest);
   useService(brickdStore.getPageState(), api);
+  const isContainerNode = useMemo(() => isContainer(componentName), []);
+
   return (
     <PropsProvider value={childProps}>
       <BrickStoreProvider value={brickdStore}>

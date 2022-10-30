@@ -28,10 +28,13 @@ function Sortable(props: SortableProps, ref: Ref<HTMLDivElement>) {
       const eventHandler = options[name];
       options[name] = (...params: any) => {
         const [evt] = params;
+        console.log('useEffect1>>>>>>>',name);
         if (name === 'onChoose') {
           store.nextSibling = evt.item.nextElementSibling;
           store.activeComponent = sortRef.current;
         } else if ((name === 'onAdd' || name === 'onUpdate') && onChange) {
+          console.log('useEffect2>>>>>>>',name);
+
           const items = sortable.toArray();
           const referenceNode =
             store.nextSibling && store.nextSibling.parentNode !== null
