@@ -1,6 +1,6 @@
 {
   "name": "@brickd/components",
-  "version": "1.0.0-alpha.16",
+  "version": "1.0.0-alpha.17",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -21,8 +21,8 @@
     "url": "https://github.com/brick-design/brick-design.git"
   },
   "dependencies": {
-    "@brickd/canvas": "^1.0.0-alpha.16",
-    "@brickd/hooks": "^1.0.0-alpha.16",
+    "@brickd/canvas": "^1.0.0-alpha.17",
+    "@brickd/hooks": "^1.0.0-alpha.17",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",
     "rc-field-form": "^1.21.1",
