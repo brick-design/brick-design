@@ -9,7 +9,7 @@
     "animate.css": "^3.7.2",
     "antd": "3.26.16",
     "classnames": "^2.2.6",
-    "electron": "^13.1.4",
+    "electron": "^15.5.5",
     "highlight.js": "^9.17.1",
     "html2canvas": "^1.0.0-rc.5",
     "immer": "^6.0.3",
