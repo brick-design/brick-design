@@ -47,7 +47,7 @@
     "less": "3.9.0",
     "less-loader": "4.1.0",
     "mini-css-extract-plugin": "0.9.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.1.0",
