@@ -268,7 +268,9 @@ export type PlaceholderRect= {
 export type PlaceholderPositionType={
   node1?:PlaceholderRect,
   node2?:PlaceholderRect,
-  node3?:PlaceholderRect
+  node3?:PlaceholderRect,
+  isFreeLayout?:boolean
+
 }
 
 export type NodeRectsMapType = { [key: string]: RealRect };
@@ -305,7 +307,11 @@ const getFirstNodeRect=(dragKeys:string[],parentNode:Element)=>{
   }
   return  {};
 };
-
+/**
+ * 获取容器中最后一个节点的真实Rect
+ * @param dragKeys
+ * @param parentNode
+ */
 const getLastNodeRect=(dragKeys:string[],parentNode:Element)=>{
   for ( let index = dragKeys.length-1; index >=0 ; index--) {
     const rect=getParentKeyNodesRect(parentNode,dragKeys[index]);
@@ -316,12 +322,17 @@ const getLastNodeRect=(dragKeys:string[],parentNode:Element)=>{
   return {};
 };
 
-
+/**
+ * 获取拖拽操作层第一个占位节点的Rect
+ * @param index
+ * @param firstNodeRect
+ * @param parentNode
+ * @param compareChildren
+ */
 const getPlaceholder1Rect=(index,firstNodeRect,parentNode,compareChildren)=>{
   if(index>=firstNodeRect.index){
     for (let i=index;i>=firstNodeRect.index;i--){
       const rect=getParentKeyNodesRect(parentNode,compareChildren[i]);
-      console.log('getPlaceholder1Rect>>>>>>',index,rect,compareChildren);
       if(!isEmpty(rect)){
         const {realWidth,left,top,realHeight}=getParentKeyNodesRect(parentNode,compareChildren[index]);
           return {height:top-firstNodeRect.top+realHeight,width:left-firstNodeRect.left+realWidth,realHeight,realWidth};
@@ -347,6 +358,12 @@ const getPlaceholder3Rect=(index,lastNodeRect,parentNode,compareChildren)=>{
   return {};
 };
 
+/**
+ * 获取拖拽排序
+ * @param compareChildren
+ * @param parentNode
+ * @param dragOffset
+ */
 export const dragSort = (
   compareChildren: string[] = [],
   parentNode: Element,
@@ -503,6 +520,15 @@ export const dragSort = (
   }
   placeholderBridgeStore.changePosition(placeholderPosition);
   return [...new Set(newChildren)];
+};
+
+export const dragFreeLayout=(dragOffset:DragEvent)=>{
+  const { clientX, clientY,target  } = dragOffset;
+  const {left,top}=getParentNodeRealRect(target as Element);
+  getIframe().contentWindow.requestAnimationFrame(()=>
+    placeholderBridgeStore.changePosition({node2:{width:60,height:60,left:clientX-left,top:clientY-top},isFreeLayout:true})
+  );
+
 };
 
 export const onDragBrickTree=(dragKey:string,sortKeys:string[],parentKey:string,setOperateState,propName)=>{

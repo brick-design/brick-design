@@ -30,7 +30,7 @@ export function addComponent(state: StateType): StateType {
     return state;
   }
 
-  const { template, dragKey, parentKey, parentPropName } = dragSource;
+  const { template, dragKey, parentKey, parentPropName,style } = dragSource;
   setDragSource(null);
   /**
    * 如果没有root根节点，新添加的组件添加到root
@@ -66,6 +66,17 @@ export function addComponent(state: StateType): StateType {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {
       //添加新组件到指定容器中
+      if(style){
+        let node;
+        if(template){
+          node=template[dragKey];
+        }else {
+          node=oldConfigs[dragKey];
+        }
+        update(node,'props.style',(oldStyle={})=>{
+          return {...oldStyle,...style};
+        });
+      }
       template&&Object.assign(oldConfigs, template);
       update(oldConfigs, getLocation(dropKey!, propName), () => dragSort);
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用

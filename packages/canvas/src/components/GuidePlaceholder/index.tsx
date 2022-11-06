@@ -21,6 +21,21 @@ const getGuideNodeCss=(rect:PlaceholderRect,size:number)=>{
   return style;
 };
 
+const getGuideNodeFreeLayoutCss=(rect:PlaceholderRect)=>{
+  if(isEmpty(rect)) return 'display:none;';
+  const {width,height,top,left}=rect;
+  const style= `
+  opacity:0.5;
+  width:${width}px;
+  height:${height}px;
+  display:block;
+  position:absolute;
+  top:${top}px;
+  left:${left}px;
+  `;
+  return style;
+};
+
 function GuidePlaceholder() {
   const hoverNodeRef = useRef<HTMLDivElement>();
   const guideNodeRef1=useRef<HTMLDivElement>();
@@ -75,13 +90,13 @@ function GuidePlaceholder() {
 
     placeholderBridgeStore.renderPlaceholder=(rects:PlaceholderPositionType)=>{
       const {scale}=getZoomState();
-      const {node1,node2,node3}=rects;
+      const {node1,node2,node3,isFreeLayout}=rects;
       let  size=2;
       if(scale<1){
           size=2/scale;
       }
       guideNodeRef1.current.style.cssText=getGuideNodeCss(node1,size);
-      guideNodeRef2.current.style.cssText=getGuideNodeCss(node2,size);
+      guideNodeRef2.current.style.cssText=isFreeLayout?getGuideNodeFreeLayoutCss(node2):getGuideNodeCss(node2,size);
       guideNodeRef3.current.style.cssText=getGuideNodeCss(node3,size);
     };
 

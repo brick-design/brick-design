@@ -89,6 +89,9 @@ export const setDragSource = (dragSource: DragSourcePayload | null) => {
     parentPropName
   };
 };
+export const setDragSourceStyle=(style:any)=>{
+  DRAG_SOURCE.style=style;
+};
 /**
  * 拖放目标 缓存
  */

@@ -14,7 +14,7 @@ import {
   getDropTarget,
   getSelector,
   PageConfigType,
-  setDragSortCache, setDropTarget,
+  setDragSortCache, setDragSourceStyle, setDropTarget,
   STATE_PROPS,
 } from '@brickd/core';
 import { useCommon,
@@ -38,7 +38,7 @@ import {
   isAllowAdd,
   isNeedJudgeFather,
   isAllowDrop,
-  getVNode, getSelectedNode, placeholderBridgeStore, getNodeRealRect,
+  getVNode, getSelectedNode, placeholderBridgeStore, getNodeRealRect, dragFreeLayout,
 } from '../utils';
 
 import {
@@ -91,7 +91,7 @@ function Container(allProps: CommonPropsType) {
   const selfNodeRef=useRef<HTMLElement>();
 
   const vNode = getVNode(key);
-  const { childNodes, componentName } = vNode;
+  const { childNodes, componentName,isFreeLayout } = vNode;
   // const executeSubject=useNewAddComponent(key);
   const pageConfigs:PageConfigType={...pageConfig,...getDragSourceFromKey('template',{})};
   // const dragOverOrigin=useRef()
@@ -165,40 +165,37 @@ function Container(allProps: CommonPropsType) {
       event.preventDefault();
       if(interceptDragOver()||propParentNodes.current[selectedPropName]) return;
       const dragKey = getDragKey();
-      if (isEmpty(childNodes)) {
-        // if (nodePropsConfig) {
-        //   // setChildren({ [selectedPropName]: [dragKey] });
-        // } else {
-        //   // setChildren([dragKey]);
-        // }
-        const {width,height}=getNodeRealRect(event.target as Element);
-        placeholderBridgeStore.changePosition({node2:{width,height,isEmptyChild:true}});
-        setDragSortCache([dragKey]);
-      } else if (Array.isArray(childNodes)) {
-        if (childNodes.length === 1 && childNodes.includes(dragKey)) return;
-        const newChildren = dragSort(
-          childNodes,
-          event.target as HTMLElement,
-          event,
-        );
-        if (!isEqual(newChildren, childNodes)) {
-          // setChildren(newChildren);
-          setDragSortCache(newChildren);
+      let childNodeKeys;
+      if(Array.isArray(childNodes)){
+        childNodeKeys=childNodes;
+      }else {
+        childNodeKeys= get(childNodes, selectedPropName, []);
+      }
+      if(isFreeLayout&&!childNodeKeys.includes(dragKey)){
+        dragFreeLayout(event);
+        if(isEmpty(childNodes)){
+          setDragSortCache([...childNodeKeys,dragKey]);
         }
-
-      } else {
-        const propChildren = get(childNodes, selectedPropName, []);
-
-        if (!propChildren.includes(dragKey)) {
-          // const newChildren = cloneChildNodes(childNodes);
-          const childrenResult = [dragKey, ...propChildren];
-          setDragSortCache(childrenResult);
-          // newChildren[selectedPropName] = childrenResult;
-          // setChildren(newChildren);
+      }else {
+        if (isEmpty(childNodeKeys)) {
+          const {width,height}=getNodeRealRect(event.target as Element);
+          placeholderBridgeStore.changePosition({node2:{width,height,isEmptyChild:true}});
+          setDragSortCache([dragKey]);
         } else {
-          setDragSortCache(propChildren);
+          if (childNodeKeys.length === 1 && childNodeKeys.includes(dragKey)) return;
+          const newChildren = dragSort(
+            childNodeKeys,
+            event.target as HTMLElement,
+            event,
+          );
+          if (!isEqual(newChildren, childNodeKeys)) {
+            // setChildren(newChildren);
+            setDragSortCache(newChildren);
+          }
+
         }
       }
+
     },
     [selectedPropName,childNodes],
   );
@@ -209,13 +206,17 @@ function Container(allProps: CommonPropsType) {
     (event: DragEvent, propName: string) => {
       event.preventDefault();
       if(interceptDragOver()) return;
-      const dragKey = getDragKey();
       let childNodeKeys=childNodes;
       if(Array.isArray(childNodes)){
-       childNodeKeys=childNodes;
+        childNodeKeys=childNodes;
       }else {
         childNodeKeys= get(childNodes, propName, []);
       }
+      const dragKey = getDragKey();
+      if(isFreeLayout&&!childNodeKeys.includes(dragKey)){
+        dragFreeLayout(event);
+        setDragSortCache([...childNodeKeys,dragKey]);
+      }else {
         if (!childNodeKeys.length) {
           // if (isEmpty(childNodes)) {
           //   // setChildren({ [propName]: [dragKey] });
@@ -225,7 +226,7 @@ function Container(allProps: CommonPropsType) {
           //   // setChildren(newChildren);
           // }
           const {width,height}=getNodeRealRect(event.target as Element);
-          placeholderBridgeStore.changePosition({node2:{width,height}});
+          placeholderBridgeStore.changePosition({node2:{width,height,isEmptyChild:true}});
           setDragSortCache([dragKey]);
         } else if (
           childNodeKeys.length === 1 &&
@@ -244,7 +245,7 @@ function Container(allProps: CommonPropsType) {
           //   // setChildren(renderChildren);
           // }
           setDragSortCache(newChildren);
-        }
+        }}
     },
     [childNodes],
   );
@@ -259,8 +260,15 @@ function Container(allProps: CommonPropsType) {
     const { selectedInfo } = getSelector(['selectedInfo']);
     const dragKey = getDragKey();
     if (get(selectedInfo,'selectedKey') === dragKey) return;
-    setOperateState({ dropNode: null,hoverNode:null });
+    if(isFreeLayout){
+      const {top,left}=get(placeholderBridgeStore.prevRects,'node2',{});
+      setDragSourceStyle({position:'absolute',top,left});
+    }else {
+      setDragSourceStyle({position:'relative'});
+    }
+
     addComponent();
+    setOperateState({ dropNode: null,hoverNode:null });
     // executeSubject();
   }, []);
 

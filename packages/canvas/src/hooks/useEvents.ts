@@ -98,21 +98,25 @@ export function useEvents(
       if (editAbleProp) {
         targetNode.contentEditable = 'true';
       }
-      setSelectedNode(targetNode);
-      onDoubleClickFn && onDoubleClickFn();
     },
-    [onDoubleClickFn, setSelectedNode],
+    [onDoubleClickFn],
   );
 
 
   const onClick = useCallback(
     (event: Event) => {
       event && event.stopPropagation();
-      isSelected&&clearSelectedStatus();
-      setOperateState({ selectedNode: null,operateSelectedKey:null });
+      if(isSelected){
+        clearSelectedStatus();
+        setOperateState({ selectedNode: null,operateSelectedKey:null });
+      }else {
+        const targetNode = event.target as HTMLElement;
+        setSelectedNode(targetNode);
+      }
+
       onClickFn && onClickFn();
     },
-    [onClickFn, isSelected],
+    [onClickFn, isSelected,setSelectedNode],
   );
 
   const onMouseOver = useCallback(
@@ -337,7 +341,6 @@ export function useEvents(
   });
 
   return {
-    onDoubleClick,
     onClick,
     onMouseOver,
     onDragStart,
@@ -346,5 +349,6 @@ export function useEvents(
     onDragEnd,
     onInput,
     onBlur,
+    onDoubleClick
   };
 }

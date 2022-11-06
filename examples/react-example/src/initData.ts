@@ -79,6 +79,7 @@ const data:PageConfigType= {
 		componentName: 'div',
 		props: {
 			style: {
+				position:'relative',
 				marginTop: '16px',
 				marginBottom: '16px',
 				marginRight: '28px',
@@ -385,6 +386,12 @@ const data:PageConfigType= {
 		componentName:'span',
 		props:{children:'${funParams.0.content}'}
 	},
+	"82":{
+		componentName:"Button",
+		props:{
+			style:{position:'absolute'}
+		}
+	}
 
 }
 

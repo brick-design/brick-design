@@ -194,6 +194,7 @@ export interface VirtualDOMType {
   componentName: string;
   props?: PropsType;
   childNodes?: ChildNodesType;
+  isFreeLayout?:boolean;
   api?: ApiType;
   state?: PlainObject;
   condition?: string;

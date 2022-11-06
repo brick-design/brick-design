@@ -36,6 +36,7 @@ export type SelectedInfoType = Omit<SelectedInfoBaseType, 'key'> & {
 export interface DragSourceType extends Partial<ParentNodeInfo> {
   template?: PageConfigType;
   dragKey?: string;
+  style?:any;
 }
 
 export interface DropTargetType {
