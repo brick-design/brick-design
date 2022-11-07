@@ -10,7 +10,7 @@ import {
   useOperate,
   getSelectedNode,
   copyComponent,
-  deleteComponent
+  deleteComponent, ROOT,
 } from '@brickd/canvas';
 import styles from './index.less';
 import {
@@ -139,7 +139,7 @@ function Header(props: HeaderProps) {
         />
         {componentName}
       </div>
-      {!propName&&<Checkbox
+      {!propName&&key!==ROOT&&<Checkbox
         onChange={()=>copyComponent({key,parentKey,parentPropName})}
         checkedIcon={copyIcon}
         uncheckedIcon={copyIcon}

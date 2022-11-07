@@ -10,7 +10,13 @@ import { generateNewKey, getNewKey, ROOT } from './index';
  * 拖拽排序 缓存
  */
 let DRAG_SORT_CACHE: string[] | null = null;
+/**
+ * 新拖拽 Key
+ */
+let NEW_DRAG_KEY:string|null=null;
 
+export const getNewDragKey=()=>NEW_DRAG_KEY;
+export const setNewDragKey=(key:string)=>(NEW_DRAG_KEY=key);
 export const setDragSortCache = (dragSort?: string[] | null) =>
   (DRAG_SORT_CACHE = dragSort);
 export const getDragSortCache = () => DRAG_SORT_CACHE;
@@ -79,6 +85,8 @@ export const setDragSource = (dragSource: DragSourcePayload | null) => {
   if (pageConfig[ROOT] && template) {
     const newKey = getNewKey(pageConfig);
     dragKey = `${newKey}`;
+    setNewDragKey(dragKey);
+
     template = generateNewKey(template, newKey);
   }
 
@@ -100,6 +108,7 @@ export const getDropTarget = () => DROP_TARGET;
 export const setDropTarget = (dropTarget: null | DropTargetType) =>DROP_TARGET=dropTarget;
 
 
+
 export const cleanStateCache = () => {
   setBrickdConfig(null);
   setWarn(null);
@@ -107,4 +116,5 @@ export const cleanStateCache = () => {
   setDragSortCache(null);
   setDropTarget(null);
   setDragSource(null);
+  setNewDragKey(null);
 };

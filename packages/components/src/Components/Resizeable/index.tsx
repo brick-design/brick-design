@@ -10,6 +10,7 @@ import React, {
 import { Direction, useResize } from '@brickd/hooks';
 import styles from './index.less';
 import { ANIMATION_YES } from '../../utils';
+import { useActive } from '../../Abilities/PanelActive';
 
 export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   left?: boolean;
@@ -27,6 +28,8 @@ export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultHeight?: number;
   defaultWidth?: number;
   onResizeStart?: (event: React.MouseEvent | MouseEvent) => void;
+  key?:string
+
 }
 
 type OriginSizeType = {
@@ -64,6 +67,7 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     className,
     defaultHeight,
     defaultWidth,
+    key,
     ...rest
   } = props;
 
@@ -73,9 +77,14 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     height: defaultHeight,
   });
   const resizeDivRef = useRef<HTMLDivElement>();
+  const setActive= useActive(key,resizeDivRef);
 
   const { onResizeStart, onResize, onResizeEnd } = useResize(resizeDivRef);
 
+  const onFocus=(event:React.FocusEvent)=>{
+    event.stopPropagation();
+    setActive();
+  };
   const changeFold = useCallback((params: ChangeFoldParam) => {
     const { isHeight, isWidth, widthTarget, heightTarget } = params;
     const { height, width } = originSizeRef.current;
@@ -145,6 +154,7 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     <div
       className={`${styles['container']} ${className}`}
       {...rest}
+      onFocus={onFocus}
       ref={resizeDivRef}
     >
       {children}

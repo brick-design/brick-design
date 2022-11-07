@@ -8,7 +8,7 @@ import BarTabs, { TabPane } from '../../Components/BarTabs';
 
 function Scaffold() {
   return (
-    <BarTabs icon={propIcon} className={styles['right-container']}>
+    <BarTabs key={'Scaffold'} icon={propIcon} className={styles['right-container']}>
       <TabPane tab={'属性'} key={'1'}>
         <Props isCommon />
       </TabPane>

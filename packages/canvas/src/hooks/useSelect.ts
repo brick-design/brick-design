@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import {
   SelectedInfoBaseType,
   SelectedInfoType,
   STATE_PROPS,
-  selectComponent,
 } from '@brickd/core';
 import { useSelector } from './useSelector';
-import { getDragKey, isEqualKey } from '../utils';
+import {  isEqualKey } from '../utils';
 
 interface SelectType {
   selectedInfo: SelectedInfoType;
@@ -68,7 +67,6 @@ export function useSelect(
     [],
   );
 
-  const renderStatusRef = useRef(false);
 
   const { selectedInfo } = useSelector<SelectType, STATE_PROPS>(
     ['selectedInfo'],
@@ -79,19 +77,6 @@ export function useSelect(
     selectedInfo || {};
   const isSelected = isEqualKey(key, selectedKey);
 
-  useEffect(() => {
-    if (!isSelected) {
-      renderStatusRef.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
-    const dragKey = getDragKey();
-    if (isSelected && !dragKey && !renderStatusRef.current) {
-      renderStatusRef.current = true;
-      selectComponent(specialProps);
-    }
-  });
 
   return { selectedDomKeys, isSelected, propName, lockedKey: selectedKey,selectedStyleProp };
 }

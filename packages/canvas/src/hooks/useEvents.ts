@@ -3,11 +3,11 @@ import {
   changeProps,
   changeStyles,
   clearSelectedStatus,
-  getComponentConfig,
+  getComponentConfig, getNewDragKey,
   // overTarget,
   ROOT,
   selectComponent,
-  SelectedInfoBaseType, setDragSource,
+  SelectedInfoBaseType, setDragSource, setNewDragKey,
   STATE_PROPS,
 } from '@brickd/core';
 import { isEmpty } from 'lodash';
@@ -84,8 +84,10 @@ export function useEvents(
   );
 
   useEffect(()=>{
-    if(isSelected)
-    setSelectedNode(getSelectedNode(key));
+    if(!isSelected&&getNewDragKey()===key){
+      setSelectedNode(getSelectedNode(key));
+      setNewDragKey(null);
+    }
   },[]);
 
   const onDoubleClick = useCallback(

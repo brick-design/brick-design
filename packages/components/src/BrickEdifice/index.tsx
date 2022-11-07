@@ -11,11 +11,10 @@ import { BrickStore } from '@brickd/hooks';
 import Users, { UserType } from './Users';
 import TopLeftButtons from './TopLeftButtons';
 import MidBottomButtons from './MidBottomButtons';
-import BottomLeftButtons, {
-  BottomLeftButtonsType,
-} from './BottomLeftButtons';
+import BottomLeftButtons, { BottomLeftButtonsType } from './BottomLeftButtons';
 import styles from '../index.less';
 import DragMove from '../Components/DragMove';
+import PanelActive from '../Abilities/PanelActive';
 
 require('rc-tabs/assets/index.css');
 require('rc-collapse/assets/index.css');
@@ -60,17 +59,24 @@ function BrickEdifice(props: BrickEdificeProps) {
   }, []);
 
   return (
+    <PanelActive>
     <ZoomProvider value={zoomStore}>
       <BrickProvider config={config} warn={warn} customReducer={customReducer}>
-        <BrickDesignCanvas className={styles['brickd-canvas']} zoomStore={zoomStore} {...rest}>
-          <DragMove />
-          <Users users={users} />
-          <TopLeftButtons />
-          <MidBottomButtons />
-          <BottomLeftButtons componentsCategory={componentsCategory} />
+        <BrickDesignCanvas
+          className={styles['brickd-canvas']}
+          zoomStore={zoomStore}
+          {...rest}
+        >
+            <DragMove />
+            <Users users={users} />
+            <TopLeftButtons />
+            <MidBottomButtons />
+            <BottomLeftButtons componentsCategory={componentsCategory} />
         </BrickDesignCanvas>
       </BrickProvider>
     </ZoomProvider>
+    </PanelActive>
+
   );
 }
 

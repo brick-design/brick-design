@@ -263,8 +263,6 @@ function Container(allProps: CommonPropsType) {
     if(isFreeLayout){
       const {top,left}=get(placeholderBridgeStore.prevRects,'node2',{});
       setDragSourceStyle({position:'absolute',top,left});
-    }else {
-      setDragSourceStyle({position:'relative'});
     }
 
     addComponent();
@@ -438,10 +436,10 @@ function Container(allProps: CommonPropsType) {
   return createElement(getComponent(componentName), {
     ...styleProps,
     ...restProps,
-    // onDragEnter: onParentDragEnter,
-    // onDragOver: onParentDragOver,
-    // // onDragLeave,
-    // onDrop,
+    onDragEnter: onParentDragEnter,
+    onDragOver: onParentDragOver,
+    // onDragLeave,
+    onDrop,
     ...events,
     ...generateRequiredProps(componentName),
     ...childNodesProps,
