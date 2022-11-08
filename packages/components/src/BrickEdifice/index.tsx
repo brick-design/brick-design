@@ -13,7 +13,6 @@ import TopLeftButtons from './TopLeftButtons';
 import MidBottomButtons from './MidBottomButtons';
 import BottomLeftButtons, { BottomLeftButtonsType } from './BottomLeftButtons';
 import styles from '../index.less';
-import DragMove from '../Components/DragMove';
 import PanelActive from '../Abilities/PanelActive';
 
 require('rc-tabs/assets/index.css');
@@ -67,7 +66,6 @@ function BrickEdifice(props: BrickEdificeProps) {
           zoomStore={zoomStore}
           {...rest}
         >
-            <DragMove />
             <Users users={users} />
             <TopLeftButtons />
             <MidBottomButtons />

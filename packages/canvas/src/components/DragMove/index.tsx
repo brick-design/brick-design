@@ -1,6 +1,7 @@
 import React, { memo, RefObject, useEffect, useState } from 'react';
-import { getIframe, useZoom } from '@brickd/canvas';
 import styles from './index.less';
+import {useZoom} from '../../hooks/useZoom';
+import {getIframe} from '../../utils';
 
 interface DragMoveProp {
   canvasRef?: RefObject<HTMLDivElement>;
@@ -33,20 +34,23 @@ function DragMove(props: DragMoveProp) {
     const { deltaX, deltaY } = e;
     const { scale } = getZoomState();
     e.preventDefault();
-    if (isAble) {
-      if (e.ctrlKey) {
-        const newScale= scale - deltaY * 0.005;
-        setZoomState({ scale:newScale||0  });
-        return false;
-      } else {
-        const target = canvasRef.current;
-        const { top, left } = getComputedStyle(target);
-        target.style.transition = 'none';
-        target.style.left = Number.parseInt(left) - deltaX * 2 + 'px';
-        target.style.top = Number.parseInt(top) - deltaY * 2 + 'px';
-        return false;
+    getIframe().contentWindow.requestAnimationFrame(()=>{
+      if (isAble) {
+        if (e.ctrlKey) {
+          const newScale= scale - deltaY * 0.005;
+          setZoomState({ scale:newScale||0  });
+          return false;
+        } else {
+          const target = canvasRef.current;
+          const { top, left } = getComputedStyle(target);
+          target.style.transition = 'none';
+          target.style.left = Number.parseInt(left) - deltaX * 2 + 'px';
+          target.style.top = Number.parseInt(top) - deltaY * 2 + 'px';
+          return false;
+        }
       }
-    }
+    });
+
   };
 
   useEffect(() => {

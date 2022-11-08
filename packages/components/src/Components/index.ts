@@ -16,4 +16,3 @@ export { default as Tips } from './Tips';
 export { default as NCollapse } from './NCollapse';
 export { default as NForm } from './NForm';
 export { default as CodeEditor } from './CodeEditor';
-export {default as DragMove } from './DragMove';

@@ -30,6 +30,7 @@ import { useSelector } from './hooks/useSelector';
 import Guidelines from './components/Guidelines';
 import { cleanCaches, getIframe, css} from './utils';
 import { useZoom } from './hooks/useZoom';
+import DragMove from './components/DragMove';
 
 interface PlatformsType {
   [platformName: string]: PlatformSizeType;
@@ -191,7 +192,6 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         minWidth: size[0],
         height: size[1],
         minHeight: size[1],
-        transition: 'all 200ms',
         transform: `scale(${scale})`,
       });
     },
@@ -239,6 +239,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             onLoadEnd={loadEnd}
           />
         </div>
+        <DragMove canvasRef={brickdCanvasRef}/>
         {Children.map(children,(child:any)=>cloneElement(child,{canvasRef:brickdCanvasRef}))}
       </div>
     </OperateProvider>
