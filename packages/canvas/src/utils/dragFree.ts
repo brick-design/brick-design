@@ -151,7 +151,7 @@ export const freeCalc = (x: number, y: number, k: string) => {
     return { x, y };
   }
 
-  calcAndDrawLines({ x, y }, target);
+ return calcAndDrawLines({ x, y }, target);
 };
 
 const checkOverlap = ({ x, y }: PositionType, target: ChildNodeRectType) => {
@@ -216,6 +216,7 @@ const calcAndDrawLines = (values: PositionType, target: ChildNodeRectType) => {
   // 	hLines,
   // 	indices,
   // });
+  return {x,y};
 };
 
 const calcPosValues = (

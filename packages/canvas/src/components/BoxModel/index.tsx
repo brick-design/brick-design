@@ -17,7 +17,7 @@ function BoxModel() {
     leftDistanceRef.current.style.display = display;
   }, []);
 
-  const boxChange = useCallback((positions: any, isFlowLayout: boolean) => {
+  const boxChange = useCallback((positions: any) => {
     const {
       lockedMarginLeft,
       lockedMarginTop,
@@ -34,12 +34,12 @@ function BoxModel() {
       marginRight,
       marginTop,
       marginBottom,
-      top,
-      left,
+      // top,
+      // left,
     } = positions;
     let topResult = pageTop - marginTop;
     const leftResult = pageLeft - marginLeft;
-    if (isFlowLayout) {
+    // if (isFlowLayout) {
       changeBoxDisplay('flex');
       if (!lockedMarginLeft) {
         changeElPositionAndSize(leftDistanceRef.current, {
@@ -186,23 +186,23 @@ function BoxModel() {
           });
         }
       }
-    } else {
-      changeElPositionAndSize(leftDistanceRef.current, {
-        left: left > 0 ? pageLeft - left : pageLeft,
-        top: pageTop + height / 2,
-        width: Math.abs(left),
-        display: 'flex',
-      });
-      leftDistanceRef.current.dataset.distance = 'left:' + left;
-
-      changeElPositionAndSize(topDistanceRef.current, {
-        left: width / 2 + pageLeft,
-        top: top > 0 ? pageTop - top : pageTop,
-        height: Math.abs(top),
-        display: 'flex',
-      });
-      topDistanceRef.current.dataset.distance = 'top:' + top;
-    }
+    // } else {
+    //   changeElPositionAndSize(leftDistanceRef.current, {
+    //     left: left > 0 ? pageLeft - left : pageLeft,
+    //     top: pageTop + height / 2,
+    //     width: Math.abs(left),
+    //     display: 'flex',
+    //   });
+    //   leftDistanceRef.current.dataset.distance = 'left:' + left;
+    //
+    //   changeElPositionAndSize(topDistanceRef.current, {
+    //     left: width / 2 + pageLeft,
+    //     top: top > 0 ? pageTop - top : pageTop,
+    //     height: Math.abs(top),
+    //     display: 'flex',
+    //   });
+    //   topDistanceRef.current.dataset.distance = 'top:' + top;
+    // }
   }, []);
 
   useEffect(() => {

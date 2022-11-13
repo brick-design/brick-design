@@ -161,12 +161,10 @@ export function useDragMove(
       const marginBottom = originalMarginBottom - offsetY;
       const top = topPosition + offsetY;
       const left = leftPosition + offsetX;
-      let isFlowLayout = true;
       if (EXCLUDE_POSITION.includes(targetNode.style.position)) {
-        isFlowLayout = false;
-        changeElPositionAndSize(targetNode, { transition: 'none', left, top });
-        positionResultRef.current = { left, top };
-        freeCalc(left, top, key);
+        const {x,y}=freeCalc(left, top, key);
+        changeElPositionAndSize(targetNode, { transition: 'none', left:x, top:y });
+        positionResultRef.current = { left:x, top:y };
       } else {
         if (!lockedMarginLeft && !lockedMarginTop) {
           changeElPositionAndSize(targetNode, {
@@ -197,7 +195,7 @@ export function useDragMove(
           });
           positionResultRef.current = { marginRight, marginBottom };
         }
-        boxChange(positionResultRef.current, isFlowLayout);
+        boxChange(positionResultRef.current);
       }
       changeOperationPanel();
 
