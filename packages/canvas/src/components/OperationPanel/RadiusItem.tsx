@@ -3,11 +3,7 @@ import { isEmpty, each } from 'lodash';
 import { changeStyles } from '@brickd/core';
 import { formatUnit } from '@brickd/hooks';
 import styles from './index.less';
-import {
-  changeElPositionAndSize,
-  css,
-  getIframe,
-} from '../../utils';
+import { changeElPositionAndSize, css, getIframe } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
 import { Radius } from './index';
@@ -196,7 +192,7 @@ function RadiusItem(props: ItemProps) {
     const { selectedNode } = getOperateState();
     // hiddenBaseboard(baseboardRef.current);
     originRadiusRef.current = undefined;
-    changeStyles({ style: radiusResultRef.current,isMerge:true });
+    changeStyles({ style: radiusResultRef.current, isMerge: true });
     radiusResultRef.current = {};
     selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
     setSelected(false);
@@ -261,7 +257,7 @@ function RadiusItem(props: ItemProps) {
     };
   }, [onMouseMove, onMouseUp]);
 
-  const onLock=(event: React.MouseEvent) =>{
+  const onLock = (event: React.MouseEvent) => {
     event.stopPropagation();
     setChecked(!checked);
   };
@@ -269,7 +265,7 @@ function RadiusItem(props: ItemProps) {
   return (
     <div
       draggable={false}
-      ref= {nodeRef}
+      ref={nodeRef}
       onClick={onLock}
       style={radiusStyles[radius]}
       onMouseDown={onMouseDown}

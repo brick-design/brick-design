@@ -21,9 +21,10 @@ function StateDomainWrapper(props: any) {
     (prevState, nextState) =>
       controlUpdate(prevState, nextState, specialProps.key),
   );
-  const vNode=pageConfig[specialProps.key] ||
+  const vNode =
+    pageConfig[specialProps.key] ||
     getDragSourceFromKey('template', {})[specialProps.key];
-  const { state, api, componentName } =vNode||{};
+  const { state, api, componentName } = vNode || {};
   const brickdStore = useRedux(state);
   const childProps = useGetProps(brickdStore.getPageState(), rest);
   useService(brickdStore.getPageState(), api);

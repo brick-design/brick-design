@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect,  useRef } from 'react';
+import React, { forwardRef, memo, useEffect, useRef } from 'react';
 // import {
 //   DragSourceType,
 //   DropTargetType,
@@ -31,15 +31,13 @@ export type PositionSizeType = {
   left: number;
 };
 
-
-
 function Guidelines() {
   const topRef = useRef<HTMLDivElement>();
   const bottomRef = useRef<HTMLDivElement>();
   const leftRef = useRef<HTMLDivElement>();
   const rightRef = useRef<HTMLDivElement>();
   const iframe = useRef(getIframe()).current;
-  const {getZoomState}=useZoom();
+  const { getZoomState } = useZoom();
   const canvas = useRef(document.getElementById('brickd-canvas')).current;
   const canvasContainer = useRef(
     document.getElementById('brickd-canvas-container'),
@@ -51,38 +49,38 @@ function Guidelines() {
   useEffect(() => {
     const { contentWindow } = iframe;
     const renderGuideLines = () => {
-      const { hoverNode,  isModal } = getOperateState();
-      const node =  hoverNode;
+      const { hoverNode, isModal } = getOperateState();
+      const node = hoverNode;
       if (node) {
         const { left, top, bottom, right } = getElementInfo(node, isModal);
         const { scrollY, scrollX } = contentWindow;
-        const {scale}=getZoomState();
-        const positionSize = getScalePosition(canvas, canvasContainer,scale);
+        const { scale } = getZoomState();
+        const positionSize = getScalePosition(canvas, canvasContainer, scale);
         const { width, height } = positionSize;
 
         changeElPositionAndSize(topRef.current, {
           top: top - scrollY,
           width,
           left: -positionSize.left,
-          display:'block'
+          display: 'block',
         });
         changeElPositionAndSize(leftRef.current, {
           left: left - scrollX,
           height,
           top: -positionSize.top,
-          display:'block'
+          display: 'block',
         });
         changeElPositionAndSize(rightRef.current, {
           left: right - 1 - scrollX,
           height,
           top: -positionSize.top,
-          display:'block'
+          display: 'block',
         });
         changeElPositionAndSize(bottomRef.current, {
           left: -positionSize.left,
           width,
           top: bottom - 1 - scrollY,
-          display:'block'
+          display: 'block',
         });
 
         setPosition(
@@ -94,11 +92,11 @@ function Guidelines() {
           ],
           isModal,
         );
-      }else {
-          leftRef.current.style.display='none';
-            rightRef.current.style.display='none';
-            topRef.current.style.display='none';
-            bottomRef.current.style.display='none';
+      } else {
+        leftRef.current.style.display = 'none';
+        rightRef.current.style.display = 'none';
+        topRef.current.style.display = 'none';
+        bottomRef.current.style.display = 'none';
       }
     };
     const unSubscribe = setSubscribe(renderGuideLines);
@@ -109,7 +107,6 @@ function Guidelines() {
       contentWindow.removeEventListener('scroll', renderGuideLines);
     };
   }, []);
-
 
   return (
     <>

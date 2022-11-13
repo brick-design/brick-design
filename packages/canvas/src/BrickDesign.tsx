@@ -10,15 +10,23 @@ import {
   PageConfigType,
   STATE_PROPS,
   getStore,
-  ROOT,addComponent,
+  ROOT,
+  addComponent,
 } from '@brickd/core';
 import ReactDOM from 'react-dom';
-import { BrickStore, StaticContextProvider,BrickObserverProvider } from '@brickd/hooks';
+import {
+  BrickStore,
+  StaticContextProvider,
+  BrickObserverProvider,
+} from '@brickd/hooks';
 import { BrickContext } from 'components/BrickProvider';
 import {
   iframeSrcDoc,
   getIframe,
-  getDragKey, getRootState, setIframe, placeholderBridgeStore,
+  getDragKey,
+  getRootState,
+  setIframe,
+  placeholderBridgeStore,
 } from './utils';
 import Distances from './components/Distances';
 import GuidePlaceholder from './components/GuidePlaceholder';
@@ -32,6 +40,7 @@ import OperationPanel from './components/OperationPanel';
 import BoxModel from './components/BoxModel';
 import styles from './index.less';
 import { ZoomProvider } from './components/ZoomProvider';
+import { FreeGuidelines } from './components/FreeGuidelines';
 /**
  * 鼠标离开设计区域清除hover状态
  */
@@ -54,32 +63,45 @@ const controlUpdate = (
   return pageConfig[ROOT] !== prevPageConfig[ROOT];
 };
 
-type LayerNameType={
-  layerName:string
-}
+type LayerNameType = {
+  layerName: string;
+};
 
 function BrickDesign(brickdProps: BrickDesignProps) {
-  const { onLoadEnd, pageName, options, operateStore,zoomStore, ...props } = brickdProps;
+  const {
+    onLoadEnd,
+    pageName,
+    options,
+    operateStore,
+    zoomStore,
+    ...props
+  } = brickdProps;
   const { pageConfig = {} } = useSelector<BrickdHookState, STATE_PROPS>(
     ['pageConfig'],
     controlUpdate,
   );
-  const iframeRef=useRef<HTMLIFrameElement>();
-  useSelector<LayerNameType,string>(['layerName'],(prevState,nextState)=>{
-    if(prevState.layerName!==nextState.layerName){
-      operateStore.setPageState({
-        hoverNode: undefined,
-        selectedNode: undefined,
-        dropNode: undefined,
-        isModal: undefined,
-        operateHoverKey: undefined,
-        operateSelectedKey: undefined,
-        index: undefined,
-        isDropAble: undefined,
-        isLock: undefined});
-    }
-    return  false;
-  },undefined,true);
+  const iframeRef = useRef<HTMLIFrameElement>();
+  useSelector<LayerNameType, string>(
+    ['layerName'],
+    (prevState, nextState) => {
+      if (prevState.layerName !== nextState.layerName) {
+        operateStore.setPageState({
+          hoverNode: undefined,
+          selectedNode: undefined,
+          dropNode: undefined,
+          isModal: undefined,
+          operateHoverKey: undefined,
+          operateSelectedKey: undefined,
+          index: undefined,
+          isDropAble: undefined,
+          isLock: undefined,
+        });
+      }
+      return false;
+    },
+    undefined,
+    true,
+  );
   const rootComponent = pageConfig[ROOT];
 
   const staticState = useMemo(() => ({ options, pageName }), [
@@ -100,7 +122,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     const rootComponent = pageConfig[ROOT];
     if (!rootComponent) return null;
     const specialProps = { domTreeKeys: [ROOT], key: ROOT, parentKey: '' };
-    const {layerName}=getRootState();
+    const { layerName } = getRootState();
     return (
       <StateDomainWrapper
         {...props}
@@ -119,17 +141,18 @@ function BrickDesign(brickdProps: BrickDesignProps) {
       ReactDOM.render(
         <BrickObserverProvider>
           <ZoomProvider value={zoomStore}>
-        <StaticContextProvider value={staticState}>
-          <OperateProvider value={operateStore}>
-            <BrickContext.Provider value={getStore()}>
-              {designPage}
-              <Distances />
-              <OperationPanel />
-              <BoxModel />
-              <GuidePlaceholder />
-            </BrickContext.Provider>
-          </OperateProvider>
-        </StaticContextProvider>
+            <StaticContextProvider value={staticState}>
+              <OperateProvider value={operateStore}>
+                <BrickContext.Provider value={getStore()}>
+                  {designPage}
+                  <Distances />
+                  <OperationPanel />
+                  <BoxModel />
+                  <GuidePlaceholder />
+                  <FreeGuidelines />
+                </BrickContext.Provider>
+              </OperateProvider>
+            </StaticContextProvider>
           </ZoomProvider>
         </BrickObserverProvider>,
         divContainer.current,
@@ -139,26 +162,28 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   );
 
   const onDragEnter = useCallback(() => {
-    const {layerName}=getRootState();
-    if(!layerName) return;
-    const {contentDocument}=getIframe();
-    placeholderBridgeStore.changePosition({node2:{
-      width:contentDocument.body.scrollWidth,
-        height:contentDocument.body.scrollHeight,
-        isEmptyChild:true
-      }});
+    const { layerName } = getRootState();
+    if (!layerName) return;
+    const { contentDocument } = getIframe();
+    placeholderBridgeStore.changePosition({
+      node2: {
+        width: contentDocument.body.scrollWidth,
+        height: contentDocument.body.scrollHeight,
+        isEmptyChild: true,
+      },
+    });
     operateStore.setPageState({
-      dropNode:contentDocument.body,
-      isDropAble:true
+      dropNode: contentDocument.body,
+      isDropAble: true,
     });
   }, []);
 
   const onDragLeave = useCallback(() => {
     operateStore.setPageState({
-      dropNode:null,
-      isDropAble:false
+      dropNode: null,
+      isDropAble: false,
     });
-      ReactDOM.unmountComponentAtNode(divContainer.current);
+    ReactDOM.unmountComponentAtNode(divContainer.current);
   }, []);
 
   const onIframeLoad = useCallback(() => {
@@ -171,18 +196,17 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     onLoadEnd && onLoadEnd();
   }, [designPage, onLoadEnd, componentMount]);
 
-
-  const onDragover=useCallback((e: any)=> {
+  const onDragover = useCallback((e: any) => {
     e.preventDefault();
-  },[]);
-  const onDrop=useCallback(()=>{
+  }, []);
+  const onDrop = useCallback(() => {
     addComponent();
     operateStore.setPageState({
-      dropNode:null
+      dropNode: null,
     });
-  },[]);
+  }, []);
   useEffect(() => {
-    if(!rootComponent){
+    if (!rootComponent) {
       const { contentWindow } = getIframe();
       contentWindow.addEventListener('dragover', onDragover);
       contentWindow.addEventListener('drop', onDrop);
@@ -190,15 +214,15 @@ function BrickDesign(brickdProps: BrickDesignProps) {
       contentWindow.addEventListener('dragleave', onDragLeave);
     }
     return () => {
-      if(!rootComponent){
+      if (!rootComponent) {
         const { contentWindow } = getIframe();
         contentWindow.removeEventListener('dragover', onDragover);
         contentWindow.removeEventListener('drop', onDrop);
         contentWindow.removeEventListener('dragenter', onDragEnter);
-      contentWindow.removeEventListener('dragleave', onDragLeave);
+        contentWindow.removeEventListener('dragleave', onDragLeave);
       }
     };
-  }, [onDragEnter, onDragLeave,rootComponent]);
+  }, [onDragEnter, onDragLeave, rootComponent]);
 
   useEffect(() => {
     if (divContainer.current) {

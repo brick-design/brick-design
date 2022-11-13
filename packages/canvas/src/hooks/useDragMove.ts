@@ -1,25 +1,66 @@
-import { useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
+import {
+  ROOT,
+  setDragSource,
+  changeStyles,
+  SelectedInfoBaseType,
+} from '@brickd/core';
 import { formatUnit } from '@brickd/hooks';
 import { isEmpty } from 'lodash';
-import { ROOT, changeStyles } from '@brickd/core';
-import { OriginalPosition } from './useDragMove';
-import { useOperate } from './useOperate';
+import { UseSelectType } from './useSelect';
+import { DEFAULT_ANIMATION, dragImg } from '../common/constants';
 import {
   changeElPositionAndSize,
   css,
   EXCLUDE_POSITION,
+  freeCalc,
   getIframe,
+  initialize, resetGuideLines,
 } from '../utils';
 
-export function useMouseMove(isSelected: boolean, key: string) {
-  const originalPositionRef = useRef<OriginalPosition>();
-  const { getOperateState } = useOperate();
-  const positionResultRef = useRef<any>();
+export type OriginalPosition = {
+  originalX: number;
+  originalY: number;
+  originalMarginLeft: number;
+  originalMarginTop: number;
+  originalMarginRight: number;
+  originalMarginBottom: number;
+  topPosition: number;
+  leftPosition: number;
+  bottomPosition: number;
+  rightPosition: number;
+  prevClientX: number;
+  prevClientY: number;
+};
 
-  const onMouseDown = useCallback(
-    (event: MouseEvent) => {
+export function useDragMove(
+  specialProps: SelectedInfoBaseType,
+  selectedInfo: UseSelectType,
+  getOperateState: any,
+) {
+  const originalPositionRef = useRef<OriginalPosition>();
+  const positionResultRef = useRef<any>();
+  const { isSelected, selectedStyleProp } = selectedInfo;
+  const { key, parentKey, parentPropName } = specialProps;
+  const onDragStart = useCallback(
+    (event: React.DragEvent) => {
       event.stopPropagation();
-      if (isSelected && key !== ROOT) {
+      if (!isSelected) {
+        dragImg.style.width = '10px';
+        dragImg.style.height = '10px';
+        event.dataTransfer.setDragImage(dragImg, 0, 0);
+      } else {
+        dragImg.style.width = '0px';
+        dragImg.style.height = '0px';
+        event.dataTransfer.setDragImage(dragImg, 0, 0);
+      }
+      setDragSource({
+        dragKey: key,
+        parentKey,
+        parentPropName,
+      });
+
+      if (isSelected && key !== ROOT && !selectedStyleProp) {
         const { clientX, clientY, target } = event;
         const targetNode = target as HTMLElement;
         const {
@@ -69,15 +110,16 @@ export function useMouseMove(isSelected: boolean, key: string) {
           prevClientX: clientX,
           prevClientY: clientY,
         };
-
+        initialize(parentKey, parentPropName);
         targetNode.style.transition = 'none';
       }
     },
-    [isSelected],
+    [isSelected, selectedStyleProp],
   );
 
-  const onMove = useCallback((event: MouseEvent) => {
+  const onDrag = useCallback((event: React.DragEvent) => {
     event.stopPropagation();
+    event.persist();
     getIframe().contentWindow.requestAnimationFrame(() => {
       if (!originalPositionRef.current) return;
       const { clientY, clientX, target } = event;
@@ -124,6 +166,7 @@ export function useMouseMove(isSelected: boolean, key: string) {
         isFlowLayout = false;
         changeElPositionAndSize(targetNode, { transition: 'none', left, top });
         positionResultRef.current = { left, top };
+        freeCalc(left, top, key);
       } else {
         if (!lockedMarginLeft && !lockedMarginTop) {
           changeElPositionAndSize(targetNode, {
@@ -154,22 +197,34 @@ export function useMouseMove(isSelected: boolean, key: string) {
           });
           positionResultRef.current = { marginRight, marginBottom };
         }
+        boxChange(positionResultRef.current, isFlowLayout);
       }
-      boxChange(positionResultRef.current, isFlowLayout);
       changeOperationPanel();
+
     });
   }, []);
 
-  const onMoveEnd = useCallback((event: DragEvent) => {
+  const onDragEnd = useCallback((event: DragEvent) => {
     event.stopPropagation();
-    const { changeBoxDisplay } = getOperateState();
+    const {
+      // actionSheetRef,
+      changeBoxDisplay,
+    } = getOperateState();
+    setDragSource(null);
     if (!isEmpty(positionResultRef.current)) {
       changeStyles({ style: positionResultRef.current, isMerge: true });
       changeBoxDisplay('none');
       positionResultRef.current = {};
     }
+    resetGuideLines();
     originalPositionRef.current = null;
+    // actionSheetRef.current.setShow(true);
+    (event.target as HTMLElement).style.transition = DEFAULT_ANIMATION;
+    getIframe().contentDocument.body.style.cursor = 'default';
   }, []);
-
-  return { onMouseDown, onMove, onMoveEnd };
+  return {
+    onDragStart,
+    onDrag,
+    onDragEnd,
+  };
 }

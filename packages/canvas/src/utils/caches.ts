@@ -8,9 +8,6 @@ export const getIframe = (): HTMLIFrameElement => {
 export const setIframe = (iframe: HTMLIFrameElement | null) =>
   (IFRAME_CACHE = iframe);
 
-
 export const cleanCaches = () => {
   setIframe(null);
 };
-
-

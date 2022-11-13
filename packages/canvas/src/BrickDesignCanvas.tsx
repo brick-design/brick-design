@@ -1,5 +1,6 @@
 import React, {
-  Children, cloneElement,
+  Children,
+  cloneElement,
   forwardRef,
   memo,
   useCallback,
@@ -8,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { BrickStore,  } from '@brickd/hooks';
+import { BrickStore } from '@brickd/hooks';
 import {
   redo,
   undo,
@@ -28,7 +29,7 @@ import {
 import styles from './index.less';
 import { useSelector } from './hooks/useSelector';
 import Guidelines from './components/Guidelines';
-import { cleanCaches, getIframe, css} from './utils';
+import { cleanCaches, getIframe, css } from './utils';
 import { useZoom } from './hooks/useZoom';
 import DragMove from './components/DragMove';
 
@@ -40,10 +41,7 @@ export interface BrickDesignCanvasType extends BrickDesignProps {
   platforms?: PlatformsType;
 }
 
-
 const defaultPlatforms: PlatformsType = { PC: [1920, 1080] };
-
-
 
 function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
@@ -59,11 +57,11 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
   const {
     platformInfo: { platformName, size },
   } = useSelector(['platformInfo']);
-  const {getZoomState,setZoomState,setSubscribe}=useZoom();
+  const { getZoomState, setZoomState, setSubscribe } = useZoom();
 
   const [isLoading, setIsLoading] = useState(false);
   const dndContainerRef = useRef<HTMLElement>();
-  const brickdCanvasRef=useRef<HTMLDivElement>();
+  const brickdCanvasRef = useRef<HTMLDivElement>();
   const selectedPlatform = platforms[platformName];
   const loadEnd = useCallback(() => {
     setIsLoading(true);
@@ -73,14 +71,13 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     onLoadEnd && onLoadEnd();
   }, [setIsLoading]);
 
-  useEffect(() =>{
-    const unSubscribe= setSubscribe(changeScale);
-    return()=>{
+  useEffect(() => {
+    const unSubscribe = setSubscribe(changeScale);
+    return () => {
       cleanCaches();
       unSubscribe();
     };
-  } , []);
-
+  }, []);
 
   const changeCanvasSize = useCallback(
     (isChangePage?: any) => {
@@ -136,17 +133,17 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
     };
   });
 
-  const changeScale=useCallback(()=>{
-    const {scale}=getZoomState();
-    brickdCanvasRef.current.style.transform= `scale(${scale})`;
-  },[]);
+  const changeScale = useCallback(() => {
+    const { scale } = getZoomState();
+    brickdCanvasRef.current.style.transform = `scale(${scale})`;
+  }, []);
 
   useEffect(() => {
     const { contentWindow } = getIframe() || {};
     function onKeyDown(keyEvent: KeyboardEvent) {
       keyEvent.stopPropagation();
       const { key, ctrlKey, shiftKey, metaKey } = keyEvent;
-      let {scale}=getZoomState();
+      let { scale } = getZoomState();
       if (ctrlKey || metaKey) {
         if (key === 'z') {
           if (!shiftKey) {
@@ -155,49 +152,41 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             redo();
           }
         } else if (key === 'u') {
-          brickdCanvasRef.current.style.transition='all 200ms';
-          brickdCanvasRef.current.style.top='auto';
-          brickdCanvasRef.current.style.left='auto';
+          brickdCanvasRef.current.style.transition = 'all 200ms';
+          brickdCanvasRef.current.style.top = 'auto';
+          brickdCanvasRef.current.style.left = 'auto';
           changeCanvasSize(true);
         } else if (key === '=') {
-          scale+=0.05;
-
+          scale += 0.05;
         } else if (key === '-') {
-          scale-=0.05;
+          scale -= 0.05;
         }
-        setZoomState({scale:scale||0});
+        setZoomState({ scale: scale || 0 });
         keyEvent.returnValue = false;
       }
     }
     addEventListener('keydown', onKeyDown);
-    if(contentWindow) {
+    if (contentWindow) {
       contentWindow.addEventListener('keydown', onKeyDown);
     }
     return () => {
-     removeEventListener('keydown', onKeyDown);
-      if(contentWindow){
-     contentWindow.removeEventListener('keydown', onKeyDown);
+      removeEventListener('keydown', onKeyDown);
+      if (contentWindow) {
+        contentWindow.removeEventListener('keydown', onKeyDown);
       }
     };
   }, [changeCanvasSize]);
 
-
-
-
-  const style = useMemo(
-    () => {
-      const {scale=0.5}=getZoomState();
-      return({
-        width: size[0],
-        minWidth: size[0],
-        height: size[1],
-        minHeight: size[1],
-        transform: `scale(${scale})`,
-      });
-    },
-        [size]
-
-  );
+  const style = useMemo(() => {
+    const { scale = 0.5 } = getZoomState();
+    return {
+      width: size[0],
+      minWidth: size[0],
+      height: size[1],
+      minHeight: size[1],
+      transform: `scale(${scale})`,
+    };
+  }, [size]);
 
   const cleanStatus = useCallback(() => {
     // const { hoverKey } = getSelector([ 'hoverKey']);
@@ -230,7 +219,7 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         >
           {isLoading && (
             <>
-              <Guidelines/>
+              <Guidelines />
             </>
           )}
           <BrickDesign
@@ -239,8 +228,10 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
             onLoadEnd={loadEnd}
           />
         </div>
-        <DragMove canvasRef={brickdCanvasRef}/>
-        {Children.map(children,(child:any)=>cloneElement(child,{canvasRef:brickdCanvasRef}))}
+        <DragMove canvasRef={brickdCanvasRef} />
+        {Children.map(children, (child: any) =>
+          cloneElement(child, { canvasRef: brickdCanvasRef }),
+        )}
       </div>
     </OperateProvider>
   );

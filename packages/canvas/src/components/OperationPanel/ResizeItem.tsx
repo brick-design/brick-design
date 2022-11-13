@@ -68,8 +68,8 @@ const containerPositionStyles: { [key: string]: React.CSSProperties } = {
 function ResizeItem(props: ItemProps) {
   const { onResizeStart, direction } = props;
   const { getOperateState } = useOperate();
-  const rotateRef=useRef<HTMLDivElement>();
-  const sizeRef=useRef<HTMLDivElement>();
+  const rotateRef = useRef<HTMLDivElement>();
+  const sizeRef = useRef<HTMLDivElement>();
   let className = styles['resize-item'];
   if (resizeV.includes(direction)) {
     className = styles['resize-item-v'];
@@ -77,34 +77,35 @@ function ResizeItem(props: ItemProps) {
     className = styles['resize-item-h'];
   }
 
-  const onRotateHover=(event:React.MouseEvent)=>{
+  const onRotateHover = (event: React.MouseEvent) => {
     event.stopPropagation();
-    renderMouse(rotateRef,true);
-
+    renderMouse(rotateRef, true);
   };
 
+  const renderMouse = (
+    divRef: RefObject<HTMLDivElement>,
+    isRotate?: boolean,
+  ) => {
+    const { selectedNode } = getOperateState();
+    const cssStyle = css(selectedNode);
+    if (!cssStyle) return;
+    const { transform } = css(selectedNode);
 
-  const renderMouse=(divRef:RefObject<HTMLDivElement>,isRotate?:boolean)=>{
-    const {selectedNode}=getOperateState();
-    const cssStyle=css(selectedNode);
-    if(!cssStyle) return;
-    const {
-      transform,
-    } = css(selectedNode);
-
-    const {sizeSvg,rotateSvg}=getMouseIcon(direction,getTransform(transform,getFatherRotate(selectedNode)));
-    const svg=isRotate?rotateSvg:sizeSvg;
-    divRef.current.style.cssText=`
+    const { sizeSvg, rotateSvg } = getMouseIcon(
+      direction,
+      getTransform(transform, getFatherRotate(selectedNode)),
+    );
+    const svg = isRotate ? rotateSvg : sizeSvg;
+    divRef.current.style.cssText = `
     ${divRef.current.style.cssText}    
     ${setCursor(svg)}
 `;
   };
 
-  const onSizeHover=(event:React.MouseEvent)=>{
+  const onSizeHover = (event: React.MouseEvent) => {
     event.stopPropagation();
     renderMouse(sizeRef);
   };
-
 
   if (resizeV.includes(direction) || resizeH.includes(direction)) {
     return (
@@ -118,7 +119,6 @@ function ResizeItem(props: ItemProps) {
       />
     );
   }
-
 
   return (
     <div

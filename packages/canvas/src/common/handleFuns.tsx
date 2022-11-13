@@ -31,19 +31,19 @@ export function handlePropsClassName(
   // isLockTarget: boolean,
   className: any,
   animateClass: string,
-  isShow:boolean
+  isShow: boolean,
 ) {
-  let style=`${selectClassTarget + key}`;
-  if(!isShow){
-    style+=' '+styles['hidden-component'];
+  let style = `${selectClassTarget + key}`;
+  if (!isShow) {
+    style += ' ' + styles['hidden-component'];
   }
 
-  if(className){
-    style+=' '+className;
+  if (className) {
+    style += ' ' + className;
   }
 
-  if(animateClass){
-    style+=' '+animateClass;
+  if (animateClass) {
+    style += ' ' + animateClass;
   }
   return style;
 }
@@ -228,7 +228,6 @@ export function handleModalTypeContainer(
 export type HookState = {
   pageConfig: PageConfigType;
 };
-
 
 export function controlUpdate(
   prevState: HookState,

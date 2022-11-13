@@ -1,7 +1,7 @@
 import React, { memo, RefObject, useEffect, useState } from 'react';
 import styles from './index.less';
-import {useZoom} from '../../hooks/useZoom';
-import {getIframe} from '../../utils';
+import { useZoom } from '../../hooks/useZoom';
+import { getIframe } from '../../utils';
 
 interface DragMoveProp {
   canvasRef?: RefObject<HTMLDivElement>;
@@ -34,11 +34,11 @@ function DragMove(props: DragMoveProp) {
     const { deltaX, deltaY } = e;
     const { scale } = getZoomState();
     e.preventDefault();
-    getIframe().contentWindow.requestAnimationFrame(()=>{
+    getIframe().contentWindow.requestAnimationFrame(() => {
       if (isAble) {
         if (e.ctrlKey) {
-          const newScale= scale - deltaY * 0.005;
-          setZoomState({ scale:newScale||0  });
+          const newScale = scale - deltaY * 0.005;
+          setZoomState({ scale: newScale || 0 });
           return false;
         } else {
           const target = canvasRef.current;
@@ -50,7 +50,6 @@ function DragMove(props: DragMoveProp) {
         }
       }
     });
-
   };
 
   useEffect(() => {

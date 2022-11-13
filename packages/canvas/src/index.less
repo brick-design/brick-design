@@ -1,27 +1,26 @@
-@import "./global";
-.hidden-drag{
+@import './global';
+.hidden-drag {
   width: 0;
   height: 0;
   transition: all 500ms;
 }
 
-.drop-empty-width{
+.drop-empty-width {
   width: 50px;
   transition: all 200ms;
 }
-.drop-empty-height{
-  height:50px;
+.drop-empty-height {
+  height: 50px;
   transition: all 200ms;
 }
 
-
-.brick-design-container{
+.brick-design-container {
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  resize:none;
+  resize: none;
   z-index: 0;
   .brickd-canvas {
     border-width: 0;
@@ -32,4 +31,3 @@
     position: absolute;
   }
 }
-

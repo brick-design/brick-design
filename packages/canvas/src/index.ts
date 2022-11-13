@@ -6,5 +6,5 @@ export { useSelector } from './hooks/useSelector';
 export { default as BrickProvider } from './components/BrickProvider';
 export * from './components/ZoomProvider';
 export * from './components/BrickProvider';
-export {useZoom} from './hooks/useZoom';
-export {useOperate} from './hooks/useOperate';
+export { useZoom } from './hooks/useZoom';
+export { useOperate } from './hooks/useOperate';

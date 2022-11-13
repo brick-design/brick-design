@@ -3,7 +3,8 @@ import {
   PageConfigType,
   VisualizedStylesPayload,
   SelectedInfoType,
-  STATE_PROPS,changeStyles,
+  STATE_PROPS,
+  changeStyles,
 } from '@brickd/core';
 
 import { map } from 'lodash';
@@ -15,11 +16,15 @@ import MarginItem from './MarginItem';
 import { useSelector } from '../../hooks/useSelector';
 import {
   changeElPositionAndSize,
-  css, getDegToRad, getDragAngle,
-  getElementInfo, getFatherRotate,
+  css,
+  getDegToRad,
+  getDragAngle,
+  getElementInfo,
+  getFatherRotate,
   getIframe,
   setPosition,
-  getTransform, getSelectedNode,
+  getTransform,
+  getSelectedNode,
 } from '../../utils';
 import { useOperate } from '../../hooks/useOperate';
 import { DEFAULT_ANIMATION } from '../../common/constants';
@@ -44,12 +49,11 @@ export enum MarginPosition {
   bottom = 'bottom',
 }
 
-
 type OriginSizeType = {
   x: number;
   y: number;
-  centerX:number;
-  centerY:number;
+  centerX: number;
+  centerY: number;
   width: number;
   height: number;
   minWidth: number | null;
@@ -57,8 +61,8 @@ type OriginSizeType = {
   maxWidth: number | null;
   maxHeight: number | null;
   direction: Direction;
-  mouseRotate:number;
-  isRotate?:boolean
+  mouseRotate: number;
+  isRotate?: boolean;
 };
 
 function OperationPanel() {
@@ -66,13 +70,15 @@ function OperationPanel() {
   const { getOperateState, setSubscribe, setOperateState } = useOperate();
   const controlUpdate = (prevState: ResizeState, nextState: ResizeState) => {
     const { selectedInfo } = nextState;
-    const {operateSelectedKey}=getOperateState();
-    if(prevState.selectedInfo&&!selectedInfo){
-      setOperateState({operateSelectedKey:null,selectedNode:null});
-    }else if(!prevState.selectedInfo&&selectedInfo&&!operateSelectedKey) {
-      const {selectedKey}=selectedInfo;
-      setOperateState({operateSelectedKey:selectedKey,selectedNode:getSelectedNode(selectedKey+'-0')});
-
+    const { operateSelectedKey } = getOperateState();
+    if (prevState.selectedInfo && !selectedInfo) {
+      setOperateState({ operateSelectedKey: null, selectedNode: null });
+    } else if (!prevState.selectedInfo && selectedInfo && !operateSelectedKey) {
+      const { selectedKey } = selectedInfo;
+      setOperateState({
+        operateSelectedKey: selectedKey,
+        selectedNode: getSelectedNode(selectedKey + '-0'),
+      });
     }
     return prevState.selectedInfo !== selectedInfo;
   };
@@ -87,15 +93,15 @@ function OperationPanel() {
   const styleResultRef = useRef<VisualizedStylesPayload>({});
   const baseboardRef = useRef<HTMLDivElement | any>();
   const actionSheetRef = useRef<any>();
-  const fatherRotateRef=useRef(0);
+  const fatherRotateRef = useRef(0);
   const [isOut, setIsOut] = useState<boolean>(true);
   const [isShowSizeTip, setIsShowSizeTip] = useState(false);
 
-  const changeOperationPanel = useCallback((isMove?:boolean) => {
+  const changeOperationPanel = useCallback((isMove?: boolean) => {
     const { selectedNode, operateSelectedKey, isModal } = getOperateState();
     if (selectedNode && operateSelectedKey) {
-      if(!isMove){
-        fatherRotateRef.current=getFatherRotate(selectedNode);
+      if (!isMove) {
+        fatherRotateRef.current = getFatherRotate(selectedNode);
       }
       const {
         left,
@@ -117,19 +123,21 @@ function OperationPanel() {
         minHeight: formatUnit(height) || positionHeight,
         width: formatUnit(width) || positionWidth,
         height: formatUnit(height) || positionHeight,
-        transform:getTransform(transform,fatherRotateRef.current),
+        transform: getTransform(transform, fatherRotateRef.current),
         transition: 'none',
       });
       setPosition([operationPanelRef.current], isModal);
       resizeRef.current.dataset.size = `${formatUnit(width)}x${formatUnit(
         height,
       )}`;
-      if(isMove){
-        const {direction,isRotate}=originSizeRef.current;
-        const {rotateSvg,sizeSvg}=getMouseIcon(direction,getTransform(transform,fatherRotateRef.current));
-        showBaseboard(isRotate?rotateSvg:sizeSvg);
+      if (isMove) {
+        const { direction, isRotate } = originSizeRef.current;
+        const { rotateSvg, sizeSvg } = getMouseIcon(
+          direction,
+          getTransform(transform, fatherRotateRef.current),
+        );
+        showBaseboard(isRotate ? rotateSvg : sizeSvg);
       }
-
     }
   }, []);
 
@@ -160,7 +168,7 @@ function OperationPanel() {
       changeElPositionAndSize(resizeRef.current, {
         width: formatUnit(width) || positionWidth,
         height: formatUnit(height) || positionHeight,
-        transform:getTransform(transform,fatherRotateRef.current),
+        transform: getTransform(transform, fatherRotateRef.current),
         transition: 'all 100ms',
       });
       setPosition([operationPanelRef.current], isModal);
@@ -194,26 +202,36 @@ function OperationPanel() {
     operationPanelRef.current.style.display = 'none';
   }
 
-  const onMouseUp = useCallback((event:MouseEvent) => {
-    event.stopPropagation();
-    const { selectedNode } = getOperateState();
-    setIsShowSizeTip(false);
-    originSizeRef.current = undefined;
-    baseboardRef.current!.style.display = 'none';
-    operationPanelRef.current.style.pointerEvents = 'none';
-    operationPanelRef.current.style.transition = DEFAULT_ANIMATION;
-    selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
-    changeStyles({style:styleResultRef.current,isMerge:true});
-    styleResultRef.current = {};
-  }, [setIsShowSizeTip]);
+  const onMouseUp = useCallback(
+    (event: MouseEvent) => {
+      event.stopPropagation();
+      const { selectedNode } = getOperateState();
+      setIsShowSizeTip(false);
+      originSizeRef.current = undefined;
+      baseboardRef.current!.style.display = 'none';
+      operationPanelRef.current.style.pointerEvents = 'none';
+      operationPanelRef.current.style.transition = DEFAULT_ANIMATION;
+      selectedNode && (selectedNode.style.transition = DEFAULT_ANIMATION);
+      changeStyles({ style: styleResultRef.current, isMerge: true });
+      styleResultRef.current = {};
+    },
+    [setIsShowSizeTip],
+  );
 
   const onMouseMove = useCallback((event: MouseEvent) => {
     event.stopPropagation();
     const { selectedNode } = getOperateState();
     if (originSizeRef.current && selectedNode) {
       const { clientX, clientY } = event;
-      const { x, y, direction, height, width,isRotate } = originSizeRef.current;
-      if(isRotate){
+      const {
+        x,
+        y,
+        direction,
+        height,
+        width,
+        isRotate,
+      } = originSizeRef.current;
+      if (isRotate) {
         return changeAngle(event);
       }
       let offsetY = 0;
@@ -278,18 +296,17 @@ function OperationPanel() {
     }
   }, []);
 
-  const changeAngle=(event:MouseEvent)=>{
-    const {centerY,centerX,mouseRotate}=originSizeRef.current;
-    const {selectedNode}=getOperateState();
+  const changeAngle = (event: MouseEvent) => {
+    const { centerY, centerX, mouseRotate } = originSizeRef.current;
+    const { selectedNode } = getOperateState();
     selectedNode.style.transition = 'none';
-   const changeDeg=getDragAngle(event,centerX,centerY);
-   const degResult=changeDeg-mouseRotate;
-       const transform=`rotate(${degResult}rad)`;
-    styleResultRef.current.transform=transform;
-    selectedNode.style.transform=transform;
+    const changeDeg = getDragAngle(event, centerX, centerY);
+    const degResult = changeDeg - mouseRotate;
+    const transform = `rotate(${degResult}rad)`;
+    styleResultRef.current.transform = transform;
+    selectedNode.style.transform = transform;
 
     changeOperationPanel(true);
-
   };
 
   const onResizeStart = useCallback(
@@ -319,9 +336,9 @@ function OperationPanel() {
           maxHeight,
           transform,
         } = css(selectedNode);
-        const rect =selectedNode.getBoundingClientRect();
-        const centerX=rect.left + rect.width / 2;
-        const centerY=rect.top + rect.height / 2;
+        const rect = selectedNode.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
         getDegToRad(transform);
         originSizeRef.current = {
           x: event.clientX,
@@ -335,11 +352,15 @@ function OperationPanel() {
           minHeight: formatUnit(minHeight),
           maxWidth: formatUnit(maxWidth),
           maxHeight: formatUnit(maxHeight),
-          mouseRotate: getDragAngle(event,centerX,centerY)-getDegToRad(transform),
-          isRotate
+          mouseRotate:
+            getDragAngle(event, centerX, centerY) - getDegToRad(transform),
+          isRotate,
         };
-        const {sizeSvg,rotateSvg}=getMouseIcon(direction,getTransform(transform,fatherRotateRef.current));
-        showBaseboard(isRotate?rotateSvg:sizeSvg);
+        const { sizeSvg, rotateSvg } = getMouseIcon(
+          direction,
+          getTransform(transform, fatherRotateRef.current),
+        );
+        showBaseboard(isRotate ? rotateSvg : sizeSvg);
       }
     },
     [setIsShowSizeTip],
@@ -390,10 +411,7 @@ function OperationPanel() {
           )}
         </div>
       </div>
-      <div
-        ref={baseboardRef}
-        className={styles['baseboard']}
-      />
+      <div ref={baseboardRef} className={styles['baseboard']} />
     </>
   );
 }
