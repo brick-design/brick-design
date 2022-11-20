@@ -28,7 +28,7 @@ export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultHeight?: number;
   defaultWidth?: number;
   onResizeStart?: (event: React.MouseEvent | MouseEvent) => void;
-  key?:string
+  activeKey?:string
 
 }
 
@@ -67,7 +67,7 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     className,
     defaultHeight,
     defaultWidth,
-    key,
+    activeKey,
     ...rest
   } = props;
 
@@ -77,7 +77,7 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     height: defaultHeight,
   });
   const resizeDivRef = useRef<HTMLDivElement>();
-  const setActive= useActive(key,resizeDivRef);
+  const setActive= useActive(activeKey,resizeDivRef);
 
   const { onResizeStart, onResize, onResizeEnd } = useResize(resizeDivRef);
 

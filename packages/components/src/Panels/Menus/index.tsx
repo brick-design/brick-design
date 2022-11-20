@@ -8,8 +8,6 @@ export default function Menus(){
 	return <DragResizeBar
 		title={'Styles'}
 		className={styles['container']}
-		minWidth={400}
-		minHeight={700}
 		defaultShow
 		barStyle={{ borderBottom: '1px #f2f2f2 solid' }}
 		icon={stylesIcon}

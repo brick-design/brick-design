@@ -8,15 +8,19 @@ import BarTabs, { TabPane } from '../../Components/BarTabs';
 
 function Scaffold() {
   return (
-    <BarTabs key={'Scaffold'} icon={propIcon} className={styles['right-container']}>
+    <BarTabs
+      activeKey={'Scaffold'}
+      icon={propIcon}
+      className={styles['right-container']}
+    >
       <TabPane tab={'属性'} key={'1'}>
         <Props isCommon />
       </TabPane>
       <TabPane tab={'高级'} key={'2'}>
-        <Senior/>
+        <Senior />
       </TabPane>
       <TabPane tab={'方法'} key={'3'}>
-        <Props/>
+        <Props />
       </TabPane>
     </BarTabs>
   );

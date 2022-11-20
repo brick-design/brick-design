@@ -119,21 +119,38 @@ export const getValueType = (v: any) => {
  * @param propsConfig
  */
 export const splitPropsConfig=(propsConfig:PropsConfigType,childNodes?:ChildNodesType)=>{
-  const firstConfig={};
+  const firstConfig:PropsConfigType={
+    style: {
+      type: PROPS_TYPES.style,
+      label: '样式',
+      formItemProps: {
+        mode: 'json5'
+      },
+    },
+      className:{
+        type: PROPS_TYPES.cssClass,
+        label: "类",
+        formItemProps:{
+          mode:'css'
+        }
+      }
+  };
   const secondConfig={};
   each(propsConfig,(config,key)=>{
     const {type}=config;
-    if(Array.isArray(childNodes)&&childNodes.length&&key==='children'){
-      return;
-    }else if(get(childNodes,key,[]).length){
+    if(Array.isArray(childNodes)
+      &&childNodes.length&&key==='children'
+      ||get(childNodes,key,[]).length
+      ||get(firstConfig,key)
+    ){
       return;
     }
     switch (type){
       case PROPS_TYPES.function:
-      case PROPS_TYPES.style:
-      case PROPS_TYPES.cssClass:
         secondConfig[key]=config;
         break;
+      case PROPS_TYPES.style:
+        config.formItemProps={mode:'json5'};
       default:
         firstConfig[key]=config;
     }

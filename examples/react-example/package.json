@@ -17,10 +17,10 @@
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "rc-animate": "^2.10.2",
-    "re-resizable": "^6.1.1",
     "react": "^16.13.1",
     "react-color": "^2.18.0",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "bizcharts": "^4.1.21"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

@@ -16,8 +16,6 @@ import {
 } from './handleSelectedComponent';
 import { changeStyles, changeVisualizedStyles } from './handleStyles';
 import { redo, undo } from './handleRedoUndo';
-import { setApi, setComponentState } from './handleComponetStateApi';
-import { setStateDomain, restStateDomain } from './handleStateDomain';
 import { initPageBrickdState, legoState } from './handlePageBrickdState';
 import {
   createLayers,
@@ -26,6 +24,7 @@ import {
   changeLayer,
   copyLayers,
 } from './handleLayers';
+import {changeSeniorProps} from './handleSeniorProps';
 import ACTION_TYPES from '../actions/actionTypes';
 import { BrickAction, BrickDesignStateType, StateType } from '../types';
 
@@ -93,19 +92,9 @@ export const reducer: ReducerType = (prevState, action) => {
     case ACTION_TYPES.changeVisualizedStyles:
       newState = changeVisualizedStyles(state, payload);
       break;
-    case ACTION_TYPES.setComponentState:
-      newState = setComponentState(state, payload);
+    case ACTION_TYPES.changeSeniorProps:
+      newState =  changeSeniorProps(state,payload);
       break;
-    case ACTION_TYPES.setApi:
-      newState = setApi(state, payload);
-      break;
-    case ACTION_TYPES.setStateDomain:
-      newState = setStateDomain(state, payload);
-      break;
-    case ACTION_TYPES.restStateDomain:
-      newState = restStateDomain(state, payload);
-      break;
-
     default:
       return prevState;
   }

@@ -5,21 +5,23 @@ import styles from './index.less';
 import Checkbox from '../Checkbox';
 import Icon from '../Icon';
 import Dropdown from '../Dropdown';
-import { moreIcon } from '../../assets';
+import { codeIcon, inputIcon, moreIcon } from '../../assets';
 
 export interface FormItemProps {
   isShowLabel?: string;
   renderFormItem?: (
-    v: any,
+    config: any,
     k: string,
     isExpression?: boolean,
     menu?: string,
   ) => any;
   config?: any;
+  key?:string
 }
 
 function FormItem(props: FormItemProps & FieldProps) {
-  const { name, isShowLabel = true, renderFormItem, config, ...rest } = props;
+  const { name, isShowLabel = true, renderFormItem, config,key, ...rest } = props;
+  console.log('key>>>>>>>>',key);
   const [isExpression, setIsExpression] = useState(false);
   const [menu, setMenu] = useState<string>();
   const {
@@ -29,7 +31,7 @@ function FormItem(props: FormItemProps & FieldProps) {
     isHidden,
     headerStyle,
   } = renderFormItem(config, name as string, isExpression, menu);
-  const {label}=config||{};
+  const {label,formItemProps={}}=config||{};
   return (
     <div style={style} className={styles['form-item-container']}>
       {isShowLabel && (
@@ -38,6 +40,8 @@ function FormItem(props: FormItemProps & FieldProps) {
           <div className={styles['handle-container']}>
             {!isHidden && (
               <Checkbox
+                uncheckedIcon={codeIcon}
+                checkedIcon={inputIcon}
                 onChange={(v) => setIsExpression(v)}
                 className={`${styles['icon-none']} ${styles['icon-flex']}`}
               />
@@ -57,7 +61,7 @@ function FormItem(props: FormItemProps & FieldProps) {
       <Field name={name} {...rest}>
         {(control) =>{
           control.setIsExpression=setIsExpression;
-          return React.cloneElement(renderComponent, control);
+          return React.cloneElement(renderComponent, Object.assign(control,formItemProps));
         } }
       </Field>
     </div>

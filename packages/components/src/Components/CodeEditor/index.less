@@ -1,3 +1,38 @@
+@import "../../global";
 .container{
   width: 100%;
+  position: relative;
+  .container-editor {
+    font-size: 12px;
+    border-radius: 3px;
+    fontFamily: Fira code, Fira Mono, monospace;
+    width:100%;
+    max-height:100px
+  }
+  .max-edit-container {
+    display: flex;
+    flex-direction: column;
+    left: calc(100vw - 550px);
+    top: 70px;
+    width: 300px;
+    max-height: calc(100vh - 150px);
+    border-radius: 8px;
+    z-index: 1000;
+  }
+  .icon{
+    width: auto;
+    height: auto;
+    margin-right: 0;
+    background-color: @transparent;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    z-index: 10;
+  }
+  .icon-class{
+    width: 13px;
+    height: 13px;
+  }
 }
+

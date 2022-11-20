@@ -4,7 +4,6 @@ export * from './produceActions/props';
 export * from './produceActions/redoUndo';
 export * from './produceActions/selectedComponent';
 export * from './produceActions/styles';
-export * from './produceActions/componentStateApi';
-export * from './produceActions/stateDomain';
 export * from './produceActions/pageBrickdState';
 export * from './produceActions/layers';
+export * from './produceActions/seniorProps';

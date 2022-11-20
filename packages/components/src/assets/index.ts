@@ -31,8 +31,14 @@ import zoomOutIcon from './zoom-out.svg';
 import zoom11Icon from './zoom-11.svg';
 import saveIcon from './save-icon.svg';
 import arrowLineIcon from './arrow-line-icon.svg';
+import codeIcon from "./code-icon.svg";
+import inputIcon from "./input-icon.svg";
+import maxIcon from './max-icon.svg';
+import minIcon from './min-icon.svg';
 
 export {
+  inputIcon,
+  codeIcon,
   arrowLineIcon,
   arrowIcon,
   deleteIcon,
@@ -66,4 +72,6 @@ export {
   zoomOutIcon,
   zoom11Icon,
   saveIcon,
+  maxIcon,
+  minIcon
 };

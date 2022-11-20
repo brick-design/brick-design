@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
+import React, { createContext, RefObject, useContext, useEffect, useRef } from 'react';
 import { BrickStore } from '@brickd/hooks';
 import {get} from 'lodash';
 import { usePrevious } from '../../utils';
@@ -24,7 +24,24 @@ function handleStates(state:any,key:string){
 	return {...state};
 }
 
-export function useActive(key:string,targetRef:any){
+export function useActiveParent(keys:string[],targetRef:RefObject<HTMLDivElement>) {
+	const store = useContext(PanelActiveContext) as BrickStore<any>;
+
+	useEffect(() => {
+		return store.subscribe(() => {
+			const state = store.getPageState();
+			console.log('useEffect>>>>>>',state);
+			for (const k of keys) {
+				if (state[k]) {
+					console.log('state>>>>>>',state[k]);
+					return targetRef.current.style.zIndex = '10000';
+				}
+				targetRef.current.style.zIndex = '0';
+			}
+		});
+	});
+}
+export function useActive(key:string,targetRef:RefObject<HTMLDivElement>){
 	const store=useContext(PanelActiveContext) as BrickStore<any>;
 	const prevStatus= usePrevious(get(store.getPageState(),key));
 	useEffect(()=>{
@@ -33,9 +50,9 @@ export function useActive(key:string,targetRef:any){
 			if(prevStatus!==status){
 				// eslint-disable-next-line no-empty
 				if(status){
-					targetRef.current.style.zIndex='2';
+					targetRef.current.style.zIndex='1000';
 				}else {
-					targetRef.current.style.zIndex='1';
+					targetRef.current.style.zIndex='0';
 				}
 			}
 

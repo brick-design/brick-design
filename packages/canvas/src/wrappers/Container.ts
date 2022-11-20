@@ -102,7 +102,8 @@ function Container(allProps: CommonPropsType) {
   const selfNodeRef = useRef<HTMLElement>();
 
   const vNode = getVNode(key);
-  const { childNodes, componentName, isFreeLayout } = vNode;
+  const { childNodes, componentName, layoutMode } = vNode;
+  const isFreeLayout=layoutMode==='free';
   // const executeSubject=useNewAddComponent(key);
   const pageConfigs: PageConfigType = {
     ...pageConfig,

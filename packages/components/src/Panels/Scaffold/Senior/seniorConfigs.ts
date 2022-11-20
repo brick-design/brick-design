@@ -1,27 +1,33 @@
 import { PROPS_TYPES, PropsConfigType } from '@brickd/core';
 
-export const seniorConfigs:PropsConfigType={
-	isFreeLayout:{
-		label: '自由布局',
-		type:PROPS_TYPES.boolean,
-	},
-	isStateDomain: {
-		type:PROPS_TYPES.boolean,
-	},
-	state: {
-		type:PROPS_TYPES.object,
-	},
-	propFields:{
-		type:PROPS_TYPES.stringArray
-	},
-	condition: {
-		type:PROPS_TYPES.string
-	},
-	loop: {
-		type:PROPS_TYPES.objectArray
-	},
+export const seniorConfigs: PropsConfigType = {
+  layoutMode: {
+    label: '布局模式',
+    type: PROPS_TYPES.enum,
+    enumData: ['flow', 'free'],
+  },
+  state: {
+    label: '状态定义',
+    type: PROPS_TYPES.object,
+    formItemProps: {
+      mode: 'json5',
+    },
+  },
+  isStateDomain: {
+    type: PROPS_TYPES.boolean,
+  },
 
-	api: {
-		type:PROPS_TYPES.objectArray
-	}
+  propFields: {
+    type: PROPS_TYPES.stringArray,
+  },
+  condition: {
+    type: PROPS_TYPES.string,
+  },
+  loop: {
+    type: PROPS_TYPES.objectArray,
+  },
+
+  api: {
+    type: PROPS_TYPES.objectArray,
+  },
 };

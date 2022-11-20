@@ -20,7 +20,7 @@ function DragResizeBar(props: DragResizeBarType) {
 
   const onClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    barButtonRef.current.closePanel();
+    barButtonRef.current.closePanel(e);
   }, []);
 
   const onMoveStart = useCallback((event: React.MouseEvent) => {
@@ -28,7 +28,7 @@ function DragResizeBar(props: DragResizeBarType) {
   }, []);
 
   return (
-    <BarButton ref={barButtonRef} icon={icon} dragResizeRef={dragResizeRef}>
+    <BarButton  icon={icon} dragResizeRef={dragResizeRef} ref={barButtonRef} {...rest}>
       <DragAndResize
         bottom
         right
@@ -37,7 +37,6 @@ function DragResizeBar(props: DragResizeBarType) {
         topRight
         bottomLeft
         bottomRight
-        // style={{ visibility: 'visible' }}
         onWheel={(event) => event.stopPropagation()}
         className={`${styles['container']} ${className}`}
         {...rest}

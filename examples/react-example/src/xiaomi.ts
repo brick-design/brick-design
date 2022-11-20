@@ -855,7 +855,7 @@ const data: PageConfigType = {
 	},
 	69: {
 		componentName: 'div',
-		isFreeLayout:true,
+		layoutMode:'free',
 		props: {
 			style: {
 				position:'relative',
