@@ -53,6 +53,7 @@ export function addComponent(state: StateType): StateType {
    * 添加之前的页面配置
    */
   const dragSort=getDragSortCache();
+
   if (
     !dragSort ||
     (parentKey === dropKey && isEqual(childNodeKeys, dragSort)) ||
@@ -62,6 +63,8 @@ export function addComponent(state: StateType): StateType {
   }
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
+  console.log('template1>>>>>>>>>',template);
+
   return {
     ...state,
     pageConfig: produce(pageConfig, (oldConfigs) => {
@@ -77,6 +80,7 @@ export function addComponent(state: StateType): StateType {
           return {...oldStyle,...style};
         });
       }
+      console.log('template>>>>>>>>>',template);
       template&&Object.assign(oldConfigs, template);
       update(oldConfigs, getLocation(dropKey!, propName), () => dragSort);
       //如果有父key说明是跨组件的拖拽，原先的父容器需要删除该组件的引用

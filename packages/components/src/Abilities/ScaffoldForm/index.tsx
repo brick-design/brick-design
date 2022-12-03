@@ -18,6 +18,9 @@ function ScaffoldForm(props:PropsType){
 	const nFormRef=useRef<any>();
 	const {defaultFormData,onValuesChange,tip,formConfig,lockKey}=props;
 	const prevLockKey= usePrevious(lockKey);
+	if(prevLockKey!==lockKey&&nFormRef.current){
+		nFormRef.current.resetFields();
+	}
 	useEffect(()=>{
 		if(nFormRef.current&&defaultFormData){
 			nFormRef.current.setFieldsValue(defaultFormData);
@@ -42,8 +45,9 @@ function ScaffoldForm(props:PropsType){
 					break;
 				case PROPS_TYPES.object:
 				case PROPS_TYPES.objectArray:
+				case PROPS_TYPES.enum:
 					style=borderStyle;
-					headerStyle={marginBottom:10};
+					headerStyle={marginBottom:5};
 					break;
 				default:
 					// headerStyle={marginBottom:5};
@@ -58,9 +62,7 @@ function ScaffoldForm(props:PropsType){
 
 
 	const onChange=(changedValues: any, values: any)=>{
-		if(lockKey===prevLockKey){
 			onValuesChange&&onValuesChange(changedValues,values);
-		}
 	};
 
 	return tip?<div className={styles['empty']}>{tip}</div>:<NForm

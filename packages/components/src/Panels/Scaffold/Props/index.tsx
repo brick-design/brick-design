@@ -49,6 +49,7 @@ function Props({ isCommon }: PropsType) {
   const formConfig = isCommon ? firstConfig : secondConfig;
 
   const onValuesChange = (changedValues) => {
+    console.log('onValuesChange>>>>>>>>',changedValues);
     changeProps({ isMerge: true, props: changedValues });
   };
   let tip = null;

@@ -2,8 +2,8 @@ import React, {
   createElement,
   memo,
   useCallback,
-  useEffect,
-  useRef,
+  // useEffect,
+  // useRef,
 } from 'react';
 import { useCommon } from '@brickd/hooks';
 import {
@@ -24,7 +24,7 @@ import {
   generateRequiredProps,
   getComponent,
   getDragKey,
-  getSelectedNode,
+  // getSelectedNode,
   // getDragSourceFromKey,
   // getSelectedNode,
   getVNode,
@@ -35,10 +35,8 @@ import {
 import { useSelect } from '../hooks/useSelect';
 import { useEvents } from '../hooks/useEvents';
 import { useOperate } from '../hooks/useOperate';
-// import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
 import { useEye } from '../hooks/useEye';
-// import { useSelector } from '../hooks/useSelector';
 
 function NoneContainer(allProps: CommonPropsType) {
   const {
@@ -46,13 +44,12 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, parentKey, parentPropName, domTreeKeys },
     ...rest
   } = allProps;
-  const selfNodeRef = useRef<HTMLElement>();
+  // const selfNodeRef = useRef<HTMLElement>();
   const selectedInfo = useSelect(specialProps);
   const { isSelected } = selectedInfo;
   const vNode = getVNode(key);
   const { componentName } = vNode;
   const { setOperateState } = useOperate();
-  // useNewAddComponent(key);
   const { props, hidden, pageState } = useCommon(vNode, rest);
   const isShow = useEye(key);
   const { index = 0 } = pageState;
@@ -102,11 +99,10 @@ function NoneContainer(allProps: CommonPropsType) {
     if (get(selectedInfo, 'selectedKey') === dragKey) return;
     setOperateState({ dropNode: null, hoverNode: null });
     addComponent();
-    // executeSubject();
   }, []);
+
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
-    // if(interceptDragOver()) return;
     const parentVNode = getVNode(parentKey);
     const { childNodes } = parentVNode;
     const dragKey = getDragKey();
@@ -124,24 +120,20 @@ function NoneContainer(allProps: CommonPropsType) {
         (event.target as HTMLElement).parentElement,
         event,
       );
-      // const renderChildren = cloneChildNodes(childNodes)||{};
-      // renderChildren[propName] = newChildren;
-      // if (!isEqual(renderChildren, childNodes)) {
-      //   // setChildren(renderChildren);
-      // }
+
       setDragSortCache(newChildren);
     }
   }, []);
-  useEffect(() => {
-    if (!selfNodeRef.current) {
-      selfNodeRef.current = getSelectedNode(key, index);
-    }
-    if (selfNodeRef.current) {
-      selfNodeRef.current.ondragenter = onDragEnter;
-      selfNodeRef.current.ondragover = onDragOver;
-      selfNodeRef.current.ondrop = onDrop;
-    }
-  }, [onDragEnter, onDragOver]);
+  // useEffect(() => {
+  //   if (!selfNodeRef.current) {
+  //     selfNodeRef.current = getSelectedNode(key, index);
+  //   }
+  //   if (selfNodeRef.current) {
+  //     selfNodeRef.current.ondragenter = onDragEnter;
+  //     selfNodeRef.current.ondragover = onDragOver;
+  //     selfNodeRef.current.ondrop = onDrop;
+  //   }
+  // }, [onDragEnter, onDragOver]);
 
   const { className, animateClass, ...restProps } = props || {};
   const styleProps = useStyleProps(
@@ -161,6 +153,9 @@ function NoneContainer(allProps: CommonPropsType) {
     ...styleProps,
     ...restProps,
     ...events,
+    onDrop,
+    onDragOver,
+    onDragEnter,
     ...generateRequiredProps(componentName),
     draggable: true,
   });

@@ -14,6 +14,7 @@ import MidBottomButtons from './MidBottomButtons';
 import BottomLeftButtons, { BottomLeftButtonsType } from './BottomLeftButtons';
 import styles from '../index.less';
 import PanelActive from '../Abilities/PanelActive';
+import Menus from '../Panels/Menus';
 
 require('rc-tabs/assets/index.css');
 require('rc-collapse/assets/index.css');
@@ -66,6 +67,7 @@ function BrickEdifice(props: BrickEdificeProps) {
           zoomStore={zoomStore}
           {...rest}
         >
+          <Menus/>
             <Users users={users} />
             <TopLeftButtons />
             <MidBottomButtons />

@@ -25,9 +25,15 @@ export const seniorConfigs: PropsConfigType = {
   },
   loop: {
     type: PROPS_TYPES.objectArray,
+    formItemProps: {
+      mode: 'json5',
+    },
   },
 
   api: {
     type: PROPS_TYPES.objectArray,
+    formItemProps: {
+      mode: 'json5',
+    },
   },
 };

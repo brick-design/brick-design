@@ -81,6 +81,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     controlUpdate,
   );
   const iframeRef = useRef<HTMLIFrameElement>();
+
   useSelector<LayerNameType, string>(
     ['layerName'],
     (prevState, nextState) => {
@@ -103,7 +104,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     true,
   );
   const rootComponent = pageConfig[ROOT];
-
+  console.log('rootComponent>>>>>>>>>',rootComponent);
   const staticState = useMemo(() => ({ options, pageName }), [
     pageName,
     options,
@@ -161,10 +162,16 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     [staticState],
   );
 
-  const onDragEnter = useCallback(() => {
+  const onDragEnter = useCallback((e) => {
+    e.stopPropagation();
     const { layerName } = getRootState();
+
     if (!layerName) return;
     const { contentDocument } = getIframe();
+    operateStore.setPageState({
+      dropNode: contentDocument.body,
+      isDropAble: true,
+    });
     placeholderBridgeStore.changePosition({
       node2: {
         width: contentDocument.body.scrollWidth,
@@ -172,10 +179,7 @@ function BrickDesign(brickdProps: BrickDesignProps) {
         isEmptyChild: true,
       },
     });
-    operateStore.setPageState({
-      dropNode: contentDocument.body,
-      isDropAble: true,
-    });
+
   }, []);
 
   const onDragLeave = useCallback(() => {
@@ -183,7 +187,8 @@ function BrickDesign(brickdProps: BrickDesignProps) {
       dropNode: null,
       isDropAble: false,
     });
-    ReactDOM.unmountComponentAtNode(divContainer.current);
+    placeholderBridgeStore.changePosition({});
+    // ReactDOM.unmountComponentAtNode(divContainer.current);
   }, []);
 
   const onIframeLoad = useCallback(() => {
@@ -199,12 +204,15 @@ function BrickDesign(brickdProps: BrickDesignProps) {
   const onDragover = useCallback((e: any) => {
     e.preventDefault();
   }, []);
+
   const onDrop = useCallback(() => {
     addComponent();
     operateStore.setPageState({
       dropNode: null,
     });
+    placeholderBridgeStore.changePosition({});
   }, []);
+
   useEffect(() => {
     if (!rootComponent) {
       const { contentWindow } = getIframe();

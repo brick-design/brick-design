@@ -50,9 +50,8 @@ function Guidelines() {
     const { contentWindow } = iframe;
     const renderGuideLines = () => {
       const { hoverNode, isModal } = getOperateState();
-      const node = hoverNode;
-      if (node) {
-        const { left, top, bottom, right } = getElementInfo(node, isModal);
+      if (hoverNode) {
+        const { left, top, bottom, right } = getElementInfo(hoverNode, isModal);
         const { scrollY, scrollX } = contentWindow;
         const { scale } = getZoomState();
         const positionSize = getScalePosition(canvas, canvasContainer, scale);

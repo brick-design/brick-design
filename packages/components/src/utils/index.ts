@@ -128,11 +128,9 @@ export const splitPropsConfig=(propsConfig:PropsConfigType,childNodes?:ChildNode
       },
     },
       className:{
-        type: PROPS_TYPES.cssClass,
+        type: PROPS_TYPES.string,
         label: "类",
-        formItemProps:{
-          mode:'css'
-        }
+
       }
   };
   const secondConfig={};

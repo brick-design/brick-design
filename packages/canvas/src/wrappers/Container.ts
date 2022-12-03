@@ -35,12 +35,11 @@ import {
   getDragKey,
   getIsModalChild,
   PropParentNodes,
-  getDragSourceFromKey,
   isAllowAdd,
   isNeedJudgeFather,
   isAllowDrop,
   getVNode,
-  getSelectedNode,
+  // getSelectedNode,
   placeholderBridgeStore,
   getNodeRealRect,
   dragFreeLayout,
@@ -75,15 +74,11 @@ function Container(allProps: CommonPropsType) {
     specialProps: { key, domTreeKeys },
     ...rest
   } = allProps;
-  // const forceRender=useForceRender();
   const controlUpdate = useCallback(
     (prevState: ContainerState, nextState: ContainerState) => {
       const { pageConfig: prevPageConfig } = prevState;
       const { pageConfig } = nextState;
-      // if(!isEqual(get(prevPageConfig,key+'.childNodes'),get(pageConfig,key+'.childNodes'))){
-      //   // forceRender();
-      //   console.log('forceRender.>>>>>>>>>>',);
-      // }
+
       return (
         prevPageConfig[key] !== pageConfig[key] ||
         !isEqual(
@@ -99,29 +94,23 @@ function Container(allProps: CommonPropsType) {
     ['pageConfig'],
     controlUpdate,
   );
-  const selfNodeRef = useRef<HTMLElement>();
+  // const selfNodeRef = useRef<HTMLElement>();
 
   const vNode = getVNode(key);
+
   const { childNodes, componentName, layoutMode } = vNode;
   const isFreeLayout=layoutMode==='free';
-  // const executeSubject=useNewAddComponent(key);
-  const pageConfigs: PageConfigType = {
-    ...pageConfig,
-    ...getDragSourceFromKey('template', {}),
-  };
-  // const dragOverOrigin=useRef()
+
   const { props, hidden, pageState } = useCommon(
     vNode,
     rest,
-    getChildrenFields(pageConfigs, childNodes),
+    getChildrenFields(pageConfig, childNodes),
   );
   const isShow = useEye(key);
   const { index = 0 } = pageState;
   const uniqueKey = `${key}-${index}`;
   useChildNodes({ childNodes, componentName, specialProps });
-  // const [children, setChildren] = useState<ChildNodesType | undefined>(
-  //   childNodes,
-  // );
+
   const { mirrorModalField, nodePropsConfig, childNodesRule } = useMemo(
     () => getComponentConfig(componentName),
     [],
@@ -134,8 +123,8 @@ function Container(allProps: CommonPropsType) {
   );
 
   const propParentNodes = useRef<PropParentNodes>({});
-  const isModal = useMemo(() => getIsModalChild(pageConfigs, domTreeKeys), [
-    pageConfigs,
+  const isModal = useMemo(() => getIsModalChild(pageConfig, domTreeKeys), [
+    pageConfig,
     domTreeKeys,
   ]);
   const { setOperateState, getOperateState } = useOperate(isModal);
@@ -183,9 +172,7 @@ function Container(allProps: CommonPropsType) {
       }
       if (isFreeLayout && !childNodeKeys.includes(dragKey)) {
         dragFreeLayout(event);
-        if (isEmpty(childNodes)) {
           setDragSortCache([...childNodeKeys, dragKey]);
-        }
       } else {
         if (isEmpty(childNodeKeys)) {
           const { width, height } = getNodeRealRect(event.target as Element);
@@ -208,7 +195,7 @@ function Container(allProps: CommonPropsType) {
         }
       }
     },
-    [selectedPropName, childNodes],
+    [selectedPropName, childNodes,isFreeLayout],
   );
 
   const dragOver = useCallback(
@@ -227,13 +214,7 @@ function Container(allProps: CommonPropsType) {
         setDragSortCache([...childNodeKeys, dragKey]);
       } else {
         if (!childNodeKeys.length) {
-          // if (isEmpty(childNodes)) {
-          //   // setChildren({ [propName]: [dragKey] });
-          // } else {
-          //   const newChildren = cloneChildNodes(childNodes);
-          //   newChildren[propName] = [dragKey];
-          //   // setChildren(newChildren);
-          // }
+
           const { width, height } = getNodeRealRect(event.target as Element);
           placeholderBridgeStore.changePosition({
             node2: { width, height, isEmptyChild: true },
@@ -250,37 +231,36 @@ function Container(allProps: CommonPropsType) {
             propParentNodes.current[propName],
             event,
           );
-          // const renderChildren = cloneChildNodes(childNodes)||{};
-          // renderChildren[propName] = newChildren;
-          // if (!isEqual(renderChildren, childNodes)) {
-          //   // setChildren(renderChildren);
-          // }
+
           setDragSortCache(newChildren);
         }
       }
     },
-    [childNodes],
+    [childNodes,isFreeLayout],
   );
 
-  // const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
-  //   event.stopPropagation();
-  //   // setChildren(childNodes);
-  // };
+  const onDragLeave = (event: React.MouseEvent|MouseEvent) => {
+    event.stopPropagation();
+    placeholderBridgeStore.changePosition({});
+  };
 
   const onDrop = useCallback((event: React.DragEvent | MouseEvent) => {
     event.stopPropagation();
     const { selectedInfo } = getSelector(['selectedInfo']);
     const dragKey = getDragKey();
     if (get(selectedInfo, 'selectedKey') === dragKey) return;
-    if (isFreeLayout) {
+    const {componentName}=getVNode(dragKey);
+    const {mirrorModalField}=getComponentConfig(componentName);
+    if (isFreeLayout&&!mirrorModalField) {
       const { top, left } = get(placeholderBridgeStore.prevRects, 'node2', {});
       setDragSourceStyle({ position: 'absolute', top, left });
     }
 
     addComponent();
     setOperateState({ dropNode: null, hoverNode: null });
+    placeholderBridgeStore.changePosition({});
     // executeSubject();
-  }, []);
+  }, [isFreeLayout]);
 
   const onParentDragEnter = useCallback(
     (event: DragEvent) => {
@@ -298,7 +278,6 @@ function Container(allProps: CommonPropsType) {
       } else {
         isDropAble = isAllowDrop(childNodesRule) && isAllowAdd(componentName);
       }
-      // isDropAble = Number.parseInt(index) === 0 && isDropAble;
       const dropNode = event.target as HTMLElement;
       setOperateState({
         dropNode,
@@ -354,16 +333,17 @@ function Container(allProps: CommonPropsType) {
     [childNodes],
   );
 
-  useEffect(() => {
-    if (!selfNodeRef.current) {
-      selfNodeRef.current = getSelectedNode(key, index);
-    }
-    if (selfNodeRef.current) {
-      selfNodeRef.current.ondragenter = onParentDragEnter;
-      selfNodeRef.current.ondragover = onParentDragOver;
-      selfNodeRef.current.ondrop = onDrop;
-    }
-  }, [onParentDragEnter, onParentDragOver]);
+  // useEffect(() => {
+  //   if (!selfNodeRef.current) {
+  //     selfNodeRef.current = getSelectedNode(key, index);
+  //   }
+  //   if (selfNodeRef.current) {
+  //     selfNodeRef.current.ondragenter = onParentDragEnter;
+  //     selfNodeRef.current.ondragover = onParentDragOver;
+  //     selfNodeRef.current.ondrop = onDrop;
+  //     selfNodeRef.current.ondragleave = onDragLeave;
+  //   }
+  // }, [onParentDragEnter, onParentDragOver,onDrop,onDragLeave]);
 
   useEffect(() => {
     if (isEmpty(childNodes)) {
@@ -382,11 +362,11 @@ function Container(allProps: CommonPropsType) {
       each(propParentNodes.current, (parentNode, propName) => {
         parentNode.ondragover = (event) => dragOver(event, propName);
         parentNode.ondragenter = (event) => onDragEnter(event, propName);
-        // parentNode.ondragleave=onDragLeave;
+        parentNode.ondragleave=onDragLeave;
         parentNode.ondrop = onDrop;
       });
     }
-  }, [childNodes, dragOver, onDragEnter]);
+  }, [childNodes, dragOver, onDragEnter,onDrop]);
 
   const interceptDragEnter = useCallback(() => {
     const dragKey = getDragKey();
@@ -453,7 +433,7 @@ function Container(allProps: CommonPropsType) {
     ...restProps,
     onDragEnter: onParentDragEnter,
     onDragOver: onParentDragOver,
-    // onDragLeave,
+    onDragLeave,
     onDrop,
     ...events,
     ...generateRequiredProps(componentName),

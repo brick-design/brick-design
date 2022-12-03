@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-json5';
@@ -6,18 +6,19 @@ import 'ace-builds/src-noconflict/mode-css';
 
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/ext-language_tools';
+import { AceEditorProps } from 'react-ace/types';
 import styles from './index.less';
 import { layersIcon, maxIcon, minIcon } from '../../assets';
 import DragResizeBar from '../DragResizeBar';
 
-interface CodeEditorType {
+interface CodeEditorType extends Omit<AceEditorProps, 'onChange'|'value'>{
   onChange?: (value: object) => void;
   value?: string | object;
   mode?: 'json5' | 'javascript'|'css';
   name?:string
 }
 function CodeEditor(props: CodeEditorType) {
-  const { value='', onChange, mode,name } = props;
+  const { value, onChange, mode,name } = props;
   const [position,setPosition]=useState({width:0,height:0,top:0,left:0});
   const [isChecked,setIsChecked]=useState(false);
   const aceRef=useRef<AceEditor>();
@@ -32,13 +33,19 @@ function CodeEditor(props: CodeEditorType) {
         break;
     }
   };
+  const getOriginPosition=useCallback(()=>{
+    const {top,width,height,left}=aceRef.current.refEditor.getBoundingClientRect();
+    setPosition({top,width,height,left});
+  },[setPosition]);
 
+  useEffect(()=>{getOriginPosition();},[]);
 
   useEffect(()=>{
-   const {top,width,height,left}=aceRef.current.refEditor.getBoundingClientRect();
-   console.log('aceRef》》》》》》》',aceRef);
-    setPosition({top,width,height,left});
-  },[]);
+    addEventListener('resize', getOriginPosition);
+    return () => {
+      removeEventListener('resize', getOriginPosition);
+    };
+  },[getOriginPosition]);
 
   const valueResult =
     typeof value === 'string' ? value : JSON.stringify(value, undefined, 2);
@@ -56,7 +63,6 @@ function CodeEditor(props: CodeEditorType) {
         fontSize={12}
         showGutter={false}
         highlightActiveLine
-        placeholder={''}
         className={styles['container-editor']}
         editorProps={{ $blockScrolling: true }}
       />
@@ -76,7 +82,6 @@ function CodeEditor(props: CodeEditorType) {
       >
         <AceEditor
           value={valueResult}
-          placeholder={''}
           debounceChangePeriod={100}
           onChange={isChecked?onCodeChange:undefined}
           style={{ width: '100%', maxHeight: '100%' }}
