@@ -62,9 +62,10 @@ function GuidePlaceholder() {
         dropNode,
         isModal,
         isDropAble,
+        selectedNode
       } = getOperateState();
       const node = dropNode || hoverNode;
-      if (node) {
+      if (node&&selectedNode!==node) {
         const { left, top, width, height } = getElementInfo(node, isModal);
         const { display, flexDirection, alignItems, justifyContent } = css(
           node,

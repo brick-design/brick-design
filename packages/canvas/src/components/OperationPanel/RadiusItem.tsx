@@ -183,11 +183,13 @@ function RadiusItem(props: ItemProps) {
         setSelected(true);
         // showBaseboard(iframe, baseboardRef.current);
       }
+      return true;
     },
     [setSelected],
   );
 
-  const onMouseUp = useCallback(() => {
+  const onMouseUp = useCallback((event:MouseEvent) => {
+    event.stopPropagation();
     if (isEmpty(originRadiusRef.current)) return;
     const { selectedNode } = getOperateState();
     // hiddenBaseboard(baseboardRef.current);
@@ -264,9 +266,9 @@ function RadiusItem(props: ItemProps) {
   const { radius } = props;
   return (
     <div
+      onClick={onLock}
       draggable={false}
       ref={nodeRef}
-      onClick={onLock}
       style={radiusStyles[radius]}
       onMouseDown={onMouseDown}
       className={`${styles['radius-item']} ${

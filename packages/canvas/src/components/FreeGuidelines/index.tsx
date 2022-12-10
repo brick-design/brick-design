@@ -13,6 +13,7 @@ export function FreeGuidelines(props) {
   const showDragLine=useCallback((isShow:boolean)=>{
   	const {selectedNode}=getOperateState();
   	if(selectedNode&&isShow){
+  		console.log('selectedNode>>>>>>>',selectedNode);
       const { left, top, width, height }=getElementInfo(selectedNode.parentElement);
 
 			containerRef.current.style.cssText=generateCSS(

@@ -553,3 +553,17 @@ export const getTransform = (Transform: string, fatherRotate: number) => {
   const deg = getMatrix(Transform);
   return `rotate(${deg + fatherRotate}deg)`;
 };
+
+export const isDragMove=(width:number,height:number,offsetX:number,offsetY:number)=>{
+  const halfWidth=width/2;
+  const halfHeight=height/2;
+  const thresholdWidth=halfWidth*0.7;
+  const thresholdHeight=halfHeight*0.7;
+  if((halfWidth-offsetX>=0&&halfWidth-offsetX<thresholdWidth||
+    offsetX-halfWidth>=0&&offsetX-halfWidth<thresholdWidth)&&
+    (halfHeight-offsetY>=0&&halfHeight-offsetY<thresholdHeight||
+      offsetY-halfHeight>=0&&offsetY-halfHeight<thresholdHeight)){
+    return true;
+  }
+  return false;
+};

@@ -7,6 +7,7 @@ import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import { AceEditorProps } from 'react-ace/types';
+import Json5 from 'json5';
 import styles from './index.less';
 import { layersIcon, maxIcon, minIcon } from '../../assets';
 import DragResizeBar from '../DragResizeBar';
@@ -21,18 +22,32 @@ function CodeEditor(props: CodeEditorType) {
   const { value, onChange, mode,name } = props;
   const [position,setPosition]=useState({width:0,height:0,top:0,left:0});
   const [isChecked,setIsChecked]=useState(false);
+  const [code,setCode]=useState<string>();
   const aceRef=useRef<AceEditor>();
+  const lockRef=useRef(false);
+  useEffect(()=>{
+    if(value&&!lockRef.current){
+      lockRef.current=true;
+      const valueResult =
+        typeof value === 'string' ? value : Json5.stringify(value, undefined, 2);
+      setCode(valueResult);
+    }
+  },[value,setCode,code]);
+
   const onCodeChange = (v) => {
+    setCode(v);
     switch (mode) {
       case 'json5':
         try {
-          const data = JSON.parse(v);
+          const data = Json5.parse(v);
           onChange&&onChange(data);
         } catch (e) {
+          console.error(e);
         }
         break;
     }
   };
+
   const getOriginPosition=useCallback(()=>{
     const {top,width,height,left}=aceRef.current.refEditor.getBoundingClientRect();
     setPosition({top,width,height,left});
@@ -47,13 +62,11 @@ function CodeEditor(props: CodeEditorType) {
     };
   },[getOriginPosition]);
 
-  const valueResult =
-    typeof value === 'string' ? value : JSON.stringify(value, undefined, 2);
   return (
     <div className={styles['container']}>
       <AceEditor
         ref={aceRef}
-        value={valueResult}
+        value={code}
         debounceChangePeriod={100}
         onChange={isChecked?undefined:onCodeChange}
         mode={mode}
@@ -81,7 +94,7 @@ function CodeEditor(props: CodeEditorType) {
         className={styles['max-edit-container']}
       >
         <AceEditor
-          value={valueResult}
+          value={code}
           debounceChangePeriod={100}
           onChange={isChecked?onCodeChange:undefined}
           style={{ width: '100%', maxHeight: '100%' }}

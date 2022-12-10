@@ -2,8 +2,6 @@ import React, {
   createElement,
   memo,
   useCallback,
-  // useEffect,
-  // useRef,
 } from 'react';
 import { useCommon } from '@brickd/hooks';
 import {
@@ -24,9 +22,6 @@ import {
   generateRequiredProps,
   getComponent,
   getDragKey,
-  // getSelectedNode,
-  // getDragSourceFromKey,
-  // getSelectedNode,
   getVNode,
   isAllowAdd,
   isAllowDrop,
@@ -44,7 +39,6 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps: { key, parentKey, parentPropName, domTreeKeys },
     ...rest
   } = allProps;
-  // const selfNodeRef = useRef<HTMLElement>();
   const selectedInfo = useSelect(specialProps);
   const { isSelected } = selectedInfo;
   const vNode = getVNode(key);
@@ -102,7 +96,7 @@ function NoneContainer(allProps: CommonPropsType) {
   }, []);
 
   const onDragOver = useCallback((event: DragEvent) => {
-    event.preventDefault();
+    event.stopPropagation();
     const parentVNode = getVNode(parentKey);
     const { childNodes } = parentVNode;
     const dragKey = getDragKey();
@@ -124,16 +118,6 @@ function NoneContainer(allProps: CommonPropsType) {
       setDragSortCache(newChildren);
     }
   }, []);
-  // useEffect(() => {
-  //   if (!selfNodeRef.current) {
-  //     selfNodeRef.current = getSelectedNode(key, index);
-  //   }
-  //   if (selfNodeRef.current) {
-  //     selfNodeRef.current.ondragenter = onDragEnter;
-  //     selfNodeRef.current.ondragover = onDragOver;
-  //     selfNodeRef.current.ondrop = onDrop;
-  //   }
-  // }, [onDragEnter, onDragOver]);
 
   const { className, animateClass, ...restProps } = props || {};
   const styleProps = useStyleProps(
@@ -141,7 +125,6 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps,
     handlePropsClassName(
       uniqueKey,
-      // dragKey===key,
       className,
       animateClass,
       isShow,

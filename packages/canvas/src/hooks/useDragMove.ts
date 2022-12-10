@@ -15,7 +15,7 @@ import {
   EXCLUDE_POSITION,
   freeCalc,
   getIframe,
-  initialize, resetGuideLines,
+  initialize, isDragMove, resetGuideLines,
 } from '../utils';
 
 export type OriginalPosition = {
@@ -76,7 +76,12 @@ export function useDragMove(
         const {
           top: pageTop,
           left: pageLeft,
+          width,height
         } = targetNode.getBoundingClientRect();
+        const offsetX=clientX-pageLeft;
+        const offsetY=clientY-pageTop;
+
+        if(isDragMove(width,height,offsetX,offsetY)){
         const {
           top: parentPageTop,
           left: parentPageLeft,
@@ -112,6 +117,7 @@ export function useDragMove(
         };
         initialize(parentKey, parentPropName);
         targetNode.style.transition = 'none';
+      }
       }
     },
     [isSelected, selectedStyleProp],
@@ -205,7 +211,6 @@ export function useDragMove(
   const onDragEnd = useCallback((event: DragEvent) => {
     event.stopPropagation();
     const {
-      // actionSheetRef,
       changeBoxDisplay,
     } = getOperateState();
     setDragSource(null);
@@ -216,9 +221,7 @@ export function useDragMove(
     }
     resetGuideLines();
     originalPositionRef.current = null;
-    // actionSheetRef.current.setShow(true);
     (event.target as HTMLElement).style.transition = DEFAULT_ANIMATION;
-    getIframe().contentDocument.body.style.cursor = 'default';
   }, []);
   return {
     onDragStart,

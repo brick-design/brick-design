@@ -204,7 +204,6 @@ function OperationPanel() {
 
   const onMouseUp = useCallback(
     (event: MouseEvent) => {
-      event.stopPropagation();
       const { selectedNode } = getOperateState();
       setIsShowSizeTip(false);
       originSizeRef.current = undefined;

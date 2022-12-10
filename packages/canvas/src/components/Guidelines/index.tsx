@@ -49,8 +49,8 @@ function Guidelines() {
   useEffect(() => {
     const { contentWindow } = iframe;
     const renderGuideLines = () => {
-      const { hoverNode, isModal } = getOperateState();
-      if (hoverNode) {
+      const { hoverNode, isModal,selectedNode } = getOperateState();
+      if (hoverNode&&hoverNode!==selectedNode) {
         const { left, top, bottom, right } = getElementInfo(hoverNode, isModal);
         const { scrollY, scrollX } = contentWindow;
         const { scale } = getZoomState();

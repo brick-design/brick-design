@@ -3,7 +3,7 @@ import { PropInfoType, PROPS_TYPES } from '@brickd/canvas';
 import Switch from 'rc-switch';
 import styles from './index.less';
 import { expressionRex, getValueType } from '../../utils';
-import { CodeEditor, Input, InputNumber } from '../../Components';
+import { CodeEditor,  InputNumber, Textarea } from '../../Components';
 import {
   CommonArray,
   Enum,
@@ -48,9 +48,8 @@ function PropItem(props: PropItem) {
       break;
     case PROPS_TYPES.string:
       renderComponent = (
-        <Input
+        <Textarea
           className={styles['input-container']}
-          closeStyle={{ width: 10, height: 10 }}
           focusClass={styles['focus-class']}
           {...rest}
         />

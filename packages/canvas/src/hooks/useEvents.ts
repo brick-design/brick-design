@@ -13,9 +13,8 @@ import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
 import { UseSelectType } from './useSelect';
 import { useDragMove } from './useDragMove';
-import { getDragKey, getIsModalChild, getSelectedNode } from '../utils';
+import { getDragKey, getIsModalChild, getSelectedNode, isDragMove } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
-
 /**
  * 事件处理器
  * @param specialProps
@@ -38,7 +37,6 @@ export function useEvents(
   const {
     onMouseOver: onMouseOverFun,
     onClick: onClickFn,
-    onDoubleClick: onDoubleClickFn,
   } = props;
 
   const { editAbleProp } = getComponentConfig(componentName);
@@ -65,10 +63,16 @@ export function useEvents(
   const setSelectedNode = useCallback(
     (selectedNode: HTMLElement) => {
       selectComponent({ ...specialProps, propName });
+      const { selectedNode:oldSelectedNode } = getOperateState();
+      if (oldSelectedNode&&oldSelectedNode.contentEditable === 'true') {
+        oldSelectedNode.contentEditable = 'false';
+      }
       setOperateState({
         selectedNode: selectedNode,
         operateSelectedKey: key,
         index,
+        hoverNode: null,
+        operateHoverKey: null
       });
     },
     [propName],
@@ -86,33 +90,22 @@ export function useEvents(
     }
   }, []);
 
-  /**
-   * 双击组件如果组件editAbleProp为true，则设置可编辑状态
-   */
-  const onDoubleClick = useCallback(
-    (e: Event) => {
-      e && e.stopPropagation();
-      const targetNode = e.target as HTMLElement;
-      if (targetNode.contentEditable === 'true') {
-        return (targetNode.contentEditable = 'false');
-      }
-      if (editAbleProp) {
-        targetNode.contentEditable = 'true';
-      }
-    },
-    [onDoubleClickFn],
-  );
 
   const onClick = useCallback(
     (event: Event) => {
       event && event.stopPropagation();
       const { selectedNode } = getOperateState();
       const targetNode = event.target as HTMLElement;
-
-      if (isSelected && selectedNode === targetNode) {
+      const isEditable=  targetNode.contentEditable;
+      if (isSelected && selectedNode === targetNode&&(isEditable!=='true')) {
         clearSelectedStatus();
         setOperateState({ selectedNode: null, operateSelectedKey: null });
-      } else {
+
+      } else if(!isSelected||selectedNode!==targetNode) {
+        // if (editAbleProp) {
+        //   targetNode.contentEditable = 'true';
+        //   targetNode.style.outline='none';
+        // }
         setSelectedNode(targetNode);
       }
 
@@ -122,20 +115,17 @@ export function useEvents(
   );
 
   const onMouseOver = useCallback(
-    (event: Event) => {
+    (event: MouseEvent) => {
       event.stopPropagation();
-      // const { hoverNode } = getOperateState();
       const dragKey = getDragKey();
+      const target=event.target as HTMLElement;
       if (dragKey && dragKey === key) {
         setOperateState({ hoverNode: null, operateHoverKey: null });
       } else {
         setOperateState({
-          hoverNode: event.target as HTMLElement,
+          hoverNode: target,
           operateHoverKey: key,
         });
-        // overTarget({
-        //   hoverKey: key,
-        // });
       }
       if (typeof onMouseOverFun === 'function') onMouseOverFun();
     },
@@ -146,31 +136,48 @@ export function useEvents(
     event.stopPropagation();
     const { changeOperationPanel } = getOperateState();
     changeOperationPanel();
+
   }, []);
 
   const onBlur = useCallback((event: React.FormEvent) => {
     event.stopPropagation();
     const target = event.target as HTMLElement;
     target.contentEditable = 'false';
+    const result=target.innerHTML.replaceAll('<div>','\n').replaceAll('</div>','');
+
     changeProps({
-      props: { [editAbleProp]: target.textContent },
+      props: { [editAbleProp]: result},
       isMerge: true,
     });
   }, []);
-
   useEffect(() => {
     if (selectedNode) {
       changeOperationPanel();
     }
   });
 
+  const onMouseMove=useCallback((event:MouseEvent)=>{
+    const {clientX,clientY,target}=event;
+    const targetNode=target as HTMLElement;
+    const {selectedNode}=getOperateState();
+    const {width,height,top,left}=targetNode.getBoundingClientRect();
+    if(selectedNode===targetNode&&isDragMove(width,height,clientX-left,clientY-top)){
+      targetNode.style.cursor='move';
+    }else if(selectedNode===target) {
+      targetNode.style.cursor='auto';
+    }else {
+      targetNode.style.cursor='pointer';
+
+    }
+  },[]);
+
   return {
     onClick,
     onMouseOver,
+    onMouseMove,
     getOperateState,
     onInput,
     onBlur,
-    onDoubleClick,
     ...dragEvent,
   };
 }

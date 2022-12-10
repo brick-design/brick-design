@@ -172,7 +172,6 @@ const calcLineValues = (
   const { x, y } = values;
   const { h: H, w: W } = target;
   const { l, r, t, b } = compare;
-  console.log('calcLineValues>>>>>>>>', values, target, compare);
   const T = y,
     B = y + H,
     L = x,

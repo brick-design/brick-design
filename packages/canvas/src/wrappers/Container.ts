@@ -57,7 +57,6 @@ import { useChildNodes } from '../hooks/useChildNodes';
 import { useSelector } from '../hooks/useSelector';
 import { useOperate } from '../hooks/useOperate';
 import { useEvents } from '../hooks/useEvents';
-// import { useNewAddComponent } from '../hooks/useNewAddComponent';
 import { useStyleProps } from '../hooks/useStyleProps';
 import { useEye } from '../hooks/useEye';
 /**
@@ -94,7 +93,6 @@ function Container(allProps: CommonPropsType) {
     ['pageConfig'],
     controlUpdate,
   );
-  // const selfNodeRef = useRef<HTMLElement>();
 
   const vNode = getVNode(key);
 
@@ -160,7 +158,7 @@ function Container(allProps: CommonPropsType) {
 
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
-      event.preventDefault();
+      event.stopPropagation();
       if (interceptDragOver() || propParentNodes.current[selectedPropName])
         return;
       const dragKey = getDragKey();
