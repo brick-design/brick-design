@@ -153,7 +153,13 @@ function Pages(props: PageProps) {
       ref={resizeRef}
       minHeight={40}
       defaultHeight={100}
-      bottom
+      bottomLeft={false}
+      bottomRight={false}
+      topLeft={false}
+      topRight={false}
+      top={false}
+      left={false}
+      right={false}
       className={styles['page-container']}
     >
       <div className={styles['header-container']}>

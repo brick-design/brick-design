@@ -11,6 +11,9 @@
 
 .rotate90 {
   transform: rotate(90deg);
+  pointer-events: none;
+  transition:none;
+  cursor: auto;
 }
 
 .icon-container {
@@ -69,6 +72,9 @@
     }
     .rc-tabs-nav-operations {
       display: none !important;
+    }
+    .rc-tabs-nav-measure-ping-left::before, .rc-tabs-nav-wrap-ping-left::before{
+      border-left-width:0px;
     }
   }
 }

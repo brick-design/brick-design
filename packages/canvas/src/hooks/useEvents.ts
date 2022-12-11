@@ -9,11 +9,12 @@ import {
   setNewDragKey,
   STATE_PROPS,
 } from '@brickd/core';
+import {isEqual} from 'lodash';
 import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
 import { UseSelectType } from './useSelect';
 import { useDragMove } from './useDragMove';
-import { getDragKey, getIsModalChild, getSelectedNode, isDragMove, nodeScrollIntoView } from '../utils';
+import { getDragKey, getIsModalChild, getSelectedNode, isDragMove, nodeScrollIntoView, usePrevious } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 /**
  * 事件处理器
@@ -34,6 +35,7 @@ export function useEvents(
 ) {
   const { isSelected } = selectedInfo;
   const { key, domTreeKeys } = specialProps;
+  const prevDomTreeKeys= usePrevious(domTreeKeys);
   const {
     onMouseOver: onMouseOverFun,
     onClick: onClickFn,
@@ -90,7 +92,7 @@ export function useEvents(
       setSelectedNode(selectedNode);
       setNewDragKey(null);
     }
-  }, []);
+  }, [isEqual(domTreeKeys,prevDomTreeKeys)]);
 
 
   const onClick = useCallback(

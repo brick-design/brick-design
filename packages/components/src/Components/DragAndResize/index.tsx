@@ -29,6 +29,7 @@ function DragAndResize(
     [],
   );
   const [isDrag, setIsDrag] = useState(false);
+  const [cursor,setCursor]=useState('move');
   const { onMove, onMoveEnd, onMoveStart } = useDragMove(getTarget);
 
   useImperativeHandle(
@@ -53,10 +54,12 @@ function DragAndResize(
     onMoveEnd(event);
     moveDivRef.current.onResizeEnd();
     moveDivRef.current.target.style.pointerEvents = 'auto';
+    setCursor('move');
   };
   const onResizeStart = () => {
     setIsDrag(true);
     moveDivRef.current.target.style.pointerEvents = 'none';
+
   };
 
   return (
@@ -64,10 +67,10 @@ function DragAndResize(
       <div
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
-        style={{ display: isDrag ? 'flex' : 'none' }}
+        style={{ display: isDrag ? 'flex' : 'none',cursor }}
         className={styles['placeholder-border']}
       />
-      <Resizeable onResizeStart={onResizeStart} {...props} ref={moveDivRef} />
+      <Resizeable onResizeStart={onResizeStart} setCursor={setCursor} {...props} ref={moveDivRef} />
     </>
   );
 }

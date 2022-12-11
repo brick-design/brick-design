@@ -29,6 +29,7 @@ export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultWidth?: number;
   onResizeStart?: (event: React.MouseEvent | MouseEvent) => void;
   activeKey?:string
+  setCursor?:(cursor:any)=>any
 
 }
 
@@ -56,18 +57,19 @@ export interface ResizeableRefType {
 function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
   const {
     children,
-    left,
-    right,
-    top,
-    bottom,
-    topLeft,
-    topRight,
-    bottomLeft,
-    bottomRight,
+    left=true,
+    right=true,
+    top=true,
+    bottom=true,
+    topLeft=true,
+    topRight=true,
+    bottomLeft=true,
+    bottomRight=true,
     className,
     defaultHeight,
     defaultWidth,
     activeKey,
+    setCursor=(s:string)=>s,
     ...rest
   } = props;
 
@@ -119,34 +121,49 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
 
   const topResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.top);
+    setCursor('row-resize');
     onMouseDown(event);
   }, []);
   const bottomResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottom);
+    setCursor('row-resize');
+
     onMouseDown(event);
   }, []);
   const leftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.left);
+    setCursor('col-resize');
+
     onMouseDown(event);
   }, []);
   const rightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.right);
+    setCursor('col-resize');
+
     onMouseDown(event);
   }, []);
   const topRightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.topRight);
+    setCursor('ne-resize');
+
     onMouseDown(event);
   }, []);
   const bottomRightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottomRight);
+    setCursor('se-resize');
+
     onMouseDown(event);
   }, []);
   const topLeftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.topLeft);
+    setCursor('nw-resize');
+
     onMouseDown(event);
   }, []);
   const bottomLeftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottomLeft);
+    setCursor('sw-resize');
+
     onMouseDown(event);
   }, []);
 

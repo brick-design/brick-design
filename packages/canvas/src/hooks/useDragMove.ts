@@ -74,6 +74,7 @@ export function useDragMove(
       const {selectedNode}=getOperateState();
 
       if (isDragMoveAble&&selectedNode===targetNode && key !== ROOT && !selectedStyleProp) {
+        targetNode.style.cursor='move';
 
         const {
           marginLeft,
@@ -225,7 +226,9 @@ export function useDragMove(
     }
     resetGuideLines();
     originalPositionRef.current = null;
-    (event.target as HTMLElement).style.transition = DEFAULT_ANIMATION;
+    const target=event.target as HTMLElement;
+    target.style.transition = DEFAULT_ANIMATION;
+    target.style.cursor='pointer';
   }, []);
   return {
     onDragStart,

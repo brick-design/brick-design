@@ -6,6 +6,7 @@ import {
   SelectedInfoBaseType, useOperate,
   onDragBrickTree
 } from '@brickd/canvas';
+import { setNewDragKey } from '@brickd/core';
 import styles from './index.less';
 import SortItem from './SortItem';
 import ReactSortable from '../../../Components/ReactSortable';
@@ -91,6 +92,7 @@ function SortTree(props: SortTreePropsType) {
         dragInfo,
       });
       setOperateState({dropNode:null,isDropAble:false});
+      setNewDragKey(null);
     },
 
     [],
@@ -103,6 +105,7 @@ function SortTree(props: SortTreePropsType) {
        * @type {any}
        */
       const dragInfo = JSON.parse(evt.clone.dataset.special);
+      setNewDragKey(dragInfo.key);
       onDragBrickTree(dragInfo.key,sortKeys,key,setOperateState,propName);
     },
     [],
