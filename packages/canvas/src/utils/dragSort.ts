@@ -343,7 +343,6 @@ export const onDragBrickTree = (
     dropNode: parentNode,
     isDropAble: true,
     index: 0,
-    isLock: true,
   });
   const isV = isVertical(parentNode);
   const dragIndex = sortKeys.findIndex((v) => v === dragKey);

@@ -95,7 +95,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
           operateSelectedKey: undefined,
           index: undefined,
           isDropAble: undefined,
-          isLock: undefined,
         });
       }
       return false;

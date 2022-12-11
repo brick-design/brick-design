@@ -90,6 +90,7 @@ function SortTree(props: SortTreePropsType) {
         parentPropName: propName!,
         dragInfo,
       });
+      setOperateState({dropNode:null,isDropAble:false});
     },
 
     [],

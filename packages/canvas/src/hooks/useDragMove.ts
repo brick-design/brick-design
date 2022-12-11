@@ -17,6 +17,7 @@ import {
   getIframe,
   initialize, isDragMove, resetGuideLines,
 } from '../utils';
+import { OperateStateType } from '../components/OperateProvider';
 
 export type OriginalPosition = {
   originalX: number;
@@ -36,7 +37,7 @@ export type OriginalPosition = {
 export function useDragMove(
   specialProps: SelectedInfoBaseType,
   selectedInfo: UseSelectType,
-  getOperateState: any,
+  getOperateState: ()=>OperateStateType,
 ) {
   const originalPositionRef = useRef<OriginalPosition>();
   const positionResultRef = useRef<any>();
@@ -45,6 +46,7 @@ export function useDragMove(
   const onDragStart = useCallback(
     (event: React.DragEvent) => {
       event.stopPropagation();
+
       if (!isSelected) {
         dragImg.style.width = '10px';
         dragImg.style.height = '10px';
@@ -54,15 +56,25 @@ export function useDragMove(
         dragImg.style.height = '0px';
         event.dataTransfer.setDragImage(dragImg, 0, 0);
       }
-      setDragSource({
-        dragKey: key,
-        parentKey,
-        parentPropName,
-      });
+      const { clientX, clientY, target } = event;
+      const targetNode = target as HTMLElement;
+      const {
+        top: pageTop,
+        left: pageLeft,
+        width,height
+      } = targetNode.getBoundingClientRect();
+      const offsetX=clientX-pageLeft;
+      const offsetY=clientY-pageTop;
+      const isDragMoveAble=isDragMove(width,height,offsetX,offsetY);
+        setDragSource({
+          dragKey: key,
+          parentKey,
+          parentPropName,
+        });
+      const {selectedNode}=getOperateState();
 
-      if (isSelected && key !== ROOT && !selectedStyleProp) {
-        const { clientX, clientY, target } = event;
-        const targetNode = target as HTMLElement;
+      if (isDragMoveAble&&selectedNode===targetNode && key !== ROOT && !selectedStyleProp) {
+
         const {
           marginLeft,
           marginTop,
@@ -73,15 +85,8 @@ export function useDragMove(
           right,
           bottom,
         } = css(targetNode);
-        const {
-          top: pageTop,
-          left: pageLeft,
-          width,height
-        } = targetNode.getBoundingClientRect();
-        const offsetX=clientX-pageLeft;
-        const offsetY=clientY-pageTop;
 
-        if(isDragMove(width,height,offsetX,offsetY)){
+
         const {
           top: parentPageTop,
           left: parentPageLeft,
@@ -117,7 +122,6 @@ export function useDragMove(
         };
         initialize(parentKey, parentPropName);
         targetNode.style.transition = 'none';
-      }
       }
     },
     [isSelected, selectedStyleProp],

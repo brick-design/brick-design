@@ -27,13 +27,13 @@ import MapNodesRenderWrapper from '../wrappers/MapNodesRenderWrapper';
 import ContainerDiffWrapper from '../wrappers/ContainerDiffWrapper';
 
 export function handlePropsClassName(
+  uniqueKey: string,
   key: string,
-  // isLockTarget: boolean,
   className: any,
   animateClass: string,
   isShow: boolean,
 ) {
-  let style = `${selectClassTarget + key}`;
+  let style = `${selectClassTarget + uniqueKey}  ${selectClassTarget + key}`;
   if (!isShow) {
     style += ' ' + styles['hidden-component'];
   }

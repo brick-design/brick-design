@@ -13,7 +13,7 @@ import { useOperate } from './useOperate';
 import { useSelector } from './useSelector';
 import { UseSelectType } from './useSelect';
 import { useDragMove } from './useDragMove';
-import { getDragKey, getIsModalChild, getSelectedNode, isDragMove } from '../utils';
+import { getDragKey, getIsModalChild, getSelectedNode, isDragMove, nodeScrollIntoView } from '../utils';
 import { controlUpdate, HookState } from '../common/handleFuns';
 /**
  * 事件处理器
@@ -84,8 +84,10 @@ export function useEvents(
      * 如果组件是未选中的情况，并且组件的key与拖拽的key一致说说明为新组件，
      * 那么默认选中该组件
      */
-    if (!isSelected && getNewDragKey() === key) {
-      setSelectedNode(getSelectedNode(key));
+    if (!isSelected && getNewDragKey() === key||isSelected) {
+      const selectedNode=getSelectedNode(key);
+      nodeScrollIntoView(selectedNode);
+      setSelectedNode(selectedNode);
       setNewDragKey(null);
     }
   }, []);
@@ -150,6 +152,7 @@ export function useEvents(
       isMerge: true,
     });
   }, []);
+
   useEffect(() => {
     if (selectedNode) {
       changeOperationPanel();

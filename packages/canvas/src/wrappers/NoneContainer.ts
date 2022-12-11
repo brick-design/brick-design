@@ -73,7 +73,6 @@ function NoneContainer(allProps: CommonPropsType) {
       dropNode: (event.target as HTMLElement).parentElement,
       isDropAble,
       index,
-      isLock: true,
     });
     if (!isDropAble) return;
     setDropTarget({
@@ -125,6 +124,7 @@ function NoneContainer(allProps: CommonPropsType) {
     specialProps,
     handlePropsClassName(
       uniqueKey,
+      key,
       className,
       animateClass,
       isShow,

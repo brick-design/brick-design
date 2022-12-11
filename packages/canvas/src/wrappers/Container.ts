@@ -158,7 +158,7 @@ function Container(allProps: CommonPropsType) {
 
   const onParentDragOver = useCallback(
     (event: DragEvent) => {
-      event.stopPropagation();
+      event.preventDefault();
       if (interceptDragOver() || propParentNodes.current[selectedPropName])
         return;
       const dragKey = getDragKey();
@@ -281,7 +281,6 @@ function Container(allProps: CommonPropsType) {
         dropNode,
         isDropAble,
         index,
-        isLock: true,
       });
 
       if (!isDropAble) return;
@@ -315,7 +314,6 @@ function Container(allProps: CommonPropsType) {
         dropNode,
         isDropAble,
         index,
-        isLock: true,
       });
       if (!isDropAble) return;
 
@@ -331,17 +329,7 @@ function Container(allProps: CommonPropsType) {
     [childNodes],
   );
 
-  // useEffect(() => {
-  //   if (!selfNodeRef.current) {
-  //     selfNodeRef.current = getSelectedNode(key, index);
-  //   }
-  //   if (selfNodeRef.current) {
-  //     selfNodeRef.current.ondragenter = onParentDragEnter;
-  //     selfNodeRef.current.ondragover = onParentDragOver;
-  //     selfNodeRef.current.ondrop = onDrop;
-  //     selfNodeRef.current.ondragleave = onDragLeave;
-  //   }
-  // }, [onParentDragEnter, onParentDragOver,onDrop,onDragLeave]);
+
 
   useEffect(() => {
     if (isEmpty(childNodes)) {
@@ -379,7 +367,6 @@ function Container(allProps: CommonPropsType) {
         dropNode: null,
         isDropAble: false,
         index,
-        isLock: true,
       });
 
       return true;
@@ -418,7 +405,7 @@ function Container(allProps: CommonPropsType) {
     specialProps,
     handlePropsClassName(
       uniqueKey,
-      // false,
+      key,
       className,
       animateClass,
       isShow,

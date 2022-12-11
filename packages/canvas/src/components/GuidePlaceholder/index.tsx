@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { memo,  useEffect, useRef } from 'react';
 import { isEmpty } from 'lodash';
 import styles from './index.less';
 import {
@@ -46,7 +46,7 @@ function GuidePlaceholder() {
   const guideNodeRef2 = useRef<HTMLDivElement>();
   const guideNodeRef3 = useRef<HTMLDivElement>();
 
-  const { getOperateState, setSubscribe, setOperateState } = useOperate(false);
+  const { getOperateState, setSubscribe } = useOperate(false);
   const { getZoomState } = useZoom();
 
   const hideGuideNode = () => {
@@ -62,10 +62,9 @@ function GuidePlaceholder() {
         dropNode,
         isModal,
         isDropAble,
-        selectedNode
       } = getOperateState();
       const node = dropNode || hoverNode;
-      if (node&&selectedNode!==node) {
+      if (node) {
         const { left, top, width, height } = getElementInfo(node, isModal);
         const { display, flexDirection, alignItems, justifyContent } = css(
           node,
@@ -95,6 +94,8 @@ function GuidePlaceholder() {
             css.backgroundColor = 'rgba(256, 0, 0, 0.1)';
           }
           setCss(hoverNodeRef.current, css);
+        }else {
+          hideGuideNode();
         }
         setPosition([hoverNodeRef.current], isModal);
       } else {
@@ -123,13 +124,8 @@ function GuidePlaceholder() {
     return setSubscribe(renderGuidePlaceholder);
   }, []);
 
-  const onTransitionEnd = useCallback(() => {
-    setOperateState({ isLock: false });
-  }, []);
-
   return (
     <div
-      onTransitionEnd={onTransitionEnd}
       ref={hoverNodeRef}
       className={styles['hover-node']}
     >

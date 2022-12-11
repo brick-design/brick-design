@@ -10,7 +10,7 @@ import {
   useOperate,
   getSelectedNode,
   copyComponent,
-  deleteComponent, ROOT,
+  deleteComponent, ROOT, nodeScrollIntoView,
 } from '@brickd/canvas';
 import styles from './index.less';
 import {
@@ -113,9 +113,11 @@ function Header(props: HeaderProps) {
             clearSelectedStatus();
             setOperateState({ selectedNode: null, operateSelectedKey: null });
           } else {
+            const selectedNode=getSelectedNode(key);
             selectComponent({ ...specialProps, propName });
+            nodeScrollIntoView(selectedNode);
             setOperateState({
-              selectedNode: getSelectedNode(key),
+              selectedNode ,
               operateSelectedKey: key,
             });
           }

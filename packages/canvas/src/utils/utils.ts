@@ -52,9 +52,15 @@ export const getSelectedNode = (
   const iframe = getIframe();
   if (iframe && key) {
     const { contentDocument } = iframe;
-    return contentDocument!.getElementsByClassName(
+    let node=contentDocument!.getElementsByClassName(
       selectClassTarget + key + '-' + index,
     )[0] as HTMLElement;
+    if(!node) {
+      node=contentDocument!.getElementsByClassName(
+        selectClassTarget + key,
+      )[0] as HTMLElement;
+    }
+    return node;
   }
 };
 
@@ -567,3 +573,34 @@ export const isDragMove=(width:number,height:number,offsetX:number,offsetY:numbe
   }
   return false;
 };
+
+
+export function isInViewPort(element){
+  const {contentWindow,contentDocument}=getIframe();
+  const viewWidth = contentWindow.innerWidth||contentDocument.documentElement.clientWidth;
+  const viewHeight=contentWindow.innerHeight||contentDocument.documentElement.clientHeight;
+  if(!element) return true;
+  const{
+    top,
+    right,
+    bottom,
+    left,
+  }=element.getBoundingClientRect();
+
+  return(
+    top>=0&&
+    left>=0&&
+    right<=viewWidth&&
+    bottom<=viewHeight
+  );
+}
+
+export function nodeScrollIntoView(selectedNode){
+  if(!isInViewPort(selectedNode)){
+    setTimeout(()=>selectedNode.scrollIntoView({
+      behavior:'smooth',
+      block:'center',
+      inline:'center'
+    }),300);
+  }
+}
