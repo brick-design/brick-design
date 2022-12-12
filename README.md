@@ -1,11 +1,10 @@
 <h1 align='center'>Brick Design</h1>
 
 
-## SNAPSHOT
 
-![brickd1](https://user-images.githubusercontent.com/15995127/85188005-7e4de100-b2d6-11ea-9441-2bd5570b14a9.gif)
-![brickd2](https://user-images.githubusercontent.com/15995127/85187856-86595100-b2d5-11ea-883e-e45313797fb3.gif)
-![brickd3](https://user-images.githubusercontent.com/15995127/85187862-92451300-b2d5-11ea-8394-a6c06b45de97.gif)
+https://user-images.githubusercontent.com/15995127/206955000-f954b7e3-eeaa-4c09-b7ed-829ae87022d0.mp4
+
+
 
 ## 描述
 目前重构中>>>>>>>>>
