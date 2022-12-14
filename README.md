@@ -8,7 +8,7 @@ https://user-images.githubusercontent.com/15995127/206958247-d1867643-8706-4172-
 
 
 ## 描述
-目前重构中>>>>>>>>>
+新版本正在开发中》》》》》》》》》》
 
 ### 快捷键
 >command/control+"+"    放大
