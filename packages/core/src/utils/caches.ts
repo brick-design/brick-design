@@ -1,3 +1,4 @@
+import {cloneDeep} from 'lodash';
 import {
   BrickAction,
   BrickDesignStateType,
@@ -58,6 +59,7 @@ let DRAG_SOURCE: DragSourceType | null=null;
 export const getDragSource = () => DRAG_SOURCE;
 export const setDragSource = (dragSource: DragSourcePayload | null) => {
   if(!dragSource) return DRAG_SOURCE=dragSource;
+  dragSource=cloneDeep(dragSource);
   const RootState=STORE.getState();
   const { layerName } = RootState;
   if(!layerName) return;

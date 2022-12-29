@@ -3,8 +3,7 @@ import React, {
   memo,
   Ref,
   useCallback,
-  useEffect,
-  useImperativeHandle,
+  useImperativeHandle, useMemo,
   useRef,
 } from 'react';
 import { Direction, useResize } from '@brickd/hooks';
@@ -83,10 +82,22 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
 
   const { onResizeStart, onResize, onResizeEnd } = useResize(resizeDivRef);
 
+  const defaultSize=useMemo(()=>{
+    const style:any={};
+    if(defaultWidth){
+      style.width=defaultWidth;
+    }
+    if(defaultHeight){
+      style.height=defaultWidth;
+    }
+    return style;
+  },[]);
+
   const onFocus=(event:React.FocusEvent)=>{
     event.stopPropagation();
     setActive();
   };
+
   const changeFold = useCallback((params: ChangeFoldParam) => {
     const { isHeight, isWidth, widthTarget, heightTarget } = params;
     const { height, width } = originSizeRef.current;
@@ -109,11 +120,6 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     onResizeEnd,
     target: resizeDivRef.current,
   }));
-
-  useEffect(() => {
-    if (defaultHeight) resizeDivRef.current.style.height = defaultHeight + 'px';
-    if (defaultWidth) resizeDivRef.current.style.width = defaultWidth + 'px';
-  }, []);
 
   const onMouseDown = useCallback((event: React.MouseEvent) => {
     props.onResizeStart && props.onResizeStart(event);
@@ -167,9 +173,11 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     onMouseDown(event);
   }, []);
 
+
   return (
     <div
       className={`${styles['container']} ${className}`}
+      style={defaultSize}
       {...rest}
       onFocus={onFocus}
       ref={resizeDivRef}

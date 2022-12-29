@@ -8,9 +8,10 @@ import React, {
   useCallback,
   forwardRef, useState,
 } from 'react';
-import { merge,isEmpty } from 'lodash';
+import { merge,isEmpty,isEqual } from 'lodash';
 import { DragAndResizeRefType } from '../DragAndResize';
 import styles from '../../global.less';
+import { usePrevious } from '../../utils';
 
 
 type OriginPositionType = {
@@ -46,7 +47,7 @@ function BarButton(props: BarButtonProps, ref: Ref<BarButtonRefType>) {
   const iconRef = useRef<HTMLDivElement>();
   const [isChecked,setIsChecked]=useState(defaultShow);
   useImperativeHandle(ref, () => ({ closePanel:onChangeMax}));
-
+  const prevDefaultPosition= usePrevious(defaultPosition);
   const getOriginPosition = useCallback(() => {
     const {
       left,
@@ -61,10 +62,14 @@ function BarButton(props: BarButtonProps, ref: Ref<BarButtonRefType>) {
     originPositionRef.current.targetHeight = height + 'px';
   }, []);
 
-  useEffect(() => {
+  useEffect(()=>{
     if(!defaultShow){
       dragResizeRef.current.target.style.visibility='hidden';
     }
+  },[]);
+
+  useEffect(() => {
+
     if(!isEmpty(defaultPosition)){
         const {top,left,width,height}=defaultPosition;
       originPositionRef.current.targetLeft = left + 'px';
@@ -78,7 +83,7 @@ function BarButton(props: BarButtonProps, ref: Ref<BarButtonRefType>) {
     return () => {
       removeEventListener('resize', getOriginPosition);
     };
-  }, [defaultShow,defaultPosition,originPositionRef]);
+  }, [isEqual(defaultPosition,prevDefaultPosition),originPositionRef]);
 
   const closePanel = useCallback(() => {
     const { target } = dragResizeRef.current;
@@ -97,16 +102,15 @@ function BarButton(props: BarButtonProps, ref: Ref<BarButtonRefType>) {
 
   const onChangeMax = useCallback((event?: React.MouseEvent) => {
     event.stopPropagation&&event.stopPropagation();
-    setIsChecked(!isChecked);
-    onCheckChange&&onCheckChange(!isChecked);
     const target = dragResizeRef.current.target;
     if (isChecked) {
       closePanel();
     } else {
       const { top, left, width,height } = originPositionRef.current;
-      target.style.visibility = 'visible';
-      target.style.cssText = `top:${top};left:${left};width:${width};height:${height};transition:all 500ms;`;
+      target.style.cssText = `top:${top};left:${left};width:${width};height:${height};transition:all 500ms;visibility:visible;`;
     }
+    setIsChecked(!isChecked);
+    onCheckChange&&onCheckChange(!isChecked);
   }, [setIsChecked,isChecked]);
 
 

@@ -21,7 +21,6 @@ export interface FormItemProps {
 
 function FormItem(props: FormItemProps & FieldProps) {
   const { name, isShowLabel = true, renderFormItem, config,key, ...rest } = props;
-  console.log('key>>>>>>>>',key);
   const [isExpression, setIsExpression] = useState(false);
   const [menu, setMenu] = useState<string>();
   const {

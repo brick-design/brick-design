@@ -9,17 +9,22 @@ import React, {
 } from 'react';
 import { useDragMove } from '@brickd/hooks';
 import styles from './index.less';
+import { DragProvider } from './DragProvider';
 import Resizeable, { ResizeableProps, ResizeableRefType } from '../Resizeable';
 
 export interface DragAndResizeRefType extends ResizeableRefType {
   onMoveStart: (event: MouseEvent | React.MouseEvent) => void;
 }
-export type DragAndResizeProp = ResizeableProps;
+
+export interface DragAndResizeProp extends ResizeableProps{
+  onDragMoveEnd?:()=>void
+};
 
 function DragAndResize(
   props: DragAndResizeProp,
   ref: Ref<DragAndResizeRefType>,
 ) {
+  const {onDragMoveEnd}=props;
   const moveDivRef = useRef<ResizeableRefType>({
     target: null,
     changeFold: (_) => _,
@@ -55,6 +60,7 @@ function DragAndResize(
     moveDivRef.current.onResizeEnd();
     moveDivRef.current.target.style.pointerEvents = 'auto';
     setCursor('move');
+    onDragMoveEnd&&onDragMoveEnd();
   };
   const onResizeStart = () => {
     setIsDrag(true);
@@ -70,7 +76,9 @@ function DragAndResize(
         style={{ display: isDrag ? 'flex' : 'none',cursor }}
         className={styles['placeholder-border']}
       />
+      <DragProvider value={isDrag}>
       <Resizeable onResizeStart={onResizeStart} setCursor={setCursor} {...props} ref={moveDivRef} />
+      </DragProvider>
     </>
   );
 }

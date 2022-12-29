@@ -29,7 +29,7 @@ import {
 import styles from './index.less';
 import { useSelector } from './hooks/useSelector';
 import Guidelines from './components/Guidelines';
-import { cleanCaches, getIframe, css } from './utils';
+import { cleanCaches, getIframe, css, elementScrollConfig } from './utils';
 import { useZoom } from './hooks/useZoom';
 import DragMove from './components/DragMove';
 
@@ -93,9 +93,11 @@ function BrickDesignCanvas(props: BrickDesignCanvasType) {
         ) {
           dndContainerRef.current.style.height = 'auto';
           changePlatform({ size: [scrollWidth, scrollHeight] });
+          elementScrollConfig.isLock=true;
         } else {
           dndContainerRef.current.style.height = '100%';
           changePlatform({ size: selectedPlatform });
+          elementScrollConfig.isLock=false;
         }
       } else {
         const target = dndContainerRef.current;

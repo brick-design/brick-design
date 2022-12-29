@@ -11,6 +11,7 @@ import Json5 from 'json5';
 import styles from './index.less';
 import { layersIcon, maxIcon, minIcon } from '../../assets';
 import DragResizeBar from '../DragResizeBar';
+import { useDragChange } from '../DragAndResize/DragProvider';
 
 interface CodeEditorType extends Omit<AceEditorProps, 'onChange'|'value'>{
   onChange?: (value: object) => void;
@@ -22,9 +23,11 @@ function CodeEditor(props: CodeEditorType) {
   const { value, onChange, mode,name } = props;
   const [position,setPosition]=useState({width:0,height:0,top:0,left:0});
   const [isChecked,setIsChecked]=useState(false);
+ const dragStatus=useDragChange();
   const [code,setCode]=useState<string>();
   const aceRef=useRef<AceEditor>();
   const lockRef=useRef(false);
+
   useEffect(()=>{
     if(value&&!lockRef.current){
       lockRef.current=true;
@@ -32,7 +35,7 @@ function CodeEditor(props: CodeEditorType) {
         typeof value === 'string' ? value : Json5.stringify(value, undefined, 2);
       setCode(valueResult);
     }
-  },[value,setCode,code]);
+  },[value,setCode]);
 
   const onCodeChange = (v) => {
     setCode(v);
@@ -53,7 +56,7 @@ function CodeEditor(props: CodeEditorType) {
     setPosition({top,width,height,left});
   },[setPosition]);
 
-  useEffect(()=>{getOriginPosition();},[]);
+  useEffect(()=>{getOriginPosition();},[dragStatus]);
 
   useEffect(()=>{
     addEventListener('resize', getOriginPosition);
@@ -61,6 +64,7 @@ function CodeEditor(props: CodeEditorType) {
       removeEventListener('resize', getOriginPosition);
     };
   },[getOriginPosition]);
+
 
   return (
     <div className={styles['container']}>

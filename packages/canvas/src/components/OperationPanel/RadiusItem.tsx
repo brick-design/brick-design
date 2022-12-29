@@ -259,8 +259,7 @@ function RadiusItem(props: ItemProps) {
     };
   }, [onMouseMove, onMouseUp]);
 
-  const onLock = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const onLock = (event: React.MouseEvent<HTMLDivElement>) => {
     setChecked(!checked);
   };
   const { radius } = props;

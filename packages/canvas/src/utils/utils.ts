@@ -595,12 +595,11 @@ export function isInViewPort(element){
   );
 }
 
+export const elementScrollConfig={
+  isLock:false
+};
+
 export function nodeScrollIntoView(selectedNode){
-  if(!isInViewPort(selectedNode)){
-    setTimeout(()=>selectedNode.scrollIntoView({
-      behavior:'smooth',
-      block:'center',
-      inline:'center'
-    }),300);
-  }
+  if(elementScrollConfig.isLock) return;
+    setTimeout(()=>selectedNode.scrollIntoViewIfNeeded(),300);
 }

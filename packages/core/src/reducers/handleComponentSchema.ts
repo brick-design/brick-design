@@ -29,7 +29,6 @@ export function addComponent(state: StateType): StateType {
   if (!dragSource || (!dropTarget && pageConfig[ROOT])) {
     return state;
   }
-
   const { template, dragKey, parentKey, parentPropName,style } = dragSource;
   setDragSource(null);
   /**
@@ -63,7 +62,6 @@ export function addComponent(state: StateType): StateType {
   }
   parentKey && undo.push({ pageConfig });
   redo.length = 0;
-  console.log('template1>>>>>>>>>',template);
 
   return {
     ...state,

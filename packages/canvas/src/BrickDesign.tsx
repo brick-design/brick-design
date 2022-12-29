@@ -103,7 +103,6 @@ function BrickDesign(brickdProps: BrickDesignProps) {
     true,
   );
   const rootComponent = pageConfig[ROOT];
-  console.log('rootComponent>>>>>>>>>',rootComponent);
   const staticState = useMemo(() => ({ options, pageName }), [
     pageName,
     options,

@@ -11,9 +11,7 @@ interface ExpressionProps {
 }
 function Expression(props: ExpressionProps) {
   const { onChange, value } = props;
-  // const {getOperateState}=useOperate();
-  // const {pageState}=getOperateState();
-  // const rex=/^(\${).+(})$/;
+
   const onInputChange = (v) => {
     onChange && onChange(v ? `\${${v}}` : undefined);
   };
