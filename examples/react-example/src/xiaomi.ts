@@ -71,7 +71,7 @@ const data: PageConfigType = {
 				width: '100%',
 			},
 		},
-		childNodes: ['54', '52', '74', '18', '69', '70'],
+		childNodes: ['54', '52', '74', '18', '69'],
 	},
 	1: {
 		componentName: 'div',
@@ -855,8 +855,10 @@ const data: PageConfigType = {
 	},
 	69: {
 		componentName: 'div',
+		layoutMode:'free',
 		props: {
 			style: {
+				position:'relative',
 				height: 332,
 				width: '100%',
 				display: 'flex',
@@ -866,9 +868,7 @@ const data: PageConfigType = {
 				marginTop: 12,
 			},
 		},
-	},
-	70: {
-		componentName: 'BackTop',
+		childNodes:['101','102','103','104']
 	},
 	71: {
 		componentName: 'div',
@@ -1203,7 +1203,46 @@ color: '#b0b0b0',
 			}
 		},
 		childNodes:['91']
+	},
+	101:{
+		componentName:"Button",
+		props:{
+			style:{position:'absolute'},
+			children:'自由布局1'
+		}
+	},
+	102:{
+		componentName:"Button",
+		props:{
+			style:{
+				position:'absolute',
+				top:30
+			},
+			children:'自由布局2'
+		}
+	},
+	103:{
+		componentName:"Button",
+		props:{
+			style:{
+				position:'absolute',
+				top:60
+			},
+			children:'自由布局3'
+		}
+	},
+	104:{
+		componentName:'span',
+		props:{
+			children:'自由布局容器，通过设置容器布局模式切换流式布局与自由布局',
+			style:{
+				position:'absolute',
+				top:0,left:0,
+				fontSize:16
+			}
+		}
 	}
+
 }
 
 export default data

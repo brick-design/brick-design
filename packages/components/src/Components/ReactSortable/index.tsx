@@ -20,28 +20,30 @@ const store: StoreType = {
 
 export type SortableProps = any & React.HTMLProps<HTMLDivElement>;
 function Sortable(props: SortableProps, ref: Ref<HTMLDivElement>) {
-  const { options = {}, onChange, ...rest } = props;
+  const { options = {}, onSortEnd,onChange,onEnd, ...rest } = props;
   const sortRef = useRef();
   useImperativeHandle(ref, () => sortRef.current);
   useEffect(() => {
-    ['onChoose', 'onAdd', 'onUpdate'].forEach((name) => {
+    ['onChoose', 'onAdd', 'onUpdate','onChange','onEnd'].forEach((name) => {
       const eventHandler = options[name];
       options[name] = (...params: any) => {
         const [evt] = params;
-        console.log('useEffect1>>>>>>>',name);
         if (name === 'onChoose') {
           store.nextSibling = evt.item.nextElementSibling;
           store.activeComponent = sortRef.current;
-        } else if ((name === 'onAdd' || name === 'onUpdate') && onChange) {
-          console.log('useEffect2>>>>>>>',name);
-
+        } else if ((name === 'onAdd' || name === 'onUpdate') && onSortEnd) {
           const items = sortable.toArray();
           const referenceNode =
             store.nextSibling && store.nextSibling.parentNode !== null
               ? store.nextSibling
               : null;
           evt.from.insertBefore(evt.item, referenceNode);
-          onChange && onChange(items, evt);
+          onSortEnd && onSortEnd(items, evt);
+        }else if(name === 'onChange'){
+          const items = sortable.toArray();
+          onChange&&onChange(items, evt);
+        }else if(name==='onEnd'){
+          onEnd&&onEnd();
         }
         if (evt.type === 'move') {
           const [evt, originalEvent] = params;
@@ -58,7 +60,7 @@ function Sortable(props: SortableProps, ref: Ref<HTMLDivElement>) {
     return () => {
       sortable.destroy();
     };
-  }, [sortRef.current]);
+  }, []);
   return <div {...rest} ref={sortRef} />;
 }
 

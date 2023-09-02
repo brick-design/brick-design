@@ -1,10 +1,9 @@
-import React, { memo, useCallback, useEffect, useRef } from 'react';
-import { PropInfoType, PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
-import { each, isEqual,isEmpty } from 'lodash';
-import PropItem from './PropItem';
+import React,{memo} from 'react';
+import { PROPS_TYPES, PropsConfigType } from '@brickd/canvas';
+import { each, isEmpty } from 'lodash';
 import styles from './index.less';
-import { CodeEditor, NForm } from '../../Components';
-import { usePrevious } from '../../utils';
+import { CodeEditor } from '../../Components';
+import { ScaffoldForm } from '../index';
 
 interface ObjectValueProps {
   value?: any;
@@ -53,54 +52,18 @@ const handleValue=(value:any,childPropsConfig:PropsConfigType)=>{
 };
 
 function ObjectValue(props: ObjectValueProps) {
-  const { childPropsConfig,value,onChange } = props;
-  const nFormRef=useRef<any>();
-  const prevValue= usePrevious(value);
-  useEffect(()=>{
-    nFormRef.current&&nFormRef.current.setFieldsValue(value);
-  },[isEqual(prevValue,value)]);
-
-  const renderFormItem = useCallback((config: PropInfoType) => {
-    const { type } = config;
-    const subStyle: React.CSSProperties = {
-      justifyContent: 'space-between',
-      height: 22,
-      paddingRight: 0,
-    };
-
-    let style: React.CSSProperties = {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      paddingRight: 0,
-    };
-
-    const renderComponent = <PropItem config={config} />;
-    if (!Array.isArray(type)) {
-      switch (type) {
-        case PROPS_TYPES.boolean:
-          style = subStyle;
-          break;
-        case PROPS_TYPES.number:
-          style = subStyle;
-          break;
-      }
-    }
-
-    return { style, renderComponent, isHidden: true };
-  }, []);
-
+  const { childPropsConfig,value,onChange,...rest } = props;
   const onValuesChange=(changedValues, values)=>{
     onChange&&onChange(values);
   };
+
   if(!childPropsConfig||isEmpty(childPropsConfig)){
-    return  <CodeEditor/>;
+    return  <CodeEditor value={value} onChange={onChange} {...rest}/>;
   }
-  return (
-    <NForm
-      ref={nFormRef}
+  return (<ScaffoldForm
+      defaultFormData={value}
       className={styles['container']}
       formConfig={handleValue(value,childPropsConfig)}
-      renderFormItem={renderFormItem}
       onValuesChange={onValuesChange}
     />
   );

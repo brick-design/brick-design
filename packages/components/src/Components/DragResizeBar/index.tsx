@@ -1,13 +1,12 @@
 import React, { useRef, memo, useCallback } from 'react';
 import styles from './index.less';
-import DragAndResize, { DragAndResizeRefType } from '../DragAndResize';
+import DragAndResize, { DragAndResizeProp, DragAndResizeRefType } from '../DragAndResize';
 import { closeIcon } from '../../assets';
 import Icon from '../Icon';
-import { ResizeableProps } from '../Resizeable';
 import BarButton, { BarButtonProps, BarButtonRefType } from '../BarButton';
 
 export interface DragResizeBarType
-  extends ResizeableProps,
+  extends DragAndResizeProp,
     Omit<BarButtonProps, 'dragResizeRef' | 'children'> {
   title?: string;
   barStyle?: React.CSSProperties;
@@ -20,7 +19,7 @@ function DragResizeBar(props: DragResizeBarType) {
 
   const onClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    barButtonRef.current.closePanel();
+    barButtonRef.current.closePanel(e);
   }, []);
 
   const onMoveStart = useCallback((event: React.MouseEvent) => {
@@ -28,16 +27,8 @@ function DragResizeBar(props: DragResizeBarType) {
   }, []);
 
   return (
-    <BarButton ref={barButtonRef} icon={icon} dragResizeRef={dragResizeRef}>
+    <BarButton  icon={icon} dragResizeRef={dragResizeRef} ref={barButtonRef} {...rest}>
       <DragAndResize
-        bottom
-        right
-        left
-        topLeft
-        topRight
-        bottomLeft
-        bottomRight
-        // style={{ visibility: 'visible' }}
         onWheel={(event) => event.stopPropagation()}
         className={`${styles['container']} ${className}`}
         {...rest}

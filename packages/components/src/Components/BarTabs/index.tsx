@@ -19,14 +19,13 @@ function BarTabs(props: BarTabsProp) {
   const barButtonRef = useRef<BarButtonRefType>();
 
   const onClick = useCallback((event: React.MouseEvent) => {
-    event.stopPropagation();
-    barButtonRef.current.closePanel();
+    barButtonRef.current.closePanel(event);
   }, []);
   const onTabChange = (key) => {
     setActiveKey(key);
   };
   const onMoveStart = useCallback((event: React.MouseEvent) => {
-    event.stopPropagation();
+    event.preventDefault();
     dragResizeRef.current.onMoveStart(event);
   }, []);
 

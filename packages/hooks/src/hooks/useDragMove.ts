@@ -12,8 +12,9 @@ export function useDragMove(getTarget:()=>HTMLElement){
 	const onMoveStart = useCallback(
 		function (event: MouseEvent|React.MouseEvent) {
 			event.stopPropagation();
-			if(!getTarget()) return;
-			const { top, left } = getComputedStyle(getTarget(), '');
+			const target=getTarget();
+			if(!target) return;
+			const { top, left } = getComputedStyle(target, '');
 			originPositionRef.current = {
 				x: event.clientX,
 				y: event.clientY,
@@ -21,7 +22,6 @@ export function useDragMove(getTarget:()=>HTMLElement){
 				left: Number.parseInt(left),
 				isMove: true,
 			};
-			const target=getTarget();
 			target.style.pointerEvents='none';
 			target.style.transition='none';
 		},
@@ -40,14 +40,15 @@ export function useDragMove(getTarget:()=>HTMLElement){
 	const onMove = useCallback(function (event: MouseEvent|React.MouseEvent) {
 		event.stopPropagation();
 		if (!originPositionRef.current.isMove) return;
+		const target=getTarget();
 		const { clientX, clientY } = event;
 		const { x, y, top, left } = originPositionRef.current;
 		const offsetY = clientY - y;
 		const offsetX = clientX - x;
 		const newLeft = left + offsetX;
-		getTarget().style.left = newLeft+ 'px';
 		const newTop = top + offsetY;
-		getTarget().style.top = newTop + 'px';
+		target.style.left = newLeft+ 'px';
+		target.style.top = newTop + 'px';
 		originPositionRef.current = {
 			x: clientX,
 			y: clientY,

@@ -1,6 +1,6 @@
 {
   "name": "@brickd/components",
-  "version": "1.0.0-alpha.17",
+  "version": "1.0.0-alpha.16",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -21,8 +21,8 @@
     "url": "https://github.com/brick-design/brick-design.git"
   },
   "dependencies": {
-    "@brickd/canvas": "^1.0.0-alpha.17",
-    "@brickd/hooks": "^1.0.0-alpha.17",
+    "@brickd/canvas": "^1.0.0-alpha.16",
+    "@brickd/hooks": "^1.0.0-alpha.16",
     "lodash": "^4.17.15",
     "rc-collapse": "^2.0.0",
     "rc-field-form": "^1.21.1",
@@ -31,13 +31,9 @@
     "react": "^16.8.0",
     "react-color": "^2.18.0",
     "sortablejs": "^1.10.2",
-    "codemirror": "^6.0.1",
-    "@codemirror/commands": "^6.1.0",
-    "@codemirror/state": "^6.1.1",
-    "@codemirror/theme-one-dark": "^6.0.0",
-    "@uiw/codemirror-extensions-basic-setup": "4.12.3",
-    "@codemirror/lang-javascript": "^6.0.2",
-    "@uiw/codemirror-theme-okaidia": "^4.12.3"
+    "react-ace": "^10.1.0",
+    "ace-builds": "^1.13.1",
+    "json5": "^2.2.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0"

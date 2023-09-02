@@ -11,7 +11,7 @@ function Bricks(props: BrickDesignLeftProps) {
   const { componentsCategory } = props;
 
   return (
-    <BarTabs icon={componentIcon} className={styles['left-container']}>
+    <BarTabs activeKey={'Bricks'} icon={componentIcon} className={styles['left-container']}>
       <TabPane tab={'组件'} key={'1'}>
         <BrickPreview componentsCategory={componentsCategory} />
       </TabPane>

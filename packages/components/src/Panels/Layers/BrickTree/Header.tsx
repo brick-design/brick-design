@@ -1,4 +1,6 @@
-import React, { memo, useCallback, useEffect,  useState } from 'react';
+import React, { memo,
+  // useCallback,
+  useEffect,  useState } from 'react';
 import {
   SelectedInfoBaseType,
   useSelector,
@@ -7,16 +9,20 @@ import {
   selectComponent,
   useOperate,
   getSelectedNode,
+  copyComponent,
+  deleteComponent, ROOT, nodeScrollIntoView,
 } from '@brickd/canvas';
 import styles from './index.less';
 import {
   arrowIcon,
-  closeEye,
+  // closeEye,
+  copyIcon,
   layoutIcon,
-  lockClose,
+  // lockClose,
   // lockOpen,
   moreIcon,
-  openEye,
+  deleteIcon1
+  // openEye,
 } from '../../../assets';
 import Icon from '../../../Components/Icon';
 import Checkbox from '../../../Components/Checkbox';
@@ -39,13 +45,15 @@ function Header(props: HeaderProps) {
   const {
     specialProps,
     propName,
-    specialProps: { key },
+    specialProps: { key,parentPropName,parentKey },
     setIsUnfold,
     isUnfold,
     componentName,
     hasChildNodes,
   } = props;
-  const { getOperateState, setOperateState, setSubscribe,executeKeyListener } = useOperate();
+  const { getOperateState, setOperateState, setSubscribe,
+    // executeKeyListener
+  } = useOperate();
   const { selectedInfo } = useSelector(['selectedInfo']);
   const { propName: selectedPropName, selectedKey } = selectedInfo || {};
   const sortItemKey = propName ? `${key}${propName}` : key;
@@ -57,9 +65,9 @@ function Header(props: HeaderProps) {
   // const isHovered = isEqualKey(sortItemKey, hoverKey);
   const color = isSelected ? selectedColor : unSelectedColor;
 
-  const lockNode = (event: React.MouseEvent) => {
-    event.stopPropagation();
-  };
+  // const lockNode = (event: React.MouseEvent) => {
+  //   event.stopPropagation();
+  // };
 
   const changeStatus = () => {
     const { operateHoverKey } = getOperateState();
@@ -71,9 +79,9 @@ function Header(props: HeaderProps) {
     return unSubscribe;
   });
 
-  const onCloseEye = useCallback(() => {
-    executeKeyListener(key);
-  }, []);
+  // const onCloseEye = useCallback(() => {
+  //   executeKeyListener(key);
+  // }, []);
 
   return (
     <div
@@ -93,7 +101,7 @@ function Header(props: HeaderProps) {
       onMouseOver={() => {
         !isSelected &&
           setOperateState({
-            hoverNode: getSelectedNode(key+'-0'),
+            hoverNode: getSelectedNode(key),
             operateHoverKey: key,
           });
       }}
@@ -105,9 +113,11 @@ function Header(props: HeaderProps) {
             clearSelectedStatus();
             setOperateState({ selectedNode: null, operateSelectedKey: null });
           } else {
+            const selectedNode=getSelectedNode(key);
             selectComponent({ ...specialProps, propName });
+            nodeScrollIntoView(selectedNode);
             setOperateState({
-              selectedNode: getSelectedNode(key+'-0'),
+              selectedNode ,
               operateSelectedKey: key,
             });
           }
@@ -131,16 +141,28 @@ function Header(props: HeaderProps) {
         />
         {componentName}
       </div>
-      <Icon
-        onClick={lockNode}
+      {!propName&&key!==ROOT&&<Checkbox
+        onChange={()=>copyComponent({key,parentKey,parentPropName})}
+        checkedIcon={copyIcon}
+        uncheckedIcon={copyIcon}
         className={styles['item-icon']}
-        // icon={isLock ? lockClose : lockOpen}
-        icon={lockClose}
-      />
+      />}
+      {/*<Icon*/}
+      {/*  onClick={lockNode}*/}
+      {/*  className={styles['item-icon']}*/}
+      {/*  // icon={isLock ? lockClose : lockOpen}*/}
+      {/*  icon={lockClose}*/}
+      {/*/>*/}
+      {/*{!propName&&<Checkbox*/}
+      {/*  onChange={onCloseEye}*/}
+      {/*  checkedIcon={closeEye}*/}
+      {/*  uncheckedIcon={openEye}*/}
+      {/*  className={styles['item-icon']}*/}
+      {/*/>}*/}
       {!propName&&<Checkbox
-        onChange={onCloseEye}
-        checkedIcon={closeEye}
-        uncheckedIcon={openEye}
+        onChange={()=>deleteComponent({key,parentKey,parentPropName})}
+        checkedIcon={deleteIcon1}
+        uncheckedIcon={deleteIcon1}
         className={styles['item-icon']}
       />}
       <Icon icon={moreIcon} className={styles['item-icon']} />

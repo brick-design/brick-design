@@ -194,14 +194,13 @@ export interface VirtualDOMType {
   componentName: string;
   props?: PropsType;
   childNodes?: ChildNodesType;
+  layoutMode?:'free'|'flow';
   api?: ApiType;
   state?: PlainObject;
   condition?: string;
   isStateDomain?: boolean;
   propFields?: string[];
-  methods?: MethodsType;
   loop?: string | any[];
-  fileName?: string;
   [custom: string]: any;
 }
 

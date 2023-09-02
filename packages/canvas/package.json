@@ -1,0 +1,43 @@
+{
+  "name": "@brickd/canvas",
+  "version": "1.0.0-alpha.16",
+  "description": "> TODO: description",
+  "author": "anye931123 <1278998669@qq.com>",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh",
+    "dev": "tsc -w & rollup -c rollup.config.js -w"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brick-design/brick-design.git"
+  },
+  "dependencies": {
+    "@brickd/core": "^1.0.0-alpha.16",
+    "@brickd/hooks": "^1.0.0-alpha.16",
+    "@brickd/utils": "^1.0.0-alpha.16",
+    "html2canvas": "^1.0.0-rc.7",
+    "json5": "^2.2.0",
+    "lodash": "^4.17.15",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.149",
+    "@types/react": "^16.9.35",
+    "@types/sortablejs": "^1.10.4"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  }
+}

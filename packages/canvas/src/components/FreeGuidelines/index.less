@@ -1,0 +1,14 @@
+@import '../../global';
+
+.free-container{
+  .guide-common();
+  pointer-events: none;
+  background-color: @transparent;
+  transition: all 100ms;
+  z-index: 2000;
+
+  .line{
+    position: absolute;
+    background-color: @lineColor;
+  }
+}

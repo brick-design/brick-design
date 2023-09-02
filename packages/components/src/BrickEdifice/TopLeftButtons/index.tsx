@@ -4,12 +4,13 @@ import styles from './index.less';
 import Layers from '../../Panels/Layers';
 import { Icon } from '../../Components';
 import { downloadIcon, uploadIcon } from '../../assets';
+import { ButtonWrapper } from '../../Abilities';
 
 function TopLeftButtons() {
   // const [isDragMove,setIsDragMove]=useState<boolean>();
-
+  const PANEL_KEYS=['Layers'];
   return (
-    <div className={styles['top-left-bar']}>
+    <ButtonWrapper panelKeys={PANEL_KEYS} className={styles['top-left-bar']}>
       <Layers />
       <Icon
         icon={uploadIcon}
@@ -22,7 +23,7 @@ function TopLeftButtons() {
         iconClass={styles['icon-class']}
       />
       {/*<Checkbox onChange={setIsDragMove} checkedIcon={dragIcon} className={styles['icon-Menu']} iconClass={styles['icon-class']}/>*/}
-    </div>
+    </ButtonWrapper>
   );
 }
 

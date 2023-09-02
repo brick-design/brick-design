@@ -1,0 +1,18 @@
+@import '../../global';
+
+.hover-node {
+  .guide-common();
+  border: 1px solid @hoverColor;
+  pointer-events: none;
+  background-color: @translucent;
+  transition: all 100ms;
+  z-index: -1;
+  position: relative;
+}
+
+.guide-node {
+  background-color: @lineColor;
+  pointer-events: none;
+  transition: all 100ms;
+  display: none;
+}

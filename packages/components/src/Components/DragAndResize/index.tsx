@@ -9,17 +9,22 @@ import React, {
 } from 'react';
 import { useDragMove } from '@brickd/hooks';
 import styles from './index.less';
+import { DragProvider } from './DragProvider';
 import Resizeable, { ResizeableProps, ResizeableRefType } from '../Resizeable';
 
 export interface DragAndResizeRefType extends ResizeableRefType {
   onMoveStart: (event: MouseEvent | React.MouseEvent) => void;
 }
-export type DragAndResizeProp = ResizeableProps;
+
+export interface DragAndResizeProp extends ResizeableProps{
+  onDragMoveEnd?:()=>void
+};
 
 function DragAndResize(
   props: DragAndResizeProp,
   ref: Ref<DragAndResizeRefType>,
 ) {
+  const {onDragMoveEnd}=props;
   const moveDivRef = useRef<ResizeableRefType>({
     target: null,
     changeFold: (_) => _,
@@ -29,6 +34,7 @@ function DragAndResize(
     [],
   );
   const [isDrag, setIsDrag] = useState(false);
+  const [cursor,setCursor]=useState('move');
   const { onMove, onMoveEnd, onMoveStart } = useDragMove(getTarget);
 
   useImperativeHandle(
@@ -53,10 +59,13 @@ function DragAndResize(
     onMoveEnd(event);
     moveDivRef.current.onResizeEnd();
     moveDivRef.current.target.style.pointerEvents = 'auto';
+    setCursor('move');
+    onDragMoveEnd&&onDragMoveEnd();
   };
   const onResizeStart = () => {
     setIsDrag(true);
     moveDivRef.current.target.style.pointerEvents = 'none';
+
   };
 
   return (
@@ -64,10 +73,12 @@ function DragAndResize(
       <div
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
-        style={{ display: isDrag ? 'flex' : 'none' }}
+        style={{ display: isDrag ? 'flex' : 'none',cursor }}
         className={styles['placeholder-border']}
       />
-      <Resizeable onResizeStart={onResizeStart} {...props} ref={moveDivRef} />
+      <DragProvider value={isDrag}>
+      <Resizeable onResizeStart={onResizeStart} setCursor={setCursor} {...props} ref={moveDivRef} />
+      </DragProvider>
     </>
   );
 }

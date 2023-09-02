@@ -31,7 +31,7 @@ function Layers() {
       className={styles['container']}
       minWidth={212}
       icon={layersIcon}
-      defaultShow
+      key={'Layers'}
     >
       <Pages onDelete={onDelete} />
       <BrickTree />

@@ -3,13 +3,13 @@ import React, {
   memo,
   Ref,
   useCallback,
-  useEffect,
-  useImperativeHandle,
+  useImperativeHandle, useMemo,
   useRef,
 } from 'react';
 import { Direction, useResize } from '@brickd/hooks';
 import styles from './index.less';
 import { ANIMATION_YES } from '../../utils';
+import { useActive } from '../../Abilities/PanelActive';
 
 export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   left?: boolean;
@@ -27,6 +27,9 @@ export interface ResizeableProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultHeight?: number;
   defaultWidth?: number;
   onResizeStart?: (event: React.MouseEvent | MouseEvent) => void;
+  activeKey?:string
+  setCursor?:(cursor:any)=>any
+
 }
 
 type OriginSizeType = {
@@ -53,17 +56,19 @@ export interface ResizeableRefType {
 function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
   const {
     children,
-    left,
-    right,
-    top,
-    bottom,
-    topLeft,
-    topRight,
-    bottomLeft,
-    bottomRight,
+    left=true,
+    right=true,
+    top=true,
+    bottom=true,
+    topLeft=true,
+    topRight=true,
+    bottomLeft=true,
+    bottomRight=true,
     className,
     defaultHeight,
     defaultWidth,
+    activeKey,
+    setCursor=(s:string)=>s,
     ...rest
   } = props;
 
@@ -73,8 +78,25 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     height: defaultHeight,
   });
   const resizeDivRef = useRef<HTMLDivElement>();
+  const setActive= useActive(activeKey,resizeDivRef);
 
   const { onResizeStart, onResize, onResizeEnd } = useResize(resizeDivRef);
+
+  const defaultSize=useMemo(()=>{
+    const style:any={};
+    if(defaultWidth){
+      style.width=defaultWidth;
+    }
+    if(defaultHeight){
+      style.height=defaultWidth;
+    }
+    return style;
+  },[]);
+
+  const onFocus=(event:React.FocusEvent)=>{
+    event.stopPropagation();
+    setActive();
+  };
 
   const changeFold = useCallback((params: ChangeFoldParam) => {
     const { isHeight, isWidth, widthTarget, heightTarget } = params;
@@ -99,52 +121,65 @@ function Resizeable(props: ResizeableProps, ref: Ref<ResizeableRefType>) {
     target: resizeDivRef.current,
   }));
 
-  useEffect(() => {
-    if (defaultHeight) resizeDivRef.current.style.height = defaultHeight + 'px';
-    if (defaultWidth) resizeDivRef.current.style.width = defaultWidth + 'px';
-  }, []);
-
   const onMouseDown = useCallback((event: React.MouseEvent) => {
     props.onResizeStart && props.onResizeStart(event);
   }, []);
 
   const topResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.top);
+    setCursor('row-resize');
     onMouseDown(event);
   }, []);
   const bottomResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottom);
+    setCursor('row-resize');
+
     onMouseDown(event);
   }, []);
   const leftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.left);
+    setCursor('col-resize');
+
     onMouseDown(event);
   }, []);
   const rightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.right);
+    setCursor('col-resize');
+
     onMouseDown(event);
   }, []);
   const topRightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.topRight);
+    setCursor('ne-resize');
+
     onMouseDown(event);
   }, []);
   const bottomRightResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottomRight);
+    setCursor('se-resize');
+
     onMouseDown(event);
   }, []);
   const topLeftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.topLeft);
+    setCursor('nw-resize');
+
     onMouseDown(event);
   }, []);
   const bottomLeftResize = useCallback((event: React.MouseEvent) => {
     onResizeStart(event, Direction.bottomLeft);
+    setCursor('sw-resize');
+
     onMouseDown(event);
   }, []);
+
 
   return (
     <div
       className={`${styles['container']} ${className}`}
+      style={defaultSize}
       {...rest}
+      onFocus={onFocus}
       ref={resizeDivRef}
     >
       {children}

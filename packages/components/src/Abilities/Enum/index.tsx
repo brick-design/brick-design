@@ -15,7 +15,7 @@ const Enum = forwardRef(function Component(props: EnumComponentPropsType) {
       <Select className={styles['select']} enumData={enumData} {...rest} />
     );
   }
-  return <Radio radioData={enumData} className={styles['radio']} {...rest} />;
+  return <Radio radioData={enumData}  {...rest} />;
 });
 
 export default memo<EnumComponentPropsType>(Enum, propsAreEqual);
