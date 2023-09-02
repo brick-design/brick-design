@@ -1,6 +1,6 @@
 {
   "name": "@brickd/hooks",
-  "version": "1.0.0-alpha.16",
+  "version": "1.0.0-alpha.17",
   "description": "> TODO: description",
   "author": "anye931123 <1278998669@qq.com>",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@brickd/utils": "^1.0.0-alpha.16",
+    "@brickd/utils": "^1.0.0-alpha.17",
     "lodash": "^4.17.20",
     "react": "^16.8.0"
   },
